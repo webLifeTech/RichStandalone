@@ -1,0 +1,59 @@
+<li class="ms-0" *ngIf="!authService.isLoggedIn">
+  <a href="javascript:void(0)" class="btn btn-solid" [routerLink]="['/auth/log-in']">
+    Sign In
+  </a>
+</li>
+
+
+<!-- <a href="javascript:void(0)" class="btn btn-solid" (click)="logOut()" *ngIf="authService.isLoggedIn">
+  Sign Out
+</a> -->
+
+<li *ngIf="authService.isLoggedIn && !type" class="dropdown ms-0">
+  <a href="javascript:void(0);" data-bs-toggle="dropdown" class="dropdown-toggle nav-link" aria-expanded="false"><span
+      class="user-img"><img src="assets/images/avtar/4.jpg" alt="Profile" class="rounded-circle"></span>
+    <span class="user-text">{{gs.loggedInUserInfo?.name}}</span>
+  </a>
+  <div class="nav-submenu d-none d-md-block py-0">
+    <a *ngIf="gs.loggedInUserInfo.role === 'admin'" class="dropdown-item" (click)="goAdminDashBoard()">
+      <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
+      Admin Dashboard
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goDashBoard()">
+      <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
+      Dashboard
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goSettings()">
+      <img src="assets/images/icon/dashboard/settings-icon.svg" width="24" alt="Settings" />
+      Settings
+    </a>
+    <a class="dropdown-item" (click)="logOut()">
+      <img src="assets/images/icon/logout.svg" width="24" alt="Logout" />
+      Logout
+    </a>
+  </div>
+</li>
+<li *ngIf="authService.isLoggedIn && type =='sidebar'" class="dropdown ms-0 w-100">
+  <a href="javascript:void(0);" data-bs-toggle="dropdown" class="dropdown-toggle nav-link" aria-expanded="false"><span
+      class="user-img"><img src="assets/images/avtar/4.jpg" alt="Profile" class="rounded-circle"></span>
+    <span class="user-text-1">{{gs.loggedInUserInfo?.name}}</span>
+  </a>
+  <div class="nav-submenu menu-content py-0">
+    <a *ngIf="gs.loggedInUserInfo.role === 'admin'" class="dropdown-item" (click)="goAdminDashBoard()">
+      <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
+      Admin Dashboard
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goDashBoard()">
+      <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
+      Dashboard
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goSettings()">
+      <img src="assets/images/icon/dashboard/settings-icon.svg" width="24" alt="Settings" />
+      Settings
+    </a>
+    <a class="dropdown-item" (click)="logOut()">
+      <img src="assets/images/icon/logout.svg" width="24" alt="Logout" />
+      Logout
+    </a>
+  </div>
+</li>

@@ -1,0 +1,71 @@
+<header [ngClass]="headerClass">
+  <div [ngClass]="containerFluid ? 'container-fluid' : 'container'">
+    <!-- <div class="row">
+      <div class="col"> -->
+    <div class="menu">
+      <div class="brand-logo">
+        <a href="javascript:void(0)" [routerLink]="['/home']">
+          <img [src]="logo" alt="logo" class="img-fluid blur-up lazyload">
+        </a>
+      </div>
+      <nav>
+        <app-menu></app-menu>
+      </nav>
+      @if(couponCode){
+      <div class="coupon-box">
+        <h6>Coupen Code :- DX4512</h6>
+      </div>
+      }
+      @if(setting){
+      <ul class="header-right">
+        <li *ngIf="!authService.isLoggedIn" class="front-setting">
+          <app-currency></app-currency>
+        </li>
+        <li class="front-setting">
+          <app-language></app-language>
+        </li>
+        <li class="main-navbar">
+          <div id="mainnav">
+            <ul class="nav-menu">
+              <li class="notification-badge" *ngIf="authService.isLoggedIn">
+                <app-notification></app-notification>
+              </li>
+              <li class="profile-badge">
+                <app-profile></app-profile>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+
+        <li class="setting">
+          <a href="javascript:void(0)" (click)="openMenu()">
+            <i class="fas fa-cog"></i>
+          </a>
+          <ul class="setting-open" [class.show]="isOpen">
+            <li *ngIf="!authService.isLoggedIn" class="front-setting">
+              <app-currency></app-currency>
+            </li>
+            <li class="front-setting">
+              <app-language></app-language>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="!authService.isLoggedIn" class="setting">
+          <a [routerLink]="['/auth/log-in']">
+            <i class="feather icon-log-in"></i>
+          </a>
+        </li>
+        <li class="setting notification-badge bg-none" *ngIf="authService.isLoggedIn">
+          <app-notification></app-notification>
+        </li>
+      </ul>
+      }
+    </div>
+    <!-- </div>
+    </div> -->
+  </div>
+  @if(searchTab){
+  <app-search-tab (searchBox)="getValue($event)"></app-search-tab>
+  }
+</header>

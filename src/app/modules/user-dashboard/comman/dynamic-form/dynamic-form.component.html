@@ -1,0 +1,456 @@
+<div>
+  <div>
+    <!-- {{sections.value | json}} -->
+  </div>
+
+  <form [formGroup]="dynamicForm">
+    <div formArrayName="sections">
+      <mat-accordion class="accordion-align" *ngIf="sections && sections.controls">
+        <ng-container *ngFor="let section of sections.controls; let i = index">
+          <mat-expansion-panel hideToggle [expanded]="section?.get('isOpen')?.value" (opened)="onToggle(true, section)"
+            (closed)="onToggle(false, section)" [formGroupName]="i">
+            <!-- hideToggle [expanded]="section?.get('isOpen')?.value" (opened)="onToggle()"
+          (closed)="onToggle()" -->
+            <mat-expansion-panel-header
+              [ngClass]="{'validation': section?.get('isInvalidSection')?.value && submitted}">
+              <!-- *ngIf="( && (field.get('value')?.touched || submitted) )" // [ngClass]="{'validation': section?.invalid && submitted}"-->
+              <mat-panel-title>
+                {{ section?.get('sectionName')?.value }}
+                <span class="header-validation-mgs" *ngIf="section?.get('isInvalidSection')?.value && submitted">
+                  <i class="feather icon-alert-octagon"></i>
+                </span>
+              </mat-panel-title>
+              <mat-panel-description>
+                <i class="feather "
+                  [ngClass]="{'icon-minus': section?.get('isOpen')?.value, 'icon-plus': !section?.get('isOpen')?.value}"></i>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="profile-info-grid">
+              <div formArrayName="fields" *ngIf="section?.get('fields') as fields">
+                <div class="row m-0 align-items-start">
+                  <ng-container *ngFor="let field of fields.controls; let j = index" [formGroupName]="j">
+                    <!-- && field.get('isActive')?.value -->
+                    <ng-container *ngIf="field.get('isVisible')?.value && field.get('isConditionValid')?.value">
+                      <!-- TEXT -->
+                      <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'TEXT'">
+                        <div class="form-group">
+                          <label for="driver_license_number">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text" />
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                          <div
+                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
+                            class="text-danger mt-2">
+                            Invalid format.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- TEXTMASK -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'TEXTMASK'">
+                        <div class="form-group">
+                          <label for="driver_license_number">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
+                            [mask]="field.get('validationType')?.value" />
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                          <div
+                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
+                            class="text-danger mt-2">
+                            Invalid format.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- TEXTGROUP -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'TEXTGROUP'">
+                        <div class="form-group ">
+                          <label for="driver_license_number">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <div class="input-group mb-3">
+
+                            <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select"
+                              type="text" />
+                            <span class="input-group-text" id="addon-wrapping">
+                              <button mat-icon-button [matMenuTriggerFor]="menu"
+                                aria-label="Example icon-button with a menu">
+                                <i class="feather icon-plus-circle"></i>
+                              </button>
+                              <mat-menu #menu="matMenu" xPosition="before">
+                                <ng-container *ngFor="let dpItem of field?.value?.apiDropdownList">
+                                  <button *ngIf="dpItem.isVisible" mat-menu-item
+                                    (click)="onCallDpField(dpItem, field, section)">
+                                    {{dpItem.dropDownDesc}}
+                                  </button>
+                                </ng-container>
+                              </mat-menu>
+                            </span>
+                          </div>
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                          <div
+                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
+                            class="text-danger mt-2">
+                            Invalid format.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- HIDDENTEXT -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'HIDDENTEXT'">
+                        <div class="form-group">
+                          <label for="driver_license_number">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="password"
+                            [name]="field.get('fieldCode')?.value" />
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                          <div
+                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
+                            class="text-danger mt-2">
+                            Invalid format.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- DATE -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === '' || field.get('fieldType')?.value === 'date' || field.get('fieldType')?.value === 'DATE'">
+                        <div class="form-group">
+                          <label for="date_of_birth">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <!-- <input [formControlName]="'value'" [readonly]="field.get('isReadOnly')?.value" type="date"
+                            class="form-control open-select" /> -->
+
+                          <ng-container
+                            *ngIf="field.get('validationType')?.value === '' || field.get('validationType')?.value === 'ALL'">
+                            <input [formControlName]="'value'" placeholder="mm/dd/yyyy" (ngModelChange)="onDateSelect()"
+                              [readonly]="field.get('isReadOnly')?.value"
+                              class="form-control datetimepicker-input digits" type="text" [owlDateTimeTrigger]="drop1"
+                              [owlDateTime]="drop1">
+                            <owl-date-time [pickerType]="'calendar'" #drop1></owl-date-time>
+                          </ng-container>
+
+                          <ng-container *ngIf="field.get('validationType')?.value === 'PASTDATE'">
+                            <input [formControlName]="'value'" placeholder="mm/dd/yyyy" (ngModelChange)="onDateSelect()"
+                              [readonly]="field.get('isReadOnly')?.value"
+                              class="form-control datetimepicker-input digits" type="text" [owlDateTimeTrigger]="drop2"
+                              [max]="todayDate" [owlDateTime]="drop2">
+                            <owl-date-time [pickerType]="'calendar'" #drop2></owl-date-time>
+                          </ng-container>
+
+                          <ng-container *ngIf="field.get('validationType')?.value === 'FUTUREDATE'">
+                            <input [formControlName]="'value'" placeholder="mm/dd/yyyy" (ngModelChange)="onDateSelect()"
+                              [readonly]="field.get('isReadOnly')?.value"
+                              class="form-control datetimepicker-input digits" type="text" [owlDateTimeTrigger]="drop3"
+                              [min]="todayDate" [owlDateTime]="drop3">
+                            <owl-date-time [pickerType]="'calendar'" #drop3></owl-date-time>
+                          </ng-container>
+
+                          <ng-container *ngIf="field.get('validationType')?.value === 'FUTURE15'">
+                            <input [formControlName]="'value'" placeholder="mm/dd/yyyy" (ngModelChange)="onDateSelect()"
+                              [readonly]="field.get('isReadOnly')?.value" [max]="getFutureDate()" [min]="todayDate"
+                              class="form-control datetimepicker-input digits" type="text" [owlDateTimeTrigger]="drop4"
+                              [owlDateTime]="drop4">
+                            <owl-date-time [pickerType]="'calendar'" #drop4></owl-date-time>
+                          </ng-container>
+
+                          <ng-container *ngIf="field.get('validationType')?.value === 'PAST15'">
+                            <input [formControlName]="'value'" placeholder="mm/dd/yyyy" (ngModelChange)="onDateSelect()"
+                              [readonly]="field.get('isReadOnly')?.value" [max]="todayDate" [min]="getPastDate()"
+                              class="form-control datetimepicker-input digits" type="text" [owlDateTimeTrigger]="drop5"
+                              [owlDateTime]="drop5">
+                            <owl-date-time [pickerType]="'calendar'" #drop5></owl-date-time>
+                          </ng-container>
+
+                          <!-- <ng-container *ngIf="field.get('fieldName')?.value !== 'DATE OF BIRTH'">
+                            <input [formControlName]="'value'" [readonly]="field.get('isReadOnly')?.value" type="text"
+                              class="form-control open-select" />
+                          </ng-container> -->
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- DROPDOWN -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'DROPDOWN'">
+                        <div class="form-group">
+                          <label for="isHaveForeignLicense">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <ng-select clearable="false" (change)="onChangeDrop($event, field, section)"
+                            [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
+                            bindLabel="Name" placeholder="-- Select One --" bindValue="Name"
+                            [formControlName]="'value'">
+                          </ng-select>
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- CHECKBOX -->
+                      <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
+                        *ngIf="field.get('fieldType')?.value === 'CHECKBOX'">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" [id]="field.get('fieldCode')?.value"
+                            [formControlName]="'value'" [attr.disabled]="field.get('isReadOnly')?.value"
+                            (change)="onChangeCheckbox(field, section)">
+                          <label class="form-check-label text-primary ms-2" [for]="field.get('fieldCode')?.value">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                        </div>
+                        <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                          class="text-danger mt-2">
+                          This field is required.
+                        </div>
+                      </div>
+
+                      <!-- RADIO -->
+                      <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
+                        *ngIf="field.get('fieldType')?.value === 'RADIO'">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" [name]="field.get('description')?.value"
+                            [id]="field.get('fieldCode')?.value" [attr.readonly]="field.get('isReadOnly')?.value"
+                            (change)="onChangeRadio(field, section)">
+                          <!-- [formControlName]="'value'" -->
+                          <label class="form-check-label text-primary ms-2" [for]="field.get('fieldCode')?.value">
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                        </div>
+                        <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                          class="text-danger mt-2">
+                          This field is required.
+                        </div>
+                      </div>
+
+                      <!-- TEXTAREA -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'TEXTAREA'">
+                        <div class="form-group">
+                          <label>
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <textarea [formControlName]="'value'" [attr.disabled]="field.get('isReadOnly')?.value"
+                            type="text" class="form-control open-select"></textarea>
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- UPLOAD LOGO -->
+                      <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'LOGO'">
+                        <div class="upload-card mb-3">
+                          <div class="position-relative profile-info-img">
+                            <img [src]="profileUrl || 'assets/images/driver/Male.jpg'" class="avatar" alt="...">
+                            <div class="centered">
+                              <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
+                              <input (change)="handleUpload($event, field)" #myInput hidden type="file"
+                                class="form-control open-select" />
+                              <i class="fas fa-trash pointer" style="color: #fff;"></i>
+                            </div>
+                          </div>
+
+                          <div class="ms-3">
+                            <h5 class="upload-title">
+                              {{ field.get('fieldName')?.value }}
+                              <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                            </h5>
+                            <p class="upload-text">
+                              {{field.get('validationType')?.value}} under 15 MB
+                              <!-- str.split(",").join("") -->
+                            </p>
+                          </div>
+                        </div>
+                        <hr class="div-line1" />
+                      </div>
+
+                      <!-- SELECTION -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'SELECTION'">
+                        <div class="form-group">
+                          <label>
+                            {{ field.get('fieldName')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <!-- accept=".png" -->
+                          <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
+                            type="file" class="form-control open-select" />
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- BUTTON -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'BUTTON' && field.get('isMandatory')?.value">
+                        <button
+                          *ngIf="field.get('modalValue')?.value === 'add' || field.get('modalValue')?.value === 'Add'"
+                          (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button">
+                          {{ field.get('fieldName')?.value }}
+                        </button>
+                        <button
+                          *ngIf="(field.get('modalValue')?.value === 'save' || field.get('modalValue')?.value === 'Save') && !isTableEdit"
+                          (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"
+                          type="button">
+                          {{ field.get('fieldName')?.value }}
+                        </button>
+                        <button *ngIf="isTableEdit" (click)="saveSubmit(field, section)"
+                          class="btn btn-solid color2 no-text-transorm" type="button">
+                          Update
+                        </button>
+                        <button
+                          *ngIf="(field.get('modalValue')?.value === 'update' || field.get('modalValue')?.value === 'Update') && isEditInfo"
+                          (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
+                          type="button">
+                          {{ field.get('fieldName')?.value }}
+                        </button>
+                        <button
+                          *ngIf="(field.get('modalValue')?.value === 'save' || field.get('modalValue')?.value === 'Save') && section?.value?.loopArray?.length"
+                          (click)="cancelForm(field, section)" class="btn btn-solid color3 no-text-transorm ms-3"
+                          type="button">
+                          Cancel
+                        </button>
+                      </div>
+
+                      <div *ngIf="field.get('lineBreak')?.value" [ngClass]="field.get('lineBreak')?.value"></div>
+
+                      <!-- <div class="col-lg-4" *ngIf="field.get('fieldType')?.value === 'TEXT'">
+                        <app-input-type-text [field]="field">
+                        </app-input-type-text>
+                      </div> -->
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Table -->
+              <div class="col-lg-12 mt-3" *ngIf="section.value?.tableGrid?.length && isTableVisible">
+                <div class="table-responsive dashboard-table mb-3">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th class="text-center">
+                          {{'#' | translate}}
+                        </th>
+                        <ng-container *ngFor="let field of section.value?.tableGrid; let j = index">
+                          <th class="text-center">
+                            {{ field.fieldName }}
+                          </th>
+                        </ng-container>
+                        <th class="text-center">
+                          {{'userDashboard.kyc.branch_info.action' | translate}}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of section?.get('tableGridValueList')?.value; let tgIdx = index">
+                        <td class="text-center">{{tgIdx+1}}</td>
+                        <ng-container *ngFor="let row of section.value?.tableGrid">
+                          <td *ngIf="row.modalValue !== 'status'" class="text-center">
+                            {{item[row.modalValue] || '-'}}
+                          </td>
+                          <td *ngIf="row.modalValue === 'status'" class="text-center">
+                            <span class="badge" [ngClass]="{
+                                'badge-light-danger': !item[row.modalValue],
+                                'badge-light-success': item[row.modalValue]}">
+                              {{item[row.modalValue] ? 'Active' : 'Inactive'}}
+                            </span>
+                          </td>
+                        </ng-container>
+                        <!-- <td class="">{{item.insuranceType || '-'}}</td> -->
+                        <!-- <td class="">{{item.companyName || '-'}}</td> -->
+                        <!-- <td class="">{{item.other || '-'}}</td> -->
+                        <!-- <td class="">{{item.policynumber || '-'}}</td> -->
+                        <!-- <td class="">{{item.policyIssueDate || '-'}}</td>
+                        <td class="">{{item.policyExpiryDate || '-'}}</td> -->
+                        <td class="text-center">
+                          <button mat-icon-button [matMenuTriggerFor]="menu"
+                            aria-label="Example icon-button with a menu">
+                            <i class="feather icon-more-vertical"></i>
+                          </button>
+                          <mat-menu #menu="matMenu" xPosition="before">
+                            <button (click)="editTableItem(tgIdx,item, section)" mat-menu-item>
+                              <i class="feather icon-edit"></i>
+                              <span class="ms-2">Edit</span>
+                            </button>
+                            <button (click)="onDelete(tgIdx,section)" mat-menu-item>
+                              <i class="feather icon-trash"></i>
+                              <span class="ms-2">Delete</span>
+                            </button>
+                          </mat-menu>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </ng-container>
+      </mat-accordion>
+    </div>
+  </form>
+
+
+
+  <!-- Buttons -->
+  <div class="row my-4">
+    <div class="col-lg-12 text-end">
+      <button *ngIf="!isEditInfo" type="button" (click)="onSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
+      </button>
+      <!-- <button *ngIf="isEditInfo" type="button" (click)="onSubmit()" class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Update
+      </button> -->
+      <!-- <button *ngIf="" type="button" (click)="onChangeKycTab('TLC license info')"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Next
+      </button> -->
+      <button *ngIf="isEditInfo" (click)="onCancel()" type="button"
+        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

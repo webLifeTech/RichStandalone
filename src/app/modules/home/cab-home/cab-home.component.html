@@ -1,0 +1,18 @@
+<app-cab-classic-home-section></app-cab-classic-home-section>
+
+@if(cabClassic){
+<app-cab-classic-rica-benefits [benefits]="cabClassic.ricaBenefits"></app-cab-classic-rica-benefits>
+
+<app-cab-classic-booking [booking]="cabClassic.booking"></app-cab-classic-booking>
+
+<app-cab-classic-car-type [carTypes]="cabClassic.carTypes"></app-cab-classic-car-type>
+}
+
+<app-cab-classic-banner></app-cab-classic-banner>
+
+@if(cabClassic){
+<div class="cab-class-testimonial">
+  <app-cab-classic-testimonial [id]="cabClassic.testimonial"></app-cab-classic-testimonial>
+</div>
+
+}

@@ -1,0 +1,30 @@
+<div class="card dash-box-card flex-fill mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center">
+        <h4>Vehicles Details</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-history">
+    <div class="row widget-box">
+
+      <div class="col-md-12">
+        <div class="d-flex align-items-center">
+          <div class="total-head">Total Vehicles -</div>
+          <div class="total-value">{{totalDrivers.total}}</div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="flex-fill">
+          <div class="widget-header text-center">
+            <app-apexcharts [data]="totalDrivers.data" [chartSize]="5" [name]="'Performance grade'"></app-apexcharts>
+          </div>
+        </div>
+      </div>
+      <div class="text-end">
+        <a class="btn view-btn mt-3" (click)="viewVehicles(null)">View</a>
+      </div>
+    </div>
+  </div>
+</div>

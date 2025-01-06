@@ -1,0 +1,167 @@
+{
+  "menu": {
+    "home": "الصفحة الرئيسية",
+    "aboutus": "معلومات عنا",
+    "car_rentals": "تأجير السيارات",
+    "driver_rentals": "تأجير السائقين",
+    "submenu": {
+      "listing": "القائمة",
+      "booking": "الحجز",
+      "car_details": "تفاصيل السيارة",
+      "child_menu": {
+        "grid_view": "عرض الشبكة",
+        "hotel": "فندق"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "لوحة القيادة",
+    "cars": "السيارات",
+    "trasaction": "المعاملة",
+    "report": "التقارير",
+    "submenus": {
+      "payment": "الدفع",
+      "enquiry": "الاستفسار",
+      "micromenu": {
+        "payment1": "الدفع 1",
+        "payment2": "الدفع 2"
+      }
+    }
+  },
+
+  "global": {
+    "location": "الموقع",
+    "search": "بحث",
+    "different": "مختلف",
+    "same": "نفسه",
+    "pick_up": "الاستلام",
+    "drop_off": "التوصيل",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "date_and_time": "التاريخ و الوقت",
+    "enter": "أدخل",
+    "select": "اختر",
+    "or": "أو",
+    "type": "النوع",
+    "am": "ص",
+    "pm": "م"
+  },
+  "cab_home_page": {
+    "title": "احجز سيارتك",
+    "descriptipn": "استأجر سيارة بسعر مناسب مع ريكا كاب"
+  },
+  "cab_list_page": {
+    "description": "استأجر سيارة لأي نوع من الرحلات"
+  },
+  "cab_list": {
+    "cab_search": "بحث عن سيارة"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "اشتراك",
+    "form": {
+      "full_name": "الاسم الكامل",
+      "username": "رقم الهاتف المحمول أو البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirm_password": "تأكيد كلمة المرور",
+      "remember_me": "تذكرني",
+      "create_account": "إنشاء حساب",
+      "send": "إرسال",
+      "resend": "إعادة الإرسال",
+      "otp": "رمز التحقق",
+      "seconds": "ثواني",
+      "otp_enable": "سيتم التفعيل في"
+    }
+  },
+  "car_list_page": {
+    "seater": "مقاعد",
+    "luggage": "الأمتعة",
+    "AC": "مكيف الهواء",
+    "fare_per_km": "الأجرة/كم",
+    "book_now": "احجز الآن",
+    "book": "احجز",
+    "details": "التفاصيل",
+    "need_help": "تحتاج مساعدة",
+    "monday-to-friday": "من الاثنين إلى الجمعة",
+    "apply": "تطبيق",
+    "close_filter": "إغلاق الفلتر",
+    "search_here": "ابحث هنا..",
+    "back": "العودة",
+    "filter": {
+      "latest_filter": "فلتر",
+      "car_option": "النقل",
+      "capacity": "السعة",
+      "car_type": "فئة السيارة",
+      "price": "السعر",
+      "review_score": "نتيجة المراجعة",
+      "car_location": "الموقع",
+      "price_per_day": "السعر اليومي",
+      "fuel_policy": "سياسة الوقود",
+      "deposit_required": "مطلوب إيداع",
+      "supplier": "المورد",
+      "mileage_kilometres": "الأميال/الكيلومترات",
+      "car_electric": "السيارات الكهربائية",
+      "car_specs": "مواصفات السيارة"
+    },
+    "car_type": {
+      "mini": "ميني",
+      "medium": "متوسط",
+      "luxury": "فاخرة",
+      "sadan": "سيدان",
+      "SUV": "دفع رباعي",
+      "standard": "قياسية",
+      "tempo": "تمبو"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 راكب",
+      "6-10_passenger": "6-10 ركاب",
+      "10_or_more": "10 أو أكثر"
+    },
+    "car_option": {
+      "automatic": "أوتوماتيكي",
+      "manual": "يدوي"
+    },
+    "location": {
+      "rajajinagar": "راجاجيناجار",
+      "basaveshwarnagar": "باسافيشوارناجار",
+      "vijayanagar": "فيجاياناجار",
+      "jayanagar": "جايناجار",
+      "madivala": "ماديفالا",
+      "all_other_location": "كل المواقع الأخرى"
+    },
+    "price_per_day": {
+      "0_5000": "₹0 - ₹5,000",
+      "5000_10000": "₹5,000 - ₹10,000",
+      "10000_15000": "₹10,000 - ₹15,000",
+      "15000_20000": "₹15,000 - ₹20,000",
+      "20000+": "₹20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "تكييف الهواء",
+      "4+doors": "4+ أبواب"
+    },
+    "car_electric": {
+      "fully_electric": "كهربائي بالكامل",
+      "hybrid": "هجين",
+      "plugin_hybrid": "هجين قابل للشحن"
+    },
+    "mileage_kilometres": {
+      "unlimited": "غير محدود"
+    },
+    "fuel_policy":{
+      "free_tank":"خزان مجاني",
+      "like_or_like":"مثل مثل"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "supplier":{
+      "avis":"أفيس",
+      "budget":"الميزانية",
+      "zoom":"زوم",
+      "sixt":"سيكست"
+    }
+  }
+}

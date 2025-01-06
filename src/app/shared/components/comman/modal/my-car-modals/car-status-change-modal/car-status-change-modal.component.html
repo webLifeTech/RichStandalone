@@ -1,0 +1,42 @@
+<div class="modal-content">
+  <div class="modal-body modal-status">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <h4>{{mainTitle || "Change Car Status"}}</h4>
+        <p>{{title || "Are you sure?"}}</p>
+      </div>
+      <div class="row m-0 mb-4 align-items-end">
+        <div class="col-lg-12" class="text-start">
+          <label class="text-start label-title">
+            {{ 'Status' | translate }}
+          </label>
+          <div class="form-group d-flex">
+            <ng-container *ngFor="let item of vehicleStatusList">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="status" [id]="'status_'+item.name"
+                  [value]="item.value" [(ngModel)]="form.status">
+                <label class="form-check-label ms-2" [for]="'status_'+item.name">
+                  {{ item.name | translate }}
+                </label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              {{confirmButton || "Change"}}
+            </a>
+          </div>
+          <div class="col-6">
+            <a (click)="closeModal()" class="btn btn-primary w-100">
+              {{cancelButton || "Cancel"}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

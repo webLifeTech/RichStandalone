@@ -1,0 +1,75 @@
+<form #frm="ngForm">
+  @if(type == 'register'){
+  <div *ngIf="isVendor" class="form-group">
+    <label for="name">{{'auth.form.vendor_type' | translate}}</label>
+    <ng-select clearable="false" [items]="vendorTypes" bindLabel="name" placeholder="-- Select --" bindValue="id"
+      [(ngModel)]="registerForm.vendor_type" name="vendor_type">
+    </ng-select>
+  </div>
+  <div *ngIf="!isVendor" class="form-group">
+    <label for="name">{{'auth.form.type' | translate}}</label>
+    <ng-select clearable="false" [items]="iAmArray" bindLabel="name" placeholder="-- Select One --" bindValue="id"
+      [(ngModel)]="registerForm.type" name="type">
+    </ng-select>
+  </div>
+  <div class="form-group">
+    <label for="name">{{'auth.form.full_name' | translate}}</label>
+    <input type="text" class="form-control" id="name"
+      placeholder="{{'global.enter' | translate}} {{'auth.form.full_name' | translate}}" autocomplete="off">
+  </div>
+  }
+  <div class="form-group">
+    <label for="exampleInputEmail1">{{'auth.form.username' | translate}}</label>
+    <div class="input-group">
+      <input type="text" [(ngModel)]="loginForm.username" name="username" class="form-control" id="exampleInputEmail1"
+        aria-describedby="emailHelp" placeholder="{{'global.enter' | translate}} {{'auth.form.username' | translate}}"
+        autocomplete="off">
+      @if(type == 'register'){
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" (click)="sendOtp()" [disabled]="sentotp">
+          <span *ngIf="!enterOTP"> {{'auth.form.send' | translate}}</span>
+          <span *ngIf="enterOTP"> {{'auth.form.resend' | translate}}</span>
+          {{'auth.form.otp' | translate}}
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+
+  @if(type == 'register' && enterOTP){
+  <div class="form-group">
+    <label for="otp">{{'auth.form.otp' | translate}} <span *ngIf="sentotp">({{'auth.form.resend' | translate}}
+        {{'auth.form.otp_enable' | translate}} {{timer}} {{'auth.form.seconds' | translate}})</span></label>
+    <input type="number" class="form-control" id="otp"
+      placeholder="{{'global.enter' | translate}} {{'auth.form.otp' | translate}}" autocomplete="off">
+  </div>
+  }
+  <div class="form-group">
+    <label for="password">{{'auth.form.password' | translate}}</label>
+    <input type="password" [(ngModel)]="loginForm.password" name="password" class=" form-control" id="password"
+      placeholder="{{'global.enter' | translate}} {{'auth.form.password' | translate}}" autocomplete="off">
+  </div>
+  @if(type == 'register'){
+  <div class="form-group">
+    <label for="confirmpassword">{{'auth.form.confirm_password' | translate}}</label>
+    <input type="password" class="form-control" id="confirmpassword"
+      placeholder="{{'global.enter' | translate}} {{'auth.form.confirm_password' | translate}}" autocomplete="off">
+  </div>
+  }
+  @if(type == 'login'){
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1"> &nbsp;
+    <label class="form-check-label" for="exampleCheck1"> {{'auth.form.remember_me' | translate}}</label>
+  </div>
+  }
+  <div class="button-bottom">
+    <button type="button" class="w-100 btn btn-theme" (click)="authUser(frm, type)">{{ type === 'register' ?
+      ('auth.form.create_account' | translate) : ('auth.login' | translate) }}</button>
+    <div class="divider">
+      <h6>{{'global.or' | translate}}</h6>
+    </div>
+    <button type="button" class="w-100 btn btn-theme btn-outline" (click)="userAuth(type)">{{ type !== 'register' ?
+      ('auth.form.create_account' | translate) : ('auth.login' | translate) }}
+    </button>
+  </div>
+</form>

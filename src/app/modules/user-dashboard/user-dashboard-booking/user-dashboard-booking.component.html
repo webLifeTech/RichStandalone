@@ -1,0 +1,190 @@
+<div class="content">
+  <div class="container">
+
+    <div class="content-header">
+      <div class="row">
+        <div class="col-lg-4">
+          <h4>My Bookings</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="row d-flex align-items-center">
+            <div class="col-lg-8 col-sm-12 col-12">
+              <div class="booking-lists">
+                <ul class="nav">
+                  <li *ngFor="let item of booktabs">
+                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12 text-end">
+              <select class="form-select">
+                <option selected>This Week</option>
+                <option value="1">This Month</option>
+                <option value="2">Last 30 Days</option>
+                <option value="3">Custom</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12 text-end">
+              <div class="filter-group">
+                <select class="form-select">
+                  <option selected>Sort By Relevance</option>
+                  <option value="1">Sort By Ascending</option>
+                  <option value="2">Sort By Descending</option>
+                  <option value="3">Sort By Alphabet</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-12 d-flex">
+        <div class="card book-card flex-fill mb-0">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-5">
+                <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+              </div>
+              <div class="col-md-7 text-md-end">
+                <div class="table-search">
+                  <div id="tablefilter">
+
+                    <div class="dataTables_filter">
+                      <label>
+                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
+                          placeholder="Search" />
+                      </label>
+                    </div>
+                  </div>
+                  <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
+                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
+                    Booking</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive dashboard-table mb-4">
+              <table class="table datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>
+                      <span>#Sn</span>
+                    </th>
+                    <th class="text-center">Booking ID</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">Booking Date</th>
+                    <th class="text-center">Pickup Date</th>
+                    <th class="text-center">End Date</th>
+                    <th class="text-center">Days</th>
+                    <th class="text-center">Price Per Day</th>
+                    <th class="text-center">Total Amount</th>
+                    <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Cancelled By</th>
+                    <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Reason</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                    <td>
+                      <span>{{idx+1}}</span>
+                    </td>
+                    <td><a>{{data.bookingId}}</a></td>
+                    <td class="text-center">
+                      <span>{{data.pickupDeliveryLocation1}}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.bookedOn}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.pickup_date_time}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.end_date_time}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.number_of_days}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.price_per_day | currencyPipe: gs.currency}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span class="text-red">{{data.total_amount | currencyPipe: gs.currency}}</span>
+                    </td>
+                    <td *ngIf="activeTab == 'cancelled'" class="text-center">
+                      <span class="text-red">{{data.cancelledBy || "-"}}</span>
+                    </td>
+                    <td *ngIf="activeTab == 'cancelled'" class="text-center ellipsis2 width-150">
+                      <span class="text-theme"><b>{{data.reason || "-"}}</b></span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                          'badge-light-secondary': data.status === 'Upcoming',
+                          'badge-light-warning': data.status === 'Inprogress' ,
+                          'badge-light-danger': data.status === 'Cancelled' || data.status === 'Refund Started' || data.status === 'Refund Completed' || data.status === 'Refund Rejected',
+                          'badge-light-success': data.status === 'Completed'}">
+                        {{data.status}}
+                      </span>
+                    </td>
+                    <td class="text-end">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <i class="feather icon-more-vertical"></i>
+                      </button>
+                      <mat-menu #menu="matMenu" xPosition="before">
+                        <button (click)="onView(data)" type="button" mat-menu-item>
+                          <i class="feather icon-eye"></i>
+                          <span class="ms-2">View</span>
+                        </button>
+                        <button *ngIf="data.status === 'Upcoming'" (click)="bookingCancel(data)" type="button"
+                          mat-menu-item>
+                          <i class="feather icon-x-square"></i>
+                          <span class="ms-2">Cancel Order</span>
+                        </button>
+                        <button *ngIf="data.status === 'Completed'" (click)="writeReview(data)" type="button"
+                          mat-menu-item>
+                          <i class="feather icon-star"></i>
+                          <span class="ms-2">Write Review</span>
+                        </button>
+                        <button
+                          *ngIf="(gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && data.status === 'Cancelled'"
+                          (click)="refundApprove(data)" type="button" mat-menu-item>
+                          <i class="feather icon-check-circle"></i>
+                          <span class="ms-2">Refund Approve</span>
+                        </button>
+                        <button
+                          *ngIf="(gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && data.status === 'Cancelled'"
+                          (click)="refundReject(data)" type="button" mat-menu-item>
+                          <i class="feather icon-x-circle"></i>
+                          <span class="ms-2">Refund Reject</span>
+                        </button>
+                        <button (click)="onDelete(idx)" type="button" mat-menu-item>
+                          <i class="feather icon-trash"></i>
+                          <span class="ms-2">Delete</span>
+                        </button>
+                      </mat-menu>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

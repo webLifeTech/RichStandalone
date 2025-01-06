@@ -1,0 +1,460 @@
+<div class="row my-kyc">
+  <div class="col-lg-3">
+    <div class="dashboard-sidebar mb-3">
+      <div class="profile-top">
+        <div class="profile-detail">
+          <h5>{{'My Profile' | translate}}</h5>
+        </div>
+      </div>
+      <div class="faq-tab">
+        <ul class="nav nav-tabs" id="top-tab" role="tablist">
+          <!-- @for(tab of sideTabs; track tab){
+          <li class="nav-item" [hidden]="tab.isHidden">
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.value"
+              (click)="changeKycTab(tab.value)">
+              <i class={{tab.icon}}></i> {{ tab.name | translate }}
+            </a>
+          </li>
+          } -->
+
+          @for(tab of sidebarTabs; track tab){
+          <li class="nav-item" [hidden]="tab.isHidden">
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
+              (click)="changeKycTab(tab)">
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-9">
+    <form
+      *ngIf="!gs.isLicenseVerified && !gs.isFleetOwnerLicenseVerified  && !gs.isIndCarOwnerLicenseVerified && !gs.isDivComeOwnedCarLicenseVerified"
+      class="row m-0 align-items-center">
+      <div class="col-lg-3">
+        <div class="form-group">
+          <ng-select (change)="onChangeIam()" clearable="false" [items]="iAmArray" bindLabel="name"
+            placeholder="-- I am --" bindValue="id" [(ngModel)]="kycForm.i_am" name="i_am" [readonly]="true">
+          </ng-select>
+          <!-- [readonly]="true" -->
+        </div>
+      </div>
+      <div class="col-lg-2 fit-content">
+        <div class="form-group mt-1 text-md-center">
+          <label for=""><strong>Drive In :-</strong></label>
+          <!-- <select id="looking_for" [(ngModel)]="kycForm.looking_for" disabled name="looking_for"
+            class="form-control open-select">
+            <option value="" disabled selected>{{ '-- Looking For --' | translate }}
+            </option>
+            <ng-container *ngFor="let item of lookingForArray">
+              <option [value]="item.id">{{item.name}}</option>
+            </ng-container>
+          </select> -->
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="form-group">
+          <ng-select (change)="onSelectState()" clearable="false" [items]="usaStatesArray" bindLabel="Name"
+            placeholder="-- State --" bindValue="ID" [(ngModel)]="kycForm.state" name="state">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="form-group">
+          <button (click)="reset()" class="btn btn-theme no-text-transorm" [disabled]="!kycForm.state">Reset</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="dashboard-box">
+      <div *ngIf="kycForm.state" class="position-relative">
+        <!-- I Am driver && gs.loggedInUserInfo.roleName -->
+        <!-- <form #driverInfoF="ngForm">
+
+        </form> -->
+        <!-- Driver info -->
+        <div *ngIf="activeKycTab === 1">
+          <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
+
+            <!-- <app-driver-info-form [activeKycTab]="activeKycTab" [kycForm]="kycForm" [driverInfoForm]="driverInfoForm"
+              [isEditInfo]="isEditDriverInfo" (onDivInfoSubmit)="onDivInfoSubmit()"
+              (changeKycTab)="changeKycTab($event)" (cancel)="cancelDriverinfo()"></app-driver-info-form> -->
+
+            <app-dynamic-form [activeKycTab]="activeKycTab" [kycForm]="kycForm" [formType]="'driverInfo'"
+              [isEditInfo]="isEditDriverInfo" (onDynamicFormSubmit)="onDynamicFormSubmit()"
+              (changeKycTab)="changeKycTab($event)" (cancel)="cancelDriverinfo()" [selectedTabObj]="selectedTabObj"
+              [userInfoData]="driverInfoData"></app-dynamic-form>
+          </div>
+          <div *ngIf="gs.isLicenseVerified && !isEditDriverInfo" class="col-lg-12">
+            <div class="dashboard-box">
+              <h2 class="completed-msg">
+                {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
+              </h2>
+              <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
+                (onEditInfo)="onEditInfo()"></app-driver-info-details>
+            </div>
+          </div>
+        </div>
+
+        <!-- TLC license info -->
+        <div *ngIf="activeKycTab === 2">
+          <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
+            <app-tlc-license-info-form [activeKycTab]="activeKycTab" [kycForm]="kycForm"
+              [tlcDriverLicenseForm]="tlcDriverLicenseForm" [isEditInfo]="isEditDriverInfo"
+              (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
+              (cancel)="cancelDriverinfo()"></app-tlc-license-info-form>
+          </div>
+        </div>
+
+        <!--  Driver details -->
+        <div *ngIf="activeKycTab === 3">
+          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isEditDriverInfo"
+            (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
+            (cancel)="cancelDriverinfo()"></app-driver-details-form>
+        </div>
+
+        <!-- I Am fleet owner -->
+        <form #fleetOwnerF="ngForm">
+          <!-- Company Info -->
+          <div *ngIf="activeKycTab === 5">
+            <div *ngIf="!gs.isFleetOwnerLicenseVerified || isEditCompanyInfo">
+              <!-- <app-company-info-form [activeKycTab]="activeKycTab" [fleetOwnerForm]="fleetOwnerForm"
+                [isEditInfo]="isEditCompanyInfo" (onFleetOwnerSubmit)="onFleetOwnerSubmit(fleetOwnerF)"
+                (changeKycTab)="changeKycTab($event)" (cancel)="cancel()"></app-company-info-form> -->
+
+              <app-dynamic-form [activeKycTab]="activeKycTab" [formType]="'fleetOwner'" [isEditInfo]="isEditCompanyInfo"
+                (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
+                (cancel)="cancelDriverinfo()" [selectedTabObj]="selectedTabObj"></app-dynamic-form>
+            </div>
+
+            <div *ngIf="gs.isFleetOwnerLicenseVerified && !isEditCompanyInfo" class="col-lg-12">
+              <div class="dashboard-box">
+                <h2 class="completed-msg">
+                  {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
+                </h2>
+                <app-fleet-owner-details [onlyCompanyInfo]="true" (onEditInfo)="onEditCompanyInfo()"
+                  [fleetOwnerInfoData]="fleetOwnerInfoData"></app-fleet-owner-details>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Branch Info / Office Details -->
+          <div *ngIf="activeKycTab === 6">
+            <app-branch-list></app-branch-list>
+          </div>
+
+          <!-- Vehicle info -->
+          <div *ngIf="isVehicleInfoEdit && this.kycForm.i_am == 2">
+            <app-vehicle-info-form [from]="'fleet_owner'" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="fleetOwnerForm"
+              [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+              (vfVehicleKycSubmit)="vehicleKycSubmit()" (vfVehicleKycUpdate)="vehicleKycUpdate()"
+              (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancel()"></app-vehicle-info-form>
+          </div>
+
+          <!-- My Vehicle -->
+          <div *ngIf="activeKycTab === 8 && this.kycForm.i_am == 2">
+            <app-my-vehicles [from]="'fleet_owner'" [allComplateKycVehicleList]="allComplateKycVehicleList"
+              [isVehicleInfoView]="isVehicleInfoView" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [vehicleInfoObj]="vehicleInfoObj" (viewVehicle)="viewVehicle($event)" (editFile)="editFile($event)"
+              (deleteFile)="deleteFile($event)" (backMyVehicle)="backMyVehicle()"></app-my-vehicles>
+          </div>
+
+
+        </form>
+
+        <!-- I Am individual car owner -->
+        <form #indCarCwnerF="ngForm">
+
+          <!-- Individual Car owner info // activeKycTab === 'Car owner info' -->
+          <div *ngIf="activeKycTab === 12">
+            <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
+              <!-- <app-car-owner-info-form [activeKycTab]="activeKycTab" [kycForm]="kycForm"
+                [individualCarOwnerForm]="individualCarOwnerForm" [isEditInfo]="isEditCarOwnerInfo"
+                (onIndCarCwnerSubmit)="onIndCarCwnerSubmit()" (changeKycTab)="changeKycTab($event)" (cancel)="cancel()">
+              </app-car-owner-info-form> -->
+
+              <app-dynamic-form [activeKycTab]="activeKycTab" [kycForm]="kycForm" [formType]="'individualCarOwner'"
+                [isEditInfo]="isEditDriverInfo" (onDynamicFormSubmit)="onDynamicFormSubmit()"
+                (changeKycTab)="changeKycTab($event)" (cancel)="cancel()" [selectedTabObj]="selectedTabObj"
+                [userInfoData]="driverInfoData"></app-dynamic-form>
+            </div>
+
+            <div *ngIf="gs.isLicenseVerified && !isEditDriverInfo" class="col-lg-12">
+              <div class="dashboard-box">
+                <h2 class="completed-msg">
+                  {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
+                </h2>
+                <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
+                  (onEditInfo)="onEditInfo()"></app-driver-info-details>
+              </div>
+            </div>
+            <!-- <div *ngIf="gs.isIndCarOwnerLicenseVerified && !isEditCarOwnerInfo" class="col-lg-12">
+              <div class="dashboard-box">
+                <h2 class="completed-msg">
+                  {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
+                </h2>
+                <app-indvl-car-owner-details [onlyCarOwnerDetails]="true" (onEditInfo)="onEditCarOwnerInfo()"
+                  [indCarOwnerInfoData]="indCarOwnerInfoData"></app-indvl-car-owner-details>
+              </div>
+            </div> -->
+          </div>
+
+          <!-- Individual Vehicle info -->
+          <div *ngIf="isVehicleInfoEdit && this.kycForm.i_am == 3">
+            <app-vehicle-info-form [from]="'ind_car_owner'" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="individualCarOwnerForm"
+              [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+              (vfVehicleKycSubmit)="vehicleKycSubmit()" (vfVehicleKycUpdate)="vehicleKycUpdateFromCarOwner()"
+              (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancel()"></app-vehicle-info-form>
+          </div>
+
+          <!-- My Vehicle -->
+          <div *ngIf="activeKycTab === 'My Vehicle' && this.kycForm.i_am == 3">
+            <app-my-vehicles [from]="'ind_car_owner'" [allComplateKycVehicleList]="allComplateKycVehicleList"
+              [isVehicleInfoView]="isVehicleInfoView" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [vehicleInfoObj]="vehicleInfoObj" (viewVehicle)="viewVehicle($event)"
+              (editFile)="editFromCarOwner($event)" (deleteFile)="deleteFile($event)"
+              (backMyVehicle)="backMyVehicle()"></app-my-vehicles>
+          </div>
+        </form>
+
+        <!-- I Am driver come owned car -->
+        <form #driverComeCwnerF="ngForm">
+          <!-- Driver info -->
+          <div *ngIf="activeKycTab === 'Driver info' && this.kycForm.i_am == 4">
+            <div *ngIf="!gs.isDivComeOwnedCarLicenseVerified || isEditDriverInfo">
+              <app-driver-info-form [activeKycTab]="activeKycTab" [kycForm]="kycForm" [driverInfoForm]="driverInfoForm"
+                [isEditInfo]="isEditDriverInfo" (onDivInfoSubmit)="onDivComeInfoSubmit()"
+                (changeKycTab)="changeKycTab($event)" (cancel)="cancelDriverinfo()"></app-driver-info-form>
+            </div>
+            <div *ngIf="gs.isDivComeOwnedCarLicenseVerified && !isEditDriverInfo" class="col-lg-12">
+              <div class="dashboard-box">
+                <h2 class="completed-msg">
+                  {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
+                </h2>
+                <app-driver-info-details [driverInfoData]="driverInfoData"
+                  (onEditInfo)="onEditInfo()"></app-driver-info-details>
+              </div>
+            </div>
+          </div>
+
+          <!-- TLC license info -->
+          <div *ngIf="activeKycTab === 'TLC license info' && this.kycForm.i_am == 4">
+            <div *ngIf="!gs.isDivComeOwnedCarLicenseVerified || isEditDriverInfo">
+              <app-tlc-license-info-form [activeKycTab]="activeKycTab" [kycForm]="kycForm"
+                [tlcDriverLicenseForm]="tlcDriverLicenseForm" [isEditInfo]="isEditDriverInfo"
+                (onDivInfoSubmit)="onDivComeInfoSubmit()" (changeKycTab)="changeKycTab($event)"
+                (cancel)="cancelDriverinfo()"></app-tlc-license-info-form>
+            </div>
+          </div>
+
+          <!-- Vehicle info -->
+          <div *ngIf="isVehicleInfoEdit && this.kycForm.i_am == 4">
+            <app-vehicle-info-form [from]="'fleet_owner'" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="fleetOwnerForm"
+              [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+              (vfVehicleKycSubmit)="vehicleKycSubmit()" (vfVehicleKycUpdate)="vehicleKycUpdate()"
+              (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancel()"></app-vehicle-info-form>
+          </div>
+
+          <div *ngIf="activeKycTab === 'My Vehicle' && this.kycForm.i_am == 4">
+            <app-my-vehicles [from]="'ind_car_owner'" [allComplateKycVehicleList]="allComplateKycVehicleList"
+              [isVehicleInfoView]="isVehicleInfoView" [isVehicleInfoEdit]="isVehicleInfoEdit"
+              [vehicleInfoObj]="vehicleInfoObj" (viewVehicle)="viewVehicle($event)" (editFile)="editFile($event)"
+              (deleteFile)="deleteFile($event)" (backMyVehicle)="backMyVehicle()"></app-my-vehicles>
+          </div>
+        </form>
+
+        <!-- Vehicle Upload -->
+        <div *ngIf="activeKycTab === 7">
+          <mat-accordion class="accordion-align">
+            <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="section.isOpen = true"
+              (closed)="section.isOpen = false" *ngFor="let section of bulkVehicleUploadTabs; let i = index">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ section.title | translate }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  <i class="feather" [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <!-- upload_bulk_vehicle -->
+              <ng-container *ngIf="section.tab === 'upload_bulk_vehicle'">
+                <div class="profile-info-grid">
+                  <div class="row m-0 align-items-end">
+                    <div class="col-lg-12">
+                      <div class="form-group d-sm-flex d-block">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report1"
+                            value="single" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
+                          <label class="form-check-label ms-2" for="is_inspection_report1">
+                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops1' | translate }}
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report2"
+                            value="bulk" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
+                          <label class="form-check-label ms-2" for="is_inspection_report2">
+                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops2' | translate }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <ng-container
+                    *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
+                    <app-dynamic-form [activeKycTab]="activeKycTab" [kycForm]="kycForm" [formType]="'vehicleUpload'"
+                      [isEditInfo]="isEditCarOwnerInfo" (onVehicleUploadSubmit)="onVehicleUploadSubmit()"
+                      (changeKycTab)="changeKycTab($event)" (cancel)="cancel()"
+                      [selectedTabObj]="selectedTabObj"></app-dynamic-form>
+
+                    <!-- <div *ngIf="this.kycForm.i_am == 2">
+                      <app-vehicle-info-form [from]="'fleet_owner'" [upload_type]="vehicleUploadType"
+                        [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="vehicleInfoForm"
+                        [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+                        (vehicleKycSaveAsDraft)="vehicleKycSaveAsDraft()" (vfVehicleKycSubmit)="vehicleKycSubmit()"
+                        (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancelVehInfo()">
+                      </app-vehicle-info-form>
+                    </div>
+                    <div *ngIf="this.kycForm.i_am == 3">
+                      <app-vehicle-info-form [from]="'ind_car_owner'" [upload_type]="vehicleUploadType"
+                        [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="vehicleInfoForm"
+                        [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+                        (vfVehicleKycSubmit)="vehicleKycSubmit()" (vfOnIndCarCwnerSubmit)="onIndCarCwnerSubmit()"
+                        (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancelVehInfo()">
+                      </app-vehicle-info-form>
+                    </div>
+                    <div *ngIf="this.kycForm.i_am == 4">
+                      <app-vehicle-info-form [from]="'driver_come_owned_car'" [upload_type]="vehicleUploadType"
+                        [activeKycTab]="activeKycTab" [kycForm]="kycForm" [vehicleInfoForm]="vehicleInfoForm"
+                        [vehicleInfoObj]="vehicleInfoObj" [isEditInfo]="isEditVehicleInfo"
+                        (vehicleKycSaveAsDraft)="vehicleKycSaveAsDraft()" (vfVehicleKycSubmit)="vehicleKycSubmit()"
+                        (vfChangeKycTab)="changeKycTab($event)" (vfCancel)="cancelVehInfo()">
+                      </app-vehicle-info-form>
+                    </div> -->
+                  </ng-container>
+
+                  <ng-container *ngIf="vehicleUploadType === 'bulk' && !isStartGetKyc">
+                    <div class="row m-0 align-items-end">
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label>
+                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
+                            <span class="mandatory">*</span>
+                          </label>
+                          <input [(ngModel)]="fleetOwnerForm.vin_document_upload" (change)="uploadFile($event)"
+                            name="vin_document_upload" type="file" class="form-control open-select" />
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <a class="btn btn-solid color2 no-text-transorm me-2">
+                            {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
+                          </a>
+                          <a class="btn btn-theme no-text-transorm">
+                            {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
+                          </a>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12">
+                        <div class="table-responsive dashboard-table">
+                          <table class="table">
+                            <thead class="thead-light">
+                              <tr>
+                                <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                                </th>
+                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.vin_number' | translate}}</th>
+                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.tlc_plate_number' | translate}}</th>
+                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.car_category' | translate}}</th>
+                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.fuel_type' | translate}}</th>
+                                <th class="text-center">
+                                  {{'userDashboard.kyc.upload_bulk_vehicle.kyc' | translate}}
+                                </th>
+                                <th class="text-center">
+                                  {{'userDashboard.kyc.upload_bulk_vehicle.status' | translate}}
+                                </th>
+                                <th class="text-center">
+                                  {{'userDashboard.kyc.upload_bulk_vehicle.action' | translate}}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let item of allPendingKycVehicleList; let idx = index">
+                                <td class="text-center">{{idx+1}}</td>
+                                <td class="text-center">{{item.vin_number}}</td>
+                                <td class="text-center">{{item.plate_number}}</td>
+                                <td class="text-center">{{item.car_category}}</td>
+                                <td class="text-center">{{item.fuel_type}}</td>
+                                <td class="text-center">
+                                  <span *ngIf="item.kyc" class="badge badge-success">
+                                    Active
+                                  </span>
+                                  <button *ngIf="!item.kyc" type="button" (click)="getKyc(item)"
+                                    class="btn btn-solid color4 no-text-transorm">
+                                    Get KYC
+                                  </button>
+                                </td>
+                                <td class="text-center">
+                                  <span *ngIf="item.status === 'Pending'" class="bold text-danger">
+                                    {{item.status}}
+                                  </span>
+                                  <span *ngIf="item.status !== 'Pending'" class="bold text-warning">
+                                    {{item.status}}
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
+                                    aria-label="Example icon-button with a menu">
+                                    <i class="feather icon-more-vertical"></i>
+                                  </button>
+                                  <mat-menu #menu="matMenu">
+                                    <button type="button" (click)="getKyc(item)" mat-menu-item>
+                                      <i class="feather icon-edit"></i>
+                                      <span>Edit</span>
+                                    </button>
+                                    <button type="button" (click)="deleteFormBulk(allPendingKycVehicleList, idx)"
+                                      mat-menu-item>
+                                      <i class="feather icon-trash"></i>
+                                      <span>Delete</span>
+                                    </button>
+                                  </mat-menu>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- Account info -->
+        <div *ngIf="activeKycTab === 4">
+          <app-payment-option-list></app-payment-option-list>
+        </div>
+
+        <!-- Account info -->
+        <div *ngIf="activeKycTab === 8">
+          <!-- [data]="productData" -->
+          <app-dynamic-grid [type]="'my_vehicle'" [columns]="productColumns" [actions]="actions"
+            (actionEvent)="handleAction($event)"></app-dynamic-grid>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

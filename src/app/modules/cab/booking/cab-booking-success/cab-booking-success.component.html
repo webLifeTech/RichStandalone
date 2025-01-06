@@ -1,0 +1,38 @@
+<div *ngIf="this.type === 'car'" class="section-b-space success-section">
+  <div class="container">
+    <div class="row success-detail">
+      <div class="col">
+        <img src="assets/images/cab/car/2.png" class="img-fluid blur-up lazyload" alt="cab-success">
+        <h2>{{'payment_success.car_title' | translate}}</h2>
+        <p>{{'payment_success.car_massage1' | translate}} {{'payment_success.car_massage2' | translate}}
+          "SHJG12155215", {{'payment_success.car_massage3' | translate}}</p>
+        <button *ngIf="params.paymentType === 'crypto'" type="button" (click)="checkCryptoStatus()"
+          class="btn btn-solid mx-2">
+          {{'Track Transaction Status' | translate}}
+        </button>
+        <button type="button" (click)="downloadInvoice()" class="btn btn-theme mx-2">
+          {{'payment_success.download_invoice' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="this.type === 'driver'" class="section-b-space success-section">
+  <div class="container">
+    <div class="row success-detail">
+      <div class="col">
+        <img src="assets/images/driver/Male.jpg" class="img-fluid blur-up lazyload" width="130px" alt="cab-success">
+        <h2>{{'payment_success.driver_title' | translate}}</h2>
+        <p>{{'payment_success.driver_massage1' | translate}} {{'payment_success.driver_massage2' | translate}}
+          "SHJG12155000", {{'payment_success.driver_massage3' | translate}}</p>
+        <button type="button" (click)="downloadInvoice()" class="btn btn-theme">{{'payment_success.download_invoice' |
+          translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isShowInvoice" class="mb-5">
+  <app-invoice-template [type]="type"></app-invoice-template>
+</div>

@@ -1,0 +1,763 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-group">
+        <div *ngFor="let item of groupedSectionsData" class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ item.sectionName }}</h6>
+          </div>
+          <div class="row">
+            <ng-container *ngIf="!(driverInfoData[item.modalObject] && driverInfoData[item.modalObject]?.length)">
+              <ng-container *ngFor="let field of item.fields">
+                <!-- [ngClass]="field.fieldClass" -->
+                <div class="col-lg-4 col-md-6 mb-3">
+                  <div class="booking-view">
+                    <h6>{{ field.fieldName }}</h6>
+                    <ng-container *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION'">
+                      <p>{{driverInfoData[field.modalObject][field.modalValue] || '-'}}</p>
+                    </ng-container>
+
+                    <ng-container *ngIf="field.fieldType === 'LOGO' || field.fieldType === 'SELECTION'">
+                      <p><i class="fa fa-eye pointer"
+                          (click)="gs.viewDocumentFile(driverInfoData[field.modalObject][field.modalValue])"></i></p>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="(
+              driverInfoData[item.modalObject] && driverInfoData[item.modalObject]?.length)">
+              <div class="booking-view">
+                <div class="col-lg-12 mt-3">
+                  <div class="table-responsive dashboard-table mb-3">
+                    <table class="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th class="text-center">
+                            {{'#' | translate}}
+                          </th>
+                          <ng-container *ngFor="let field of item.fields; let j = index">
+                            <th *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
+                              class="text-center">
+                              {{ field.fieldName }}
+                            </th>
+                          </ng-container>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let tblItem of driverInfoData[item.modalObject]; let tgIdx = index">
+                          <td class="text-center">{{tgIdx+1}}</td>
+                          <ng-container *ngFor="let field of item.fields; let j = index">
+                            <td *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
+                              class="text-center">
+                              {{tblItem[field.modalValue] || '-'}}
+                            </td>
+                          </ng-container>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="booking-header">
+        <div class="booking-img-wrap">
+          <div class="book-img">
+            <img [src]="driverInfoData.profile_picture" alt="img">
+          </div>
+          <div class="book-info">
+            <h6>{{driverInfoData.carName}}</h6>
+            <p>{{ 'userDashboard.kyc.driverInfo.profile_picture' | translate }}</p>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="booking-group"> -->
+      <!-- Driver info -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.driverInfo.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.driver_license_number' | translate }}</h6>
+                <p>{{driverInfoData.driver_license_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_state' | translate }}</h6>
+                <p>{{driverInfoData.dl_state || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.license_document_upload' | translate }}</h6>
+                <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i></p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.firstname' | translate }}</h6>
+                <p>{{driverInfoData.firstName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.middlename' | translate }}</h6>
+                <p>{{driverInfoData.middleName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.lastname' | translate }}</h6>
+                <p>{{driverInfoData.lastName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.prefix' | translate}}</h6>
+                <p>{{driverInfoData.prefix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.suffix' | translate}}</h6>
+                <p>{{driverInfoData.suffix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.date_of_birth' | translate}}</h6>
+                <p>{{driverInfoData.date_of_birth || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_effective_date' | translate}}</h6>
+                <p>{{driverInfoData.dl_effective_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_expiration_date' | translate}}</h6>
+                <p>{{driverInfoData.dl_expiration_date || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- Do you have foreign driver license -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.foreign_drv_lics_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.foreign_drv_lics_info.have_foreign_licns' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.isHaveForeignLicense || '-'}}
+                </p>
+              </div>
+            </div>
+            <ng-container *ngIf="driverInfoData.isHaveForeignLicense === 'Yes'">
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.country' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_country || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.state' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_state || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.city' | translate}}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_city || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.postal_code' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_postal_code || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.issue_date' | translate}}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_issue_date || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.expire_date' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_expire_date || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.document_upload' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.forn_licn_document_upload || '-'}}
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div> -->
+
+      <!-- Personal info -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.personal_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.gender' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.gender || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.date_of_birth' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.date_of_birth || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.year_of_experience' | translate}}
+                </h6>
+                <p>
+                  {{driverInfoData.year_of_experience || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.marital_status' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.marital_status || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.number_of_children' | translate}}
+                </h6>
+                <p>
+                  {{driverInfoData.number_of_children || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.contact_number' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.contact || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.email_id' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.email_id || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.emergency_contact_number' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.emergency_contact_number || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{'userDashboard.kyc.personal_info.emergency_contact_person_name'| translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.emergency_contact_person_name || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.other_info.ssn' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.ssn || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.credit_score' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.credit_score || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.other_info.pickup_location' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.pickup_location || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- Current address -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.current_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.country || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.state || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- Permanent address -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.permanent_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_state || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.perm_add_country || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- Billing Address -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.billing_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_state || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.bill_add_country || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- Other Information -->
+      <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.other_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.other_info.have_medical_insurance' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.have_medical_insurance || '-'}}
+                </p>
+              </div>
+            </div>
+
+            <ng-container *ngIf="driverInfoData.have_medical_insurance === 'Yes'">
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.other_info.insurance_type' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.insurance_type || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.other_info.insurance_company_name' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.insurance_company_name || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.other_info.policy_number' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.policy_number || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.other_info.policy_issue_date' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.policy_issue_date || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.other_info.policy_expiry_date' | translate }}
+                  </h6>
+                  <p>
+                    {{driverInfoData.policy_expiry_date || '-'}}
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+
+            <div *ngIf="driverInfoData.have_medical_insurance === 'No'" class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.other_info.get_quotes_from_tlh' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.get_quotes_from_tlh || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- TLC license info -->
+      <!-- <div *ngIf="driverInfoData.sr_state === 'New York City'" class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.tlc_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.driver_license_number' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_driver_license_number || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.license_document_upload' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_license_document_upload || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.firstname' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_firstName || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.lastname' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_lastName || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.dl_state' | translate }}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_dl_state || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.dl_effective_date' | translate}}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_dl_effective_date || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.tlc_info.dl_expiration_date' | translate}}
+                </h6>
+                <p>
+                  {{driverInfoData.tlc_dl_expiration_date || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+      <!-- </div> -->
+    </div>
+  </div>

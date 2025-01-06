@@ -1,0 +1,98 @@
+<section class="home_section tour_layout slide-1 p-0">
+  <div>
+    <div class="home home-long bg-size" [style.background-image]="'url(assets/images/cab/bg.jpg)'">
+      <img src="assets/images/cab/bg.jpg" class="bg-img img-fluid blur-up lazyload" alt="background-image"
+        style="display: none;">
+      <div class="container">
+        <div class="row home-content mix-layout">
+          <div class="col-md-12 bg-transparent">
+            <div class="">
+              <div class="bg-transparent">
+                <div class="flight-search">
+                  <div class="flight-search-detail">
+                    <form class="row m-0">
+                      <div class="col"
+                        [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
+                        <div class="form-group">
+                          <label class="font-xs-white"> {{ 'global.pick_up' | translate }} {{ 'global.location' |
+                            translate }}</label>
+                          <input name="pick_up_location" [(ngModel)]="searchObj.pick_up_location" type="text"
+                            class="form-control open-select" id="exampleInputEmail1"
+                            placeholder="{{ 'global.pick_up' | translate }} ">
+                          <img src="assets/images/icon/from.png" class="img-fluid blur-up lazyload" alt="pickup-icon">
+                        </div>
+                      </div>
+                      <div class="col"
+                        [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
+                        <div class="form-group">
+                          <label class="font-xs-white"> {{ 'global.drop_off' | translate }} {{ 'global.location' |
+                            translate }}</label>
+                          <input name="drop_location" [(ngModel)]="searchObj.drop_location" type="text"
+                            class="form-control open-select" placeholder="{{ 'global.drop_off' | translate }}">
+                          <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload"
+                            alt="location-icon">
+                        </div>
+                      </div>
+                      <div class="col"
+                        [ngClass]="{ 'd-none': searchObj.location_type == 'option1', 'd-block': searchObj.location_type == 'option2' }">
+                        <div class="form-group">
+                          <label class="font-xs-white">
+                            {{ 'global.location' | translate }}
+                          </label>
+                          <input name="same_location" [(ngModel)]="searchObj.same_location" type="text"
+                            class="form-control open-select"
+                            placeholder="{{ 'global.pick_up' | translate }}-{{ 'global.drop_off' | translate }}">
+                          <img src=" assets/images/icon/location.png" class="img-fluid blur-up lazyload"
+                            alt="location-icon">
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label class="font-xs-white"> {{ 'global.pick_up_time' | translate }}</label>
+                          <input name="pick_time" [(ngModel)]="searchObj.pick_time"
+                            class="form-control datetimepicker-input digits"
+                            placeholder="{{ 'global.pick_up_time' | translate }} {{ 'global.date_and_time' | translate }}"
+                            type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+                          <owl-date-time #pickup></owl-date-time>
+                        </div>
+                      </div>
+                      <div id="dropdate" class="col">
+                        <div class="form-group">
+                          <label class="font-xs-white">{{ 'global.drop_off_time' | translate }}</label>
+                          <input name="drop_time" [(ngModel)]="searchObj.drop_time"
+                            class="form-control datetimepicker-input digits"
+                            placeholder="{{ 'global.drop_off_time' | translate }} {{ 'global.date_and_time' | translate }}"
+                            type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+                          <owl-date-time #drop></owl-date-time>
+                        </div>
+                      </div>
+                      <div id="type" class="col">
+                        <div class="form-group">
+                          <label class="font-xs-white">{{ 'global.type' | translate }}</label>
+                          <select id="type" name="type" [(ngModel)]="searchObj.type" class="form-control open-select"
+                            (change)="onChangeType()">
+                            <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' |
+                              translate }}</option>
+                            <option value="car">Car</option>
+                            <option value="driver">Driver</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="search-btn">
+                          <a class="btn btn-theme" (click)="findToSearch()">
+                            {{ 'global.search' | translate }}
+                          </a>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

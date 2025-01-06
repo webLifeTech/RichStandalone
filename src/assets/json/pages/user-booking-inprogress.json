@@ -1,0 +1,43 @@
+{
+  "data": [
+    {
+      "bookingId": "#1002",
+      "carName": "Toyota Camry SE 350",
+      "deliveryStatus": "Self Pickup",
+      "rentalType": "Day",
+      "booked_for": "2 Days",
+      "pickupDeliveryLocation1": "1646 West St, Grand Rapids",
+      "pickupDeliveryLocation2": "18 Sep 2023, 09:00 AM",
+      "dropoffLocation1": "26 Platinum Drive, Canonsburg",
+      "dropoffLocation2": "15 Sep 2023, 11:30 AM",
+      "bookedOn": "18 Sep 2023, 08:10 PM",
+      "pickup_date_time": "15 Sep 2023, 09:00 AM",
+      "end_date_time": "15 Sep 2023, 09:00 AM",
+      "number_of_days": "3 days",
+      "price_per_day": 25,
+      "total_amount": 75,
+      "status": "Inprogress",
+      "img": "assets/images/cab/car/23.jpg"
+    },
+    {
+      "bookingId": "#1004",
+      "carName": "Audi A3 2019 new",
+      "deliveryStatus": "Self Pickup",
+      "rentalType": "Monthly",
+      "booked_for": "5 Days",
+      "pickupDeliveryLocation1": "63 White Pine Lane, Martinsville",
+      "pickupDeliveryLocation2": "05 Nov 2023, 02:30 PM",
+      "dropoffLocation1": "14 Roane Avenue, Herndon",
+      "dropoffLocation2": "05 Dec 2023, 02:30 PM",
+      "bookedOn": "04 Oct 2023, 08:00 AM",
+      "pickup_date_time": "18 Sep 2023, 08:10 PM",
+      "end_date_time": "18 Sep 2023, 08:10 PM",
+      "number_of_days": "5 days",
+      "price_per_day": 100,
+      "total_amount": 500,
+      "status": "Inprogress",
+      "img": "assets/images/cab/car/24.jpg"
+    }
+  ],
+  "totalData": 2
+}

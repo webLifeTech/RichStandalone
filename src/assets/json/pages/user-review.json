@@ -1,0 +1,96 @@
+{
+  "data": [
+    {
+      "id": 1001,
+      "bookingId": "#1001",
+      "carName": "Ferrari 458 MM Speciale",
+      "rentalType": "Hourly",
+      "review": "The car arrived early & the rep was courteous and polite.",
+      "img": "assets/images/cab/car/24.jpg",
+      "driver_name": "Michael Johnson",
+      "driver_img": "assets/images/driver/d1.png",
+      "feature": "Delivery",
+      "number_of_days": "3 days",
+      "rating": "4"
+    },
+    {
+      "id": 1002,
+      "bookingId": "#1002",
+      "carName": "Toyota Camry SE 350",
+      "rentalType": "Day",
+      "review": "The car was a lovely car to drive no problem with it all.",
+      "img": "assets/images/cab/car/21.jpg",
+      "driver_name": "Emily Carter",
+      "driver_img": "assets/images/driver/d2.png",
+      "feature": "Self Pickup",
+      "number_of_days": "5 days",
+      "rating": "1"
+    },
+    {
+      "id": 1003,
+      "bookingId": "#1003",
+      "carName": "Kia Soul 2016",
+      "rentalType": "Weekly",
+      "review": "Experience was great travelling wih Dreams Rental",
+      "img": "assets/images/cab/car/25.jpg",
+      "driver_name": "Sarah Thompson",
+      "driver_img": "assets/images/driver/d4.png",
+      "feature": "Delivery",
+      "number_of_days": "6 days",
+      "rating": "2"
+    },
+    {
+      "id": 1004,
+      "bookingId": "#1004",
+      "carName": "Audi A3 2019 new",
+      "rentalType": "Monthly",
+      "review": "Best service with good price, nice vehicle overall very good",
+      "img": "assets/images/cab/car/23.jpg",
+      "driver_name": "James Anderson",
+      "driver_img": "assets/images/driver/d3.png",
+      "feature": "Self Pickup",
+      "number_of_days": "1 days",
+      "rating": "5"
+    },
+    {
+      "id": 1005,
+      "bookingId": "#1005",
+      "carName": "2018 Chevrolet Camaro",
+      "rentalType": "Day",
+      "review": "Smooth process, modern vehicle & fair price - great rental experience",
+      "img": "assets/images/cab/car/25.jpg",
+      "driver_name": "Olivia Martinez",
+      "driver_img": "assets/images/driver/d1.png",
+      "feature": "Delivery",
+      "number_of_days": "4 days",
+      "rating": "3"
+    },
+    {
+      "id": 1006,
+      "bookingId": "#1006",
+      "carName": "Acura Sport Version",
+      "rentalType": "Hourly",
+      "review": "Excellent service, clean car & smooth pickup & drop-off process",
+      "img": "assets/images/cab/car/21.jpg",
+      "driver_name": "David Wilson",
+      "driver_img": "assets/images/driver/d5.png",
+      "feature": "Self Pickup",
+      "number_of_days": "2 days",
+      "rating": "5"
+    },
+    {
+      "id": 1007,
+      "bookingId": "#1007",
+      "carName": "Toyota Tacoma 4wD",
+      "rentalType": "Monthly",
+      "review": "Quick & easy rental and also fair price for what you get",
+      "img": "assets/images/cab/car/22.jpg",
+      "driver_name": "Sophia Lopez",
+      "driver_img": "assets/images/driver/d1.png",
+      "feature": "Delivery",
+      "number_of_days": "1 days",
+      "rating": "4"
+    }
+  ],
+  "totalData": 7
+}

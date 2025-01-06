@@ -1,0 +1,122 @@
+<div class="modal-content invoice-modal">
+  <div class="modal-header border-0 m-0 p-0">
+    <div class="invoice-btns">
+      <a (click)="printInvoice()" class="btn me-2">
+        <i class="feather icon-printer"></i> Print
+      </a>
+      <a (click)="downloadPDF()" class="btn me-2">
+        <i class="feather icon-download"></i> Download Invoice
+      </a>
+      <a (click)="closeModal()" class="btn"><span>×</span></a>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div id="invoice-bill" class="invoice-details">
+      <div class="invoice-items">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <div class="invoice-logo">
+              <img src="assets/images/icon/header-logo.png" alt="logo">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="invoice-info-text">
+              <h4>Invoice</h4>
+              <p>Invoice Number : <span>In983248782</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="invoice-item-bills">
+        <div class="row align-items-center">
+          <div class="col-lg-4 col-md-12">
+            <div class="invoice-bill-info">
+              <h6>Billed to</h6>
+              <p>
+                Customer Name <br>
+                9087484288 <br>
+                Address line 1, <br>
+                Address line 2 <br>
+                Zip code ,City - Country
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12">
+            <div class="invoice-bill-info">
+              <h6>Invoice From</h6>
+              <p>
+                Company Name <br>
+                9087484288 <br>
+                Address line 1, <br>
+                Address line 2 <br>
+                Zip code ,City - Country
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12">
+            <div class="invoice-bill-info border-0">
+              <p>Booking Date : 27 Jul 2022</p>
+              <p>Total Amount : $1,54,22 </p>
+              <p class="mb-0">Booking Id : 54515454</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="invoice-table-wrap">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="invoice-table table table-center mb-0">
+                <thead>
+                  <tr>
+                    <th>Car Type</th>
+                    <th>Number of Days</th>
+                    <th>Price Per Day</th>
+                    <th class="text-end">Total Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h6>Ferrari 458 MM Speciale</h6>
+                    </td>
+                    <td>1 Days</td>
+                    <td>$2000</td>
+                    <td class="text-end">$2000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="payment-details-info">
+        <div class="row">
+          <div class="col-lg-6 col-md-12">
+            <div class="invoice-terms">
+              <h6>Payment Details</h6>
+              <div class="invocie-note">
+                <p>Debit Card<br>
+                  XXXXXXXXXXXX-2541<br>
+                  HDFC Bank</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12">
+            <div class="invoice-total-box">
+              <div class="invoice-total-inner">
+                <p><b>Total Fare</b> <span>$2000</span></p>
+                <p>Insurance Fee <span>+ $90</span></p>
+                <p>Discount <span>- $25</span></p>
+                <p>Tax <span>+ $75</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="invoice-total">
+        <h4>Total <span>$2165.00</span></h4>
+      </div>
+    </div>
+  </div>
+</div>

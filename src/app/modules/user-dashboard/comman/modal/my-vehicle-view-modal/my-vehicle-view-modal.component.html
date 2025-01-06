@@ -1,0 +1,250 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.vehicles_info.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.vin_number' | translate }}</h6>
+                <p>{{singleDetails.vin_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.vin_document_upload' | translate }}</h6>
+                <p>{{singleDetails.vin_document_upload || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.plate_number' | translate }}</h6>
+                <p>{{singleDetails.plate_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.model_year' | translate }}</h6>
+                <p>{{singleDetails.model_year || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.vehicle_age' | translate }}</h6>
+                <p>{{singleDetails.vehicle_age || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.make' | translate }}</h6>
+                <p>{{singleDetails.make || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.model' | translate }}</h6>
+                <p>{{singleDetails.model || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.gross_vehicle_weight' | translate }}</h6>
+                <p>{{singleDetails.gross_vehicle_weight || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.seating_capacity' | translate }}</h6>
+                <p>{{singleDetails.seating_capacity || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.registration_state' | translate }}</h6>
+                <p>{{singleDetails.registration_state || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.territory_code' | translate }}</h6>
+                <p>{{singleDetails.territory_code || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.garage_zip_code' | translate }}</h6>
+                <p>{{singleDetails.garage_zip_code || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.fuel_type' | translate }}</h6>
+                <p>{{singleDetails.fuel_type || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.dashboard_camera' | translate }}</h6>
+                <p>{{singleDetails.dashboard_camera || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.collision_avoidance' | translate }}</h6>
+                <p>{{singleDetails.collision_avoidance || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.transmission' | translate }}</h6>
+                <p>{{singleDetails.transmission || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicles_info.car_category' | translate }}</h6>
+                <p>{{singleDetails.car_category || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.vehicle_inspection_detail.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6 *ngIf="singleDetails.is_inspection_report">{{
+                  'userDashboard.kyc.vehicle_inspection_detail.is_inspection_report' | translate }}</h6>
+                <h6 *ngIf="!singleDetails.is_inspection_report">{{
+                  'userDashboard.kyc.vehicle_inspection_detail.vehicle_tlh' | translate }}</h6>
+                <p>{{singleDetails.is_inspection_report || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_inspection_detail.valid_date' | translate }}</h6>
+                <p>{{singleDetails.valid_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_inspection_detail.upload_inspection_report' | translate }}</h6>
+                <p>
+                  <span>
+                    <i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6 *ngIf="singleDetails.is_insurance_covered">{{
+                  'userDashboard.kyc.vehicle_insurance_detail.is_insurance_covered' | translate }}</h6>
+                <h6 *ngIf="!singleDetails.is_insurance_covered">{{
+                  'userDashboard.kyc.vehicle_insurance_detail.insurance_quote' | translate }}</h6>
+                <p>{{singleDetails.is_insurance_covered || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.carriers_name' | translate }}</h6>
+                <p>{{singleDetails.carriers_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.policy_number' | translate }}</h6>
+                <p>{{singleDetails.policy_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.limits_coverage' | translate }}</h6>
+                <p>{{singleDetails.limits_coverage || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_expire_date' | translate }}</h6>
+                <p>{{singleDetails.coverage_expire_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_effective_date' | translate }}</h6>
+                <p>{{singleDetails.coverage_effective_date || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.other_details.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_details.car_image_upload' | translate }}</h6>
+                <p>
+                  <span>
+                    <i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_details.branch' | translate }}</h6>
+                <p>{{singleDetails.branch || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_details.price_per_day' | translate }}</h6>
+                <p>{{singleDetails.price_per_day || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.price_per_week' | translate }}</h6>
+                <p>{{singleDetails.price_per_week || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.price_per_month' | translate }}</h6>
+                <p>{{singleDetails.price_per_month || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_details.vehicle_status' | translate }}</h6>
+                <p>{{singleDetails.vehicle_status || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

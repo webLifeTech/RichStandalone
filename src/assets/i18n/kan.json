@@ -1,0 +1,109 @@
+{
+  "menu": {
+    "home": "ಮುಖಪುಟ",
+    "aboutus": "ನಮ್ಮ ಬಗ್ಗೆ",
+    "car_rentals": "ಕಾರು ಬಾಡಿಗೆ",
+    "driver_rentals": "ಡ್ರೈವರ್ ಬಾಡಿಗೆ",
+    "submenu": {
+      "listing": "ಪಟ್ಟಿ",
+      "booking": "ಬುಕಿಂಗ್",
+      "car_details": "ಕಾರು ವಿವರಗಳು",
+      "child_menu": {
+        "grid_view": "ಗ್ರಿಡ್ ವೀಕ್ಷಣೆ",
+        "hotel": "ಹೋಟೆಲ್"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "ಡ್ಯಾಶ್ಬೋರ್ಡ್",
+    "cars": "ಕಾರುಗಳು",
+    "trasaction": "ವಹಿವಾಟು",
+    "report": "ವರದಿಗಳು",
+    "submenus": {
+      "payment": "ಪಾವತಿ",
+      "enquiry": "ವಿಚಾರಣೆ",
+      "micromenu": {
+        "payment1": "ಪಾವತಿ 1",
+        "payment2": "ಪಾವತಿ 2"
+      }
+    }
+  },
+  "global": {
+    "location": "ಸ್ಥಳ",
+    "search": "ಹುಡುಕಿ",
+    "different": "ವಿಭಿನ್ನ",
+    "same": "ಅದೇ",
+    "pick_up": "ಪಿಕ್ ಅಪ್",
+    "drop_off": "ಡ್ರಾಪ್ ಆಫ್",
+    "date": "ದಿನಾಂಕ",
+    "time": "ಸಮಯ",
+    "date_and_time": "ದಿನಾಂಕ & ಸಮಯ",
+    "enter": "ನಮೂದಿಸಿ",
+    "select": "ಆಯ್ಕೆ ಮಾಡಿ",
+    "or": "ಅಥವಾ",
+    "type": "ಪ್ರಕಾರ",
+    "am": "ಪೂರ್ವಾಹ್ನ",
+    "pm": "ಅಪರಾಹ್ನ"
+  },
+  "cab_home_page": {
+    "title": "ನಿಮ್ಮ ಕ್ಯಾಬ್ ಬುಕ್ ಮಾಡಿ",
+    "descriptipn": "ವಾಜಿಬ ಬೆಲೆಯಲ್ಲಿ ಕ್ಯಾಬ್ ಬಾಡಿಗೆಗೆ TL Hub cab"
+  },
+  "cab_list_page": {
+    "description": "ಯಾವುದೇ ರೀತಿಯ ಪ್ರಯಾಣಕ್ಕಾಗಿ ಕ್ಯಾಬ್ ಬಾಡಿಗೆ"
+  },
+  "cab_list": {
+    "cab_search": "ಕ್ಯಾಬ್ ಹುಡುಕು"
+  },
+  "auth": {
+    "login": "ಲಾಗಿನ್",
+    "signup": "ಸೈನ್ ಅಪ್",
+    "form": {
+      "full_name": "ಪೂರ್ಣ ಹೆಸರು",
+      "username": "ಮೊಬೈಲ್ ನಂಬರ್ ಅಥವಾ ಇಮೇಲ್ ವಿಳಾಸ",
+      "password": "ಪಾಸ್ವರ್ಡ್",
+      "confirm_password": "ಪಾಸ್ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ",
+      "remember_me": "ನನ್ನನ್ನು ನೆನಸಿಡಿ",
+      "create_account": "ಖಾತೆ ಸೃಷ್ಟಿಸಿ",
+      "send": "ಕಳುಹಿಸಿ",
+      "resend": "ಮತ್ತೆ ಕಳುಹಿಸಿ",
+      "otp": "ಒಟಿಪಿ",
+      "seconds": "ಸೆಕೆಂಡುಗಳು",
+      "otp_enable": "ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ"
+    }
+  },
+  "car_list_page": {
+    "seater": "ಸೀಟರ್",
+    "luggage": "ಸಾಮಾನು",
+    "AC": "ಎಸಿ",
+    "fare_per_km": "ಪ್ರತಿ ಕಿಮೀ ದರ",
+    "book_now": "ಈಗ ಬುಕ್ ಮಾಡಿ",
+    "automatic": "ಸ್ವಯಂಚಾಲಿತ",
+    "manual": "ಮೆನುಯಲ್",
+    "medium": "ಮಧ್ಯಮ",
+    "air_conditioning": "ವಾಯು ನಿಯಂತ್ರಣ",
+    "mini": "ಮಿನಿ",
+    "luxury": "ಐಶ್ವರ್ಯ",
+    "sadan": "ಸಡಾನ್",
+    "SUV": "ಎಸಿಯುವಿ",
+    "standard": "ಮಾನಕ",
+    "tempo": "ಟೆಂಪೋ ಟ್ರಾವೆಲ್",
+    "filter": {
+      "latest_filter": "ತಾಜಾ ಫಿಲ್ಟರ್",
+      "car_option": "ಕಾರು ಆಯ್ಕೆ",
+      "capacity": "ಕ್ಷಮತೆ",
+      "car_type": "ಕಾರು ಪ್ರಕಾರ",
+      "price": "ಬೆಲೆ",
+      "review_score": "ಸ್ಟಾರ್ ವರ್ಗ"
+    },
+    "1-5_passenger": "1-5 ಪ್ರಯಾಣಿಕರು",
+    "6-10_passenger": "6-10 ಪ್ರಯಾಣಿಕರು",
+    "10_or_more": "10 ಅಥವಾ ಹೆಚ್ಚು",
+    "need_help": "ಸಹಾಯ ಬೇಕು",
+    "monday-to-friday": "ಸೋಮವಾರದಿಂದ ಶುಕ್ರವಾರ",
+    "apply": "ಅನ್ವಯಿಸು",
+    "close_filter": "ಫಿಲ್ಟರ್ ಮುಚ್ಚು",
+    "search_here": "ಇಲ್ಲಿ ಹುಡುಕಿ..",
+    "back": "ಹಿನ್ನೆಲೆ"
+  }
+}

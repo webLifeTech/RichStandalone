@@ -1,0 +1,501 @@
+{
+  "menu": {
+    "home": "الصفحة الرئيسية",
+    "aboutus": "نبذة عنا",
+    "car_rentals": "تأجير السيارات",
+    "driver_rentals": "تأجير السائقين",
+    "submenu": {
+      "listing": "الإعلان",
+      "booking": "الحجز",
+      "car_details": "تفاصيل السيارة",
+      "child_menu": {
+        "grid_view": "عرض الشبكة",
+        "hotel": "الفندق"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "لوحة التحكم",
+    "cars": "السيارات",
+    "trasaction": "المعاملات",
+    "report": "التقارير",
+    "submenus": {
+      "payment": "الدفع",
+      "enquiry": "الاستفسار",
+      "micromenu": {
+        "payment1": "الدفع 1",
+        "payment2": "الدفع 2"
+      }
+    }
+  },
+  "global": {
+    "location": "الموقع",
+    "search": "البحث",
+    "different": "مختلف",
+    "same": "نفس",
+    "pick_up": "الاستلام",
+    "drop_off": "التسليم",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "date_and_time": "التاريخ والوقت",
+    "enter": "أدخل",
+    "select": "حدد",
+    "or": "أو",
+    "type": "اكتب",
+    "am": "صباحًا",
+    "pm": "مساءً"
+  },
+  "cab_home_page": {
+    "title": "احجز سيارة أجرة",
+    "descriptipn": "استأجر سيارة أجرة بسعر مناسب مع شركة ريكا كاب"
+  },
+  "cab_list_page": {
+    "description": "استأجر سيارة أجرة لأي نوع من الرحلات"
+  },
+  "cab_list": {
+    "cab_search": "البحث عن سيارة أجرة"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل",
+    "form": {
+      "full_name": "الاسم الكامل",
+      "username": "رقم الهاتف المحمول أو عنوان البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirm_password": "تأكيد كلمة المرور",
+      "remember_me": "تذكرني",
+      "create_account": "إنشاء حساب",
+      "send": "إرسال",
+      "resend": "إعادة إرسال",
+      "otp": "رمز المرور لمرة واحدة",
+      "seconds": "ثوانٍ",
+      "otp_enable": "سيتم تمكينه في"
+    }
+  },
+  "car_list_page": {
+    "seater": "عدد المقاعد",
+    "luggage": "الأمتعة",
+    "AC": "تكييف الهواء",
+    "mileage": "عدد الأميال غير محدود",
+    "fare_per_km": "الأجرة/كم",
+    "book_now": "احجز الآن",
+    "book": "احجز",
+    "view_deal": "اعرض الصفقة",
+    "d_rating": "التقييم",
+    "d_location": "الموقع",
+    "d_experience": "التجربة",
+    "details": "التفاصيل",
+    "need_help": "بحاجة إلى مساعدة",
+    "monday-to-friday": "من الإثنين إلى الجمعة",
+    "apply": "تطبيق",
+    "close_filter": "إغلاق الفلتر",
+    "search_here": "ابحث هنا..",
+    "offer_discount": "عرض المهرجان",
+    "discount_for": "خصم على",
+    "free_cancellation": "إلغاء مجاني",
+    "important_info": "معلومات مهمة",
+    "email_quote": "إرسال عرض أسعار عبر البريد الإلكتروني",
+    "back": "رجوع",
+    "status": {
+      "available": "متاح",
+      "booked": "محجوز"
+    },
+    "filter": {
+      "latest_filter": "الفلتر",
+      "clear_filter": "مسح الفلتر",
+      "car_option": "ناقل الحركة",
+      "capacity": "السعة",
+      "experience": "الخبرة",
+      "car_type": "فئة السيارة",
+      "price": "السعر",
+      "review_score": "مراجعة السيارة",
+      "car_location": "الموقع",
+      "price_per_day": "السعر في اليوم",
+      "fuel_policy": "سياسة الوقود",
+      "deposit_required": "مطلوب وديعة",
+      "supplier": "شركة الأسطول",
+      "mileage_kilometres": "الأميال/الكيلومترات",
+      "car_electric": "السيارات الكهربائية",
+      "car_specs": "مواصفات السيارة"
+    },
+    "car_type": {
+      "mini": "ميني",
+      "medium": "متوسطة",
+      "luxury": "فاخرة",
+      "sadan": "سيدان",
+      "SUV": "SUV",
+      "standard": "قياسية",
+      "tempo": "درجة الحرارة 0"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 ركاب",
+      "6-10_passenger": "6-10 ركاب",
+      "10_or_more": "10 أو أكثر"
+    },
+    "experience": {
+      "1-5_years": "1-5 years",
+      "6-10_years": "6-10 years",
+      "11-15_years": "11-15 years",
+      "16-20_years": "16-20 years",
+      "20_or_more": "20 or more"
+    },
+    "car_option": {
+      "automatic": "أوتوماتيكي",
+      "manual": "يدوي"
+    },
+    "location": {
+      "rajajinagar": "Rajajinagar",
+      "basaveshwarnagar": "Basaveshwarnagar",
+      "vijayanagar": "Vijayanagar",
+      "jayanagar": "Jayanagar",
+      "madivala": "Madivala",
+      "all_other_location": "All other locations"
+    },
+    "price_per_day": {
+      "0_5000": "₹0 - ₹5,000",
+      "5000_10000": "₹5,000 - ₹10,000",
+      "10000_15000": "₹10,000 - ₹15,000",
+      "15000_20000": "₹15,000 - ₹20,000",
+      "20000+": "₹20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "تكييف هواء",
+      "4+doors": "4+ أبواب"
+    },
+    "car_electric": {
+      "fully_electric": "كهربائية بالكامل",
+      "hybrid": "هجين",
+      "plugin_hybrid": "هجين قابل للشحن"
+    },
+    "mileage_kilometres": {
+      "unlimited": "غير محدود"
+    },
+    "fuel_policy": {
+      "free_tank": "خزان مجاني",
+      "like_or_like": "مثل مثل"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "carowner": {
+      "carowner": "مالك السيارة"
+    },
+    "supplier": {
+      "peugeot": "بيجو",
+      "suzuki": "سوزوكي",
+      "fiat": "فيات",
+      "honda": "هوندا",
+      "ford": "فورد",
+      "hyundai": "هيونداي",
+      "general": "جنرال",
+      "avis": "أفيس",
+      "budget": "بدجيت",
+      "dollar": "دولار",
+      "hertz": "هيرتز",
+      "sixt": "سيكست"
+    }
+  },
+  "booking_page": {
+    "back_results": "العودة إلى نتائج البحث",
+    "deal_title": "صفقتك",
+    "free_cancellation_up": "إلغاء مجاني حتى 48 ساعة قبل الاستلام",
+    "continue_to_book": "متابعة الحجز"
+  },
+  "booking_payment_page": {
+    "back_results": "العودة إلى صفقتك",
+    "title": "الدفع",
+    "book_now": "احجز الآن",
+    "cancel": "إلغاء"
+  },
+  "booking_summary": {
+    "title": "ملخص الحجز",
+    "pickup": "الاستلام",
+    "dropoff": "التسليم",
+    "pickup_date": "تاريخ الاستلام",
+    "return_date": "تاريخ العودة",
+    "car_type": "نوع السيارة",
+    "driver_name": "اسم السائق",
+    "discount": "الخصم",
+    "total_fare": "الأجرة الإجمالية"
+  },
+  "have_coupon": {
+    "title": "هل لديك رمز قسيمة؟",
+    "input_plchold": "رمز ترويجي",
+    "apply": "تطبيق"
+  },
+  "great_choice": {
+    "title": "اختيار رائع!",
+    "customer_rating": "تقييم العملاء",
+    "short_queues": "طوابير قصيرة",
+    "helpful_counter_staff": "موظفو الكاونتر متعاونون",
+    "most_popular_fuel_policy": "سياسة الوقود الأكثر شيوعًا",
+    "easy_to_find_counter": "من السهل العثور على الكاونتر",
+    "free_cancellation": "إلغاء مجاني"
+  },
+  "payment_success": {
+    "car_title": "تم الدفع بنجاح! استعد للركوب",
+    "car_massage1": "نشكرك على الدفع. لقد تلقينا الدفع بنجاح.",
+    "car_massage2": "معرف المعاملة الخاص بك هو",
+    "car_massage3": "ستتلقى فاتورة بالبريد الإلكتروني قريبًا!",
+    "driver_title": "تم الدفع بنجاح! استعد للركوب يا سائق",
+    "driver_massage1": "نشكرك على الدفع. لقد تلقينا الدفع بنجاح.",
+    "driver_massage2": "معرف المعاملة الخاص بك هو",
+    "driver_massage3": "ستتلقى فاتورة بالبريد الإلكتروني قريبًا!",
+    "download_invoice": "تنزيل الفاتورة"
+  },
+  "invoice_summary": {
+    "car_title": "تم الدفع بنجاح! استعد السيارة للركوب",
+    "car_subtitle": "نشكرك على الدفع. لقد تلقينا الدفع بنجاح. شارك خططك مع الأصدقاء والعائلة",
+    "driver_title": "تم الدفع بنجاح! استعد السائق لموقعك",
+    "driver_subtitle": "نشكرك على الدفع. لقد تلقينا الدفع بنجاح. شارك خططك مع الأصدقاء والعائلة",
+    "view_itinerary": "عرض مسار الرحلة",
+    "booking_details": "تفاصيل الحجز",
+    "transaction_id": "معرف المعاملة",
+    "booking_status": "حالة الحجز",
+    "car_details": "تفاصيل السيارة",
+    "driver_details": "تفاصيل السائق",
+    "pickup": "الاستلام",
+    "dropoff": "التسليم",
+    "pickup_date": "تاريخ الاستلام",
+    "return_date": "تاريخ العودة",
+    "car_type": "نوع السيارة",
+    "driver_name": "اسم السائق",
+    "discount": "الخصم",
+    "total_fare": "إجمالي الأجرة",
+    "total_days": "إجمالي الأيام",
+    "total_day": "إجمالي اليوم",
+    "your_details": "تفاصيلك",
+    "name": "الاسم",
+    "address": "العنوان",
+    "email": "البريد الإلكتروني",
+    "phone_no": "رقم الهاتف"
+  },
+  "payment_failed": {
+    "car_title": "عفواً! لا يمكننا معالجة دفعتك",
+    "car_massage1": "يبدو أننا واجهنا خطأً. يُرجى المحاولة مرة أخرى. إذا استمرت المشكلة، فحاول طريقة دفع أخرى.",
+    "driver_title": "عفواً! لا يمكننا معالجة دفعتك",
+    "driver_massage1": "يبدو أننا واجهنا خطأً. يُرجى المحاولة مرة أخرى. إذا استمرت المشكلة، فحاول طريقة دفع أخرى.",
+    "try_again": "حاول مرة أخرى"
+  },
+  "userDashboard": {
+    "kyc": {
+      "toptabs": {
+        "dashboard": "لوحة التحكم",
+        "my_bookings": "حجوزاتي",
+        "reviews": "التقييمات",
+        "wishlist": "قائمة الرغبات",
+        "messages": "الرسائل",
+        "wallet": "المحفظة",
+        "payments": "المدفوعات",
+        "my_profile": "ملفي الشخصي",
+        "settings": "الإعدادات"
+      },
+      "driverInfo": {
+        "title": "معلومات السائق",
+        "profile_picture": "صورة الملف الشخصي",
+        "upload": "تحميل",
+        "submit": "إرسال",
+        "driver_license_number": "رقم رخصة القيادة",
+        "license_document_upload": "تحميل مستند الرخصة",
+        "firstname": "الاسم الأول",
+        "lastname": "الاسم الأخير",
+        "date_of_birth": "تاريخ الميلاد",
+        "dl_state": "ولاية رخصة القيادة",
+        "dl_effective_date": "تاريخ سريان رخصة القيادة",
+        "dl_expiration_date": "تاريخ انتهاء صلاحية رخصة القيادة",
+        "edit": "تعديل المعلومات",
+        "completed_msg": "تم إكمال عملية التحقق من هوية العميل بنجاح."
+      },
+      "personal_info": {
+        "title": "البيانات الشخصية",
+        "gender": "الجنس",
+        "date_of_birth": "تاريخ الميلاد",
+        "year_of_experience": "سنة الخبرة",
+        "marital_status": "الحالة الاجتماعية",
+        "number_of_children": "عدد الأطفال",
+        "contact_number": "رقم الاتصال",
+        "email_id": "معرف البريد الإلكتروني",
+        "emergency_contact_number": "رقم جهة الاتصال في حالات الطوارئ",
+        "emergency_contact_person_name": "اسم جهة الاتصال في حالات الطوارئ",
+        "credit_score": "درجة الائتمان"
+      },
+      "address": {
+        "current_address": "العنوان الحالي",
+        "permanent_address": "العنوان الدائم",
+        "billing_address": "عنوان الفاتورة",
+        "country": "الدولة",
+        "state": "الولاية",
+        "city": "المدينة",
+        "zip_code": "الرمز البريدي",
+        "address_1": "العنوان 1",
+        "address_2": "العنوان 2"
+      },
+      "other_info": {
+        "title": "معلومات أخرى",
+        "taxid": "رقم التعريف الضريبي",
+        "ssn": "رقم الضمان الاجتماعي",
+        "price_per_day": "السعر في اليوم",
+        "location": "الموقع",
+        "pickup_location": "مكان الاستلام",
+        "drop_location": "مكان التسليم",
+        "is_available_for_private_booking": "هل هو متاح للحجز الخاص؟",
+        "is_active_inactive": "هل هو نشط/غير نشط",
+        "shift_timing": "توقيت الوردية",
+        "from": "توقيت الوردية من",
+        "to": "توقيت الوردية إلى",
+        "working_hours": "ساعات العمل",
+        "serial_number": "رقم",
+        "day_of_week": "يوم الأسبوع",
+        "from_time": "من الوقت",
+        "to_time": "إلى الوقت",
+        "action": "الإجراء",
+        "status": "الحالة"
+      },
+      "tlc_info": {
+        "title": "معلومات ترخيص TLC",
+        "driver_license_number": "رقم ترخيص TLC",
+        "license_document_upload": "تحميل مستند ترخيص TLC",
+        "firstname": "الاسم الأول",
+        "lastname": "الاسم الأخير",
+        "date_of_birth": "تاريخ الميلاد",
+        "dl_state": "ولاية الترخيص",
+        "dl_effective_date": "تاريخ سريان ترخيص TLC",
+        "dl_expiration_date": "تاريخ انتهاء صلاحية ترخيص TLC"
+      },
+      "company_details": {
+        "title": "تفاصيل الشركة",
+        "logo": "شعار الشركة",
+        "taxid": "الرقم الضريبي",
+        "registration_document": "تحميل مستند التسجيل",
+        "company_name": "اسم الشركة",
+        "date_of_registration": "تاريخ التسجيل",
+        "city": "المدينة",
+        "postal_code": "الرمز البريدي",
+        "registration_address": "عنوان التسجيل"
+      },
+      "fleet_owner_details": {
+        "title": "تفاصيل مالك الأسطول",
+        "first_name": "الاسم الأول",
+        "last_name": "الاسم الأخير",
+        "contact_number": "رقم الاتصال",
+        "email_id": "معرف البريد الإلكتروني",
+        "ssn": "رقم الضمان الاجتماعي",
+        "driver_license_number": "رقم رخصة القيادة",
+        "driver_license_document": "تحميل مستند رخصة القيادة"
+      },
+      "office_details": {
+        "title": "تفاصيل المكتب",
+        "first_name": "الاسم الأول للشخص المسؤول",
+        "last_name": "الاسم الأخير",
+        "contact_number": "رقم الاتصال",
+        "email_id": "معرف البريد الإلكتروني",
+        "city": "المدينة",
+        "postal_code": "الرمز البريدي",
+        "company_address": "عنوان الشركة",
+        "map_location": "الموقع على الخريطة"
+      },
+      "branch_info": {
+        "title": "معلومات الفرع",
+        "multiple_location": "هل لديك مواقع متعددة؟",
+        "dba_name": "اسم مسؤول قاعدة البيانات",
+        "first_name": "الاسم الأول للشخص المسؤول",
+        "last_name": "الاسم الأخير",
+        "contact_number": "رقم الاتصال",
+        "email_id": "معرف البريد الإلكتروني",
+        "city": "المدينة",
+        "postal_code": "الرمز البريدي",
+        "branch_address": "عنوان الفرع",
+        "map_location": "موقع الخريطة",
+        "add_more": "أضف فرعًا آخر"
+      },
+      "vehicles_info": {
+        "title": "معلومات المركبة",
+        "vin_number": "رقم تعريف المركبة",
+        "vin_document_upload": "تحميل مستند تعريف المركبة",
+        "plate_number": "رقم اللوحة",
+        "model_year": "سنة الطراز",
+        "vehicle_age": "عمر المركبة",
+        "make": "الصنع",
+        "model": "الموديل",
+        "gross_vehicle_weight": "الوزن الإجمالي للمركبة",
+        "seating_capacity": "سعة المقاعد",
+        "registration_state": "ولاية التسجيل",
+        "territory_code": "رمز الإقليم",
+        "garage_zip_code": "الرمز البريدي للمرآب",
+        "fuel_type": "نوع الوقود",
+        "dashboard_camera": "كاميرا لوحة القيادة",
+        "collision_avoidance": "تجنب الاصطدام",
+        "transmission": "ناقل الحركة",
+        "car_category": "فئة السيارة"
+      },
+      "vehicle_inspection_detail": {
+        "title": "تفاصيل فحص المركبة",
+        "is_inspection_report": "هل تقرير الفحص متوفر؟",
+        "vehicle_tlh": "السيارة لا تحتوي على تقرير فحص يتم البدء به من TLH",
+        "valid_date": "تاريخ صالح",
+        "upload_inspection_report": "تحميل تقرير الفحص"
+      },
+      "vehicle_insurance_detail": {
+        "title": "تفاصيل تأمين المركبة",
+        "is_insurance_covered": "هل التأمين مشمول",
+        "insurance_quote": "التأمين غير مشمول أبحث عن عرض أسعار",
+        "carriers_name": "اسم شركة التأمين",
+        "policy_number": "رقم الوثيقة",
+        "limits_coverage": "الحدود والتغطية",
+        "coverage_expire_date": "تاريخ انتهاء التغطية",
+        "coverage_effective_date": "تاريخ سريان التغطية"
+      },
+      "other_details": {
+        "title": "تفاصيل أخرى",
+        "branch": "الفرع",
+        "price_per_day": "السعر باليوم",
+        "car_image_upload": "تحميل صورة السيارة"
+      },
+      "upload_bulk_vehicle": {
+        "title": "تحميل مركبة كبيرة",
+        "table_title": "جميع الفروع",
+        "upload_vin_number": "تحميل جدول بيانات برقم تعريف المركبة",
+        "vin_number": "رقم تعريف المركبة",
+        "tlc_plate_number": "رقم لوحة TLC",
+        "car_category": "فئة السيارة",
+        "fuel_type": "نوع الوقود",
+        "transmission": "ناقل الحركة",
+        "kyc": "معرفة العميل",
+        "action": "الإجراء"
+      },
+      "car_owner_info": {
+        "title": "تفاصيل مالك السيارة",
+        "first_name": "الاسم الأول",
+        "last_name": "الاسم الأخير",
+        "contact_number": "رقم التواصل",
+        "email_id": "معرف البريد الإلكتروني",
+        "ssn": "رقم الضمان الاجتماعي",
+        "driver_license_number": "رقم رخصة القيادة",
+        "driver_license_document": "تحميل وثيقة رخصة القيادة"
+      }
+    },
+    "try_again": "حاول ثانية"
+  },
+  "adminDashboard": {
+    "security": {
+      "menu": "القائمة",
+      "submenu": "القائمة الفرعية",
+      "all_menu": "القائمة الكاملة",
+      "search": "البحث",
+      "add_menu": "إضافة قائمة جديدة",
+      "add_sub_menu": "إضافة قائمة فرعية جديدة",
+      "sn": "S#",
+      "menu_name": "اسم القائمة",
+      "status": "الحالة",
+      "action": "الإجراء",
+      "sub_menu_name": "اسم القائمة الفرعية",
+      "redirect_url": "عنوان URL لإعادة التوجيه",
+      "description": "الوصف",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "upload": "تحميل"
+    }
+  }
+}

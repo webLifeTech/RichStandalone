@@ -1,0 +1,257 @@
+<div class="invoice-template" *ngIf="this.type === 'car'">
+  <table class="template-width" align="center" border="0" cellpadding="0" cellspacing="0"
+    style="background-color: #fff;  box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);">
+    <tbody>
+      <tr>
+        <td class="success-img" style="text-align: center;">
+          <img src="assets/images/cab/booking-success.jpg">
+          <h2 style="margin: 0 auto; width: 90%;  font-size:calc(18px + (22 - 18) * ((100vw - 320px) / (1920 - 320)));">
+            {{'invoice_summary.car_title' | translate}}
+          </h2>
+          <h3
+            style="width: 70%;margin: 5px auto 28px;line-height: 1.4;color: #9a9a9a;font-weight: 400;    font-size: 16px;">
+            {{'invoice_summary.car_subtitle' | translate}}
+          </h3>
+          <a class="btn btn-view-itinerary">{{'invoice_summary.view_itinerary' | translate}}</a>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 0 20px;">
+          <table class="booking-table">
+            <tbody>
+              <tr>
+                <td class="booking-td summery_box"
+                  style="border-right: 1px solid #dddddd; width: 50%;vertical-align: top;">
+                  <h5 style="margin: 0 0 6px 0; font-size: 18px; border-bottom: 1px solid #dddddd; padding: 10px;">
+                    {{'invoice_summary.booking_details' | translate}}
+                  </h5>
+                  <table class="table"
+                    style="padding-left: 10px; color: #616161; padding-bottom: 10px;padding-top: 5px;    width: 100%;">
+                    <tbody style="font-size: 16px; line-height: 1.5;">
+                      <tr>
+                        <td>{{'invoice_summary.transaction_id' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{details.transactionID}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.booking_status' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">Confirmed</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.total_fare' | translate}}:</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{ 1100 | currencyPipe: cabService.currency }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td class="booking-td summery_box" style="width: 50%;vertical-align: top;">
+                  <h5 style="margin: 0 0 6px 0; font-size: 18px; border-bottom: 1px solid #dddddd; padding: 10px;">
+                    {{'invoice_summary.car_details' | translate}}
+                  </h5>
+                  <table class="table"
+                    style="padding-left: 10px; color: #616161; padding-bottom: 10px;padding-top: 5px;width: 100%;">
+                    <tbody style="font-size: 16px; line-height: 1.5;">
+                      <!-- <tr>
+                        <td>{{'invoice_summary.pickup' | translate}}:</td>
+                        <td>Paris</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.dropoff' | translate}}:</td>
+                        <td>Toulouse</td>
+                      </tr> -->
+                      <tr>
+                        <td>{{'invoice_summary.location' | translate}}</td>
+                        <td>Paris</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.pickup_date' | translate}}:</td>
+                        <td>10/01/2019, 11.35pm</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.return_date' | translate}}:</td>
+                        <td>14/01/2019</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.car_type' | translate}}:</td>
+                        <td>Fiat Chrysler</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.total_days' | translate}}:</td>
+                        <!-- <td>{{'invoice_summary.total_day' | translate}}:</td> -->
+                        <td>3 Days</td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'pricing_summary.package_name' | translate}}</td>
+                        <td>{{ "Basic" }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'pricing_summary.discount' | translate}}</td>
+                        <td>- {{ 100 | currencyPipe: cabService.currency }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'pricing_summary.tax' | translate}}</td>
+                        <td>{{ 10 | currencyPipe: cabService.currency }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5 style="font-size: 18px; padding-left: 24px; margin-bottom: 10px;margin-top: 30px;">
+            {{'invoice_summary.your_details' | translate}}</h5>
+        </td>
+      </tr>
+      <tr style="color: #616161;">
+        <td style="padding: 0 24px 50px;">
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.name' | translate}}:<span style="font-weight: 500">Mark
+              Jecno</span>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.address' | translate}}: <span style="font-weight: 500">1189 Half and Half Drive</span>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;">
+            Fresno,
+            California,
+            93721</h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;;">United
+            Kingdom</h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.email' | translate}}:<a style="font-weight: 500">{{'test@example.com'}}</a>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.phone_no' | translate}}: <span style="font-weight: 500">+444 222 111</span></h6>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="invoice-template" *ngIf="this.type === 'driver'">
+  <table class="template-width" align="center" border="0" cellpadding="0" cellspacing="0"
+    style="background-color: #fff;  box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);">
+    <tbody>
+      <tr>
+        <td class="success-img" style="text-align: center;">
+          <img src="assets/images/cab/booking-success.jpg">
+          <h2 style="margin: 0 auto; width: 90%;  font-size:calc(18px + (22 - 18) * ((100vw - 320px) / (1920 - 320)));">
+            {{'invoice_summary.driver_title' | translate}}
+          </h2>
+          <h3
+            style="width: 70%;margin: 5px auto 28px;line-height: 1.4;color: #9a9a9a;font-weight: 400;    font-size: 16px;">
+            {{'invoice_summary.driver_subtitle' | translate}}
+          </h3>
+          <a class="btn btn-view-itinerary">{{'invoice_summary.view_itinerary' | translate}}</a>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 0 20px;">
+          <table class="booking-table">
+            <tbody>
+              <tr>
+                <td class="booking-td summery_box"
+                  style="border-right: 1px solid #dddddd; width: 50%;vertical-align: top;">
+                  <h5 style="margin: 0 0 6px 0; font-size: 18px; border-bottom: 1px solid #dddddd; padding: 10px;">
+                    {{'invoice_summary.booking_details' | translate}}
+                  </h5>
+                  <table class="table"
+                    style="padding-left: 10px; color: #616161; padding-bottom: 10px;padding-top: 5px;    width: 100%;">
+                    <tbody style="font-size: 16px; line-height: 1.5;">
+                      <tr>
+                        <td>{{'invoice_summary.transaction_id' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{details.transactionID}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.booking_status' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">Confirmed</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.total_fare' | translate}}:</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{ 1100 | currencyPipe: cabService.currency }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td class="booking-td summery_box" style="width: 50%;vertical-align: top;">
+                  <h5 style="margin: 0 0 6px 0; font-size: 18px; border-bottom: 1px solid #dddddd; padding: 10px;">
+                    {{'invoice_summary.driver_details' | translate}}
+                  </h5>
+                  <table class="table"
+                    style="padding-left: 10px; color: #616161; padding-bottom: 10px;padding-top: 5px;width: 100%;">
+                    <tbody style="font-size: 16px; line-height: 1.5;">
+                      <!-- <tr>
+                        <td>{{'invoice_summary.pickup' | translate}}:</td>
+                        <td>Paris</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.dropoff' | translate}}:</td>
+                        <td>Toulouse</td>
+                      </tr> -->
+                      <tr>
+                        <td>{{'invoice_summary.location' | translate}}</td>
+                        <td>Paris</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.pickup_date' | translate}}:</td>
+                        <td>10/01/2019, 11.35pm</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.return_date' | translate}}:</td>
+                        <td>14/01/2019</td>
+                      </tr>
+                      <tr>
+                        <td>{{'booking_summary.driver_name' | translate}}</td>
+                        <td>John Doe</td>
+                      </tr>
+                      <tr>
+                        <td>{{'invoice_summary.total_days' | translate}}:</td>
+                        <!-- <td>{{'invoice_summary.total_day' | translate}}:</td> -->
+                        <td>3 Days</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5 style="font-size: 18px; padding-left: 24px; margin-bottom: 10px;margin-top: 30px;">
+            {{'invoice_summary.your_details' | translate}}</h5>
+        </td>
+      </tr>
+      <tr style="color: #616161;">
+        <td style="padding: 0 24px 50px;">
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.name' | translate}}:<span style="font-weight: 500">Mark
+              Jecno</span>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.address' | translate}}: <span style="font-weight: 500">1189 Half and Half Drive</span>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;">
+            Fresno,
+            California,
+            93721</h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;;">United
+            Kingdom</h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.email' | translate}}:<a style="font-weight: 500">{{'test@example.com'}}</a>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'invoice_summary.phone_no' | translate}}: <span style="font-weight: 500">+444 222 111</span></h6>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,131 @@
+{
+  "CarOwner": [
+    {
+      "type": "Driver Booking Request",
+      "notifications": "Driver John Doe has requested a booking for your car on 27 Nov 2024, 10:00 AM.",
+      "dateTime": "2024-11-27T10:00:00.000Z",
+      "shortTime": "10 mins ago",
+      "image": "driver1.png"
+    },
+    {
+      "type": "Booking Confirmed",
+      "notifications": "Driver Jane Smith has confirmed your booking for 28 Nov 2024, 2:00 PM.",
+      "dateTime": "2024-11-27T09:50:00.000Z",
+      "shortTime": "20 mins ago",
+      "image": "driver2.png"
+    },
+    {
+      "type": "Payment Received",
+      "notifications": "You have received $150 for the booking of your car by Driver Michael Johnson.",
+      "dateTime": "2024-11-27T09:30:00.000Z",
+      "shortTime": "40 mins ago",
+      "image": "payment.png"
+    },
+    {
+      "type": "Booking Canceled",
+      "notifications": "Driver John Doe canceled the booking for your car on 28 Nov 2024, 4:00 PM.",
+      "dateTime": "2024-11-27T09:15:00.000Z",
+      "shortTime": "55 mins ago",
+      "image": "cancel.png"
+    },
+    {
+      "type": "Feedback Reminder",
+      "notifications": "Leave feedback for Driver Jane Smith to help improve our service.",
+      "dateTime": "2024-11-27T08:50:00.000Z",
+      "shortTime": "1 hour ago",
+      "image": "feedback.png"
+    }
+  ],
+  "Drivers": [
+    {
+      "type": "Car Booked Successfully",
+      "notifications": "Your booking for Toyota Corolla with Car Owner Sarah Lee on 28 Nov 2024, 5:00 PM is confirmed.",
+      "dateTime": "2024-11-27T09:40:00.000Z",
+      "shortTime": "30 mins ago",
+      "image": "car1.png"
+    },
+    {
+      "type": "Booking Request Received",
+      "notifications": "Car Owner Alex Parker has requested your services for 28 Nov 2024, 3:00 PM.",
+      "dateTime": "2024-11-27T09:20:00.000Z",
+      "shortTime": "50 mins ago",
+      "image": "car_owner.png"
+    },
+    {
+      "type": "Fleet Booking Confirmed",
+      "notifications": "Fleet Company Elite Rentals confirmed your booking for 29 Nov 2024, 9:00 AM.",
+      "dateTime": "2024-11-27T08:40:00.000Z",
+      "shortTime": "1 hour ago",
+      "image": "fleet.png"
+    }
+  ],
+  "FleetCompany": [
+    {
+      "type": "Driver Booking Request",
+      "notifications": "Driver Emma Wilson has requested a booking for your car on 27 Nov 2024, 2:30 PM.",
+      "dateTime": "2024-11-27T10:20:00.000Z",
+      "shortTime": "5 mins ago",
+      "image": "driver3.png"
+    },
+    {
+      "type": "Car Booked",
+      "notifications": "Driver Emma Wilson successfully booked your Tesla Model X for 28 Nov 2024, 10:00 AM.",
+      "dateTime": "2024-11-27T09:55:00.000Z",
+      "shortTime": "15 mins ago",
+      "image": "car2.png"
+    }
+  ],
+  "DriverOwnedCar": [
+    {
+      "type": "Trip Reminder",
+      "notifications": "You have a trip scheduled with Fleet Company Elite Rentals on 28 Nov 2024, 4:00 PM.",
+      "dateTime": "2024-11-27T09:25:00.000Z",
+      "shortTime": "45 mins ago",
+      "image": "reminder.png"
+    },
+    {
+      "type": "Booking Confirmed",
+      "notifications": "Your booking with Fleet Company Alpha Services for 28 Nov 2024, 11:00 AM is confirmed.",
+      "dateTime": "2024-11-27T09:35:00.000Z",
+      "shortTime": "35 mins ago",
+      "image": "fleet_confirmed.png"
+    }
+  ],
+  "Admin": [
+    {
+      "type": "Driver Booking Request",
+      "notifications": "Driver John Doe has requested a booking for your car on 27 Nov 2024, 10:00 AM.",
+      "dateTime": "2024-11-27T10:00:00.000Z",
+      "shortTime": "10 mins ago",
+      "image": "driver1.png"
+    },
+    {
+      "type": "Booking Confirmed",
+      "notifications": "Driver Jane Smith has confirmed your booking for 28 Nov 2024, 2:00 PM.",
+      "dateTime": "2024-11-27T09:50:00.000Z",
+      "shortTime": "20 mins ago",
+      "image": "driver2.png"
+    },
+    {
+      "type": "Payment Received",
+      "notifications": "You have received $150 for the booking of your car by Driver Michael Johnson.",
+      "dateTime": "2024-11-27T09:30:00.000Z",
+      "shortTime": "40 mins ago",
+      "image": "payment.png"
+    },
+    {
+      "type": "Booking Canceled",
+      "notifications": "Driver John Doe canceled the booking for your car on 28 Nov 2024, 4:00 PM.",
+      "dateTime": "2024-11-27T09:15:00.000Z",
+      "shortTime": "55 mins ago",
+      "image": "cancel.png"
+    },
+    {
+      "type": "Feedback Reminder",
+      "notifications": "Leave feedback for Driver Jane Smith to help improve our service.",
+      "dateTime": "2024-11-27T08:50:00.000Z",
+      "shortTime": "1 hour ago",
+      "image": "feedback.png"
+    }
+  ]
+}

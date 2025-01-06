@@ -1,0 +1,451 @@
+<div>
+  <mat-accordion class="accordion-align">
+    <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="section.isOpen = true"
+      (closed)="section.isOpen = false" *ngFor="let section of vehicleInfoTabs; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ section.title | translate }}
+        </mat-panel-title>
+        <mat-panel-description>
+          <i class="feather" [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- vehicles_info -->
+      <ng-container *ngIf="section.tab === 'vehicles_info'">
+        <div class="profile-info-grid">
+          <div class="row m-0 mb-5 align-items-end">
+
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.vin_number' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.vin_number" name="vin_number" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.vin_document_upload' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.vin_document_upload" name="vin_document_upload" type="file"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <a class="btn btn-solid color2 no-text-transorm me-2">
+                  {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
+                </a>
+                <a (click)="vinDocUpload()" class="btn btn-theme no-text-transorm">
+                  {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.plate_number' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.plate_number" name="plate_number" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.model_year' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.model_year" name="model_year" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.vehicle_age' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.vehicle_age" name="vehicle_age" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.make' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="makeList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.make" name="make">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.model' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="modelList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.model" name="model">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.gross_vehicle_weight' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="grossWeightList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.gross_vehicle_weight" name="gross_vehicle_weight">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.seating_capacity' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.seating_capacity" name="seating_capacity" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.registration_state' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="usaStatesArray" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.registration_state" name="registration_state">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.territory_code' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="territoryCodeList" bindLabel="value"
+                  placeholder="-- Select One --" bindValue="name" [(ngModel)]="vehicleInfoForm.territory_code"
+                  name="territory_code">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.garage_zip_code' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.garage_zip_code" name="garage_zip_code" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.fuel_type' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="fuelTypeList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.fuel_type" name="fuel_type">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.dashboard_camera' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="yesNoList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.dashboard_camera" name="dashboard_camera">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.collision_avoidance' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="yesNoList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.collision_avoidance" name="collision_avoidance">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.transmission' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="transmissionList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.transmission" name="transmission">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.vehicles_info.car_category' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="carCategoryList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.car_category" name="car_category">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- vehicle_inspection_detail -->
+      <ng-container *ngIf="section.tab === 'vehicle_inspection_detail'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-12">
+              <div class="form-group d-flex">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_inspection_report" id="is_inspection_report1"
+                    [value]="true" [(ngModel)]="vehicleInfoForm.is_inspection_report">
+                  <label class="form-check-label ms-2" for="is_inspection_report1">
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.is_inspection_report' | translate }}
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_inspection_report" id="is_inspection_report2"
+                    [value]="false" [(ngModel)]="vehicleInfoForm.is_inspection_report">
+                  <label class="form-check-label ms-2" for="is_inspection_report2">
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.vehicle_tlh' | translate }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="vehicleInfoForm.is_inspection_report">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.valid_date' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.valid_date" name="valid_date" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.upload_inspection_report' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.upload_inspection_report" name="upload_inspection_report"
+                    type="file" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <a class="btn btn-solid color2 no-text-transorm me-2">
+                    {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
+                  </a>
+                  <a class="btn btn-theme no-text-transorm">
+                    {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
+                  </a>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- vehicle_insurance_detail -->
+      <ng-container *ngIf="section.tab === 'vehicle_insurance_detail'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-12">
+              <div class="form-group d-flex">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_insurance_covered" id="is_insurance_covered1"
+                    [value]="true" [(ngModel)]="vehicleInfoForm.is_insurance_covered">
+                  <label class="form-check-label ms-2" for="is_insurance_covered1">
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.is_insurance_covered' | translate }}
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_insurance_covered" id="insurance_quote2"
+                    [value]="false" [(ngModel)]="vehicleInfoForm.is_insurance_covered">
+                  <label class="form-check-label ms-2" for="insurance_quote2">
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.insurance_quote' | translate }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="vehicleInfoForm.is_insurance_covered">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.carriers_name' | translate }}
+                  </label>
+                  <ng-select clearable="false" [items]="carrierList" bindLabel="value" placeholder="-- Select One --"
+                    bindValue="name" [(ngModel)]="vehicleInfoForm.carriers_name" name="carriers_name">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.policy_number' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.policy_number" name="policy_number" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.limits_coverage' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.limits_coverage" name="limits_coverage" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_expire_date' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.coverage_expire_date" name="coverage_expire_date" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_effective_date' | translate }}
+                  </label>
+                  <input [(ngModel)]="vehicleInfoForm.coverage_effective_date" name="coverage_effective_date"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- other_details -->
+      <ng-container *ngIf="section.tab === 'other_details'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-4">
+              <div class=" mb-3">
+                <div class="position-relative ">
+                  <img [src]="profileUrl || 'assets/images/cab/car/1.png'" class="avatar" alt="...">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.other_details.car_image_upload' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.car_image_upload" name="car_image_upload" type="file"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <a class="btn btn-solid color2 no-text-transorm me-2">
+                  {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row m-0 align-items-end">
+            <div *ngIf="from === 'fleet_owner'" class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.other_details.branch' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="branchList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="vehicleInfoForm.branch" name="branch">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.other_details.price_per_day' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.price_per_day" name="price_per_day" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="price_per_week">
+                  {{ 'userDashboard.kyc.other_info.price_per_week' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.price_per_week" name="price_per_week" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="price_per_month">
+                  {{ 'userDashboard.kyc.other_info.price_per_month' | translate }}
+                </label>
+                <input [(ngModel)]="vehicleInfoForm.price_per_month" name="price_per_month" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.other_details.vehicle_status' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="vehicleStatusList" bindLabel="value"
+                  placeholder="-- Select One --" bindValue="name" [(ngModel)]="vehicleInfoForm.vehicle_status"
+                  name="vehicle_status">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div class="row my-4">
+    <div class="col-lg-12 text-end">
+      <button *ngIf="from === 'fleet_owner' && upload_type === 'bulk'" type="button" (click)="onSaveAsDraft()"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Save as draft
+      </button>
+      <button *ngIf="!isEditInfo && !isVehicleInfoEdit && kycForm.i_am === 2" type="button" (click)="vehicleKycSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
+      </button>
+      <button *ngIf="!isEditInfo && !isVehicleInfoEdit && kycForm.i_am === 3" type="button" (click)="vehicleKycSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
+      </button>
+      <button *ngIf="!isEditInfo && !isVehicleInfoEdit && kycForm.i_am === 4" type="button" (click)="vehicleKycSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
+      </button>
+      <button *ngIf="isVehicleInfoEdit" type="button" (click)="vehicleKycUpdate()"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Update
+      </button>
+      <button *ngIf="isEditInfo" type="button" (click)="onFleetOwnerSubmit()"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Update
+      </button>
+      <button *ngIf="upload_type === 'single'" type="button" (click)="cancel(upload_type)"
+        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+      <button *ngIf="isEditInfo || upload_type === 'bulk'" type="button" (click)="cancel(upload_type)"
+        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+
+@if(type == 'basic'){
+  <app-title-one [title]="title" [subTitle]="subTitle" [background_text]="background_text" [rounded]="rounded" [textWhite]="textWhite"></app-title-one>
+}
+
+@if(type == 'simple'){
+  <app-title-two [title]="title" [subTitle]="subTitle" [textWhite]="textWhite"></app-title-two>
+}
+
+@if(type == 'classic'){
+  <app-title-three [titleClass]="titleClass" [title]="title" [subTitle]="subTitle" [description]="description"></app-title-three>
+}
+
+@if(type == 'standard'){
+  <app-title-four [title]="title" [subTitle]="subTitle" [description]="description"></app-title-four>
+}

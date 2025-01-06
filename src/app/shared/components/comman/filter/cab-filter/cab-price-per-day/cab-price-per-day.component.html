@@ -1,0 +1,15 @@
+<div class="collection-collapse-block" [class.open]="isOpenPPD">
+    <h6 class="collapse-block-title" (click)="openPPD()">{{'car_list_page.filter.price_per_day'| translate}}</h6>
+    <div class="collection-collapse-block-content" [ngStyle]="{ 'display' : isOpenPPD == true ? 'block' : 'none'}">
+      <div class="collection-brand-filter">
+        @for(ppd of caPPDs; track ppd){
+          <div class="form-check collection-filter-checkbox">
+            <input type="checkbox" class="form-check-input" id="{{ ppd.checkId }}" [value]="ppd.checkId" [checked]="checked(ppd.checkId)" (change)="applyFilter($event)" [disabled]="!ppd.availability">
+            <label class="form-check-label" for="{{ ppd.checkId }}">{{ ppd.title | translate }}</label>
+            <label class="form-check-count" for="{{ ppd.checkId }}">{{ ppd.availability || 0 }}</label>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  

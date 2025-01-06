@@ -1,0 +1,168 @@
+<ng-container *ngIf="gs.loggedInUserInfo['role'] === 'user_4'">
+  <app-dash-driver-owned-car></app-dash-driver-owned-car>
+</ng-container>
+<div *ngIf="gs.loggedInUserInfo['role'] !== 'user_4'" class="content dashboard-content">
+  <div class="container">
+
+    <div *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4'"
+      class="alert-msg mb-4">
+      <div class="alert alert-success py-2 alert-dismissible fade show" role="alert">
+        Your Booking has been Approved by Car Owner
+        <a (click)="onView(approvedBookDetails)" class="alert-link">
+          <u>View Details</u>
+        </a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="alert alert-warning py-2 alert-dismissible fade show" role="alert">
+        Your Refund request has been Approved by Car Owner & your payment will be updated in 3 days.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="alert alert-danger py-2 alert-dismissible fade show" role="alert">
+        Your Refund request has been rejected by Car Owner.
+        <a (click)="onViewRefundStatus(approvedBookDetails)" class="alert-link">
+          <u>View Details</u>
+        </a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <div class="content-header">
+      <h4 *ngIf="gs.loggedInUserInfo['role'] === 'user'">Driver Dashboard</h4>
+      <h4 *ngIf="gs.loggedInUserInfo['role'] === 'user_2'">Car Owner Dashboard</h4>
+      <h4 *ngIf="gs.loggedInUserInfo['role'] === 'user_3'">Fleet Owner Dashboard</h4>
+      <h4 *ngIf="gs.loggedInUserInfo['role'] === 'user_4'">Driver Owned Car Dashboard</h4>
+    </div>
+
+    <div class="row mb-4">
+      <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
+        class="col-lg-4">
+        <app-vehicles-details></app-vehicles-details>
+      </div>
+      <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
+        class="col-lg-4">
+        <app-carowner-booking-details></app-carowner-booking-details>
+      </div>
+      <div *ngIf="gs.loggedInUserInfo['role'] === 'user' " class=" col-lg-4">
+        <app-my-booking-details></app-my-booking-details>
+      </div>
+      <div *ngIf="gs.loggedInUserInfo['role'] === 'user_4' " class=" col-lg-4">
+        <app-doc-trip-book-details></app-doc-trip-book-details>
+      </div>
+      <div *ngIf="gs.loggedInUserInfo['role'] === 'user_4' " class=" col-lg-4">
+        <app-doc-vehicle-book-details></app-doc-vehicle-book-details>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card dash-box-card flex-fill mb-0 py-2">
+          <div class="card-body overview-box">
+            <div class="row">
+              <div class="col-md-6  p-0 d-flex">
+                <div class="widget-box pb-5 flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Wallet Balance</h3>
+                      <div class="widget-icon">
+                        <span class="total-count">
+                          {{dashboardDetails.totalWalletBalance | currencyPipe: gs.currency}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                  <div class="text-end">
+                    <a class="btn view-btn mt-2" (click)="goWallet()">View</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 p-0 d-flex">
+                <div class="widget-box pb-5 flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Favourite</h3>
+                      <div class="widget-icon">
+                        <span class="total-count">
+                          {{dashboardDetails.totalFavourite}}
+                        </span>
+                      </div>
+                      <div class="text-center">
+                        <a class="btn view-btn mt-2" (click)="goWishlist()">View</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4'"
+                class="col-md-6 p-0">
+                <div class="widget-box  flex-fill px-0">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Driver Risk Score</h3>
+                    </div>
+                  </div>
+                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="160"
+                    [name]="'Performance grade'"></app-user-apexcharts>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4'"
+                class="col-md-6 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Average Star Rating</h3>
+                    </div>
+                  </div>
+                  <div class="review-rating d-flex align-items-center mt-5 text-center">
+                    <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div
+                *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || gs.loggedInUserInfo['role'] === 'user_4'"
+                class="col-md-6 p-0">
+                <div class="widget-box  flex-fill px-0">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Vehicle Risk Score</h3>
+                    </div>
+                  </div>
+                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="160"
+                    [name]="'Performance grade'"></app-user-apexcharts>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_4'"
+                class="col-md-6 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Vehicle Average Star Rating</h3>
+                      <div class="review-rating d-flex align-items-center mt-4 text-center">
+                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_3'" class="col-md-6 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Customer Average Star Rating</h3>
+                      <div class="review-rating d-flex align-items-center mt-4 text-center">
+                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

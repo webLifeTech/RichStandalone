@@ -1,0 +1,84 @@
+<li class="dropdown dropdown-toggle notification me-0">
+  <a class="pe-0 bell-icon">
+    <img src="assets/images/icon/notification.svg" alt="Bell" />
+    <span class="badge badge-pill"></span>
+  </a>
+
+  <!-- [class.show]="isNotiShow"  -->
+  <div class="nav-submenu menu-content d-none d-md-block dropdown-menu notifications" data-bs-popper="static">
+    <div class="topnav-dropdown-header"><span class="notification-title">Notifications</span><a
+        href="javascript:void(0)" class="clear-noti"> Clear All </a>
+    </div>
+    <div class="noti-content">
+      <ul class="notification-list">
+        <ng-container *ngFor="let item of this.notificationList; let indx = index">
+          <li *ngIf="indx <= 4" class="notification-message">
+            <!-- <a> -->
+            <div class="media d-flex">
+              <span class="avatar avatar-lg flex-shrink-0">
+                <img alt="User Image" src="assets/images/icon/notification.svg" class="avatar-img rounded-circle" />
+              </span>
+              <div class="media-body flex-grow-1">
+                <p class="noti-title">
+                  {{item.type}}
+                </p>
+                <p class="noti-details">
+                  {{item.notifications}}
+                </p>
+                <p class="noti-time"><span class="notification-time">
+                    {{item.shortTime}}
+                  </span></p>
+              </div>
+            </div>
+            <!-- </a> -->
+          </li>
+        </ng-container>
+        <!-- <li class="notification-message"><a >
+            <div class="media d-flex"><span class="avatar avatar-lg flex-shrink-0"><img alt="User Image"
+                  src="assets/images/driver/d3.png" class="avatar-img rounded-circle"></span>
+              <div class="media-body flex-grow-1">
+                <p class="noti-details"><span class="noti-title">Julie Pennington</span> has booked
+                  <span class="noti-title">your service</span>
+                </p>
+                <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+              </div>
+            </div>
+          </a></li>
+        <li class="notification-message"><a >
+            <div class="media d-flex"><span class="avatar avatar-lg flex-shrink-0"><img alt="User Image"
+                  src="assets/images/driver/d2.png" class="avatar-img rounded-circle"></span>
+              <div class="media-body flex-grow-1">
+                <p class="noti-details"><span class="noti-title">Tyrone Roberts</span> has booked
+                  <span class="noti-title">your service</span>
+                </p>
+                <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+              </div>
+            </div>
+          </a></li>
+        <li class="notification-message"><a >
+            <div class="media d-flex"><span class="avatar avatar-lg flex-shrink-0"><img alt="User Image"
+                  src="assets/images/driver/d4.png" class="avatar-img rounded-circle"></span>
+              <div class="media-body flex-grow-1">
+                <p class="noti-details"><span class="noti-title">Patricia Manzi</span> has booked
+                  <span class="noti-title">your service</span>
+                </p>
+                <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+              </div>
+            </div>
+          </a></li>
+        <li class="notification-message"><a >
+            <div class="media d-flex"><span class="avatar avatar-lg flex-shrink-0"><img alt="User Image"
+                  src="assets/images/driver/d1.png" class="avatar-img rounded-circle"></span>
+              <div class="media-body flex-grow-1">
+                <p class="noti-details"><span class="noti-title">Jonathan Doe</span> has booked
+                  <span class="noti-title">your service</span>
+                </p>
+                <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+              </div>
+            </div>
+          </a></li> -->
+      </ul>
+    </div>
+    <div class="topnav-dropdown-footer"><a>View all Notifications</a></div>
+  </div>
+</li>

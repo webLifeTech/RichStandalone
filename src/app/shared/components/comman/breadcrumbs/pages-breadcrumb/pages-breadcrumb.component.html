@@ -1,0 +1,15 @@
+<section class="breadcrumb-dashboard pt-0 bg-size">
+  <img [src]="bg_image" class="bg-img img-fluid blur-up lazyload" alt="background-image" style="display: none;">
+  <div class="breadcrumb-content" [class.pt-0]="paddingClass">
+    <div>
+      <h2>{{ title | translate }}</h2>
+      <nav aria-label="breadcrumb" class="theme-breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="javascript:void(0)">{{ parent | translate}}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ child | translate }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="title-breadcrumb">TL Hub</div>
+</section>

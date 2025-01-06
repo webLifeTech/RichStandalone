@@ -1,0 +1,459 @@
+{
+  "driver_package": [
+    {
+      "plan_name": "Basic/Free Plan",
+      "title": "Basic",
+      "price": "Free",
+      "color": "#fd6193",
+      "package_for": "driver",
+      "id": "11",
+      "benefits": [
+        {
+          "name": "Searchable/Visibility",
+          "value": "Last"
+        },
+        {
+          "name": "Number of Days",
+          "value": "30 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "10"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": " 25 $/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Silver",
+      "title": "For the Best",
+      "price": 15,
+      "color": "#35a644",
+      "package_for": "driver",
+      "id": "12",
+      "benefits": [
+        {
+          "name": "Searchable/Visibility",
+          "value": "4th Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "25"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "15$/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Gold",
+      "title": "Recommended",
+      "price": 35,
+      "color": "#B8860B",
+      "package_for": "driver",
+      "id": "13",
+      "benefits": [
+        {
+          "name": "Searchable/Visibility",
+          "value": "3rd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "50"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "10 $/ Per Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Dimond",
+      "title": "Highly Recommended",
+      "price": 48,
+      "color": "#008B8B",
+      "package_for": "driver",
+      "id": "14",
+      "benefits": [
+        {
+          "name": "Searchable/Visibility",
+          "value": "2nd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "100"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "5 $/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Platinum",
+      "title": "For the Pro",
+      "price": 60,
+      "color": "#ff9307",
+      "package_for": "driver",
+      "id": "15",
+      "benefits": [
+        {
+          "name": "Searchable/Visibility",
+          "value": "Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "Unlimited"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "0 $/ Pre Order"
+        }
+      ]
+    }
+  ],
+  "car_owner_package": [
+    {
+      "plan_name": "Basic/Free Plan",
+      "title": "Basic",
+      "price": "Free",
+      "color": "#fd6193",
+      "package_for": "car_owner",
+      "id": "21",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "01"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "Last"
+        },
+        {
+          "name": "Number of Days",
+          "value": "30 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "10"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "25 $/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Silver",
+      "title": "For the Best",
+      "price": 115,
+      "color": "#35a644",
+      "package_for": "car_owner",
+      "id": "22",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "02"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "4t h Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "25"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "15 $/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Gold",
+      "title": "Recommended",
+      "price": 135,
+      "color": "#B8860B",
+      "package_for": "car_owner",
+      "id": "23",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "05"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "3rd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "50"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "10 $/ Per Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Dimond",
+      "title": "Highly Recommended",
+      "price": 148,
+      "color": "#008B8B",
+      "package_for": "car_owner",
+      "id": "24",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "10"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "2nd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "100"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "5 $/ Pre Order"
+        }
+      ]
+    },
+    {
+      "plan_name": "Platinum",
+      "title": "For the Pro",
+      "price": 160,
+      "color": "#ff9307",
+      "package_for": "car_owner",
+      "id": "25",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "25"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "Unlimited"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "0 $/ Pre Order"
+        }
+      ]
+    }
+  ],
+  "fleet_owner_package": [
+    {
+      "plan_name": "Basic/Free Plan",
+      "title": "Basic",
+      "price": "Free",
+      "color": "#fd6193",
+      "package_for": "fleet_owner",
+      "id": "31",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "01"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "Last"
+        },
+        {
+          "name": "Number of Days",
+          "value": "30 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "10"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "25 $/ Pre Order"
+        },
+        {
+          "name": "No of Branch",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "plan_name": "Silver",
+      "title": "For the Best",
+      "price": 215,
+      "color": "#35a644",
+      "package_for": "fleet_owner",
+      "id": "32",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "02"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "4t h Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "25"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "15 $/ Pre Order"
+        },
+        {
+          "name": "No of Branch",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "plan_name": "Gold",
+      "title": "Recommended",
+      "price": 235,
+      "color": "#B8860B",
+      "package_for": "fleet_owner",
+      "id": "33",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "05"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "3rd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "50"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "10 $/ Per Order"
+        },
+        {
+          "name": "No of Branch",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "plan_name": "Dimond",
+      "title": "Highly Recommended",
+      "price": 248,
+      "color": "#008B8B",
+      "package_for": "fleet_owner",
+      "id": "34",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "10"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "2nd Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "100"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "5 $/ Pre Order"
+        },
+        {
+          "name": "No of Branch",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "plan_name": "Platinum",
+      "title": "For the Pro",
+      "price": 260,
+      "color": "#ff9307",
+      "package_for": "fleet_owner",
+      "id": "35",
+      "benefits": [
+        {
+          "name": "No.of Vehicle Add",
+          "value": "25"
+        },
+        {
+          "name": "Searchable/Visibility",
+          "value": "Top"
+        },
+        {
+          "name": "Number of Days",
+          "value": "365 days"
+        },
+        {
+          "name": "No.Orders",
+          "value": "Unlimited"
+        },
+        {
+          "name": "Transaction Fees",
+          "value": "0 $/ Pre Order"
+        },
+        {
+          "name": "No of Branch",
+          "value": "Unlimited"
+        }
+      ]
+    }
+  ],
+  "totalData": 3
+}

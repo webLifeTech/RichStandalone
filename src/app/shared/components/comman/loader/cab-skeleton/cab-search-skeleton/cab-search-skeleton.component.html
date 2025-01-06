@@ -1,0 +1,51 @@
+<div [ngClass]="map ? 'container-fluid' : 'container'">
+  <div class="flight-search" [class.shadow-cls]="skeletonType == 'cab'">
+    <div class="responsive-detail">
+      <div class="destination">
+        <span></span>
+      </div>
+      <div class="details">
+        <span></span>
+      </div>
+      <div class="modify-search">
+        <div class="ldr-btn"></div>
+      </div>
+    </div>
+    <div class="flight-search-detail">
+      <form class="row m-0">
+        <div class="col">
+          <div class="form-group">
+            <label></label>
+            <input class="form-control open-select">
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label></label>
+            <input class="form-control open-select">
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label></label>
+            <input class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label></label>
+            <input class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <input class="form-control" />
+          </div>
+        </div>
+        <div class="responsive-close">
+          <i class="far fa-times-circle"></i>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<app-header [headerClass]="'light_header'"></app-header>
+
+<app-breadcrumbs [type]="'pages'" [bg_image]="bg_image" [title]="title" [parent]="parent" [child]="child"
+  [paddingClass]="true"></app-breadcrumbs>
+
+<section class="small-section dashboard-section bg-inner" data-sticky_parent>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-vendor-dashboard-top-tabbar [tabs]="userDashboardTopTabs" (tabValue)="getTabValue($event)">
+        </app-vendor-dashboard-top-tabbar>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="product_img_scroll" data-sticky_column>
+          <div class="faq-content tab-content" id="top-tabContent">
+            <div class="tab-pane fade show active" id="dashboard">
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer [location]="true"></app-footer>
+
+<app-layout></app-layout>

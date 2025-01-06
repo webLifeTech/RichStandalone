@@ -1,0 +1,43 @@
+{
+  "data": [
+    {
+      "bookingId": "#1001",
+      "carName": "Ferrari 458 MM Speciale",
+      "deliveryStatus": "Delivery",
+      "rentalType": "Hourly",
+      "booked_for": "2 Days",
+      "pickupDeliveryLocation1": "45, Avenue ,Mark Street,",
+      "pickupDeliveryLocation2": "USA 15 Sep 2023, 09:30 AM",
+      "dropoffLocation1": "21, Avenue, Windham",
+      "dropoffLocation2": "USA 15 Sep 2023, 11:30 AM",
+      "bookedOn": "15 Sep 2023, 09:00 AM",
+      "pickup_date_time": "15 Sep 2023, 09:00 AM",
+      "end_date_time": "15 Sep 2023, 09:00 AM",
+      "number_of_days": "3 days",
+      "price_per_day": 100,
+      "total_amount": 300,
+      "status": "Upcoming",
+      "img": "assets/images/cab/car/25.jpg"
+    },
+    {
+      "bookingId": "#1007",
+      "carName": "Toyota Tacoma 4WD",
+      "deliveryStatus": "Delivery",
+      "rentalType": "Monthly",
+      "booked_for": "5 Days",
+      "pickupDeliveryLocation1": "41 Duke Lane, Branchburg",
+      "pickupDeliveryLocation2": "15 Dec 2023, 04:30 PM",
+      "dropoffLocation1": "80 Glory Road",
+      "dropoffLocation2": "Nashville 15 Jan 2024, 04:30 PM",
+      "bookedOn": "02 Nov 2023, 07:30 AM",
+      "pickup_date_time": "18 Sep 2023, 08:10 PM",
+      "end_date_time": "18 Sep 2023, 08:10 PM",
+      "number_of_days": "5 days",
+      "price_per_day": 30,
+      "total_amount": 150,
+      "status": "Upcoming",
+      "img": "assets/images/cab/car/21.jpg"
+    }
+  ],
+  "totalData": 2
+}

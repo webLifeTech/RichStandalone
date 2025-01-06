@@ -1,0 +1,42 @@
+@if(testimonial){
+  <owl-carousel-o [options]="Options">
+    @for(details of testimonial; track details){
+      <ng-template carouselSlide>
+        <div>
+          <div class="row">
+            <div class="col-xl-8 offset-xl-2">
+              <div class="testimonial">
+                <div class="left-part">
+                  <img [src]="details.profileURL" class="img-fluid blur-up lazyload" alt="profile">
+                  <div class="design">
+                    <i class="fas fa-comments"></i>
+                    <i class="fas fa-comments light"></i>
+                  </div>
+                </div>
+                <div class="right-part">
+                  <p>
+                    "{{ details.description }}"
+                  </p>
+                  <div class="detail">
+                    <div class="rating">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="far fa-star"></i>
+                    </div>
+                    <h6>{{ details.name }}</h6>
+                  </div>
+                </div>
+                <div class="quote-icon">
+                  <i class="fas fa-quote-right"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    }
+  </owl-carousel-o>
+}
+

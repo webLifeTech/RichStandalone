@@ -1,0 +1,40 @@
+<div class="content dashboard-content">
+  <div class="container">
+
+    <div class="content-header">
+      <h4>Admin Dashboard</h4>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-lg-8">
+        <div class="card dash-box-card flex-fill mb-0">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-12 text-center">
+                <h4>Customer Status</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card-body booking-history">
+            <div class="widget-box p-0">
+              <app-apexcharts [data]="userDetails.data" [chartType]="'column_charts'"
+                [name]="'Performance grade'"></app-apexcharts>
+              <div class="text-end">
+                <a class="btn view-btn btn view-btn mt-1 me-2 mb-2" (click)="viewUsers(null)">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <app-ad-vehicles-details></app-ad-vehicles-details>
+      </div>
+      <div class="col-lg-8">
+        <app-ad-booking-details></app-ad-booking-details>
+      </div>
+      <!-- <div class="col-lg-4">
+        <app-ad-earning-details></app-ad-earning-details>
+      </div> -->
+    </div>
+  </div>
+</div>

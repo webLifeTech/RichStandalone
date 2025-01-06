@@ -1,0 +1,32 @@
+<div class="email-quote">
+  <h1 mat-dialog-title class="dialogue-header no-text-transorm">
+    Ford Fusion or Similar Large Car
+    <button mat-icon-button class="close-icon" (click)="onClose()">
+      <i class="fas fa-times"></i>
+    </button>
+  </h1>
+
+  <div mat-dialog-content>
+    <div class="car-details">
+      <img src="assets/images/cab/car/1.png" alt="Ford Fusion" class="car-image" />
+      <div class="car-info">
+        <p><strong>Seats:</strong> 5</p>
+        <p><strong>Transmission:</strong> Automatic</p>
+        <p><strong>Luggage:</strong> 2 Large bags, 1 Small bag</p>
+        <p><strong>Mileage:</strong> Unlimited</p>
+        <p><strong>Location:</strong> North Bergen - Kennedy Boulevard</p>
+        <p><strong>Rating:</strong> 8.5 (Very Good) - 83 reviews</p>
+      </div>
+    </div>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Email address</mat-label>
+      <input matInput [(ngModel)]="email" placeholder="Enter your email">
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="submitEmail()" [disabled]="!email">Email Quote</button>
+    <button mat-button (click)="onClose()">Close</button>
+  </div>
+
+</div>

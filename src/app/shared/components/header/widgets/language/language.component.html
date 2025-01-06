@@ -1,0 +1,5 @@
+<select (change)="getLanguage($event)" [(ngModel)]="selectedLang">
+  @for(language of languages; track language){
+    <option value="{{ language.code }}">{{ language.name }}</option>
+  }
+</select>

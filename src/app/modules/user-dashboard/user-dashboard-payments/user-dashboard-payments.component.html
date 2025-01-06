@@ -1,0 +1,164 @@
+<div class="content">
+  <div class="container">
+
+    <div class="content-header">
+      <div class="row">
+        <div class="col-lg-4">
+          <h4>My Payments</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="row d-flex align-items-center">
+            <div class="col-lg-8 col-sm-12 col-12">
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12 text-end">
+              <select class="form-select">
+                <option selected>This Week</option>
+                <option value="1">This Month</option>
+                <option value="2">Last 30 Days</option>
+                <option value="3">Custom</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12 text-end">
+              <div class="filter-group">
+                <select class="form-select">
+                  <option selected>Sort By Relevance</option>
+                  <option value="1">Sort By Ascending</option>
+                  <option value="2">Sort By Descending</option>
+                  <option value="3">Sort By Alphabet</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-12 d-flex">
+        <div class="card book-card flex-fill mb-0">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-5">
+                <h4>{{'All Payments'}} <span>{{totalData}}</span></h4>
+              </div>
+              <div class="col-md-7 text-md-end">
+                <div class="table-search">
+                  <div id="tablefilter">
+
+                    <div class="dataTables_filter">
+                      <label>
+                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
+                          placeholder="Search" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive dashboard-table mb-4">
+              <table class="table datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>
+                      <span>#Sn</span>
+                    </th>
+                    <th>Payment ID</th>
+                    <th>Booking ID</th>
+                    <th class="text-start">Car Name</th>
+                    <th class="text-start"
+                      *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'">
+                      Driver Name</th>
+                    <th>Payment Date</th>
+                    <th>Payment Mode</th>
+                    <th class="text-center">Total Amount</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                    <td>
+                      <span>{{idx+1}}</span>
+                    </td>
+                    <td>
+                      <a>{{data.paymentID}}</a>
+                    </td>
+                    <td>
+                      <a>{{data.bookingID}}</a>
+                    </td>
+                    <td class="text-start">
+                      <div class="table-avatar">
+                        <a class="avatar avatar-lg flex-shrink-0">
+                          <img class="avatar-img" [src]="data.img" alt="Booking">
+                        </a>
+                        <div class="table-head-name flex-grow-1">
+                          <a>{{data.carName}}</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
+                      class="text-start">
+                      <div class="table-avatar">
+                        <a class="avatar avatar-lg flex-shrink-0">
+                          <img class="avatar-img" [src]="data.driver_img" alt="Booking">
+                        </a>
+                        <div class="table-head-name flex-grow-1">
+                          <a>{{data.driver_name}}</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.paymentDate | date : 'dd, MMM, y'}}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.mode}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.total_amount | currencyPipe: gs.currency}}</span>
+                    </td>
+                    <td>
+                      <span
+                        [ngClass]="{ 'badge-light-success': data.status === 'Completed','badge-light-warning': data.status === 'Pending','badge-light-danger':data.status === 'Failed' }"
+                        class="badge">{{data.status}}</span>
+                    </td>
+                    <td class="text-end">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <i class="feather icon-more-vertical"></i>
+                      </button>
+                      <mat-menu #menu="matMenu" xPosition="before">
+                        <button (click)="onView(data)" type="button" mat-menu-item>
+                          <i class="feather icon-eye"></i>
+                          <span class="ms-2">View Invoice</span>
+                        </button>
+                      </mat-menu>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #delete_modal let-c="close" let-d="dismiss">
+  <app-delete-modal></app-delete-modal>
+</ng-template>
+<ng-template #booking_details let-c="close" let-d="dismiss">
+  <app-booking-details-modal [bookingDetails]="editInfo"></app-booking-details-modal>
+</ng-template>

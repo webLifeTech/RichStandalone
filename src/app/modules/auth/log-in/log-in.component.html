@@ -1,0 +1,21 @@
+<app-breadcrumbs [type]="'pages'" [bg_image]="bg_image" [title]="title" [parent]="parent" [child]="child"
+  [paddingClass]="false"></app-breadcrumbs>
+
+<section class="section-b-space dark-cls animated-section bg-size"
+  [style.background-image]="'url(assets/images/cab/grey-bg.jpg)'">
+  <img src="assets/images/cab/grey-bg.jpg" alt="background-image" class="img-fluid blur-up lazyload bg-img"
+    style="display: none;">
+  <app-animations [type]="'dots'"></app-animations>
+  <div class="container">
+    <div class="row">
+      <div class="offset-lg-3 col-lg-6 offset-sm-2 col-sm-8 col-12">
+        <div class="account-sign-in">
+          <div class="title">
+            <h3>{{'auth.login' | translate}}</h3>
+          </div>
+          <app-comman-login-form [type]="'login'"></app-comman-login-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

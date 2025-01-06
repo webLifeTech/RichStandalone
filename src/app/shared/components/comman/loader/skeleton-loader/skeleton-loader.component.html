@@ -1,0 +1,36 @@
+<div class="skeleton_loader" [class.loader-hide]="loaderHide">
+  <app-menu-skeleton [skeletonType]="skeletonType"></app-menu-skeleton>
+
+
+  @if(skeletonType == 'cab-list' || skeletonType == 'cab'){
+    <section class="breadcrumb-section flight-sec pt-0">
+    </section>
+  }
+
+
+  @if(restaurantBreadcrumb){
+    <div class="top-title-bar">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="hotel_title_section">
+              <div class="left-part">
+                <h2></h2>
+                <h6></h6>
+              </div>
+              <div class="right-part">
+                <ul></ul>
+                <h6></h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if(skeletonType == 'cab-list' || skeletonType == 'cab'){
+    <app-cab-skeleton [filterType]="filterType" [skeletonType]="skeletonType" [gridType]="gridType" [grid]="grid" [filter]="filter" [mapSide]="mapSide" [map]="map"></app-cab-skeleton>
+  }
+
+</div>

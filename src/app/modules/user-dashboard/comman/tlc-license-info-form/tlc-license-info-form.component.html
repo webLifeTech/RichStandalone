@@ -1,0 +1,107 @@
+<div>
+  <div class="profile-info-grid">
+    <div class="row m-0 align-items-end">
+      <div class="col-lg-12 p-0">
+        <div class="box-title">
+          <h4>
+            {{ 'userDashboard.kyc.tlc_info.title' | translate }}
+          </h4>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.driver_license_number' | translate }}
+            <span class="mandatory">*</span>
+          </label>
+          <input [(ngModel)]="tlcDriverLicenseForm.tlc_driver_license_number" name="tlc_driver_license_number"
+            type="text" class="form-control open-select" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.license_document_upload' | translate }}
+            <span class="mandatory">*</span>
+          </label>
+          <input [(ngModel)]="tlcDriverLicenseForm.tlc_license_document_upload" name="tlc_license_document_upload"
+            type="file" class="form-control open-select" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <a class="btn btn-solid color2 no-text-transorm me-2">Upload</a>
+          <a (click)="documentUpload('tlc')" class="btn btn-theme no-text-transorm">Submit</a>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.firstname' | translate }}
+          </label>
+          <input readonly [(ngModel)]="tlcDriverLicenseForm.tlc_firstName" name="tlc_firstName" type="text"
+            class="form-control open-select" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.lastname' | translate }}
+          </label>
+          <input readonly [(ngModel)]="tlcDriverLicenseForm.tlc_lastName" name="tlc_lastName" type="text"
+            class="form-control open-select" />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.dl_state' | translate }}
+          </label>
+          <ng-select clearable="false" [items]="usaStatesArray" bindLabel="name" placeholder="-- Select One --"
+            bindValue="value" [(ngModel)]="tlcDriverLicenseForm.tlc_dl_state" name="forn_licn_state">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.dl_effective_date' | translate}}
+          </label>
+          <input readonly [(ngModel)]="tlcDriverLicenseForm.tlc_dl_effective_date" name="tlc_dl_effective_date"
+            type="text" class="form-control open-select" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label>
+            {{ 'userDashboard.kyc.tlc_info.dl_expiration_date' | translate}}
+          </label>
+          <input readonly [(ngModel)]="tlcDriverLicenseForm.tlc_dl_expiration_date" name="tlc_dl_expiration_date"
+            type="text" class="form-control open-select" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row my-4">
+    <div class="col-lg-12 text-end">
+      <button *ngIf="!isEditInfo" type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2"
+        (click)="onSubmit()">
+        Confirmed
+      </button>
+      <button *ngIf="kycForm.state === 'New York City' && isEditInfo" type="button"
+        class="btn btn-theme no-text-transorm mx-2 mb-2" (click)="onSubmit()">
+        Update
+      </button>
+      <button type="button" (click)="onChangeKycTab('Driver info')" class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Previous
+      </button>
+      <button *ngIf="isEditInfo" type="button" (click)="onCancel()"
+        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

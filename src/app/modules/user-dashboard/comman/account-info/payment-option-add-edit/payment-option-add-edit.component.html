@@ -1,0 +1,133 @@
+<div class="row m-0 align-items-end">
+  <div class="col-lg-12">
+    <div class="form-group d-flex">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="upload_type" id="payment_credit_card" value="credit_card"
+          [(ngModel)]="paymentMethodForm.type">
+        <label class="form-check-label ms-2" for="payment_credit_card">
+          {{ 'userDashboard.kyc.account_info.payment_credit_card' | translate }}
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="upload_type" id="payment_banking" value="banking"
+          [(ngModel)]="paymentMethodForm.type">
+        <label class="form-check-label ms-2" for="payment_banking">
+          {{ 'userDashboard.kyc.account_info.payment_banking' | translate }}
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="upload_type" id="payment_wallet" value="wallet"
+          [(ngModel)]="paymentMethodForm.type">
+        <label class="form-check-label ms-2" for="payment_wallet">
+          {{ 'userDashboard.kyc.account_info.payment_wallet' | translate }}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="profile-info-grid">
+  <form (submit)="onFromSubmit(paymentF)" #paymentF="ngForm">
+
+    <ng-container *ngIf="paymentMethodForm.type === 'credit_card'">
+      <div class="row m-0 align-items-end">
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="c-name">Credit/Debit Card Number</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.credit_card.card_number"
+              name="card_number">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="c-number">Card Type</label>
+            <ng-select clearable="false" [items]="cardTypeList" bindLabel="name" placeholder="-- Select One --"
+              bindValue="value" [(ngModel)]="paymentMethodForm.credit_card.card_type" name="card_type">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="c-name">Expiry Date (MM/YY)</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.credit_card.expiry_date"
+              name="expiry_date">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="c-name">CVV</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.credit_card.cvv" name="cvv">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="c-name">Name</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.credit_card.holder_name"
+              name="holder_name">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="paymentMethodForm.type === 'banking'">
+      <div class="row m-0 align-items-end">
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label>Routing Number</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.banking.routing_number"
+              name="routing_number">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label>Account number</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.banking.account_number"
+              name="account_number">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label>Bank Name</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.banking.bank_name" name="bank_name">
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label>Account Holder Name</label>
+            <input type="text" class="form-control" [(ngModel)]="paymentMethodForm.banking.holder_name"
+              name="account_holder_name">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="paymentMethodForm.type === 'wallet'">
+      <div class="wallet-section">
+        <h6>Select your wallet</h6>
+        <div class="row mb-4">
+          @for(details of walletDetails; track details){
+          <div class="form-check col-md-6">
+            <input class="form-check-input" type="radio" name="exampleRadios2" id="{{ details.radioId }}"
+              value="{{ details.radioValue }}" [checked]="details.checked">
+            <label class="form-check-label ms-2" for="{{ details.radioId }}">
+              {{ details.title }}
+            </label>
+          </div>
+          }
+        </div>
+      </div>
+    </ng-container>
+    <div class="col-lg-12 text-end">
+      <button *ngIf="isEditInfo" type="button" (click)="onFromUpdate()"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Update
+      </button>
+      <button *ngIf="!isEditInfo" type="submit" class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Save
+      </button>
+      <button (click)="cancel()" type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

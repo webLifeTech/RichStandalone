@@ -1,0 +1,163 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-header">
+        <div class="booking-img-wrap">
+          <div class="book-img">
+            <img [src]="fleetOwnerInfoData.company_logo" alt="img">
+          </div>
+          <div class="book-info">
+            <h6>{{fleetOwnerInfoData.comp_info_company_name}}</h6>
+          </div>
+        </div>
+      </div>
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.company_details.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.taxid' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_taxid || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.registration_document' | translate }}</h6>
+                <p>
+                  <span>
+                    <i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.company_name' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_company_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.date_of_registration' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_date_of_registration || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.city' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_city || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.postal_code' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_postal_code || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.company_details.registration_address' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.comp_info_registration_address || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.fleet_owner_details.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.first_name' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_first_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.middlename' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.middleName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.last_name' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_last_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.prefix' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.prefix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.suffix' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.suffix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.contact_number' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_contact_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.email_id' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_email_id || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.ssn' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_ssn || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.driver_license_number' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_driver_license_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.car_owner_info.dl_state' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_dl_state || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.car_owner_info.dl_effective_date' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_dl_effective_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.car_owner_info.dl_expiration_date' | translate }}</h6>
+                <p>{{fleetOwnerInfoData.fleet_owr_dl_expiration_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.fleet_owner_details.driver_license_document' | translate }}</h6>
+                <p>
+                  <span>
+                    <i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,50 @@
+<div class="title-top">
+  <h5>{{'booking_summary.title' | translate}}</h5>
+</div>
+<div class="flight_detail">
+  <div class="summery_box">
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <td>{{'booking_summary.location' | translate}}</td>
+          <td>Paris</td>
+        </tr>
+        <tr>
+          <td>{{'booking_summary.pickup_date' | translate}}</td>
+          <td>10/01/2019, 11.35pm</td>
+        </tr>
+        <tr>
+          <td>{{'booking_summary.return_date' | translate}}</td>
+          <td>14/01/2019</td>
+        </tr>
+        <tr *ngIf="type === 'car'">
+          <td>{{'booking_summary.car_type' | translate}}</td>
+          <td>Fiat Chrysler</td>
+        </tr>
+        <tr *ngIf="type === 'driver'">
+          <td>{{'booking_summary.driver_name' | translate}}</td>
+          <td>John Doe</td>
+        </tr>
+        <tr>
+          <td>Price per day</td>
+          <td>{{ 1200 | currencyPipe: cabService.currency }}</td>
+        </tr>
+        <tr>
+          <td>{{'booking_summary.insurance_fee' | translate}}</td>
+          <td>{{ 12 | currencyPipe: cabService.currency }}</td>
+        </tr>
+        <tr>
+          <td>{{'booking_summary.discount' | translate}}</td>
+          <td>- {{ 100 | currencyPipe: cabService.currency }}</td>
+        </tr>
+        <tr>
+          <td>{{'booking_summary.tax' | translate}}</td>
+          <td>{{ 10 | currencyPipe: cabService.currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grand_total">
+      <h5>{{'booking_summary.total_fare' | translate}} <span>{{ 1100 | currencyPipe: cabService.currency }}</span></h5>
+    </div>
+  </div>
+</div>

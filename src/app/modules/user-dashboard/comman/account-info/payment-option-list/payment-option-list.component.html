@@ -1,0 +1,55 @@
+<div *ngIf="isAdd">
+  <app-payment-option-add-edit [editInfo]="editInfo" (onCancel)="cancelAdd()" (onSubmit)="onSubmit($event)"
+    (onUpdateSubmit)="onUpdate($event)"></app-payment-option-add-edit>
+</div>
+<div *ngIf="!isAdd" class="container-fluid ac-payment-info">
+  <div class="row align-items-center mt-4 mb-2">
+    <div class="col-lg-12 mb-2">
+      <h5 class="title-5">{{ 'userDashboard.kyc.account_info.title' | translate }}</h5>
+    </div>
+    <div class="col-lg-6">
+      <form class="form-inline align-self-end">
+        <div class="d-flex">
+          <input [(ngModel)]="searchText" name="sub_menu_name" type="text"
+            [placeholder]="'userDashboard.search_placeholder' | translate" class="form-control open-select" />
+          <button (click)="isAdd = true" type="button" class="btn btn-theme no-text-transorm ms-2">
+            <i class="feather icon-search"></i> {{ 'userDashboard.search_btn' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6">
+      <div *ngIf="!isAdd" class="text-end">
+        <a (click)="isAdd = true" type="button" class="btn btn-solid color2 no-text-transorm add-btn">
+          <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.account_info.add_new_payment_m' | translate }}
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-12 mt-5">
+      <div class="list-box" *ngFor="let section of paymentOptions; let i = index">
+        <div class="list-title" *ngIf="section.type === 'credit_card'">
+          <app-card-types [card_type]="section.card_type"></app-card-types>
+          {{ section.card_name | translate }} ending in {{ section.last4 | translate}}
+        </div>
+        <div class="list-title" *ngIf="section.type === 'banking'">
+          {{ section.bank_name | translate }} {{ section.last4 | translate }}
+        </div>
+        <div class="list-title" *ngIf="section.type === 'wallet'">
+          {{ section.wallet_name | translate }} {{ section.wallet_type | translate }}
+        </div>
+
+        <div>
+          <button mat-mini-fab class="me-2" (click)="onView(section)">
+            <i class="feather icon-eye"></i>
+          </button>
+          <button mat-mini-fab class="me-2" (click)="onEdit(section, i)">
+            <i class="feather icon-edit"></i>
+          </button>
+          <button mat-mini-fab class="me-2 btn-red" (click)="onDelete(i)">
+            <i class="feather icon-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

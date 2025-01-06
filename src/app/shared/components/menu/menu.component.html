@@ -1,0 +1,152 @@
+<div class="main-navbar">
+  <div id="mainnav">
+    <div class="toggle-nav" (click)="openSidebar()">
+      <i class="fa fa-bars sidebar-bar"></i>
+    </div>
+    <div class="menu-overlay" [class.show]="isOpen"></div>
+    <ul class="nav-menu" [style.left]="isOpen ? '0px' : '-410px'">
+      <li class="back-btn">
+        <div class="mobile-back text-end" (click)="closeSidebar()">
+          <i aria-hidden="true" class="fa fa-times-circle ps-2"></i>
+        </div>
+      </li>
+      @for(menuItem of menuItems; track menuItem){
+      @if(menuItem.type==='link'){
+      <li>
+        @if(menuItem.title){
+        <a href="javascript:void(0)" [routerLink]="menuItem.path" [queryParams]="menuItem.queryParams"> {{
+          menuItem.title | translate }} </a>
+        }
+      </li>
+      }
+      @else if(!menuItem.megaMenu){
+      <li class="dropdown">
+        @if(menuItem.title){
+        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.active && isOpen ? 'active' : ''"
+          (click)="toggleMenu(menuItem)">{{ menuItem.title | translate }}
+          @if(isOpen){
+          <span class="according-menu">{{ menuItem.active && isOpen ? '-' : '+'}}</span>
+          }
+        </a>
+        }
+        <ul class="nav-submenu menu-content"
+          [ngClass]="{ 'd-block' : menuItem.active == true && isOpen , 'd-none d-md-block' : menuItem.active == false && !isOpen}">
+          <div *ngTemplateOutlet="recursiveMenu; context: { $implicit: menuItem.children }"></div>
+          <ng-template #recursiveMenu let-menuItem>
+            @for(item of menuItem; track item){
+            <li>
+              <a href="javascript:void(0)" [class.menu-title]="item.children"
+                [ngClass]="item.active && isOpen ? 'active' : ''" (click)="toggleMenu(item)" [routerLink]="item.path">{{
+                item.title | translate }}
+                @if(isOpen && item.children){
+                <span class="according-menu">{{ item.active && isOpen ? '-' : '+'}}</span>
+                }
+              </a>
+              @if(item.children){
+              <ul [class.nav-sub-childmenu]="item.children"
+                [ngClass]="{ 'level1' : item.level === 2,  'submenu-content level3' : item.level === 4 && item.children,'submenu-content level2' : item.level === 3 && item.type == 'sub','d-block' : item.active == true && isOpen }">
+                <div *ngTemplateOutlet="recursiveMenu; context: { $implicit: item.children }"></div>
+              </ul>
+              }
+            </li>
+            }
+          </ng-template>
+        </ul>
+      </li>
+      }@else{
+      <li class="mega-menu">
+        @if(menuItem.title){
+        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.active && isOpen ? 'active' : ''"
+          (click)="toggleMenu(menuItem)">
+          @if(isOpen){
+          <span class="according-menu">{{ menuItem.active && isOpen ? '-' : '+'}}</span>
+          }
+          {{ menuItem.title | translate }}
+        </a>
+        }
+        <div class="mega-menu-container menu-content"
+          [ngClass]="{ 'd-block' : menuItem.active == true && isOpen , 'd-none d-md-block' : menuItem.active == false && !isOpen}">
+          <div class="container">
+            <div class="row">
+              <div *ngTemplateOutlet="recursiveMenu1; context: { $implicit: menuItem.children }"></div>
+              <ng-template #recursiveMenu1 let-menuItem>
+                @for(item of menuItem; track item){
+                <div class="col mega-box">
+                  @if(!item.section){
+                  <div class="link-section">
+                    <div class="submenu-title">
+                      <h5 [ngClass]="item.active && isOpen ? 'active' : ''" (click)="toggleMenu(item)">{{ item.title |
+                        translate }}</h5>
+                      @if(isOpen){
+                      <span class="according-menu">{{ item.active && isOpen ? '-' : '+'}}</span>
+                      }
+                    </div>
+                    <div class="submenu-content opensubmegamenu"
+                      [ngClass]="{ 'd-block' : item.active == true && isOpen , 'd-none d-md-block' : item.active == false && !isOpen}">
+                      <ul class="list">
+                        @for(data of item.children; track data){
+                        <li [class.highlight-link]="data.badgeIcon">
+                          <a href="javascript:void(0)" [routerLink]="data.path">
+                            {{ data.title | translate }}
+                            @if(data.badge){
+                            <span class="label">{{ data.badgeText }}</span>
+                            }
+                            @if(data.badgeIcon){
+                            <span class="icon-trend label"><i class="fas fa-bolt"></i></span>
+                            }
+                          </a>
+                        </li>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                  }@else {
+                  @for(child of item.section; track child){
+                  <div class="link-section">
+                    <div class="submenu-title">
+                      <h5 [ngClass]="child.active && isOpen ? 'active' : ''" (click)="toggleMenu(child)">{{ child.title
+                        | translate }}</h5>
+                      @if(isOpen){
+                      <span class="according-menu">{{ child.active && isOpen ? '-' : '+'}}</span>
+                      }
+                    </div>
+                    <div class="submenu-content opensubmegamenu"
+                      [ngClass]="{ 'd-block' : child.active == true && isOpen , 'd-none d-md-block' : child.active == false && !isOpen}">
+                      <ul class="list">
+                        @for(data of child.children; track data){
+                        <li [class.highlight-link]="data.badgeIcon">
+                          @if(data.type == 'extTabLink'){
+                          <a href="{{ data.path }}" target="_blank"> {{ data.title | titlecase }} </a>
+                          }@else {
+                          <a href="javascript:void(0)" [routerLink]="data.path">{{ data.title | titlecase }}
+                            @if(data.badge){
+                            <span class="label">{{ data.badgeText }}</span>
+                            }
+                            @if(data.badgeIcon){
+                            <span class="icon-trend label"><i class="fas fa-bolt"></i></span>
+                            }
+                          </a>
+                          }
+                        </li>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                  }
+                  }
+                </div>
+                }
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </li>
+      }
+      }
+
+      <li class="profile-badge" *ngIf="isOpen">
+        <app-profile [type]="'sidebar'"></app-profile>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="footer-title">
+  <h5>new topics</h5>
+</div>
+<div class="footer-content">
+  <div class="footer-blog">
+    @for(details of footerNewTopic; track details){
+      <div class="media">
+        <div class="img-part">
+          <a href="javascript:void(0)" [routerLink]="details.path">
+            <img [src]="details.image" class="img-fluid blur-up lazyload" alt="image"></a>
+        </div>
+        <div class="media-body">
+          <h5 [routerLink]="details.path">{{ details.title }}</h5>
+          <p>{{ details.description }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

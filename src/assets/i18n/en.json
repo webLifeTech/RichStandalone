@@ -1,0 +1,636 @@
+{
+  "menu": {
+    "home": "Home",
+    "aboutus": "About Us",
+    "car_rentals": "Car Rentals",
+    "driver_rentals": "Driver Rentals",
+    "vendors": "Vendors",
+    "pricing": "Pricing",
+    "submenu": {
+      "listing": "Listing",
+      "booking": "Booking",
+      "car_details": "Car details",
+      "child_menu": {
+        "grid_view": "grid view",
+        "hotel": "Hotel"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "Dashboard",
+    "cars": "cars",
+    "trasaction": "Transaction",
+    "report": "Reports",
+    "submenus": {
+      "payment": "payment",
+      "enquiry": "enquiry",
+      "micromenu": {
+        "payment1": "payment 1",
+        "payment2": "payment 2"
+      }
+    }
+  },
+  "global": {
+    "location": "location",
+    "search": "search",
+    "different": "different",
+    "same": "same",
+    "pick_up": "pick up",
+    "drop_off": "drop",
+    "pick_up_time": "pick up time",
+    "drop_off_time": "drop time",
+    "date": "date",
+    "time": "time",
+    "date_and_time": "date & time",
+    "enter": "Enter",
+    "select": "Select",
+    "or": "OR",
+    "type": "Type",
+    "am": "am",
+    "pm": "pm"
+  },
+  "cab_home_page": {
+    "title": "book your cab",
+    "descriptipn": "rent cab with affordable price with TL Hub cab"
+  },
+  "cab_list_page": {
+    "description": "hire cab for any kind of trip"
+  },
+  "cab_list": {
+    "cab_search": "cab search"
+  },
+  "auth": {
+    "login": "log in",
+    "signup": "sign up",
+    "form": {
+      "vendor_type": "Vendor Type",
+      "type": "Type",
+      "full_name": "Full name",
+      "username": "Mobile Number or Email address",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "remember_me": "remember me",
+      "create_account": "create account",
+      "send": "send",
+      "resend": "re send",
+      "otp": "otp",
+      "seconds": "seconds",
+      "otp_enable": "will be enable in"
+    }
+  },
+  "car_list_page": {
+    "seater": "seater",
+    "luggage": "luggage",
+    "AC": "AC",
+    "mileage": "Unlimited Mileage",
+    "fare_per_km": "fare/km",
+    "book_now": "book now",
+    "book": "book",
+    "view_deal": "View deal",
+    "d_rating": "Rating",
+    "d_location": "Location",
+    "d_experience": "Experience",
+    "details": "details",
+    "need_help": "need help",
+    "monday-to-friday": "Monday to Friday",
+    "apply": "apply",
+    "close_filter": "close filter",
+    "search_here": "Search here..",
+    "offer_discount": "Festival Offer",
+    "discount_for": "Discount for",
+    "free_cancellation": "Free Cancellation",
+    "add_to_wishlist": "Add to Favourite",
+    "remove_to_wishlist": "Remove to Favourite",
+    "important_info": "Important info",
+    "email_quote": "Email quote",
+    "back": "back",
+    "status": {
+      "available": "Available",
+      "booked": "Booked"
+    },
+    "filter": {
+      "latest_filter": "Filter",
+      "clear_filter": "Clear filter",
+      "car_option": "Transmission",
+      "capacity": "capacity",
+      "experience": "Experience",
+      "car_type": "car category",
+      "price": "price",
+      "review_score": "Vehicle Rating",
+      "driver_rating": "Driver Rating",
+      "car_location": "Location",
+      "price_per_day": "Price per day",
+      "fuel_policy": "Fuel policy",
+      "deposit_required": "Deposit required",
+      "supplier": "Fleet company",
+      "mileage_kilometres": "Mileage/Kilometres",
+      "car_electric": "Electric cars",
+      "car_specs": "Car specs"
+    },
+    "car_type": {
+      "mini": "Mini",
+      "medium": "Medium",
+      "luxury": "Luxury",
+      "sadan": "Sadan",
+      "SUV": "SUV",
+      "standard": "Standard",
+      "tempo": "Tempo"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 passenger",
+      "6-10_passenger": "6-10 passenger",
+      "10_or_more": "10 o rmore"
+    },
+    "experience": {
+      "1-5_years": "1-5 years",
+      "6-10_years": "6-10 years",
+      "11-15_years": "11-15 years",
+      "16-20_years": "16-20 years",
+      "20_or_more": "20 or more"
+    },
+    "car_option": {
+      "automatic": "automatic",
+      "manual": "manual"
+    },
+    "location": {
+      "rajajinagar": "Rajajinagar",
+      "basaveshwarnagar": "Basaveshwarnagar",
+      "vijayanagar": "Vijayanagar",
+      "jayanagar": "Jayanagar",
+      "madivala": "Madivala",
+      "all_other_location": "All other locations"
+    },
+    "price_per_day": {
+      "0_5000": "$0 - $5,000",
+      "5000_10000": "$5,000 - $10,000",
+      "10000_15000": "$10,000 - $15,000",
+      "15000_20000": "$15,000 - $20,000",
+      "20000+": "$20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "Air Conditioning",
+      "4+doors": "4+ doors"
+    },
+    "car_electric": {
+      "fully_electric": "Fully electric",
+      "hybrid": "Hybrid",
+      "plugin_hybrid": "Plug-in hybrid"
+    },
+    "mileage_kilometres": {
+      "unlimited": "Unlimited"
+    },
+    "fuel_policy": {
+      "free_tank": "Free Tank",
+      "like_or_like": "Like for like"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "carowner": {
+      "carowner": "Car Owner"
+    },
+    "supplier": {
+      "peugeot": "Peugeot",
+      "suzuki": "Suzuki",
+      "fiat": "Fiat",
+      "honda": "Honda",
+      "ford": "Ford",
+      "hyundai": "Hyundai",
+      "general": "General",
+      "avis": "Avis",
+      "budget": "Budget",
+      "dollar": "Dollar",
+      "hertz": "Hertz",
+      "sixt": "Sixt"
+    }
+  },
+  "booking_page": {
+    "back_results": "Back to Search results",
+    "deal_title": "Your deal",
+    "free_cancellation_up": "Free cancellation up to 48 hours before pick-up",
+    "continue_to_book": "Continue to book"
+  },
+  "booking_payment_page": {
+    "back_results": "Back to Your deal",
+    "title": "Checkout",
+    "book_now": "Book Now",
+    "cancel": "Cancel"
+  },
+  "booking_summary": {
+    "title": "booking summary",
+    "pickup": "Pick-up",
+    "dropoff": "Drop-off",
+    "location": "location",
+    "pickup_date": "pickup date",
+    "return_date": "return date",
+    "car_type": "car type",
+    "driver_name": "Driver Name",
+    "insurance_fee": "Insurance fee",
+    "discount": "Discount",
+    "tax": "Tax",
+    "total_fare": "total fare"
+  },
+  "pricing_summary": {
+    "title": "Package Summary",
+    "package_name": "Package Name",
+    "discount": "Discount",
+    "tax": "Tax",
+    "total": "Total",
+    "pay_now": "Pay Now",
+    "cancel": "Cancel"
+  },
+  "have_coupon": {
+    "title": "Have a coupon code?",
+    "input_plchold": "Promo Code",
+    "apply": "apply"
+  },
+  "great_choice": {
+    "title": "Great Choice!",
+    "customer_rating": "Customer rating",
+    "short_queues": "Short queues",
+    "helpful_counter_staff": "Helpful counter staff",
+    "most_popular_fuel_policy": "Most popular fuel policy",
+    "easy_to_find_counter": "Easy to find counter",
+    "free_cancellation": "Free Cancellation"
+  },
+  "payment_success": {
+    "car_title": "Payment Successful ! get ready to ride",
+    "car_massage1": "Thank you for your payment. we have received your payment successfully.",
+    "car_massage2": "Your Transaction ID is",
+    "car_massage3": "you will get an email invoice soon!",
+    "driver_title": "Payment Successful ! Driver get ready to ride",
+    "driver_massage1": "Thank you for your payment. we have received your payment successfully.",
+    "driver_massage2": "Your Transaction ID is",
+    "driver_massage3": "you will get an email invoice soon!",
+    "download_invoice": "download invoice"
+  },
+  "invoice_summary": {
+    "car_title": "Payment Successful ! Car get ready to ride",
+    "car_subtitle": "Thank you for you payment. we have received your payment successfully. share your plans with friends & family",
+    "driver_title": "Payment Successful ! Driver get ready to your location",
+    "driver_subtitle": "Thank you for you payment. we have received your payment successfully. share your plans with friends & family",
+    "view_itinerary": "view itinerary",
+    "booking_details": "Booking Details",
+    "transaction_id": "Transaction ID",
+    "booking_status": "Booking Status",
+    "car_details": "Car Details",
+    "driver_details": "Driver Details",
+    "pickup": "Pick-up",
+    "dropoff": "Drop-off",
+    "location": "Location",
+    "pickup_date": "pickup date",
+    "return_date": "return date",
+    "car_type": "car type",
+    "driver_name": "Driver Name",
+    "discount": "Discount",
+    "total_fare": "total fare",
+    "total_days": "Total Days",
+    "total_day": "Total Day",
+    "your_details": "Your Details",
+    "name": "Name",
+    "address": "Address",
+    "email": "Email",
+    "phone_no": "Phone No"
+  },
+  "payment_failed": {
+    "car_title": "oops ! we are unable to process your payment",
+    "car_massage1": "looks like we encountered an error. please try again. if you continue to have issue, try another payment method.",
+    "driver_title": "oops ! we are unable to process your payment",
+    "driver_massage1": "looks like we encountered an error. please try again. if you continue to have issue, try another payment method.",
+    "try_again": "try again"
+  },
+  "pricing_payment_success": {
+    "title": "Payment Successful ! Package subscribed",
+    "massage1": "Thank you for",
+    "massage1_1": "package subscribed. we have received your payment successfully.",
+    "massage2": "Your Transaction ID is",
+    "massage3": "you will get an email invoice soon!",
+    "download_invoice": "download invoice"
+  },
+  "package_invoice_summary": {
+    "car_title": "Payment Successful ! Package subscribed",
+    "car_subtitle": "Thank you for you payment. we have received your payment successfully. share your plans with friends & family",
+    "driver_title": "Payment Successful ! Driver get ready to your location",
+    "driver_subtitle": "Thank you for you payment. we have received your payment successfully. share your plans with friends & family",
+    "view_itinerary": "view itinerary",
+    "payment_details": "Payment Details",
+    "package_summary": "Package Summary",
+    "transaction_id": "Transaction ID",
+    "status": "Status",
+    "total_fare": "total",
+    "booking_details": "Booking Details",
+    "driver_details": "Driver Details",
+    "pickup": "Pick-up",
+    "dropoff": "Drop-off",
+    "location": "Location",
+    "pickup_date": "pickup date",
+    "return_date": "return date",
+    "car_type": "car type",
+    "driver_name": "Driver Name",
+    "discount": "Discount",
+    "total_days": "Total Days",
+    "total_day": "Total Day",
+    "your_details": "Your Details",
+    "name": "Name",
+    "address": "Address",
+    "email": "Email",
+    "phone_no": "Phone No"
+  },
+  "userDashboard": {
+    "search_placeholder": "search here..",
+    "search_btn": "",
+    "back_btn": "Back",
+    "add": "Add",
+    "edit": "Edit",
+    "kyc": {
+      "toptabs": {
+        "dashboard": "Dashboard",
+        "my_bookings": "My Bookings",
+        "my_car_bookings": "My Car Bookings",
+        "reviews": "Reviews",
+        "favourite": "Favourite",
+        "messages": "Messages",
+        "wallet": "Wallet",
+        "payments": "Payments",
+        "my_profile": "My Profile",
+        "settings": "Settings",
+        "my_cars": "My Cars",
+        "all_user": "All User",
+        "all_vehicles": "All Vehicles",
+        "booking_overview": "Booking Overview"
+      },
+      "driverInfo": {
+        "title": "Driver info",
+        "profile_picture": "Profile picture",
+        "upload": "Upload",
+        "submit": "Submit",
+        "driver_license_number": "Driver License Number",
+        "license_document_upload": "License Document Upload",
+        "firstname": "First Name",
+        "middlename": "Middle Name",
+        "lastname": "Last Name",
+        "prefix": "Prefix",
+        "suffix": "Suffix",
+        "date_of_birth": "Date of birth",
+        "dl_state": "Driver License State",
+        "dl_effective_date": "Driver License Effective Date",
+        "dl_expiration_date": "Driver License Expiration Date",
+        "edit": "Edit Info",
+        "completed_msg": "Your kyc verification is successfully completed."
+      },
+      "foreign_drv_lics_info": {
+        "title": "Do you have foreign driver license",
+        "have_foreign_licns": "Do you have Foreign driver license",
+        "country": "Country",
+        "state": "State",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "issue_date": "Issue Date",
+        "expire_date": "Expire Date",
+        "foreign_driver_license_number": "Foreign Driver License Number",
+        "document_upload": "Document Upload?",
+        "upload": "Upload",
+        "submit": "Submit"
+      },
+      "personal_info": {
+        "title": "Personal Information",
+        "gender": "Gender",
+        "date_of_birth": "Date of Birth",
+        "year_of_experience": "Year of Experience",
+        "marital_status": "Marital status",
+        "relation_type": "Relation type",
+        "number_of_children": "Number of Children",
+        "contact_number": "Contact number",
+        "email_id": "Email Id",
+        "emergency_contact_number": "Emergency contact number",
+        "emergency_contact_person_name": "Emergency contact person name",
+        "credit_score": "Credit Score"
+      },
+      "address": {
+        "current_address": "Permanent Address",
+        "permanent_address": "Mailing Address",
+        "old_current_address": "Current Address",
+        "old_permanent_address": "Permanent Address",
+        "billing_address": "Billing Address",
+        "country": "Country",
+        "state": "State",
+        "city": "City",
+        "zip_code": "Postal Code",
+        "address_1": "Address 1",
+        "address_2": "Address 2"
+      },
+      "other_info": {
+        "title": "Other Information",
+        "taxid": "TaxID",
+        "ssn": "SSN",
+        "price_per_day": "Price per day",
+        "price_per_week": "Price Per Week",
+        "price_per_month": "Price Per Month",
+        "location": "Location",
+        "pickup_location": "Pickup location",
+        "drop_location": "Drop Location",
+        "is_available_for_private_booking": "Is Available for Private Booking?",
+        "have_medical_insurance": "Do you have insurance?",
+        "insurance_company_name": "Company name",
+        "insurance_type": "Insurance Type",
+        "policy_number": "Policy number",
+        "policy_issue_date": "Policy issue date",
+        "policy_expiry_date": "Policy expiry date",
+        "get_quotes_from_tlh": "Do you want to get quotes from TLH",
+        "is_active_inactive": "Is Active/Inactive",
+        "shift_timing": "Shift Timing",
+        "from": "Shift Timing From",
+        "to": "Shift Timing To",
+        "working_hours": "Working hours",
+        "serial_number": "No.",
+        "day_of_week": "Day Of Week",
+        "from_time": "From Time",
+        "to_time": "To Time",
+        "action": "Action",
+        "status": "Status"
+      },
+      "tlc_info": {
+        "title": "TLC license info",
+        "driver_license_number": "TLC License Number",
+        "license_document_upload": "TLC License Document Upload",
+        "firstname": "First Name",
+        "lastname": "Last Name",
+        "date_of_birth": "Date of birth",
+        "dl_state": "License State",
+        "dl_effective_date": "TLC License Effective Date",
+        "dl_expiration_date": "TLC License Expiration Date"
+      },
+      "company_details": {
+        "title": "Company Details",
+        "logo": "Company Logo",
+        "taxid": "TaxID",
+        "registration_document": "Registration document upload",
+        "company_name": "Company Name",
+        "date_of_registration": "Date of Registration",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "registration_address": "Registration address"
+      },
+      "fleet_owner_details": {
+        "title": "Fleet Owner Details",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "contact_number": "Contact Number",
+        "email_id": "Email ID",
+        "ssn": "SSN",
+        "driver_license_number": "Driver license Number",
+        "dl_state": "Driver License State",
+        "dl_effective_date": "Driver License Effective Date",
+        "dl_expiration_date": "Driver License Expiration Date",
+        "driver_license_document": "Driver license document Upload"
+      },
+      "office_details": {
+        "title": "Office Details",
+        "first_name": "Contact Person First Name",
+        "last_name": "Last Name",
+        "contact_number": "Contact Number",
+        "email_id": "Email ID",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "company_address": "Company Address",
+        "map_location": "Map Location"
+      },
+      "branch_info": {
+        "title": "Branch Info",
+        "multiple_location": "Do you have multiple Location?",
+        "dba_name": "DBA Name",
+        "first_name": "Contact Person First Name",
+        "last_name": "Last Name",
+        "contact_number": "Contact Number",
+        "email_id": "Email ID",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "branch_address": "Address 1",
+        "branch_address2": "Address 2",
+        "map_location": "Map Location",
+        "add_more": "Add Branch",
+        "tab1": "User",
+        "role": "Role",
+        "user_name": "User name",
+        "login_id": "Login ID",
+        "mobile_number": "Mobile Number",
+        "sn": "S#",
+        "status": "Status",
+        "action": "Action"
+      },
+      "vehicles_info": {
+        "title": "Vehicle Info",
+        "vin_number": "Vin Number",
+        "vin_document_upload": "Vin document Upload",
+        "plate_number": "Plate Number",
+        "model_year": "Model Year",
+        "vehicle_age": "Vehicle Age",
+        "make": "Make",
+        "model": "Model",
+        "gross_vehicle_weight": "Gross vehicle Weight",
+        "seating_capacity": "Seating Capacity",
+        "registration_state": "Registration State",
+        "territory_code": "Territory Code",
+        "garage_zip_code": "Garage zip Code",
+        "fuel_type": "Fuel Type",
+        "dashboard_camera": "Dashboard Camera",
+        "collision_avoidance": "Collision Avoidance",
+        "transmission": "Transmission",
+        "car_category": "Car Category"
+      },
+      "vehicle_inspection_detail": {
+        "title": "Vehicle Inspection Detail",
+        "is_inspection_report": "Is Inspection Report available?",
+        "vehicle_tlh": "Vehicle dosn't have Inspection Report Initiate from TLH",
+        "valid_date": "Valid Date",
+        "upload_inspection_report": "Upload Inspection Report"
+      },
+      "vehicle_insurance_detail": {
+        "title": "Vehicle Insurance Detail",
+        "is_insurance_covered": "Is Insurance Covered",
+        "insurance_quote": "Insurance not coverd looking for Quote",
+        "carriers_name": "Carriers Name",
+        "policy_number": "Policy Number",
+        "limits_coverage": "Limits & Coverage",
+        "coverage_expire_date": "Coverage Expire date",
+        "coverage_effective_date": "Coverage effective date"
+      },
+      "other_details": {
+        "title": "Other details",
+        "branch": "Branch",
+        "price_per_day": "Price Per Day",
+        "car_image_upload": "Car Image Upload",
+        "vehicle_status": "Vehicle status"
+      },
+      "upload_bulk_vehicle": {
+        "title": "Vehicle Upload",
+        "upload_ops1": "Upload Single Vehicle",
+        "upload_ops2": "Upload Bulk Vehicle",
+        "table_title": "All Branches",
+        "upload_vin_number": "Upload Spreadsheet with VIN Number",
+        "vin_number": "VIN Number",
+        "tlc_plate_number": "TLC Plate Number",
+        "car_category": "Car Category",
+        "fuel_type": "Fuel Type",
+        "transmission": "Transmission",
+        "kyc": "KYC",
+        "status": "Status",
+        "action": "Action"
+      },
+      "car_owner_info": {
+        "title": "Car owner Details",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "contact_number": "Contact Number",
+        "email_id": "Email ID",
+        "ssn": "SSN",
+        "driver_license_number": "Driver license Number",
+        "dl_state": "Driver License State",
+        "dl_effective_date": "Driver License Effective Date",
+        "dl_expiration_date": "Driver License Expiration Date",
+        "driver_license_document": "Driver license document Upload"
+      },
+      "account_info": {
+        "title": "Payment options",
+        "add_new_payment_m": "Add New Payment Method",
+        "name": "Payment options",
+        "payment_credit_card": "Credit Card",
+        "payment_banking": "ACH",
+        "payment_wallet": "My Wallet",
+        "sn": "Sn#",
+        "type": "Type",
+        "status": "Status",
+        "action": "Action"
+      }
+    },
+    "try_again": "try again"
+  },
+  "adminDashboard": {
+    "toptabs": {
+      "dashboard": "Admin Dashboard"
+    },
+    "security": {
+      "menu": "Menu",
+      "submenu": "Sub Menu",
+      "all_menu": "ALL Menu",
+      "search": "Search",
+      "add_menu": "Add New Menu",
+      "add_sub_menu": "Add New Sub Menu",
+      "sn": "S#",
+      "menu_name": "Menu Name",
+      "status": "Status",
+      "action": "Action",
+      "sub_menu_name": "Sub Menu Name",
+      "redirect_url": "Redirect Url",
+      "description": "Description",
+      "save": "Save",
+      "cancel": "Cancel",
+      "upload": "Upload",
+      "role": {
+        "add_role": "Add New Role"
+      }
+    }
+  }
+}

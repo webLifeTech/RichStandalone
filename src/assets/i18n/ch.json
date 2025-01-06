@@ -1,0 +1,501 @@
+{
+  "menu": {
+    "home": "首页",
+    "aboutus": "关于我们",
+    "car_rentals": "租车",
+    "driver_rentals": "司机租赁",
+    "submenu": {
+      "listing": "列表",
+      "booking": "预订",
+      "car_details": "车辆详情",
+      "child_menu": {
+        "grid_view": "网格视图",
+        "hotel": "酒店"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "仪表板",
+    "cars": "汽车",
+    "trasaction": "交易",
+    "report": "报告",
+    "submenus": {
+      "payment": "付款",
+      "enquiry": "查询",
+      "micromenu": {
+        "payment1": "付款1",
+        "payment2": "付款2"
+      }
+    }
+  },
+  "global": {
+    "location": "位置",
+    "search": "搜索",
+    "different": "不同",
+    "same": "相同",
+    "pick_up": "取车",
+    "drop_off": "还车",
+    "date": "日期",
+    "time": "时间",
+    "date_and_time": "日期和时间",
+    "enter": "输入",
+    "select": "选择",
+    "or": "或",
+    "type": "类型",
+    "am": "上午",
+    "pm": "下午"
+  },
+  "cab_home_page": {
+    "title": "预订您的出租车",
+    "descriptipn": "以实惠的价格租用Rica出租车"
+  },
+  "cab_list_page": {
+    "description": "为任何类型的旅行租车"
+  },
+  "cab_list": {
+    "cab_search": "出租车搜索"
+  },
+  "auth": {
+    "login": "登录",
+    "signup": "注册",
+    "form": {
+      "full_name": "全名",
+      "username": "手机号或邮箱地址",
+      "password": "密码",
+      "confirm_password": "确认密码",
+      "remember_me": "记住我",
+      "create_account": "创建账户",
+      "send": "发送",
+      "resend": "重新发送",
+      "otp": "验证码",
+      "seconds": "秒",
+      "otp_enable": "将在"
+    }
+  },
+  "car_list_page": {
+    "seater": "座位",
+    "luggage": "行李",
+    "AC": "空调",
+    "mileage": "不限里程",
+    "fare_per_km": "票价/公里",
+    "book_now": "立即预订",
+    "book": "预订",
+    "view_deal": "查看优惠",
+    "d_rating": "评分",
+    "d_location": "位置",
+    "d_experience": "体验",
+    "details": "详情",
+    "need_help": "需要帮助",
+    "monday-to-friday": "周一至周五",
+    "apply": "申请",
+    "close_filter": "关闭过滤器",
+    "search_here": "在此搜索..",
+    "offer_discount": "节日优惠",
+    "discount_for": "折扣",
+    "free_cancellation": "免费取消",
+    "important_info": "重要信息",
+    "email_quote": "电子邮件报价",
+    "back": "返回",
+    "status": {
+      "available": "可用",
+      "booked": "已预订"
+    },
+    "filter": {
+      "latest_filter": "筛选",
+      "clear_filter": "清除筛选",
+      "car_option": "变速箱",
+      "capacity": "容量",
+      "experience": "体验",
+      "car_type": "汽车类别",
+      "price": "价格",
+      "review_score": "车辆评论",
+      "car_location": "位置",
+      "price_per_day": "每日价格",
+      "fuel_policy": "燃油政策",
+      "deposit_required": "是否需要押金",
+      "supplier": "车队公司",
+      "mileage_kilometres": "里程/公里数",
+      "car_electric": "电动车",
+      "car_specs": "汽车规格"
+    },
+    "car_type": {
+      "mini": "迷你",
+      "medium": "中型",
+      "luxury": "豪华",
+      "sadan": "Sadan",
+      "SUV": "SUV",
+      "standard": "标准",
+      "tempo": "Tempo"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 名乘客",
+      "6-10_passenger": "6-10 名乘客",
+      "10_or_more": "10 名或以上"
+    },
+    "experience": {
+      "1-5_years": "1-5 years",
+      "6-10_years": "6-10 years",
+      "11-15_years": "11-15 years",
+      "16-20_years": "16-20 years",
+      "20_or_more": "20 or more"
+    },
+    "car_option": {
+      "automatic": "自动",
+      "manual": "手动"
+    },
+    "location": {
+      "rajajinagar": "Rajajinagar",
+      "basaveshwarnagar": "Basaveshwarnagar",
+      "vijayanagar": "Vijayanagar",
+      "jayanagar": "Jayanagar",
+      "madivala": "Madivala",
+      "all_other_location": "All other locations"
+    },
+    "price_per_day": {
+      "0_5000": "₹0 - ₹5,000",
+      "5000_10000": "₹5,000 - ₹10,000",
+      "10000_15000": "₹10,000 - ₹15,000",
+      "15000_20000": "₹15,000 - ₹20,000",
+      "20000+": "₹20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "空调",
+      "4+doors": "4+ 门"
+    },
+    "car_electric": {
+      "fully_electric": "全电动",
+      "hybrid": "混合动力",
+      "plugin_hybrid": "插电式混合动力"
+    },
+    "mileage_kilometres": {
+      "unlimited": "无限"
+    },
+    "fuel_policy": {
+      "free_tank": "免费油箱",
+      "like_or_like": "同类产品"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "carowner": {
+      "carowner": "车主"
+    },
+    "supplier": {
+      "peugeot": "标致",
+      "suzuki": "铃木",
+      "fiat": "菲亚特",
+      "honda": "本田",
+      "ford": "福特",
+      "hyundai": "现代",
+      "general": "通用",
+      "avis": "Avis",
+      "budget": "预算",
+      "dollar": "美元",
+      "hertz": "赫兹",
+      "sixt": "Sixt"
+    }
+  },
+  "booking_page": {
+    "back_results": "返回搜索结果",
+    "deal_title": "您的优惠",
+    "free_cancellation_up": "取车前 48 小时内可免费取消",
+    "continue_to_book": "继续预订"
+  },
+  "booking_payment_page": {
+    "back_results": "返回您的优惠",
+    "title": "结账",
+    "book_now": "立即预订",
+    "cancel": "取消"
+  },
+  "booking_summary": {
+    "title": "预订摘要",
+    "pickup": "取车",
+    "dropoff": "还车",
+    "pickup_date": "取车日期",
+    "return_date": "还车日期",
+    "car_type": "车型",
+    "driver_name": "司机姓名",
+    "discount": "折扣",
+    "total_fare": "总票价"
+  },
+  "have_coupon": {
+    "title": "有优惠码吗？",
+    "input_plchold": "促销代码",
+    "apply": "申请"
+  },
+  "great_choice": {
+    "title": "绝佳选择！",
+    "customer_rating": "客户评级",
+    "short_queues": "排队时间短",
+    "helpful_counter_staff": "柜台工作人员乐于助人",
+    "most_popular_fuel_policy": "最受欢迎的燃油政策",
+    "easy_to_find_counter": "柜台容易找到",
+    "free_cancellation": "免费取消"
+  },
+  "payment_success": {
+    "car_title": "付款成功！准备乘车",
+    "car_massage1": "感谢您的付款。我们已成功收到您的付款。",
+    "car_massage2": "您的交易 ID 是",
+    "car_massage3": "您很快就会收到电子邮件发票！",
+    "driver_title": "付款成功！司机准备乘车",
+    "driver_massage1": "感谢您的付款。我们已成功收到您的付款。",
+    "driver_massage2": "您的交易 ID 是",
+    "driver_massage3": "您很快就会收到电子邮件发票！",
+    "download_invoice": "下载发票"
+  },
+  "invoice_summary": {
+    "car_title": "付款成功！汽车准备出发",
+    "car_subtitle": "感谢您的付款。我们已成功收到您的付款。与朋友和家人分享您的计划",
+    "driver_title": "付款成功！司机准备前往您的位置",
+    "driver_subtitle": "感谢您的付款。我们已成功收到您的付款。与朋友和家人分享您的计划",
+    "view_itinerary": "查看行程",
+    "booking_details": "预订详情",
+    "transaction_id": "交易 ID",
+    "booking_status": "预订状态",
+    "car_details": "汽车详情",
+    "driver_details": "司机详情",
+    "pickup": "取车",
+    "dropoff": "还车",
+    "pickup_date": "取车日期",
+    "return_date": "还车日期",
+    "car_type": "汽车类型",
+    "driver_name": "司机姓名",
+    "discount": "折扣",
+    "total_fare": "总票价",
+    "total_days": "总天数",
+    "total_day": "总天数",
+    "your_details": "您的详情",
+    "name": "姓名",
+    "address": "地址",
+    "email": "电子邮件",
+    "phone_no": "电话号码"
+  },
+  "payment_failed": {
+    "car_title": "哎呀！我们无法处理您的付款",
+    "car_massage1": "看起来我们遇到了错误。请重试。如果您仍然遇到问题，请尝试其他付款方式。",
+    "driver_title": "哎呀！我们无法处理您的付款",
+    "driver_massage1": "看起来我们遇到了错误。请重试。如果您仍然遇到问题，请尝试其他付款方式。",
+    "try_again": "重试"
+  },
+  "userDashboard": {
+    "kyc": {
+      "toptabs": {
+        "dashboard": "仪表板",
+        "my_bookings": "我的预订",
+        "reviews": "评论",
+        "wishlist": "愿望清单",
+        "messages": "消息",
+        "wallet": "钱包",
+        "payments": "付款",
+        "my_profile": "我的个人资料",
+        "settings": "设置"
+      },
+      "driverInfo": {
+        "title": "驾驶员信息",
+        "profile_picture": "个人资料图片",
+        "upload": "上传",
+        "submit": "提交",
+        "driver_license_number": "驾驶执照号码",
+        "license_document_upload": "执照文件上传",
+        "firstname": "名字",
+        "lastname": "姓氏",
+        "date_of_birth": "出生日期",
+        "dl_state": "驾驶执照所在州",
+        "dl_effective_date": "驾驶执照生效日期",
+        "dl_expiration_date": "驾驶执照到期日期",
+        "edit": "编辑信息",
+        "completed_msg": "您的 kyc 验证已成功完成。"
+      },
+      "personal_info": {
+        "title": "个人信息",
+        "gender": "性别",
+        "date_of_birth": "出生日期",
+        "year_of_experience": "工作年限",
+        "marital_status": "婚姻状况",
+        "number_of_children": "子女数量",
+        "contact_number": "联系电话",
+        "email_id": "电子邮件 ID",
+        "emergency_contact_number": "紧急联系电话",
+        "emergency_contact_person_name": "紧急联系人姓名",
+        "credit_score": "信用评分"
+      },
+      "address": {
+        "current_address": "当前地址",
+        "permanent_address": "永久地址",
+        "billing_address": "帐单地址",
+        "country": "国家",
+        "state": "州",
+        "city": "城市",
+        "zip_code": "邮政编码",
+        "address_1": "地址 1",
+        "address_2": "地址 2"
+      },
+      "other_info": {
+        "title": "其他信息",
+        "taxid": "税号",
+        "ssn": "社会保险号",
+        "price_per_day": "每日价格",
+        "location": "地点",
+        "pickup_location": "取车地点",
+        "drop_location": "还车地点",
+        "is_available_for_private_booking": "是否可以私人预订？",
+        "is_active_inactive": "是否活跃/不活跃",
+        "shift_timing": "轮班时间",
+        "from": "轮班时间从",
+        "to": "轮班时间到",
+        "working_hours": "工作时间",
+        "serial_number": "编号",
+        "day_of_week": "星期几",
+        "from_time": "从时间",
+        "to_time": "到时间",
+        "action": "操作",
+        "status": "状态"
+      },
+      "tlc_info": {
+        "title": "TLC 执照信息",
+        "driver_license_number": "TLC 执照编号",
+        "license_document_upload": "TLC 执照文件上传",
+        "firstname": "名字",
+        "lastname": "姓氏",
+        "date_of_birth": "出生日期",
+        "dl_state": "执照所在州",
+        "dl_effective_date": "TLC 执照生效日期",
+        "dl_expiration_date": "TLC 执照到期日期"
+      },
+      "company_details": {
+        "title": "公司详情",
+        "logo": "公司徽标",
+        "taxid": "税号",
+        "registration_document": "注册文件上传",
+        "company_name": "公司名称",
+        "date_of_registration": "注册日期",
+        "city": "城市",
+        "postal_code": "邮政编码",
+        "registration_address": "注册地址"
+      },
+      "fleet_owner_details": {
+        "title": "车队所有者详细信息",
+        "first_name": "名字",
+        "last_name": "姓氏",
+        "contact_number": "联系电话",
+        "email_id": "电子邮件 ID",
+        "ssn": "社会保险号",
+        "driver_license_number": "驾驶执照号码",
+        "driver_license_document": "驾驶执照文件上传"
+      },
+      "office_details": {
+        "title": "办公室详情",
+        "first_name": "联系人名字",
+        "last_name": "姓氏",
+        "contact_number": "联系电话",
+        "email_id": "电子邮件 ID",
+        "city": "城市",
+        "postal_code": "邮政编码",
+        "company_address": "公司地址",
+        "map_location": "地图位置"
+      },
+      "branch_info": {
+        "title": "分支机构信息",
+        "multiple_location": "您有多个地点吗？",
+        "dba_name": "DBA 名称",
+        "first_name": "联系人名字",
+        "last_name": "姓氏",
+        "contact_number": "联系电话",
+        "email_id": "电子邮件 ID",
+        "city": "城市",
+        "postal_code": "邮政编码",
+        "branch_address": "分支机构地址",
+        "map_location": "地图位置",
+        "add_more": "添加另一个分支机构"
+      },
+      "vehicles_info": {
+        "title": "车辆信息",
+        "vin_number": "Vin 号",
+        "vin_document_upload": "Vin 文件上传",
+        "plate_number": "车牌号",
+        "model_year": "车型年份",
+        "vehicle_age": "车龄",
+        "make": "品牌",
+        "model": "车型",
+        "gross_vehicle_weight": "车辆总重",
+        "seating_capacity": "座位数",
+        "registration_state": "登记州",
+        "territory_code": "领土代码",
+        "garage_zip_code": "车库邮政编码",
+        "fuel_type": "燃料类型",
+        "dashboard_camera": "仪表盘摄像头",
+        "collision_avoidance": "防撞系统",
+        "transmission": "变速箱",
+        "car_category": "汽车类别"
+      },
+      "vehicle_inspection_detail": {
+        "title": "车辆检验详情",
+        "is_inspection_report": "检验报告可用吗？",
+        "vehicle_tlh": "车辆没有 TLH 发起的检验报告",
+        "valid_date": "有效日期",
+        "upload_inspection_report": "上传检验报告"
+      },
+      "vehicle_insurance_detail": {
+        "title": "车辆保险详情",
+        "is_insurance_covered": "保险是否承保",
+        "insurance_quote": "保险不承保寻求报价",
+        "carriers_name": "承保人名称",
+        "policy_number": "保单号",
+        "limits_coverage": "限额和承保范围",
+        "coverage_expire_date": "承保到期日期",
+        "coverage_effective_date": "承保生效日期"
+      },
+      "other_details": {
+        "title": "其他详情",
+        "branch": "分店",
+        "price_per_day": "每日价格",
+        "car_image_upload": "汽车图片上传"
+      },
+      "upload_bulk_vehicle": {
+        "title": "上传批量车辆",
+        "table_title": "所有分支机构",
+        "upload_vin_number": "上传包含 VIN 号的电子表格",
+        "vin_number": "VIN 号",
+        "tlc_plate_number": "TLC 车牌号",
+        "car_category": "汽车类别",
+        "fuel_type": "燃料类型",
+        "transmission": "变速器",
+        "kyc": "KYC",
+        "action": "行动"
+      },
+      "car_owner_info": {
+        "title": "车主详细信息",
+        "first_name": "名字",
+        "last_name": "姓氏",
+        "contact_number": "联系电话",
+        "email_id": "电子邮件 ID",
+        "ssn": "社会保险号",
+        "driver_license_number": "驾驶执照号码",
+        "driver_license_document": "驾驶执照文件上传"
+      }
+    },
+    "try_again": "再试一次"
+  },
+  "adminDashboard": {
+    "security": {
+      "menu": "選單",
+      "submenu": "子選單",
+      "all_menu": "所有選單",
+      "search": "搜尋",
+      "add_menu": "新增選單",
+      "add_sub_menu": "新增子選單",
+      "sn": "S#",
+      "menu_name": "菜單名稱",
+      "status": "地位",
+      "action": "行動",
+      "sub_menu_name": "子選單名稱",
+      "redirect_url": "重新導向網址",
+      "description": "描述",
+      "save": "節省",
+      "cancel": "取消",
+      "upload": "上傳"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+@if(cabDetails && cabDetails.length){
+<nav aria-label="Page navigation example" class="pagination-section mt-0">
+  @if(paginate.pages && paginate.pages.length){
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{disabled:paginate.currentPage === 1}">
+      <a class="page-link" href="javascript:void(0)" aria-label="Previous" (click)="pageSet(paginate.currentPage - 1)">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    @for(page of paginate.pages; track page){
+    <li class="page-item" [ngClass]="{ 'active disabled': paginate.currentPage == page }">
+      <a class="page-link" href="javascript:void(0)" (click)="pageSet(page)">{{ page }}</a>
+    </li>
+    }
+    <li class="page-item" [ngClass]="{ disabled: paginate.currentPage == paginate.totalPages }">
+      <a class="page-link" href="javascript:void(0)" aria-label="Next" (click)="pageSet(paginate.currentPage + 1)">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+  }
+</nav>
+}
+
+@if(driverDetails && driverDetails.length){
+<!-- *ngIf="driverDetails.length" -->
+<nav aria-label="Page navigation example" class="pagination-section mt-0">
+  @if(d_paginate.pages && d_paginate.pages.length){
+  <ul class="pagination">
+    <li class="page-item" [ngClass]="{disabled:d_paginate.currentPage === 1}">
+      <a class="page-link" href="javascript:void(0)" aria-label="Previous"
+        (click)="pageSet(d_paginate.currentPage - 1)">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    @for(page of d_paginate.pages; track page){
+    <li class="page-item" [ngClass]="{ 'active disabled': d_paginate.currentPage == page }">
+      <a class="page-link" href="javascript:void(0)" (click)="pageSet(page)">{{ page }}</a>
+    </li>
+    }
+    <li class="page-item" [ngClass]="{ disabled: d_paginate.currentPage == d_paginate.totalPages }">
+      <a class="page-link" href="javascript:void(0)" aria-label="Next" (click)="pageSet(d_paginate.currentPage + 1)">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+  }
+</nav>
+}

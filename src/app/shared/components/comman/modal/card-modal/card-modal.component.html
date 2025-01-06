@@ -1,0 +1,43 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">add new card</h5>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      @if(modalType == 'add'){
+        <div class="form-group">
+          <label for="a-month">card type</label>
+          <select id="a-month" class="form-control">
+            <option selected>add new card...</option>
+            <option>credit card</option>
+            <option>debit card</option>
+            <option>debit card with ATM pin</option>
+          </select>
+        </div>
+      }
+      <div class="form-group">
+        <label for="a-na">name on card</label>
+        <input type="text" class="form-control" id="a-na" [placeholder]="modalType == 'edit' ? 'Mark jecno' : '' ">
+      </div>
+      <div class="form-group">
+        <label for="a-n">card number</label>
+        <input type="text" class="form-control" id="a-n" [placeholder]="modalType == 'edit' ? '7451 2154 2115 2510' : ''">
+      </div>
+      <div class="row">
+        <div class="form-group col-md-8">
+          <label for="a-e">expiry date</label>
+          <input type="text" class="form-control" id="a-e" [placeholder]="modalType == 'edit' ? '12/23' : ''">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="a-c">cvv</label>
+          <input type="password" maxlength="3" class="form-control" id="a-c" [placeholder]="modalType == 'edit' ? '&#9679;&#9679;&#9679;' : ''">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-solid">{{ modalType == 'edit' ? 'update card' : 'add card' }}</button>
+  </div>
+</div>

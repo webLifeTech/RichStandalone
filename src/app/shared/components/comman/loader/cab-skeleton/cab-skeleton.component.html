@@ -1,0 +1,40 @@
+<div class="pb-0" [ngClass]="{ 'small-section': skeletonType =='cab-list' && !map, 'bg-inner' : skeletonType =='cab-list' || map == true,  'xs-section': skeletonType =='cab' || map == true}">
+  <app-cab-search-skeleton [skeletonType]="skeletonType" [map]="map"></app-cab-search-skeleton>
+</div>
+
+<section [ngClass]="{ 'small-section': skeletonType =='cab-list' && !map,'pt-0 bg-inner' : skeletonType =='cab-list' || map, 'xs-section': skeletonType =='cab' || map}">
+  <div [ngClass]="map ? 'container-fluid' : 'container'">
+    <div class="row">
+      @if(map){
+        <div class="col-xl-5 col-lg-4  map-section">
+          <div class="map"></div>
+        </div>
+      }
+      @if(skeletonType == 'cab' && grid){
+        <div class="col-12">
+          <app-cab-grid-skeleton></app-cab-grid-skeleton>
+        </div>
+      }
+      @if(filterType == 'left'){
+        <div class="col-lg-3">
+          <app-cab-filter-skeleton></app-cab-filter-skeleton>
+        </div>
+      }
+      @if(skeletonType == 'cab'){
+        <div class="ratio3_2" [class.col-lg-9]="skeletonType == 'cab' && filter" [class.col-lg-12]="skeletonType == 'cab' && !filter">
+          <app-cab-details-skeleton [gridType]="gridType"></app-cab-details-skeleton>
+        </div>
+      }
+      @if(skeletonType == 'cab-list'){
+        <div [ngClass]="map ? 'col-xl-7 col-lg-8 ratio3_2' : 'col-lg-9'">
+          <app-cab-list-details-skeleton [map]="map"></app-cab-list-details-skeleton>
+        </div>
+      }
+      @if(filterType == 'right'){
+      <div class="col-lg-3">
+        <app-cab-filter-skeleton></app-cab-filter-skeleton>
+      </div>
+      }
+    </div>
+  </div>
+</section>

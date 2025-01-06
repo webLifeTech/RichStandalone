@@ -1,0 +1,29 @@
+[
+  {
+    "ID": 42,
+    "Code": "NY",
+    "Name": "NEW YORK",
+    "Description": "NEW YORK",
+    "Priority": 0,
+    "CountryID": 0,
+    "IsActive": false
+  },
+  {
+    "ID": 53,
+    "Code": "NYC",
+    "Name": "New York City",
+    "Description": "New York City",
+    "Priority": 0,
+    "CountryID": 0,
+    "IsActive": false
+  },
+  {
+    "ID": 43,
+    "Code": "OT",
+    "Name": "Other",
+    "Description": "Other",
+    "Priority": 0,
+    "CountryID": 0,
+    "IsActive": false
+  }
+]

@@ -1,0 +1,35 @@
+<div class="modal-content write-review">
+  <div class="modal-body">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <h4>Review & Rating</h4>
+        <!-- <p>{{title || "Are you sure want to cancel?"}}</p> -->
+      </div>
+      <form>
+        <div class="row">
+          <div class="form-group col-12 text-start mt-3">
+            <bar-rating [(rate)]="form.rating"></bar-rating>
+          </div>
+          <div class="form-group col-12 text-start">
+            <label>Write Review</label>
+            <textarea type="text" [(ngModel)]="form.review" name="review" class="form-control open-select"></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              Submit
+            </a>
+          </div>
+          <div class="col-6">
+            <a (click)="closeModal()" class="btn btn-primary w-100">
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

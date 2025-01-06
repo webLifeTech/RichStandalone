@@ -1,0 +1,32 @@
+<div class="card dash-box-card flex-fill mb-0 mt-3">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center">
+        <h4>Booking Overview</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-overview">
+    <ng-container *ngFor="let item of carOwnersData">
+      <div class="row align-items-center">
+        <div class="col-md-5">
+          <div class="progress-head">
+            <div class="name">
+              {{item.title}}
+            </div>
+            <div class="value view-link ms-3">{{item.total}}</div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="progress">
+            <div class="progress-bar" [ngClass]="item['bg-color']" role="progressbar" [style.width.%]="item.percentage"
+              [attr.aria-valuenow]="item.percentage" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="text-end">
+      <a class="btn view-btn mt-3" (click)="viewBooking(null)">View</a>
+    </div>
+  </div>
+</div>

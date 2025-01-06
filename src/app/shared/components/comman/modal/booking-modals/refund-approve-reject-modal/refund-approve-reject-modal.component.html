@@ -1,0 +1,32 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <h4>Reject Refund Request</h4>
+        <p>{{title || "Are you sure want to Reject refund request?"}}</p>
+      </div>
+      <form>
+        <div class="row">
+          <div class="form-group col-12 text-start">
+            <label>Reason for Reject</label>
+            <textarea type="text" [(ngModel)]="reason" name="reason" class="form-control open-select"></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              Yes, Reject
+            </a>
+          </div>
+          <div class="col-6">
+            <a (click)="closeModal()" class="btn btn-primary w-100">
+              No
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

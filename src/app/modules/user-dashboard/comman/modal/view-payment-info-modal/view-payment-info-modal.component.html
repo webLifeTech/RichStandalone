@@ -1,0 +1,52 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'Payment details' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="profile-info-grid">
+              <div class="row m-0 align-items-end">
+                <div class="col-md-6">
+                  <ng-container *ngIf="singleDetails.type === 'credit_card'">
+                    <div class="mb-3">
+                      <span><b>Holder Name:</b></span>
+                      <span class="ms-4">{{singleDetails.holder_name}}</span>
+                    </div>
+                    <div class="mb-3 d-flex">
+                      <span><b>Card type:</b></span>
+                      <app-card-types [card_type]="singleDetails.card_type"></app-card-types>
+                    </div>
+
+                    <div class="mb-3">
+                      <span><b>Card Number:</b></span>
+                      <span class="ms-4">********{{singleDetails.last4}}</span>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="singleDetails.type === 'banking'">
+                    <div class="mb-3">
+                      <span><b>Holder Name:</b></span>
+                      <span class="ms-4">{{singleDetails.holder_name}}</span>
+                    </div>
+                    <div class="mb-3">
+                      <span><b>Routing Number:</b></span>
+                      <span class="ms-4">{{singleDetails.routing_number}}</span>
+                    </div>
+                    <div class="mb-3">
+                      <span><b>Account number:</b></span>
+                      <span class="ms-4">********{{singleDetails.last4}}</span>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

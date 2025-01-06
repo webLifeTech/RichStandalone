@@ -1,0 +1,126 @@
+{
+  "ricaBenefits": [
+    {
+      "id": 1,
+      "title": "4500 + rides daily",
+      "description": "every day more than 4500 customer take rides with tl hub cab",
+      "icon": "assets/images/svg/cab-classic/rides.svg"
+    },
+    {
+      "id": 2,
+      "title": "3,00,000 Happy Client",
+      "description": "Till today tl hub cab has more than three lakhs happy customer",
+      "icon": "assets/images/svg/hotel-minimal/client.svg"
+    },
+    {
+      "id": 3,
+      "title": "45,000 + location",
+      "description": "tl hub cab has more than 45k location at different countries & citys",
+      "icon": "assets/images/svg/hotel-minimal/location.svg"
+    },
+    {
+      "id": 4,
+      "title": "10,000 cabs",
+      "description": "tl hub cab has more than 10000 cabs which include luxury cabs too",
+      "icon": "assets/images/svg/cab-classic/cab.svg"
+    }
+  ],
+  "booking": [
+    {
+      "id": 1,
+      "title": "Book cab threw website or app",
+      "image": "assets/images/icon/cab-steps/mobile-app.png"
+    },
+    {
+      "id": 2,
+      "title": "Receive confirmation",
+      "image": "assets/images/icon/cab-steps/confirm-schedule.png"
+    },
+    {
+      "id": 3,
+      "title": "meet cab driver on pickup time",
+      "image": "assets/images/icon/cab-steps/taxi.png"
+    },
+    {
+      "id": 4,
+      "title": "arrive at your destination",
+      "image": "assets/images/icon/cab-steps/destination.png"
+    }
+  ],
+  "carTypes": [
+    {
+      "id": 1,
+      "title": "classic",
+      "description": "Classic cars evoke timeless elegance and charm, embodying automotive nostalgia and craftsmanship of a bygone era",
+      "image": "assets/images/cab/car/1.png",
+      "price": 10,
+      "seat": true,
+      "luggage": true,
+      "snow": true,
+      "setting": true
+    },
+    {
+      "id": 2,
+      "title": "business",
+      "description": "Business cars offer a blend of style, comfort, and functionality, ideal for professionals on the move",
+      "image": "assets/images/cab/car/2.png",
+      "price": 6,
+      "seat": true,
+      "luggage": true,
+      "snow": true,
+      "setting": true
+    },
+    {
+      "id": 3,
+      "title": "vip",
+      "description": "VIP cars exude luxury, featuring premium materials, cutting-edge technology, and superior comfort for an elite driving experience",
+      "image": "assets/images/cab/car/3.png",
+      "price": 5,
+      "seat": true,
+      "luggage": true,
+      "snow": true,
+      "setting": true
+    },
+    {
+      "id": 4,
+      "title": "van",
+      "description": "Versatile and spacious, van cars offer ample cargo capacity and comfortable seating for both passengers and goods transport",
+      "image": "assets/images/cab/car/4.png",
+      "price": 6,
+      "seat": true,
+      "luggage": true,
+      "snow": true,
+      "setting": true
+    }
+  ],
+  "testimonial": [
+    1,
+    2
+  ],
+  "brand": [
+    {
+      "id": 1,
+      "logo": "assets/images/cab/logo/1.png"
+    },
+    {
+      "id": 2,
+      "logo": "assets/images/cab/logo/2.png"
+    },
+    {
+      "id": 3,
+      "logo": "assets/images/cab/logo/3.png"
+    },
+    {
+      "id": 4,
+      "logo": "assets/images/cab/logo/4.png"
+    },
+    {
+      "id": 5,
+      "logo": "assets/images/cab/logo/5.png"
+    },
+    {
+      "id": 2,
+      "logo": "assets/images/cab/logo/2.png"
+    }
+  ]
+}

@@ -1,0 +1,738 @@
+<div>
+  <mat-accordion class="accordion-align">
+    <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="section.isOpen = true"
+      (closed)="section.isOpen = false" *ngFor="let section of infoTabs; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ section.title | translate }}
+        </mat-panel-title>
+        <mat-panel-description>
+          <i class="feather " [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Driver info -->
+      <ng-container *ngIf="section.tab === 'driver_info'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-4">
+              <div class="upload-card mb-3">
+                <div class="position-relative profile-info-img">
+                  <img [src]="profileUrl || 'assets/images/driver/d1.png'" class="avatar" alt="...">
+                  <div class="centered">
+                    <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
+                    <input (change)="handleUpload($event)" #myInput hidden type="file"
+                      class="form-control open-select" />
+                    <i class="fas fa-trash pointer" style="color: #fff;"></i>
+                  </div>
+                </div>
+
+                <div class="ms-3">
+                  <h5 class="upload-title">
+                    {{ 'userDashboard.kyc.driverInfo.profile_picture' | translate }}
+                  </h5>
+                  <p class="upload-text">
+                    PNG, JPEG under 15 MB
+                  </p>
+                </div>
+              </div>
+              <hr class="div-line1" />
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="driver_license_number">
+                  {{ 'userDashboard.kyc.driverInfo.driver_license_number' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.driver_license_number" name="driver_license_number" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="dl_state">
+                  {{ 'userDashboard.kyc.driverInfo.dl_state' | translate }} <span class="mandatory">*</span>
+                </label>
+                <ng-select clearable="false" [items]="usaStatesArray" bindLabel="name" placeholder="-- Select One --"
+                  bindValue="value" [(ngModel)]="driverInfoForm.dl_state" name="dl_state" name="dl_state">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="license_document_upload">
+                  {{ 'userDashboard.kyc.driverInfo.license_document_upload' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.license_document_upload" name="license_document_upload" type="file"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="form-group">
+                <a class="btn btn-solid color2 no-text-transorm me-2">
+                  {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
+                </a>
+                <a (click)="documentUpload('driver')" class="btn btn-theme no-text-transorm">
+                  {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="firstName">
+                  {{ 'userDashboard.kyc.driverInfo.firstname' | translate }}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.firstName" name="firstName" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="middleName">
+                  {{ 'userDashboard.kyc.driverInfo.middlename' | translate }}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.middleName" name="middleName" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="lastName">
+                  {{ 'userDashboard.kyc.driverInfo.lastname' | translate }}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.lastName" name="lastName" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.driverInfo.prefix' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="prifixList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.prefix" name="prefix">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.driverInfo.suffix' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="suffixList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.suffix" name="suffix">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="date_of_birth">
+                  {{ 'userDashboard.kyc.driverInfo.date_of_birth' | translate }}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.date_of_birth" name="date_of_birth" type="password"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="dl_effective_date">
+                  {{ 'userDashboard.kyc.driverInfo.dl_effective_date' | translate}}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.dl_effective_date" name="dl_effective_date" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="dl_expiration_date">
+                  {{ 'userDashboard.kyc.driverInfo.dl_expiration_date' | translate}}
+                </label>
+                <input readonly [(ngModel)]="driverInfoForm.dl_expiration_date" name="dl_expiration_date" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Foreign driver license -->
+      <ng-container *ngIf="section.tab === 'foreign_driver_license'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.foreign_drv_lics_info.have_foreign_licns' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="yesNoList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="driverInfoForm.isHaveForeignLicense" name="isHaveForeignLicense">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="driverInfoForm.isHaveForeignLicense === 'Yes'">
+            <div class="row m-0 align-items-end">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.country' | translate }}
+                  </label>
+                  <ng-select clearable="false" [items]="countryList" bindLabel="value" placeholder="-- Select One --"
+                    bindValue="name" [(ngModel)]="driverInfoForm.forn_licn_country" name="forn_licn_country"
+                    name="forn_licn_country">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.state' | translate }}
+                  </label>
+                  <ng-select clearable="false" [items]="usaStatesArray" bindLabel="name" placeholder="-- Select One --"
+                    bindValue="value" [(ngModel)]="driverInfoForm.forn_licn_state" name="forn_licn_state">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.city' | translate }}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.forn_licn_city" name="forn_licn_city" name="forn_licn_city"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.postal_code' | translate }}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.forn_licn_postal_code" name="forn_licn_postal_code"
+                    name="forn_licn_postal_code" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.issue_date' | translate}}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.forn_licn_issue_date" name="forn_licn_issue_date"
+                    name="forn_licn_issue_date" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.expire_date' | translate}}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.forn_licn_expire_date" name="forn_licn_expire_date"
+                    name="forn_licn_expire_date" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="foreign_driver_license_number">
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.foreign_driver_license_number' | translate }}
+                    <span class="mandatory">*</span>
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.foreign_driver_license_number" name="foreign_driver_license_number"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.document_upload' | translate }}
+                    <span class="mandatory">*</span>
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.forn_licn_document_upload" name="forn_licn_document_upload"
+                    name="forn_licn_document_upload" type="file" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <a class="btn btn-solid color2 no-text-transorm me-2">
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.upload' | translate }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- Personal info -->
+      <ng-container *ngIf="section.tab === 'personal_info'">
+        <div class="profile-info-grid">
+          <div class="row m-0">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="gender">
+                  {{ 'userDashboard.kyc.personal_info.gender' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <ng-select clearable="false" [items]="genderList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.gender" name="gender" name="gender">
+                </ng-select>
+              </div>
+
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="date_of_birth">
+                  {{ 'userDashboard.kyc.personal_info.date_of_birth' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.date_of_birth" name="date_of_birth" type="password"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.personal_info.marital_status' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <ng-select clearable="false" [items]="maritalStatusList" bindLabel="value"
+                  placeholder="-- Select One --" bindValue="name" [(ngModel)]="driverInfoForm.marital_status"
+                  name="marital_status">
+                </ng-select>
+              </div>
+            </div>
+            <div *ngIf="driverInfoForm.marital_status === 'Married'" class="col-lg-4">
+              <div class="form-group">
+                <label for="number_of_children">
+                  {{ 'userDashboard.kyc.personal_info.number_of_children' | translate}}
+                </label>
+                <input [(ngModel)]="driverInfoForm.number_of_children" name="number_of_children" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="contact">
+                  {{ 'userDashboard.kyc.personal_info.contact_number' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.contact" name="contact" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="email_id">
+                  {{ 'userDashboard.kyc.personal_info.email_id' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.email_id" name="email_id" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="emergency_contact_number">
+                  {{ 'userDashboard.kyc.personal_info.emergency_contact_number' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.emergency_contact_number" name="emergency_contact_number" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="emergency_contact_person_name">
+                  {{'userDashboard.kyc.personal_info.emergency_contact_person_name'| translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <input [(ngModel)]="driverInfoForm.emergency_contact_person_name" name="emergency_contact_person_name"
+                  type="text" class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.personal_info.relation_type' | translate }}
+                  <span class="mandatory">*</span>
+                </label>
+                <ng-select clearable="false" [items]="relationTypeList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.relation_type" name="relation_type">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="ssn">
+                  {{ 'userDashboard.kyc.other_info.ssn' | translate }}
+                </label>
+                <input [(ngModel)]="driverInfoForm.ssn" name="ssn" name="ssn" type="password"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="credit_score">
+                  {{ 'userDashboard.kyc.personal_info.credit_score' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="creditScoreList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.credit_score" name="credit_score" name="credit_score">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="location">
+                  {{ 'userDashboard.kyc.other_info.location' | translate }}
+                </label>
+                <input [(ngModel)]="driverInfoForm.location" name="location" name="location" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Current address -->
+      <ng-container *ngIf="section.tab === 'current_address'">
+        <div class="profile-info-grid">
+          <div class="row m-0">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_1">
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.address_1" name="address_1" type="text"
+                  class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_2">
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.address_2" name="address_2" type="text"
+                  class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="zip_code">
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </label>
+                <input [(ngModel)]="driverInfoForm.zip_code" name="zip_code" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="city">
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="cityList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.city" name="city" name="city">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="state">
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="usaStatesArray" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.state" name="state" name="state">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-12 mb-4">
+              <div class="form-check">
+                <input (change)="setPrimaryAddress($event, 'Permanent address')" class="form-check-input"
+                  type="checkbox" value="" id="primaryaddress1">
+                <label class="form-check-label text-primary ms-2" for="primaryaddress1">
+                  {{'userDashboard.kyc.address.current_address' | translate}} set as Primary address
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Permanent address -->
+      <ng-container *ngIf="section.tab === 'permanent_address'">
+        <div class="profile-info-grid">
+          <div class="row m-0">
+            <div class="col-lg-12 mb-4">
+              <div class="form-check">
+                <input (change)="sameAsAddress($event, 'Permanent')" class="form-check-input" type="checkbox" value=""
+                  id="flexCheckDefault">
+                <label class="form-check-label text-danger ms-2" for="flexCheckDefault">
+                  Is Mailing Address Same as Permanent Address
+                </label>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_1">
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.perm_add_address_1" name="perm_add_address_1"
+                  name="perm_add_address_1" type="text" class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_2">
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.perm_add_address_2" name="perm_add_address_2"
+                  name="perm_add_address_2" type="text" class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="zip_code">
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </label>
+                <input [(ngModel)]="driverInfoForm.perm_add_zip_code" name="perm_add_zip_code" name="perm_add_zip_code"
+                  type="text" class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="city">
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="cityList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.perm_add_city" name="perm_add_city" name="perm_add_city">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="state">
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="usaStatesArray" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.perm_add_state" name="perm_add_state"
+                  name="perm_add_state">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="country">
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="countryList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.perm_add_country" name="perm_add_country"
+                  name="perm_add_country">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-12 mb-4">
+              <div class="form-check">
+                <input (change)="setPrimaryAddress($event, 'Permanent address')" class="form-check-input"
+                  type="checkbox" value="" id="primaryaddress2">
+                <label class="form-check-label text-primary ms-2" for="primaryaddress2">
+                  {{'userDashboard.kyc.address.permanent_address' | translate}} set as Primary address
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Billing Address -->
+      <ng-container *ngIf="section.tab === 'billing_address'">
+        <div class="profile-info-grid">
+          <div class="row m-0">
+            <div class="col-lg-12 mb-4">
+              <div class="form-check">
+                <input (change)="sameAsAddress($event, 'Billing')" class="form-check-input" type="checkbox" value=""
+                  id="flexCheckDefault1">
+                <label class="form-check-label text-danger ms-2" for="flexCheckDefault1">
+                  Is Billing Address Same as Permanent Address
+                </label>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_1">
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.bill_add_address_1" name="bill_add_address_1"
+                  name="bill_add_address_1" type="text" class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="address_2">
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </label>
+                <textarea [(ngModel)]="driverInfoForm.bill_add_address_2" name="bill_add_address_2"
+                  name="bill_add_address_2" type="text" class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="zip_code">
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </label>
+                <input [(ngModel)]="driverInfoForm.bill_add_zip_code" name="bill_add_zip_code" name="bill_add_zip_code"
+                  type="text" class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="city">
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="cityList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.bill_add_city" name="bill_add_city" name="bill_add_city">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="state">
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="usaStatesArray" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.bill_add_state" name="bill_add_state"
+                  name="bill_add_state">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="country">
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="countryList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.bill_add_country" name="bill_add_country"
+                  name="bill_add_country">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-lg-12 mb-4">
+              <div class="form-check">
+                <input (change)="setPrimaryAddress($event, 'Permanent address')" class="form-check-input"
+                  type="checkbox" value="" id="primaryaddress3">
+                <label class="form-check-label text-primary ms-2" for="primaryaddress3">
+                  {{'userDashboard.kyc.address.billing_address' | translate}} set as Primary address
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Other Information -->
+      <ng-container *ngIf="section.tab === 'other_information'">
+        <div class="profile-info-grid mb-5">
+          <div class="row m-0">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.other_info.have_medical_insurance' | translate }}
+                </label>
+                <ng-select clearable="false" [items]="yesNoList" bindLabel="value" placeholder="-- Select One --"
+                  bindValue="name" [(ngModel)]="driverInfoForm.have_medical_insurance" name="have_medical_insurance">
+                </ng-select>
+              </div>
+            </div>
+
+            <ng-container *ngIf="driverInfoForm.have_medical_insurance === 'Yes'">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.other_info.insurance_type' | translate }}
+                  </label>
+                  <ng-select clearable="false" [items]="insuranceTypeList" bindLabel="name"
+                    placeholder="-- Select One --" bindValue="value" [(ngModel)]="driverInfoForm.insurance_type"
+                    name="insurance_type">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.other_info.insurance_company_name' | translate }}
+                  </label>
+                  <ng-select clearable="false" [items]="companyList" bindLabel="name" placeholder="-- Select One --"
+                    bindValue="value" [(ngModel)]="driverInfoForm.insurance_company_name" name="insurance_company_name">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.other_info.policy_number' | translate }}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.policy_number" name="policy_number" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.other_info.policy_issue_date' | translate }}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.policy_issue_date" name="policy_issue_date" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.other_info.policy_expiry_date' | translate }}
+                  </label>
+                  <input [(ngModel)]="driverInfoForm.policy_expiry_date" name="policy_expiry_date" type="text"
+                    class="form-control open-select" />
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="driverInfoForm.have_medical_insurance === 'No'">
+              <div class="col-lg-12 mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" [(ngModel)]="driverInfoForm.get_quotes_from_tlh" type="checkbox"
+                    id="other_info">
+                  <label class="form-check-label ms-2" for="other_info">
+                    {{'userDashboard.kyc.other_info.get_quotes_from_tlh' | translate}}
+                  </label>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <!-- Buttons -->
+  <div class="row my-4">
+    <div class="col-lg-12 text-end">
+      <button *ngIf="kycForm.state !== 'New York City' && !isEditInfo" type="button" (click)="onSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
+      </button>
+      <button *ngIf="kycForm.state !== 'New York City' && isEditInfo" type="button" (click)="onSubmit()"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Update
+      </button>
+      <button *ngIf="kycForm.state === 'New York City'" type="button" (click)="onChangeKycTab('TLC license info')"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Next
+      </button>
+      <button *ngIf="isEditInfo" (click)="onCancel()" type="button"
+        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

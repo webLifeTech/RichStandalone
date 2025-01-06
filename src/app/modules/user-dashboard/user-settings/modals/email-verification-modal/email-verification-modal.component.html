@@ -1,0 +1,34 @@
+<div class="modal-content form-modal verification-form">
+  <div class="modal-header">
+    <h4 class="modal-title">Email Verification</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="otp-number">
+      <p>
+        Please click the verification link send to your email address
+        <span>Triddse3w&#64;example.com</span>
+      </p>
+    </div>
+    <div class="otp-resend">
+      <a>Resend Again</a>
+    </div>
+    <div class="modal-btn">
+      <div class="row">
+        <div class="col-6">
+          <a (click)="onConfirm()" class="btn btn-theme w-100">
+            Verify
+          </a>
+        </div>
+
+        <div class="col-6">
+          <a (click)="closeModal()" class="btn btn-primary w-100">
+            Close
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

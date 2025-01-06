@@ -1,0 +1,31 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <h4>{{details.status || ""}}</h4>
+        <p>{{title || ""}}</p>
+      </div>
+      <form>
+        <div class="row text-start ">
+          <div class="cancel-reason">
+            <h6 class="">{{details.status}} Reason</h6>
+          </div>
+          <div class="cancel-box mb-4">
+            <p>
+              {{details.reason}}
+            </p>
+          </div>
+        </div>
+      </form>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-12 text-center">
+            <a (click)="closeModal()" class="btn btn-theme">
+              Close
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

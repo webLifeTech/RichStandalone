@@ -1,0 +1,28 @@
+<div class="row my-kyc">
+  <div class="col-lg-3">
+    <div class="dashboard-sidebar mb-3">
+      <div class="profile-top">
+        <div class="profile-detail">
+          <h5>{{'Settings' | translate}}</h5>
+        </div>
+      </div>
+      <div class="faq-tab">
+        <ul class="nav nav-tabs" id="top-tab" role="tablist">
+
+          @for(tab of sideTabs; track tab){
+          <li class="nav-item">
+            <a data-bs-toggle="tab" class="nav-link" [routerLink]="tab.route" routerLinkActive="active">
+              <i class={{tab.icon}}></i> {{ tab.title | translate }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-9">
+    <router-outlet></router-outlet>
+  </div>
+</div>

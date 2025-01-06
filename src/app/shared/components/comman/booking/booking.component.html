@@ -1,0 +1,67 @@
+<div class="review-section">
+  <div class="review_box" [class.shadow-none]="!title">
+    @if(title){
+    <div class="title-top">
+      <h5>payment option</h5>
+    </div>
+    }
+
+    <div class="flight_detail payment-gateway" [class.p-0]="!title">
+      <div class="accordion" id="accordionExample" ngbAccordion [closeOthers]="true">
+        @if(cabDetail){
+        @for(details of cabDetail.cabBooking; track details){
+        <div class="card" ngbAccordionItem [collapsed]="details.panel !== 'First'">
+          <div class="card-header" id="h_one">
+            <button class="btn btn-link" ngbAccordionButton (click)="change(details.title)">
+              <label for='{{ details.checkId }}'>
+                <input type='radio' class="radio_animated ms-0" id='{{ details.checkId }}' name='occupation'
+                  value='Working' [checked]="details.checked" required />
+                {{ details.title }}
+              </label>
+            </button>
+          </div>
+          <div id="one" class="collapse" ngbAccordionCollapse>
+            <div class="card-body" ngbAccordionBody>
+              <ng-template>
+                <!-- @if(details.value == 'debit'){
+                <app-booking-debit-card></app-booking-debit-card>
+                } -->
+
+                @if(details.value == 'credit'){
+                <app-booking-credit-card></app-booking-credit-card>
+                }
+
+                @if(details.value == 'net_banking'){
+                <app-booking-net-banking></app-booking-net-banking>
+                }
+
+                @if(details.value == 'wallet'){
+                <app-booking-my-wallet></app-booking-my-wallet>
+                }
+
+                <!-- @if(details.value == 'crypto'){
+                <app-booking-crypto [coinList]="coinList"></app-booking-crypto>
+                } -->
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        }
+        }
+      </div>
+
+      <div class="payment-btn text-end mt-5">
+        <button (click)="bookCancel()" type="button" class="btn btn-solid color1 me-3">
+          {{'booking_payment_page.cancel' | translate}}
+        </button>
+        <button *ngIf="!isLoader" (click)="bookNow()" type="button" class="btn btn-theme">
+          {{'booking_payment_page.book_now' | translate}}
+        </button>
+        <button *ngIf="isLoader" class="btn btn btn-theme" type="button">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

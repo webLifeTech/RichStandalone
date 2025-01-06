@@ -1,0 +1,501 @@
+{
+  "menu": {
+    "home": "होम",
+    "aboutus": "हमारे बारे में",
+    "car_rentals": "कार किराया",
+    "driver_rentals": "ड्राइवर किराया",
+    "submenu": {
+      "listing": "लिस्टिंग",
+      "booking": "बुकिंग",
+      "car_details": "कार विवरण",
+      "child_menu": {
+        "grid_view": "ग्रिड दृश्य",
+        "hotel": "होटल"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "डैशबोर्ड",
+    "cars": "कारें",
+    "trasaction": "लेन-देन",
+    "report": "रिपोर्ट्स",
+    "submenus": {
+      "payment": "भुगतान",
+      "enquiry": "जांच",
+      "micromenu": {
+        "payment1": "भुगतान 1",
+        "payment2": "भुगतान 2"
+      }
+    }
+  },
+  "global": {
+    "location": "स्थान",
+    "search": "खोज",
+    "different": "अलग",
+    "same": "समान",
+    "pick_up": "उठाना",
+    "drop_off": "छोड़ना",
+    "date": "तारीख",
+    "time": "समय",
+    "date_and_time": "तारीख और समय",
+    "enter": "दर्ज करें",
+    "select": "चुनें",
+    "or": "या",
+    "type": "प्रकार",
+    "am": "पूर्वाह्न",
+    "pm": "अपराह्न"
+  },
+  "cab_home_page": {
+    "title": "अपनी कैब बुक करें",
+    "descriptipn": "रिका कैब के साथ किफायती कीमत पर कैब किराए पर लें"
+  },
+  "cab_list_page": {
+    "description": "किसी भी प्रकार की यात्रा के लिए कैब किराए पर लें"
+  },
+  "cab_list": {
+    "cab_search": "कैब खोजें"
+  },
+  "auth": {
+    "login": "लॉग इन",
+    "signup": "साइन अप",
+    "form": {
+      "full_name": "पूरा नाम",
+      "username": "मोबाइल नंबर या ईमेल पता",
+      "password": "पासवर्ड",
+      "confirm_password": "पासवर्ड की पुष्टि करें",
+      "remember_me": "मुझे याद रखें",
+      "create_account": "खाता बनाएँ",
+      "send": "भेजें",
+      "resend": "पुनः भेजें",
+      "otp": "ओटीपी",
+      "seconds": "सेकंड",
+      "otp_enable": "में सक्षम होगा"
+    }
+  },
+  "car_list_page": {
+    "seater": "सीटर",
+    "luggage": "सामान",
+    "AC": "एसी",
+    "mileage": "असीमित माइलेज",
+    "fare_per_km": "किराया/किमी",
+    "book_now": "अभी बुक करें",
+    "book": "बुक करें",
+    "view_deal": "डील देखें",
+    "d_rating": "रेटिंग",
+    "d_location": "स्थान",
+    "d_experience": "अनुभव",
+    "details": "विवरण",
+    "need_help": "मदद की ज़रूरत",
+    "monday-to-friday": "सोमवार से शुक्रवार",
+    "apply": "लागू करें",
+    "close_filter": "फ़िल्टर बंद करें",
+    "search_here": "यहां खोजें..",
+    "offer_discount": "त्यौहार ऑफर",
+    "discount_for": "के लिए छूट",
+    "free_cancellation": "मुफ़्त निराकरण",
+    "important_info": "महत्वपूर्ण जानकारी",
+    "email_quote": "ईमेल उद्धरण",
+    "back": "वापस",
+    "status": {
+      "available": "उपलब्ध",
+      "booked": "बुक किया गया"
+    },
+    "filter": {
+      "latest_filter": "फ़िल्टर",
+      "clear_filter": "फ़िल्टर साफ़ करें",
+      "car_option": "ट्रांसमिशन",
+      "capacity": "क्षमता",
+      "car_type": "कार श्रेणी",
+      "price": "कीमत",
+      "review_score": "वाहन समीक्षा",
+      "car_location": "स्थान",
+      "price_per_day": "प्रति दिन कीमत",
+      "fuel_policy": "ईंधन नीति",
+      "deposit_required": "जमा की आवश्यकता",
+      "supplier": "बेड़ा कंपनी",
+      "mileage_kilometres": "माइलेज/किलोमीटर",
+      "car_electric": "इलेक्ट्रिक कारें",
+      "car_specs": "कार विशेषताएँ",
+      "experience": "अनुभव"
+    },
+    "car_type": {
+      "mini": "मिनी",
+      "medium": "मध्यम",
+      "luxury": "लक्जरी",
+      "sadan": "सेडान",
+      "SUV": "एसयूवी",
+      "standard": "मानक",
+      "tempo": "टेम्पो"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 यात्री",
+      "6-10_passenger": "6-10 यात्री",
+      "10_or_more": "10 या अधिक"
+    },
+    "experience": {
+      "1-5_years": "1-5 years",
+      "6-10_years": "6-10 years",
+      "11-15_years": "11-15 years",
+      "16-20_years": "16-20 years",
+      "20_or_more": "20 or more"
+    },
+    "car_option": {
+      "automatic": "स्वचालित",
+      "manual": "मैनुअल"
+    },
+    "location": {
+      "rajajinagar": "राजाजीनगर",
+      "basaveshwarnagar": "बसवेश्वरनगर",
+      "vijayanagar": "विजयनगर",
+      "jayanagar": "जयानगर",
+      "madivala": "माडीवाला",
+      "all_other_location": "अन्य सभी स्थान"
+    },
+    "price_per_day": {
+      "0_5000": "₹0 - ₹5,000",
+      "5000_10000": "₹5,000 - ₹10,000",
+      "10000_15000": "₹10,000 - ₹15,000",
+      "15000_20000": "₹15,000 - ₹20,000",
+      "20000+": "₹20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "वातानुकूलन",
+      "4+doors": "4+ दरवाजे"
+    },
+    "car_electric": {
+      "fully_electric": "पूरी तरह से इलेक्ट्रिक",
+      "hybrid": "हाइब्रिड",
+      "plugin_hybrid": "प्लग-इन हाइब्रिड"
+    },
+    "mileage_kilometres": {
+      "unlimited": "असीमित"
+    },
+    "fuel_policy": {
+      "free_tank": "फ्री टैंक",
+      "like_or_like": "जैसा का तैसा"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "carowner": {
+      "carowner": "कार मालिक"
+    },
+    "supplier": {
+      "peugeot": "प्यूज़ो",
+      "suzuki": "सुज़ुकी",
+      "fiat": "फ़िएट",
+      "honda": "होंडा",
+      "ford": "फ़ोर्ड",
+      "hyundai": "हुंडई ",
+      "general": "जनरल",
+      "avis": "एविस",
+      "budget": "बजट",
+      "dollar": "डॉलर",
+      "hertz": "हेटर्स",
+      "sixt": "सिक्स्ट"
+    }
+  },
+  "booking_page": {
+    "back_results": "खोज परिणामों पर वापस जाएं",
+    "deal_title": "आपका सौदा",
+    "free_cancellation_up": "पिक-अप से 48 घंटे पहले तक निःशुल्क रद्दीकरण",
+    "continue_to_book": "बुक करना जारी रखें"
+  },
+  "booking_payment_page": {
+    "back_results": "अपने सौदे पर वापस जाएँ",
+    "title": "चेकआउट करें",
+    "book_now": "अभी बुक करें",
+    "cancel": "रद्द करें"
+  },
+  "booking_summary": {
+    "title": "बुकिंग सारांश",
+    "pickup": "पिक-अप",
+    "dropoff": "ड्रॉप-ऑफ",
+    "pickup_date": "पिकअप तिथि",
+    "return_date": "वापसी तिथि",
+    "car_type": "कार का प्रकार",
+    "driver_name": "ड्राइवर का नाम",
+    "discount": "छूट",
+    "total_fare": "कुल किराया"
+  },
+  "have_coupon": {
+    "title": "क्या आपके पास कूपन कोड है?",
+    "input_plchold": "प्रोमो कोड",
+    "apply": "लागू करें"
+  },
+  "great_choice": {
+    "title": "बहुत बढ़िया विकल्प!",
+    "customer_rating": "ग्राहक रेटिंग",
+    "short_queues": "छोटी कतारें",
+    "helpful_counter_staff": "सहायक काउंटर कर्मचारी",
+    "most_popular_fuel_policy": "सबसे लोकप्रिय ईंधन नीति",
+    "easy_to_find_counter": "काउंटर ढूंढना आसान",
+    "free_cancellation": "निःशुल्क रद्दीकरण"
+  },
+  "payment_success": {
+    "car_title": "भुगतान सफल! सवारी के लिए तैयार हो जाओ",
+    "car_massage1": "आपके भुगतान के लिए धन्यवाद. हमें आपका भुगतान सफलतापूर्वक प्राप्त हो गया है.",
+    "car_massage2": "आपकी लेनदेन आईडी है",
+    "car_massage3": "आपको जल्द ही एक ईमेल चालान प्राप्त होगा!",
+    "driver_title": "भुगतान सफल! ड्राइवर सवारी के लिए तैयार हो जाओ",
+    "driver_massage1": "आपके भुगतान के लिए धन्यवाद. हमें आपका भुगतान सफलतापूर्वक प्राप्त हो गया है.",
+    "driver_massage2": "आपकी लेनदेन आईडी है",
+    "driver_massage3": "आपको जल्द ही एक ईमेल चालान प्राप्त होगा!",
+    "download_invoice": "चालान डाउनलोड करें"
+  },
+  "invoice_summary": {
+    "car_title": "भुगतान सफल! कार सवारी के लिए तैयार हो गई",
+    "car_subtitle": "आपके भुगतान के लिए धन्यवाद। हमें आपका भुगतान सफलतापूर्वक प्राप्त हो गया है। अपने दोस्तों और परिवार के साथ अपनी योजनाएँ साझा करें",
+    "driver_title": "भुगतान सफल! ड्राइवर आपके स्थान पर जाने के लिए तैयार हो गया",
+    "driver_subtitle": "आपके भुगतान के लिए धन्यवाद। हमें आपका भुगतान सफलतापूर्वक प्राप्त हो गया है। अपने दोस्तों और परिवार के साथ अपनी योजनाएँ साझा करें",
+    "view_itinerary": "यात्रा कार्यक्रम देखें",
+    "booking_details": "बुकिंग विवरण",
+    "transaction_id": "लेनदेन आईडी",
+    "booking_status": "बुकिंग स्थिति",
+    "car_details": "कार विवरण",
+    "driver_details": "ड्राइवर विवरण",
+    "pickup": "पिक-अप",
+    "dropoff": "ड्रॉप-ऑफ",
+    "pickup_date": "पिकअप तिथि",
+    "return_date": "वापसी तिथि",
+    "car_type": "कार का प्रकार",
+    "driver_name": "ड्राइवर का नाम",
+    "discount": "छूट",
+    "total_fare": "कुल किराया",
+    "total_days": "कुल दिन",
+    "total_day": "कुल दिन",
+    "your_details": "आपका विवरण",
+    "name": "नाम",
+    "address": "पता",
+    "email": "ईमेल",
+    "phone_no": "फ़ोन नंबर"
+  },
+  "payment_failed": {
+    "car_title": "ओह! हम आपका भुगतान संसाधित करने में असमर्थ हैं",
+    "car_massage1": "ऐसा लगता है कि हमें कोई त्रुटि मिली है। कृपया पुनः प्रयास करें। यदि आपको समस्या बनी रहती है, तो कोई अन्य भुगतान विधि आज़माएँ।",
+    "driver_title": "ओह! हम आपका भुगतान संसाधित करने में असमर्थ हैं",
+    "driver_massage1": "ऐसा लगता है कि हमें कोई त्रुटि मिली है। कृपया पुनः प्रयास करें। यदि आपको समस्या बनी रहती है, तो कोई अन्य भुगतान विधि आज़माएँ।",
+    "try_again": "पुनः प्रयास करें"
+  },
+  "userDashboard": {
+    "kyc": {
+      "toptabs": {
+        "dashboard": "डैशबोर्ड",
+        "my_bookings": "मेरी बुकिंग",
+        "reviews": "समीक्षाएँ",
+        "wishlist": "इच्छा सूची",
+        "messages": "संदेश",
+        "wallet": "वॉलेट",
+        "payments": "भुगतान",
+        "my_profile": "मेरी प्रोफ़ाइल",
+        "settings": "सेटिंगs"
+      },
+      "driverInfo": {
+        "title": "ड्राइवर जानकारी",
+        "profile_picture": "प्रोफ़ाइल चित्र",
+        "upload": "अपलोड करें",
+        "submit": "सबमिट करें",
+        "driver_license_number": "ड्राइवर लाइसेंस नंबर",
+        "license_document_upload": "लाइसेंस दस्तावेज़ अपलोड करें",
+        "firstname": "पहला नाम",
+        "lastname": "अंतिम नाम",
+        "date_of_birth": "जन्म तिथि",
+        "dl_state": "ड्राइवर लाइसेंस राज्य",
+        "dl_effective_date": "ड्राइवर लाइसेंस प्रभावी तिथि",
+        "dl_expiration_date": "ड्राइवर लाइसेंस समाप्ति तिथि",
+        "edit": "जानकारी संपादित करें",
+        "completed_msg": "आपका kyc सत्यापन सफलतापूर्वक पूरा हो गया है।"
+      },
+      "personal_info": {
+        "title": "व्यक्तिगत जानकारी",
+        "gender": "लिंग",
+        "date_of_birth": "जन्म तिथि",
+        "year_of_experience": "अनुभव का वर्ष",
+        "marital_status": "वैवाहिक स्थिति",
+        "number_of_children": "बच्चों की संख्या",
+        "contact_number": "संपर्क संख्या",
+        "email_id": "ईमेल आईडी",
+        "emergency_contact_number": "आपातकालीन संपर्क संख्या",
+        "emergency_contact_person_name": "आपातकालीन संपर्क व्यक्ति का नाम",
+        "credit_score": "क्रेडिट स्कोर"
+      },
+      "address": {
+        "current_address": "वर्तमान पता",
+        "permanent_address": "स्थायी पता",
+        "billing_address": "बिलिंग पता",
+        "country": "देश",
+        "state": "राज्य",
+        "city": "शहर",
+        "zip_code": "पोस्टल कोड",
+        "address_1": "पता 1",
+        "address_2": "पता 2"
+      },
+      "other_info": {
+        "title": "अन्य जानकारी",
+        "taxid": "टैक्सआईडी",
+        "ssn": "एसएसएन",
+        "price_per_day": "प्रतिदिन की कीमत",
+        "location": "स्थान",
+        "pickup_location": "पिकअप स्थान",
+        "drop_location": "ड्रॉप स्थान",
+        "is_available_for_private_booking": "क्या निजी बुकिंग के लिए उपलब्ध है?",
+        "is_active_inactive": "क्या सक्रिय/निष्क्रिय है",
+        "shift_timing": "शिफ्ट समय",
+        "from": "शिफ्ट समय से",
+        "to": "शिफ्ट समय से",
+        "working_hours": "कार्य समय",
+        "serial_number": "सं.",
+        "day_of_week": "सप्ताह का दिन",
+        "from_time": "समय से",
+        "to_time": "समय तक",
+        "action": "कार्रवाई",
+        "status": "स्थिति"
+      },
+      "tlc_info": {
+        "title": "टीएलसी लाइसेंस जानकारी",
+        "driver_license_number": "टीएलसी लाइसेंस नंबर",
+        "license_document_upload": "टीएलसी लाइसेंस दस्तावेज़ अपलोड",
+        "firstname": "पहला नाम",
+        "lastname": "अंतिम नाम",
+        "date_of_birth": "जन्म तिथि",
+        "dl_state": "लाइसेंस राज्य",
+        "dl_effective_date": "टीएलसी लाइसेंस प्रभावी तिथि",
+        "dl_expiration_date": "टीएलसी लाइसेंस समाप्ति तिथि"
+      },
+      "company_details": {
+        "title": "कंपनी विवरण",
+        "logo": "कंपनी का लोगो",
+        "taxid": "टैक्सआईडी",
+        "registration_document": "पंजीकरण दस्तावेज़ अपलोड",
+        "company_name": "कंपनी का नाम",
+        "date_of_registration": "पंजीकरण की तिथि",
+        "city": "शहर",
+        "postal_code": "पोस्टल कोड",
+        "registration_address": "पंजीकरण पता"
+      },
+      "fleet_owner_details": {
+        "title": "बेड़े के मालिक का विवरण",
+        "first_name": "पहला नाम",
+        "last_name": "अंतिम नाम",
+        "contact_number": "संपर्क नंबर",
+        "email_id": "ईमेल आईडी",
+        "ssn": "एसएसएन",
+        "driver_license_number": "ड्राइवर लाइसेंस नंबर",
+        "driver_license_document": "ड्राइवर लाइसेंस दस्तावेज़ अपलोड करें"
+      },
+      "office_details": {
+        "title": "कार्यालय विवरण",
+        "first_name": "संपर्क व्यक्ति का पहला नाम",
+        "last_name": "अंतिम नाम",
+        "contact_number": "संपर्क नंबर",
+        "email_id": "ईमेल आईडी",
+        "city": "शहर",
+        "postal_code": "पोस्टल कोड",
+        "company_address": "कंपनी का पता",
+        "map_location": "मानचित्र स्थान"
+      },
+      "branch_info": {
+        "title": "शाखा जानकारी",
+        "multiple_location": "क्या आपके पास कई स्थान हैं?",
+        "dba_name": "डीबीए नाम",
+        "first_name": "संपर्क व्यक्ति का पहला नाम",
+        "last_name": "अंतिम नाम",
+        "contact_number": "संपर्क नंबर",
+        "email_id": "ईमेल आईडी",
+        "city": "शहर",
+        "postal_code": "डाक कोड",
+        "branch_address": "शाखा का पता",
+        "map_location": "मानचित्र स्थान",
+        "add_more": "एक और शाखा जोड़ें"
+      },
+      "vehicles_info": {
+        "title": "वाहन की जानकारी",
+        "vin_number": "विन नंबर",
+        "vin_document_upload": "विन दस्तावेज़ अपलोड करें",
+        "plate_number": "प्लेट नंबर",
+        "model_year": "मॉडल वर्ष",
+        "vehicle_age": "वाहन की आयु",
+        "make": "निर्माता",
+        "model": "मॉडल",
+        "gross_vehicle_weight": "कुल वाहन वजन",
+        "seating_capacity": "बैठने की क्षमता",
+        "registration_state": "पंजीकरण राज्य",
+        "territory_code": "क्षेत्र कोड",
+        "garage_zip_code": "गैरेज ज़िप कोड",
+        "fuel_type": "ईंधन प्रकार",
+        "dashboard_camera": "डैशबोर्ड कैमरा",
+        "collision_avoidance": "टकराव से बचाव",
+        "transmission": "ट्रांसमिशन",
+        "car_category": "कार श्रेणी"
+      },
+      "vehicle_inspection_detail": {
+        "title": "वाहन निरीक्षण विवरण",
+        "is_inspection_report": "क्या निरीक्षण रिपोर्ट उपलब्ध है?",
+        "vehicle_tlh": "वाहन में निरीक्षण रिपोर्ट नहीं है THE से आरंभ करें",
+        "valid_date": "मान्य डेटा",
+        "upload_inspection_report": "निरीक्षण रिपोर्ट अपलोड करें"
+      },
+      "vehicle_insurance_detail": {
+        "title": "वाहन बीमा विवरण",
+        "is_insurance_covered": "क्या बीमा कवर है",
+        "insurance_quote": "बीमा कवर नहीं है, कोटेशन की तलाश है",
+        "carriers_name": "वाहक का नाम",
+        "policy_number": "पॉलिसी संख्या",
+        "limits_coverage": "सीमाएँ और कवरेज",
+        "coverage_expire_date": "कवरेज समाप्ति तिथि",
+        "coverage_effective_date": "कवरेज प्रभावी तिथि"
+      },
+      "other_details": {
+        "title": "अन्य विवरण",
+        "branch": "शाखा",
+        "price_per_day": "प्रति दिन कीमत",
+        "car_image_upload": "कार छवि अपलोड करें"
+      },
+      "upload_bulk_vehicle": {
+        "title": "थोक वाहन अपलोड करें",
+        "table_title": "सभी शाखाएँ",
+        "upload_vin_number": "VIN नंबर के साथ स्प्रेडशीट अपलोड करें",
+        "vin_number": "VIN नंबर",
+        "tlc_plate_number": "TLC प्लेट नंबर",
+        "car_category": "कार श्रेणी",
+        "fuel_type": "ईंधन प्रकार",
+        "transmission": "ट्रांसमिशन",
+        "kyc": "KYC",
+        "action": "कार्रवाई"
+      },
+      "car_owner_info": {
+        "title": "कार मालिक का विवरण",
+        "first_name": "पहला नाम",
+        "last_name": "अंतिम नाम",
+        "contact_number": "संपर्क नंबर",
+        "email_id": "ईमेल आईडी",
+        "ssn": "एसएसएन",
+        "driver_license_number": "ड्राइवर लाइसेंस नंबर",
+        "driver_license_document": "ड्राइवर लाइसेंस दस्तावेज़ अपलोड करें"
+      }
+    },
+    "try_again": "पुनः प्रयास करें"
+  },
+  "adminDashboard": {
+    "security": {
+      "menu": "मेनू",
+      "submenu": "सब मेनू",
+      "all_menu": "सभी मेनू",
+      "search": "खोजें",
+      "add_menu": "नया मेनू जोड़ें",
+      "add_sub_menu": "नया सबमेनू जोड़ें",
+      "sn": "S#",
+      "menu_name": "मेनू नाम",
+      "status": "स्थिति",
+      "action": "कार्रवाई",
+      "sub_menu_name": "सबमेनू नाम",
+      "redirect_url": "रीडायरेक्ट यूआरएल",
+      "description": "विवरण",
+      "save": "सहेजें",
+      "cancel": "रद्द करें",
+      "upload": "अपलोड करें"
+    }
+  }
+}

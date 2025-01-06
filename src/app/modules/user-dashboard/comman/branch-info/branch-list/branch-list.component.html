@@ -1,0 +1,100 @@
+<div *ngIf="isAdd">
+  <app-branch-add-edit [editInfo]="editInfo" (onCancel)="cancelAdd()" (onSubmit)="onSubmit($event)"
+    (onUpdateSubmit)="onUpdate($event)"></app-branch-add-edit>
+</div>
+<div *ngIf="!isAdd" class="container-fluid">
+  <div class="row align-items-center mt-4 mb-2">
+    <div class="col-lg-12 mb-2">
+      <h5 class="title-5">{{ 'userDashboard.kyc.branch_info.title' | translate }}</h5>
+    </div>
+    <div class="col-lg-6">
+      <form class="form-inline align-self-end">
+        <div class="d-flex">
+          <input [(ngModel)]="searchText" name="sub_menu_name" type="text"
+            [placeholder]="'userDashboard.search_placeholder' | translate" class="form-control open-select" />
+          <button (click)="isAdd = true" class="btn btn-theme no-text-transorm ms-2">
+            <i class="feather icon-search"></i> {{ 'userDashboard.search_btn' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6">
+      <div *ngIf="!isAdd" class="text-end">
+        <a (click)="isAdd = true" class="btn btn-solid color2 no-text-transorm">
+          <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.branch_info.add_more' | translate }}
+        </a>
+      </div>
+    </div>
+    <div *ngIf="!userList.length" class="col-lg-12 mt-5">
+      <div class="text-center">
+        <p>Branch Info Not Found</p>
+      </div>
+    </div>
+    <div class="col-lg-12 mt-3">
+      <div class="table-responsive dashboard-table mb-3">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">
+                {{'userDashboard.kyc.branch_info.sn' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.dba_name' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.first_name' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.last_name' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.contact_number' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.email_id' | translate}}
+              </th>
+              <th>
+                {{'userDashboard.kyc.branch_info.city' | translate}}
+              </th>
+              <th class="text-center">
+                {{'userDashboard.kyc.branch_info.action' | translate}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of userList | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+              <td class="text-center">{{idx+1}}</td>
+              <td class="">{{item.branch_dba_name || '-'}}</td>
+              <td class="">{{item.branch_first_name || '-'}}</td>
+              <td class="">{{item.branch_last_name || '-'}}</td>
+              <td class="">{{item.branch_contact_number || '-'}}</td>
+              <td class="">{{item.branch_email_id || '-'}}</td>
+              <td class="">{{item.branch_city || '-'}}</td>
+              <td class="text-center">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <i class="feather icon-more-vertical"></i>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button (click)="onView(item)" type="button" mat-menu-item>
+                    <i class="feather icon-eye"></i>
+                    <span class="ms-2">View</span>
+                  </button>
+                  <button (click)="onEdit(item, idx)" mat-menu-item>
+                    <i class="feather icon-edit"></i>
+                    <span class="ms-2">Edit</span>
+                  </button>
+                  <button (click)="onDelete(idx)" mat-menu-item>
+                    <i class="feather icon-trash"></i>
+                    <span class="ms-2">Delete</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>

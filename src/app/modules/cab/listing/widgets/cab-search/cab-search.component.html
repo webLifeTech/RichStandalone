@@ -1,0 +1,98 @@
+<div class="desktop-book-details" *ngIf="!isSearchVisible">
+  <div class="desktop-info d-flax">
+    <div class="desktop-destination">
+      <span *ngIf="!searchInfo.same_location" class="desktop-title">{{searchInfo.pick_up_location}}</span>
+      <span *ngIf="searchInfo.same_location" class="desktop-title">{{searchInfo.same_location}}</span>
+      &nbsp; &nbsp;
+      <br />
+      <span>{{searchInfo.pick_time | date:'medium' }}</span> &nbsp; &nbsp;
+    </div>
+    <div class="dr"></div>
+    <div class="desktop-destination">
+      <span *ngIf="!searchInfo.same_location" class="desktop-title">{{searchInfo.drop_location}}</span>
+      <span *ngIf="searchInfo.same_location" class="desktop-title">{{searchInfo.same_location}}</span>
+      &nbsp; &nbsp;<br />
+      <span>{{searchInfo.drop_time | date:'medium' }}</span>
+    </div>
+  </div>
+  <div *ngIf="searchFrom !== 'checkout'" class="modify-search">
+    <a class="btn btn-theme no-text-transorm" (click)="openSearchBox()">Edit</a>
+  </div>
+
+</div>
+
+<div *ngIf="isSearchVisible" class="flight-search-detail position-relative" [class.show]="isShow">
+  <form class="row m-0">
+    <div class="col"
+      [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
+      <div class="form-group">
+        <label>{{ 'global.pick_up' | translate }} {{ 'global.location' | translate }}</label>
+        <input [(ngModel)]="searchObj.pick_up_location" name="pick_up_location" type="text" value="Paris"
+          class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
+        <img src="assets/images/icon/from.png" class="img-fluid blur-up lazyload" alt="pickup-icon">
+      </div>
+    </div>
+    <div class="col"
+      [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
+      <div class="form-group">
+        <label>{{ 'global.drop_off' | translate }} {{ 'global.location' | translate }}</label>
+        <input [(ngModel)]="searchObj.drop_location" name="drop_location" type="text" value="Toulouse"
+          class="form-control open-select" placeholder="drop off">
+        <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+      </div>
+    </div>
+    <div class="col"
+      [ngClass]="{ 'd-none': searchObj.location_type == 'option1', 'd-block': searchObj.location_type == 'option2' }">
+      <div class="form-group">
+        <label class="font-xs-white">
+          {{ 'global.location' | translate }}
+        </label>
+        <input [(ngModel)]="searchObj.same_location" name="same_location" type="text" value="Toulouse"
+          class="form-control open-select" placeholder="drop off">
+        <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label>{{ 'global.pick_up_time' | translate }}</label>
+        <input [(ngModel)]="searchObj.pick_time" name="pick_time" class="form-control datetimepicker-input digits"
+          placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}"
+          value="02:05 11/13/2019" type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+        <owl-date-time #pickup></owl-date-time>
+      </div>
+    </div>
+    <!-- [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }" -->
+    <div class="col">
+      <div class="form-group">
+        <label>{{ 'global.drop_off_time' | translate }}</label>
+        <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
+          placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}"
+          value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+        <owl-date-time #drop></owl-date-time>
+      </div>
+    </div>
+    <div id="type" class="col">
+      <div class="form-group">
+        <label class="font-xs-white">{{ 'global.type' | translate }}</label>
+        <select [(ngModel)]="searchObj.type" name="type" id="type" class="form-control open-select"
+          (change)="applyFilter($event)">
+          <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' | translate }}</option>
+          <option value="car">Car</option>
+          <option value="driver">Driver</option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="search-btn">
+        <a class="btn btn-theme" (click)="serachCarDetails()">{{ 'global.search' |
+          translate }}</a>
+      </div>
+    </div>
+    <div (click)="closeSearchBox()" class="close-search">
+      <i class="far fa-times-circle"></i>
+    </div>
+    <div class="responsive-close" (click)="closeSearchBox()">
+      <i class="far fa-times-circle"></i>
+    </div>
+  </form>
+</div>

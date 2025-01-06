@@ -1,0 +1,25 @@
+<div class="card dash-box-card flex-fill mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center">
+        <h4>Booking Overview</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-history">
+    <div class="row widget-box p-0">
+
+      <div class="col-md-12">
+        <div class="flex-fill">
+          <div class="widget-header text-center">
+            <app-user-apexcharts [data]="totalDrivers.data" [chartSize]="3"
+              [name]="'Performance grade'"></app-user-apexcharts>
+            <div class="text-end">
+              <a class="btn view-btn mb-2" (click)="viewBooking(null)">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

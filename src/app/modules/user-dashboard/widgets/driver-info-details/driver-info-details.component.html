@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-lg-12 mt-3">
+    <div class="table-responsive dashboard-table">
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th class="text-center">
+              {{'userDashboard.kyc.branch_info.sn' | translate}}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.driverInfo.firstname' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.driverInfo.middlename' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.driverInfo.lastname' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.driverInfo.driver_license_number' | translate }}
+            </th>
+            <th class="text-center">
+              {{'userDashboard.kyc.branch_info.action' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of [driverInfoData]; let idx = index">
+            <td class="text-center">{{idx+1}}</td>
+            <td class="">{{item.driverInfo.firstName || '-'}}</td>
+            <td class="">{{item.driverInfo.middleName || '-'}}</td>
+            <td class="">{{item.driverInfo.lastName || '-'}}</td>
+            <td class="">{{item.driverInfo.driverLicenseNumber || '-'}}</td>
+            <td class="text-center">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <i class="feather icon-more-vertical"></i>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="before">
+                <button (click)="onView(item)" type="button" mat-menu-item>
+                  <i class="feather icon-eye"></i>
+                  <span class="ms-2">View</span>
+                </button>
+                <!-- <button (click)="blockchainPDF(item)" type="button" mat-menu-item>
+                  <i class="feather icon-file-text"></i>
+                  <span class="ms-2">View Blockchain PDF</span>
+                </button> -->
+                <button (click)="onEdit(item, idx)" mat-menu-item>
+                  <i class="feather icon-edit"></i>
+                  <span class="ms-2">Edit</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

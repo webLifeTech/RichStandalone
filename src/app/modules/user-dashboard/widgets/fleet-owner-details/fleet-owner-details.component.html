@@ -1,0 +1,421 @@
+<div class="row">
+
+  <div *ngIf="onlyCompanyInfo" class="col-lg-12 mt-3">
+    <div class="table-responsive dashboard-table">
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th class="text-center">
+              {{'userDashboard.kyc.branch_info.sn' | translate}}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.company_details.company_name' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.fleet_owner_details.contact_number' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.fleet_owner_details.first_name' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.driverInfo.middlename' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.fleet_owner_details.last_name' | translate }}
+            </th>
+            <th>
+              {{ 'userDashboard.kyc.fleet_owner_details.driver_license_number' | translate }}
+            </th>
+            <th class="text-center">
+              {{'userDashboard.kyc.branch_info.action' | translate}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of [fleetOwnerInfoData]; let idx = index">
+            <td class="text-center">{{idx+1}}</td>
+            <td class="">{{item.comp_info_company_name || '-'}}</td>
+            <td class="">{{item.fleet_owr_contact_number || '-'}}</td>
+            <td class="">{{item.fleet_owr_first_name || '-'}}</td>
+            <td class="">{{item.middleName || '-'}}</td>
+            <td class="">{{item.fleet_owr_last_name || '-'}}</td>
+            <td class="">{{item.fleet_owr_driver_license_number || '-'}}</td>
+            <td class="text-center">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <i class="feather icon-more-vertical"></i>
+              </button>
+              <mat-menu #menu="matMenu" xPosition="before">
+                <button (click)="onView(item)" type="button" mat-menu-item>
+                  <i class="feather icon-eye"></i>
+                  <span class="ms-2">View</span>
+                </button>
+                <button (click)="onEdit(item, idx)" mat-menu-item>
+                  <i class="feather icon-edit"></i>
+                  <span class="ms-2">Edit</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Vehicle Info // for both -->
+  <div *ngIf="onlyVehicleInfo" class="col-lg-12 mb-4">
+    <div class="review-section">
+      <div class="review_box">
+        <div class="title-top">
+          <h5>
+            {{ 'userDashboard.kyc.vehicles_info.title' | translate }}
+          </h5>
+        </div>
+        <div class="flight_detail">
+          <div class="summery_box">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.vin_number' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.vin_number || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.vin_document_upload' | translate }}
+                  </td>
+                  <td>
+                    <span>
+                      <i class="fa fa-eye pointer" (click)="viewDocumentFile()"></i>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.plate_number' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.plate_number || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.model_year' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.model_year || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.vehicle_age' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.vehicle_age || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.make' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.make || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.model' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.model || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.gross_vehicle_weight' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.gross_vehicle_weight || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.seating_capacity' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.seating_capacity || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.registration_state' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.registration_state || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.territory_code' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.territory_code || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.garage_zip_code' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.garage_zip_code || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.fuel_type' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.fuel_type || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.dashboard_camera' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.dashboard_camera || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.collision_avoidance' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.collision_avoidance || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.transmission' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.transmission || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.vehicles_info.car_category' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.car_category || '-'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Vehicle Inspection Detail // for both -->
+  <div *ngIf="onlyVehicleInfo" class="col-lg-12 mb-4">
+    <div class="review-section">
+      <div class="review_box">
+        <div class="title-top">
+          <h5>
+            {{ 'userDashboard.kyc.vehicle_inspection_detail.title' | translate }}
+          </h5>
+        </div>
+        <div class="flight_detail">
+          <div class="summery_box">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td *ngIf="fleetOwnerInfoData.is_inspection_report">
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.is_inspection_report' | translate }}
+                  </td>
+                  <td *ngIf="!fleetOwnerInfoData.is_inspection_report">
+                    {{ 'userDashboard.kyc.vehicle_inspection_detail.vehicle_tlh' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.is_inspection_report || '-'}}</td>
+                </tr>
+                <ng-container *ngIf="fleetOwnerInfoData.is_inspection_report">
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_inspection_detail.valid_date' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.valid_date || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_inspection_detail.upload_inspection_report' | translate }}
+                    </td>
+                    <td>
+                      <span>
+                        <i class="fa fa-eye pointer" (click)="viewDocumentFile()"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Insurance Detail // for both -->
+  <div *ngIf="onlyVehicleInfo" class="col-lg-12 mb-4">
+    <div class="review-section">
+      <div class="review_box">
+        <div class="title-top">
+          <h5>
+            {{ 'userDashboard.kyc.vehicle_insurance_detail.title' | translate }}
+          </h5>
+        </div>
+        <div class="flight_detail">
+          <div class="summery_box">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td *ngIf="fleetOwnerInfoData.is_insurance_covered">
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.is_insurance_covered' | translate }}
+                  </td>
+                  <td *ngIf="!fleetOwnerInfoData.is_insurance_covered">
+                    {{ 'userDashboard.kyc.vehicle_insurance_detail.insurance_quote' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.is_insurance_covered || '-'}}</td>
+                </tr>
+                <ng-container *ngIf="fleetOwnerInfoData.is_insurance_covered">
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_insurance_detail.carriers_name' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.carriers_name || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_insurance_detail.policy_number' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.policy_number || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_insurance_detail.limits_coverage' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.limits_coverage || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_expire_date' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.coverage_expire_date || '-'}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{ 'userDashboard.kyc.vehicle_insurance_detail.coverage_effective_date' | translate }}
+                    </td>
+                    <td>{{fleetOwnerInfoData.coverage_effective_date || '-'}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other details // for both -->
+  <div *ngIf="onlyVehicleInfo" class="col-lg-12 mb-4">
+    <div class="review-section">
+      <div class="review_box">
+        <div class="title-top">
+          <h5>
+            {{ 'userDashboard.kyc.other_details.title' | translate }}
+          </h5>
+        </div>
+        <div class="flight_detail">
+          <div class="summery_box">
+
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.other_details.branch' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.branch || '-'}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.other_details.price_per_day' | translate }}
+                  </td>
+                  <td>{{fleetOwnerInfoData.price_per_day || '-'}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="col-lg-12">
+              <div class="position-relative profile-info-img">
+                <img src="assets/images/cab/car/1.png" class="avatar" alt="...">
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Bulk Vehicle -->
+  <div *ngIf="!onlyVehicleInfo && !onlyCompanyInfo" class="col-lg-12 mb-4">
+    <div class="review-section">
+      <div class="review_box">
+        <div class="title-top">
+          <h5>
+            {{ 'userDashboard.kyc.upload_bulk_vehicle.title' | translate }}
+          </h5>
+        </div>
+        <div class="flight_detail">
+          <div class="summery_box">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
+                  </td>
+                  <td>
+                    <span>
+                      <i class="fa fa-eye pointer" (click)="viewDocumentFile()"></i>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ 'userDashboard.kyc.upload_bulk_vehicle.table_title' | translate }}
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-12">
+            <div class="table-responsive dashboard-table">
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                    </th>
+                    <th>{{'userDashboard.kyc.upload_bulk_vehicle.vin_number' | translate}}</th>
+                    <th>{{'userDashboard.kyc.upload_bulk_vehicle.tlc_plate_number' | translate}}</th>
+                    <th>{{'userDashboard.kyc.upload_bulk_vehicle.car_category' | translate}}</th>
+                    <th>{{'userDashboard.kyc.upload_bulk_vehicle.fuel_type' | translate}}</th>
+                    <th>{{'userDashboard.kyc.upload_bulk_vehicle.transmission' | translate}}</th>
+                    <th class="text-center">{{'userDashboard.kyc.upload_bulk_vehicle.kyc' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of allBranchList">
+                    <td class="text-center">{{item.no}}</td>
+                    <td class="text-center">{{item.vin_number}}</td>
+                    <td class="text-center">{{item.tlc_plate_number}}</td>
+                    <td class="text-center">{{item.car_category}}</td>
+                    <td class="text-center">{{item.fuel_type}}</td>
+                    <td>
+                      <div class="table-avatar">
+                        <div class="table-head-name flex-grow-1">
+                          {{item.transmission}}
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <span *ngIf="item.kyc" class="badge badge-success">
+                        Active
+                      </span>
+                      <span *ngIf="!item.kyc" class="badge badge-danger">
+                        Get KYC
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

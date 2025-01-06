@@ -1,0 +1,198 @@
+<div>
+  <div *ngIf="driverInfoData.id && !isEdit" class="col-lg-12 mb-4">
+    <div class="col-lg-12 mt-3">
+      <div class="table-responsive dashboard-table">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">
+                {{'userDashboard.kyc.branch_info.sn' | translate}}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.is_active_inactive' | translate }}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.is_available_for_private_booking' | translate }}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.price_per_day' | translate}}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.price_per_week' | translate }}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.price_per_month' | translate}}
+              </th>
+              <th>
+                {{ 'userDashboard.kyc.other_info.action' | translate}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of [driverInfoData]; let idx = index">
+              <td class="text-center">{{idx+1}}</td>
+              <td class="">{{item.is_active_inactive || '-'}}</td>
+              <td class="">{{item.is_available_for_private_booking || '-'}}</td>
+              <td class="">{{item.price_per_day || '-'}}</td>
+              <td class="">{{item.price_per_week || '-'}}</td>
+              <td class="">{{item.price_per_month || '-'}}</td>
+              <td class="text-center">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <i class="feather icon-more-vertical"></i>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button (click)="onView(item)" type="button" mat-menu-item>
+                    <i class="feather icon-eye"></i>
+                    <span class="ms-2">View</span>
+                  </button>
+                  <button (click)="onEdit(item, idx)" mat-menu-item>
+                    <i class="feather icon-edit"></i>
+                    <span class="ms-2">Edit</span>
+                  </button>
+                  <button (click)="onDelete(idx)" mat-menu-item>
+                    <i class="feather icon-trash"></i>
+                    <span class="ms-2">Delete</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isAdd || isEdit" class="profile-info-grid">
+    <div class="row m-0 align-items-end">
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="is_active_inactive">
+            {{ 'userDashboard.kyc.other_info.is_active_inactive' | translate }}
+          </label>
+          <ng-select clearable="false" [items]="statusList" bindLabel="value" placeholder="-- Select One --"
+            bindValue="name" [(ngModel)]="driverInfoForm.is_active_inactive" name="is_active_inactive"
+            name="is_active_inactive">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="is_available_for_private_booking">
+            {{ 'userDashboard.kyc.other_info.is_available_for_private_booking' | translate }}
+          </label>
+          <ng-select clearable="false" [items]="availableForPrivate" bindLabel="value" placeholder="-- Select One --"
+            bindValue="name" [(ngModel)]="driverInfoForm.is_available_for_private_booking"
+            name="is_available_for_private_booking" name="is_available_for_private_booking">
+          </ng-select>
+        </div>
+      </div>
+      <ng-container *ngIf="driverInfoForm.is_available_for_private_booking === 'Yes'">
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="price_per_day">
+              {{ 'userDashboard.kyc.other_info.price_per_day' | translate }}
+            </label>
+            <input [(ngModel)]="driverInfoForm.price_per_day" name="price_per_day" name="price_per_day" type="text"
+              class="form-control open-select" />
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="price_per_week">
+              {{ 'userDashboard.kyc.other_info.price_per_week' | translate }}
+            </label>
+            <input [(ngModel)]="driverInfoForm.price_per_week" name="price_per_week" type="text"
+              class="form-control open-select" />
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group">
+            <label for="price_per_month">
+              {{ 'userDashboard.kyc.other_info.price_per_month' | translate }}
+            </label>
+            <input [(ngModel)]="driverInfoForm.price_per_month" name="price_per_month" type="text"
+              class="form-control open-select" />
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <h4 class="mb-3">
+            <b>{{'userDashboard.kyc.other_info.working_hours' | translate}}</b>
+          </h4>
+          <div class="table-responsive dashboard-table">
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                  </th>
+                  <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
+                  <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
+                  <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
+                  <th class="text-center">{{'userDashboard.kyc.other_info.action' | translate}}</th>
+                  <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of driverInfoForm.workingHours">
+                  <td class="text-center">{{item.no}}</td>
+                  <td>
+                    <div class="table-avatar">
+                      <div class="table-head-name flex-grow-1">
+                        {{item.name}}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span *ngIf="!item.isEdit">{{item.from_time}}</span>
+                    <input *ngIf="item.isEdit" type="time" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="item.from_time" (ngModelChange)="onChangeTime($event)" name="from_time">
+                  </td>
+                  <td class="text-success-light">
+                    <span *ngIf="!item.isEdit">{{item.to_time}}</span>
+                    <input *ngIf="item.isEdit" type="time" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="item.to_time" (ngModelChange)="onChangeTime($event)" name="to_time">
+                  </td>
+                  <td class="text-center">
+                    <a *ngIf="!item.isEdit" (click)="item.isEdit = true">
+                      <i class="fas fa-pen me-2 pointer"></i> Edit
+                    </a>
+                    <a *ngIf="item.isEdit" (click)="item.isEdit = false">
+                      <i class="fas fa-save me-2 pointer"></i> Save
+                    </a>
+                  </td>
+                  <td class="text-center">
+                    <a *ngIf="item.status === 'ON'" (click)="changeStatus(item)">
+                      <span class="badge badge-success">
+                        {{item.status}}
+                      </span>
+                    </a>
+                    <a *ngIf="item.status === 'OFF'" (click)="changeStatus(item)">
+                      <span class="badge badge-danger">
+                        {{item.status}}
+                      </span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+      <div class="row my-4">
+        <div class="col-lg-12 text-end">
+          <button *ngIf="!isEdit" (click)="onSubmit()" type="button" class="btn btn-theme no-text-transorm mx-2 mb-2">
+            Save
+          </button>
+          <button *ngIf="isEdit" (click)="vehicleKycUpdate()" type="button"
+            class="btn btn-theme no-text-transorm mx-2 mb-2">
+            Update
+          </button>
+          <button type="button" (click)="onCancelDriverdetails()"
+            class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,221 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+
+import { CabService } from '../../../../shared/services/cab.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { DynamicInfoModalComponent } from '../modal/dynamic-info-modal/dynamic-info-modal.component';
+import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
+import { ProfileService } from '../../../../shared/services/profile.service';
+import { ToastService } from '../../../../shared/services/toast.service';
+import { GlobalService } from '../../../../shared/services/global.service';
+
+@Component({
+  selector: 'app-dynamic-grid',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    NgbModule,
+    NgxPaginationModule,
+    MatMenuModule,
+    MatButtonModule
+  ],
+  templateUrl: './dynamic-grid.component.html',
+  styleUrl: './dynamic-grid.component.scss'
+})
+export class DynamicGridComponent {
+
+  public params: Params;
+  @Input() type: any = "";
+  @Input() driverInfoData: any = {};
+  @Input() selectedTabObj: any = {};
+  @Output() onEditInfo = new EventEmitter<any>();
+  // editInfo
+
+
+  formName: string = '';
+  @Input() columns: any[] = [];
+  @Input() data: any[] = [];
+  @Input() actions: string[] = [];
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  currentPage = 1;
+  pageSize = 1;
+  totalData = 0;
+  filteredData: any[] = [];
+  paginatedData: any[] = [];
+
+  @Output() actionEvent = new EventEmitter<any>();
+
+
+  formArray: any[] = [];
+  groupedSectionsData: any = [];
+
+  constructor(
+    public cabService: CabService,
+    public profileService: ProfileService,
+    private route: ActivatedRoute,
+    private modalService: NgbModal,
+    private toast: ToastService,
+    public gs: GlobalService
+  ) {
+  }
+
+  ngOnInit() {
+    if (this.type === 'my_vehicle') {
+      this.formName = 'VEHICLE UPLOAD';
+    }
+    this.getConfigUIFields();
+  }
+
+  getSearchData() {
+    if (this.type === 'my_vehicle') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId
+      }
+      this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
+        console.log("getVehicleDetails >>>>>>>>", response);
+        if (response && response.vehicleKYC && response.vehicleKYC.length) {
+          this.filteredData = response.vehicleKYC;
+          this.totalData = response.vehicleKYC.length
+        }
+      })
+    }
+  }
+
+  // Get Config UI Fields
+  getConfigUIFields() {
+    this.gs.isSpinnerShow = true;
+
+    console.log("this.formName >>>>", this.formName);
+
+    let body = {
+      "clientID": null,
+      "stateCode": 42,
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
+      "countryId": 230,
+      "transactionId": 1,
+      "formName": this.formName,//THis is name you have send form names
+      "menuId": 27
+    }
+
+    console.log("body >>>>", body);
+
+    this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
+      this.formArray = response;
+      console.log("aaaaaaaaaaaa >>>>>>>>", this.formArray);
+      const groupedSections = this.groupBy(this.formArray, 'sectionID');
+      console.log("groupedSections >>>>>>>>", groupedSections);
+
+      Object.keys(groupedSections).forEach((sectionID, index) => {
+        const fieldsArray: any = groupedSections[sectionID].sort(
+          (a: any, b: any) => a.fieldOrder - b.fieldOrder
+        );
+
+        const modalObjectCounts: { [key: string]: number } = {};
+        fieldsArray.forEach((item: any) => {
+          modalObjectCounts[item.modalObject] = (modalObjectCounts[item.modalObject] || 0) + 1;
+        });
+        const mostFrequentModalObject = Object.keys(modalObjectCounts).reduce((a, b) =>
+          modalObjectCounts[a] > modalObjectCounts[b] ? a : b
+        );
+
+        const section: any = {
+          sectionID: sectionID,
+          sectionName: (fieldsArray[0]?.sectionName || ''),
+          modalObject: mostFrequentModalObject, // (fieldsArray[0]?.modalObject || ''),
+          fields: fieldsArray
+        };
+        this.groupedSectionsData.push(section);
+      });
+
+      this.getSearchData();
+      console.log("this.groupedSectionsData >>>>>>>>>>", this.groupedSectionsData);
+
+
+      this.gs.isSpinnerShow = false;
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err || "Something went wrong");
+    })
+  }
+
+  groupBy(array: any[], key: string) {
+    return array.reduce((result, currentValue) => {
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      return result;
+    }, {});
+  }
+
+  onView(item: any) {
+    console.log("view -------->", item);
+
+    const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.driverInfoData = item;
+    modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+    modalRef.result.then((res: any) => {
+
+    }, () => {
+    });
+  }
+
+  onEdit(item: any, index: any) {
+    this.onEditInfo.emit();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async onDelete(index: any) {
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+    });
+    modalRef.result.then((res: any) => {
+
+    }, () => {
+    });
+  }
+
+  onAction(action: string, rowData: any) {
+    // this.actionEvent.emit({ action, rowData });
+  }
+
+  pageChanged(event: any) {
+    this.currentPage = event;
+  }
+
+  onSort(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.sortData();
+  }
+
+  sortData() {
+    if (this.sortColumn) {
+      this.filteredData.sort((a, b) => {
+        const aValue = a[this.sortColumn];
+        const bValue = b[this.sortColumn];
+        if (aValue < bValue) {
+          return this.sortDirection === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return this.sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+  }
+
+}

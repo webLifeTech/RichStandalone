@@ -1,0 +1,39 @@
+// Bootstrap Layout scss
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+// Owl Carousel
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
+
+//  Light Box
+// @import "~@angular/cdk/overlay-prebuilt.css"; // need to do
+
+// Date Time Picker
+// @import "~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css"; // need to do
+
+/* Leaflet Map */
+// @import "~leaflet/dist/leaflet.css"; // need to do
+
+//  BASE
+// @import "./base/reset";
+// @import "./base/typography";
+// @import "./base/colors";
+// @import "./base/base";
+// @import "./base/grid";
+
+
+// Angular Calender
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+// Bar Rating
+@import "../../../node_modules/ngx-bar-rating/themes/br-default-theme";
+@import "../../../node_modules/ngx-bar-rating/themes/br-stars-theme";
+
+
+// Font Awesome
+@import "./font-awesome.scss";
+
+@import "./general";
+@import "./color1.scss";
+
+@import "./style.scss";

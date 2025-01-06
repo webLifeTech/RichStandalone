@@ -1,0 +1,261 @@
+@if(responsiveLatestFilter == true){
+<a href="javascript:void(0)" class="mobile-filter border-top-0" (click)="openResponsiveFilter()">
+  <h5>{{'car_list_page.filter.latest_filter'| translate}}</h5>
+  <img src="assets/images/icon/adjust.png" class="img-fluid blur-up lazyload" alt="filter-icon">
+</a>
+}
+
+<!-- Tags  -->
+<br>
+<span class="car-available">{{totalCabAvailable}} {{type}}s available</span>
+<br>
+<div *ngIf="type === 'car'" class="car-categories">
+  <ng-container *ngFor="let cartype of carTypes">
+    <div class="category" id="{{ cartype.checkId }}" [ngClass]="{ 'checked-category' : checked(cartype.checkId)}"
+      (click)="applyFilter(cartype.checkId)">
+      <img class="car-image" [src]="cartype.icon">
+      <span>{{cartype.title | translate}}</span>
+    </div>
+  </ng-container>
+</div>
+
+<div class="car-driv-view-detail">
+  <!-- Car -->
+  <ng-container *ngIf="type === 'car'">
+    <div class="flight-detail-sec cab-detail-sec"
+      [ngClass]="{ 'product-wrapper-grid special-section grid-box' : marginClass}">
+      <div class="detail-bar">
+        @for(details of cabDetails; track details){
+        <div class="container-fluid detail-wrap wow fadeInUp">
+          <a [ngClass]="{'btn-available': details.status === 'car_list_page.status.available', 'btn-booked' :details.status === 'car_list_page.status.booked'}"
+            class="btn">
+            {{details.status | translate}}
+          </a>
+          <div class="row">
+            <div class="col-md-3 align-self-center">
+              <div class="logo-sec">
+                <img [src]="details.carImage" class="img-fluid blur-up lazyload" alt="cab-image">
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="title-sec">
+                <div class="car-title">{{ details.carName | translate }}</div>
+                <small>({{ details.carType | translate }})</small>
+              </div>
+              <div class="car-details">
+                <ul>
+                  <li>
+                    <img src="assets/images/cab/icon/seat.png" class="img-fluid blur-up lazyload" alt="seat-icon">
+                    {{details.passenger }} {{'car_list_page.seater' | translate}}
+                  </li>
+                  <li>
+                    <img src="assets/images/cab/icon/luggage.png" class="img-fluid blur-up lazyload" alt="luggage-icon">
+                    {{ details.luggage }} {{'car_list_page.luggage' | translate}}
+                  </li>
+                  <li *ngIf="details?.unlimittedMileage">
+                    <img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
+                      alt="snowflake-icon">
+                    {{'car_list_page.mileage' | translate}}
+                  </li>
+                </ul>
+                <ul>
+                  <li><img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
+                      alt="snowflake-icon"> {{'car_list_page.AC' | translate}}</li>
+                  <li><img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload"
+                      alt="setting-icon">
+                    {{ details.gearbox | translate}}</li>
+                </ul>
+              </div>
+              <div *ngIf="details.offer_discount" class="offer-box">
+                <ul>
+                  <li>
+                    <img src="assets/images/cab/icon/gift-svgrepo-com.svg" width="30px"
+                      class="img-fluid blur-up lazyload" alt="seat-icon">
+                    {{'car_list_page.offer_discount' | translate}} <br />
+                    <span class="ms-5">
+                      {{('car_list_page.discount_for' | translate) + ' ' + details.offer_discount+'%'}}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-5 text-end align-self-end price-top">
+              <div class="price">
+                <h6>Price per day:</h6>
+                <h4 class="my-2">{{ details.price | currencyPipe: cabService.currency }}</h4>
+                <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
+              </div>
+              <div class="book-flight">
+                <!-- <a href="javascript:void(0)" class="btn btn-solid color1 margin-5"
+                    [routerLink]="['/cab/single-details']">{{'car_list_page.view_deal' | translate}}</a> -->
+                <a href="javascript:void(0)" class="btn btn-theme margin-5" (click)="bookNow(details)">
+                  {{'car_list_page.book' | translate}}</a>
+              </div>
+              <br>
+              <div class="book-flight">
+
+              </div>
+            </div>
+          </div>
+          <hr class="div-line1" />
+          <div class="row">
+            <div class="col-md-5 d-flex brand-sec">
+              <div class="brandLogo">
+                <img [src]="details.brandLogo" class="img-fluid blur-up lazyload" alt="seat-icon">
+              </div>
+              <div class="rating">
+                {{details.rating}}
+              </div>
+              <div class="">
+                <h6 class="brand_name">{{details.carBrand | translate}}</h6>
+                <p class="mb-0 reviews">{{details.review}} reviews</p>
+              </div>
+            </div>
+            <div class="col-md-7 end">
+              <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="addRemoveWishlist(details)">
+                <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
+              </a>
+              <a *ngIf="details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="addRemoveWishlist(details)">
+                <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
+              </a>
+              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="openImportantNoticeDialog()">
+                <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
+              </a>
+              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="openEmailQuoteDialog()">
+                <i class="fas fa-envelope"></i> {{'car_list_page.email_quote' | translate}}
+              </a>
+            </div>
+
+          </div>
+        </div>
+        }@empty {
+        <app-no-data [icon]="icon" [title]="title" [description]="description"></app-no-data>
+        }
+      </div>
+    </div>
+
+    <app-pagination *ngIf="cabDetails.length" [cabDetails]="cabDetails" [paginate]="paginate"
+      (setPage)="setPage($event)"></app-pagination>
+  </ng-container>
+
+  <!-- Driver -->
+  <ng-container *ngIf="type === 'driver'">
+    <div class="flight-detail-sec cab-detail-sec"
+      [ngClass]="{ 'product-wrapper-grid special-section grid-box' : marginClass}">
+      <div class="detail-bar">
+        @for(details of driverDetails; track details){
+        <div class="container-fluid detail-wrap wow fadeInUp">
+          <a [ngClass]="{'btn-available': details.status === 'car_list_page.status.available', 'btn-booked' :details.status === 'car_list_page.status.booked'}"
+            class="btn">
+            {{details.status | translate}}
+          </a>
+          <div class="row">
+            <div class="col-md-3 align-self-center">
+              <div class="logo-sec">
+                <img *ngIf="details.driverImage" [src]="details.driverImage" class="img-fluid blur-up lazyload"
+                  alt="cab-image">
+                <img *ngIf="!details.driverImage" src="assets/images/driver/Male.jpg" class="img-fluid blur-up lazyload"
+                  alt="cab-image">
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="title-sec">
+                <div class="car-title">{{ details.driverName }}</div>
+              </div>
+              <div class="car-details">
+                <ul>
+                  <li>
+                    <img src="assets/images/cab/icon/star.svg" class="img-fluid blur-up lazyload" alt="seat-icon">
+                    {{details.rating }} {{'car_list_page.d_rating' | translate}}
+                  </li>
+                  <li>
+                    <img src="assets/images/cab/icon/location-pin.svg" class="img-fluid blur-up lazyload"
+                      alt="seat-icon">
+                    {{details.location }} {{'car_list_page.d_location' | translate}}
+                  </li>
+                  <li>
+                    <img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload" alt="seat-icon">
+                    {{ details.experience }} {{'car_list_page.d_experience' | translate}}
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="details.offer_discount" class="offer-box">
+                <ul>
+                  <li>
+                    <img src="assets/images/cab/icon/gift-svgrepo-com.svg" width="30px"
+                      class="img-fluid blur-up lazyload" alt="seat-icon">
+                    {{'car_list_page.offer_discount' | translate}} <br />
+                    <span class="ms-5">
+                      {{('car_list_page.discount_for' | translate) + ' ' + details.offer_discount+'%'}}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- <div class="col-md-2">
+              </div> -->
+            <div class="col-md-5 text-end align-self-end price-top">
+              <div class="price">
+                <div>
+                  <h6>Price per day:</h6>
+                  <h4 class="my-2">{{ details.price | currencyPipe: cabService.currency }}</h4>
+                  <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
+                </div>
+              </div>
+              <div class="book-flight">
+                <a href="javascript:void(0)" class="btn btn-theme book-btn margin-5" (click)="bookNow(details)">
+                  {{'car_list_page.book' | translate}}</a>
+              </div>
+              <br>
+              <div class="book-flight">
+
+              </div>
+            </div>
+          </div>
+          <hr class="div-line1" />
+          <div class="row align-items-center">
+            <div class="col-md-6 d-flex brand-sec align-items-center">
+              <div class="rating">
+                {{details.rating}}
+              </div>
+              <div class="">
+                <p class="mb-0 reviews">{{details.reviews}} reviews</p>
+              </div>
+            </div>
+            <div class="col-md-6 end">
+              <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="addRemoveWishlist(details)">
+                <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
+              </a>
+              <a *ngIf="details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="addRemoveWishlist(details)">
+                <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
+              </a>
+              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="openImportantNoticeDialog()">
+                <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
+              </a>
+              <!-- <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
+                (click)="openEmailQuoteDialog()">
+                <i class="fas fa-envelope"></i> {{'car_list_page.email_quote' | translate}}
+              </a> -->
+            </div>
+
+          </div>
+        </div>
+        }@empty {
+        <app-no-data [icon]="d_icon" [title]="d_title" [description]="d_description"></app-no-data>
+        }
+      </div>
+    </div>
+
+    <app-pagination *ngIf="driverDetails.length" [driverDetails]="driverDetails" [d_paginate]="d_pagination"
+      (setPage)="setPage($event)"></app-pagination>
+  </ng-container>
+</div>

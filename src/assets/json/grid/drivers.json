@@ -1,0 +1,486 @@
+{
+    "driver":[
+      {
+       "id": 1,
+      "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.booked",
+      "price": 1200,
+      "offer_discount": 15,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 2,
+      "reviews": 64,
+      "category": "popular",
+      "tags": ["sadan","two","1_5","automatic"],
+      "driverName": "John Doe",
+      "driverImage": "assets/images/driver/d1.png",
+      "location": "New York, NY",
+      "experience": 5
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 2,
+      "reviews": 64,
+      "category": "popular",
+        "id": 2,
+        "driverName": "Jane Smith",
+        "driverImage": "assets/images/driver/d2.png",
+        "location": "Los Angeles, CA",
+        "experience": "7 years",
+        "tags": ["sadan","two","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": "2",
+      "reviews": 64,
+      "category": "popular",
+        "id": 3,
+        "driverName": "Michael Brown",
+        "driverImage": null,
+        "location": "Chicago, IL",
+        "experience": "6 years",
+        "tags": ["sadan","two","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.booked",
+      "price": 1200,
+      "offer_discount": 30,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 2,
+      "reviews": 64,
+      "category": "popular",
+        "id": 4,
+        "driverName": "Emily Davis",
+        "driverImage": "assets/images/driver/d4.png",
+        "location": "Houston, TX",
+        "experience": "8 years",
+        "tags": ["sadan","two","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 2,
+      "reviews": 64,
+      "category": "popular",
+        "id": 5,
+        "driverName": "David Wilson",
+        "driverImage": "assets/images/driver/d5.png",
+        "location": "Phoenix, AZ",
+        "experience": "4 years",
+        "tags": ["sadan","two","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 2,
+      "reviews": 64,
+      "category": "popular",
+        "id": 6,
+        "driverName": "Sophia Taylor",
+        "driverImage": "assets/images/driver/d1.png",
+        "location": "Philadelphia, PA",
+        "experience": "5 years",
+        "tags": ["sadan","two","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 3,
+      "reviews": 64,
+      "category": "popular",
+        "id": 7,
+        "driverName": "James Anderson",
+        "driverImage": "assets/images/driver/d2.png",
+        "location": "San Antonio, TX",
+        "experience": "7 years",
+        "tags": ["sadan","three","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 3,
+      "reviews": 64,
+      "category": "popular",
+        "id": 8,
+        "driverName": "Olivia Martinez",
+        "driverImage": "assets/images/driver/d3.png",
+        "location": "San Diego, CA",
+        "experience": "6 years",
+        "tags": ["sadan","three","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 4,
+      "reviews": 64,
+      "category": "popular",
+        "id": 9,
+        "driverName": "Liam Thompson",
+        "driverImage": "assets/images/driver/d4.png",
+        "location": "Dallas, TX",
+        "experience": "4 years",
+        "tags": ["sadan","four","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 4,
+      "reviews": 64,
+      "category": "popular",
+        "id": 10,
+        "driverName": "Isabella White",
+        "driverImage": "assets/images/driver/d5.png",
+        "location": "San Jose, CA",
+        "experience": "9 years",
+        "tags": ["sadan","four","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 4,
+      "reviews": 64,
+      "category": "popular",
+        "id": 11,
+        "driverName": "Benjamin Harris",
+        "driverImage": null,
+        "location": "Austin, TX",
+        "experience": "5 years",
+        "tags": ["sadan","four","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 5,
+      "reviews": 64,
+      "category": "popular",
+        "id": 12,
+        "driverName": "Mia Clark",
+        "driverImage": "assets/images/driver/d2.png",
+        "location": "Jacksonville, FL",
+        "experience": "6 years",
+        "tags": ["sadan","five","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 5,
+      "reviews": 64,
+      "category": "popular",
+        "id": 13,
+        "driverName": "William Rodriguez",
+        "driverImage": "assets/images/driver/d3.png",
+        "location": "San Francisco, CA",
+        "experience": "8 years",
+        "tags": ["sadan","five","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 5,
+      "reviews": 64,
+      "category": "popular",
+        "id": 14,
+        "driverName": "Charlotte Lewis",
+        "driverImage": "assets/images/driver/d4.png",
+        "location": "Columbus, OH",
+        "experience": "7 years",
+        "tags": ["sadan","five","1_5","automatic"]
+      },
+      {
+        "carName": "Peugeot Citroen",
+      "carImage": "assets/images/cab/car/5.png",
+      "carImages": [
+        {
+          "url": "assets/images/cab/car/12.jpg",
+          "fileType": "image"
+        },
+        {
+          "url": "assets/images/cab/car/13.jpg",
+          "fileType": "image"
+        }
+      ],
+      "carType": "car_list_page.car_type.sadan",
+      "status": "car_list_page.status.available",
+      "price": 1200,
+      "fare": 25,
+      "per_km": 10,
+      "passenger": 5,
+      "luggage": 2,
+      "gearbox": "car_list_page.car_option.automatic",
+      "carOption": "automatic",
+      "rating": 5,
+      "reviews": 64,
+      "category": "popular",
+        "id": 15,
+        "driverName": "Elijah Walker",
+        "driverImage": "assets/images/driver/d5.png",
+        "location": "Fort Worth, TX",
+        "experience": "10 years",
+        "tags": ["sadan","five","1_5","automatic"]
+      }
+    ]
+}

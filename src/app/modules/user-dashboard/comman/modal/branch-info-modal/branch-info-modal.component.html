@@ -1,0 +1,77 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'Driver details' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.dba_name' | translate }}</h6>
+                <p>{{singleDetails.branch_dba_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.first_name' | translate }}</h6>
+                <p>{{singleDetails.branch_first_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.last_name' | translate }}</h6>
+                <p>{{singleDetails.branch_last_name || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.contact_number' | translate }}</h6>
+                <p>{{singleDetails.branch_contact_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.email_id' | translate }}</h6>
+                <p>{{singleDetails.branch_email_id || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.branch_address' | translate }}</h6>
+                <p>{{singleDetails.branch_address || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.branch_address2' | translate }}</h6>
+                <p>{{singleDetails.branch_address2 || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.postal_code' | translate }}</h6>
+                <p>{{singleDetails.branch_postal_code || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.city' | translate }}</h6>
+                <p>{{singleDetails.branch_city || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.branch_info.map_location' | translate }}</h6>
+                <p>{{singleDetails.branch_map_location || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

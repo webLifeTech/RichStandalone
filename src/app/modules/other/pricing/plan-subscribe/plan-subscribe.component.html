@@ -1,0 +1,134 @@
+<section class="small-section pricing-plan-more">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="booking-order mb-4">
+          <div class="review-section">
+            <div class="review_box p-2">
+              <div class="price-level price-level-popular">
+                <h6>{{packageObj.plan_name}}</h6>
+                <p>{{packageObj.title}}</p>
+              </div>
+              <div class="flight_detail">
+                <div class="summery_box">
+                  <div class="price-details">
+                    <ul>
+                      <ng-container *ngFor="let row of packageObj['benefits']">
+                        <li class="price-check">
+                          <span>
+                            <i class="feather icon-check-circle"></i>
+                          </span>
+                          {{row.name}} : <strong [style.color]="packageObj.color">{{row.value}}</strong>
+                        </li>
+                      </ng-container>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="review_box" [class.shadow-none]="!title">
+            @if(title){
+            <div class="title-top">
+              <h5>payment option</h5>
+            </div>
+            }
+
+            <div class="flight_detail payment-gateway" [class.p-0]="!title">
+              <div class="accordion" id="accordionExample" ngbAccordion [closeOthers]="true">
+                @if(cabDetail){
+                @for(details of cabDetail.cabBooking; track details){
+                <div class="card" ngbAccordionItem [collapsed]="details.panel !== 'First'">
+                  <div class="card-header" id="h_one">
+                    <button class="btn btn-link" ngbAccordionButton>
+                      <label for='{{ details.checkId }}'>
+                        <input type='radio' class="radio_animated ms-0" id='{{ details.checkId }}' name='occupation'
+                          value='Working' [checked]="details.checked" required />
+                        {{ details.title }}
+                      </label>
+                    </button>
+                  </div>
+                  <div id="one" class="collapse" ngbAccordionCollapse>
+                    <div class="card-body" ngbAccordionBody>
+                      <ng-template>
+                        @if(details.value == 'credit'){
+                        <app-booking-credit-card></app-booking-credit-card>
+                        }
+                        @if(details.value == 'net_banking'){
+                        <app-booking-net-banking></app-booking-net-banking>
+                        }
+                        @if(details.value == 'wallet'){
+                        <app-booking-my-wallet></app-booking-my-wallet>
+                        }
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+                }
+                }
+              </div>
+
+              <div class="payment-btn text-end mt-5">
+                <button (click)="bookCancel()" type="button" class="btn btn-solid color1 me-3">
+                  {{'pricing_summary.cancel' | translate}}
+                </button>
+                <button (click)="payNow()" type="button" class="btn btn-theme">
+                  {{'pricing_summary.pay_now' | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 booking-order res-margin">
+        <div class="review-section">
+          <div class="review_box">
+            <div class="title-top">
+              <h5>{{'pricing_summary.title' | translate}}</h5>
+            </div>
+            <div class="flight_detail">
+              <div class="summery_box">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td>{{'pricing_summary.package_name' | translate}}</td>
+                      <td>{{ "Basic" }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'pricing_summary.discount' | translate}}</td>
+                      <td>- {{ 100 | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'pricing_summary.tax' | translate}}</td>
+                      <td>{{ 10 | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="grand_total">
+                  <h5>
+                    {{'pricing_summary.total' | translate}}
+                    <span>
+                      {{ 1100 | currencyPipe: cabService.currency}}
+                    </span>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="review_box">
+            <app-cab-promo-code></app-cab-promo-code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="book-panel">
+  <h6 class="mb-0 text">grand total : <span>{{ 1250 | currencyPipe: cabService.currency }}</span></h6>
+  <button type="button" class="btn bottom-btn theme-color">continue</button>
+</div>

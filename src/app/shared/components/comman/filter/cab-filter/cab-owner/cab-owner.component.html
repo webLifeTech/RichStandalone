@@ -1,0 +1,10 @@
+<div class="collection-brand-filter mb-3 mt-4">
+  @for(own of carOwner; track own){
+  <div class="form-check collection-filter-checkbox">
+    <input type="checkbox" class="form-check-input" id="{{ own.checkId }}" [value]="own.checkId"
+      [checked]="checked(own.checkId)" (change)="applyFilter($event)" [disabled]="!own.availability">
+    <label class="form-check-label" for="{{ own.checkId }}">{{ own.title | translate }}</label>
+    <label class="form-check-count" for="{{ own.checkId }}">{{ own.availability || 0 }}</label>
+  </div>
+  }
+</div>

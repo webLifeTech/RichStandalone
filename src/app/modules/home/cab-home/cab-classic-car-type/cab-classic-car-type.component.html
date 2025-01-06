@@ -1,0 +1,43 @@
+<section class="section-b-space">
+  <app-title [type]="'classic'" [titleClass]="'detail-title'" [title]="'widest varity'" [subTitle]="'our awesome fleet'" [description]="description"></app-title>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="center-slider-cab arrow-classic car-type-section">
+          <owl-carousel-o [options]="options">
+            @for(details of carTypes; track details){
+              <ng-template carouselSlide>
+                <div>
+                  <div class="type-box">
+                    <div class="img-part">
+                      <img [src]="details.image" class="img-fluid blur-up lazyload" alt="cab-image" style="width: auto;">
+                    </div>
+                    <div class="content">
+                      <h5>{{ details.title }}</h5>
+                      <h6>start {{ details.price | currencyPipe: cabService.currency }} / per km</h6>
+                      <p>{{ details.description }}</p>
+                      <ul>
+                        @if(details.seat){
+                          <li><img src="assets/images/cab/icon/seat.png" class="img-fluid blur-up lazyload" alt="seat-icon"></li>
+                        }
+                        @if(details.luggage){
+                          <li><img src="assets/images/cab/icon/luggage.png" class="img-fluid blur-up lazyload" alt="luggage"></li>
+                        }
+                        @if(details.snow){
+                          <li><img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload" alt="snow-icon"></li>
+                        }
+                        @if(details.setting){
+                          <li><img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload" alt="setting-icon"></li>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            }
+          </owl-carousel-o>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,10 @@
+<div class="collection-collapse-block" [class.open]="isOpenPrice">
+  <h6 class="collapse-block-title" (click)="openPrice()">{{'car_list_page.filter.price'| translate}}</h6>
+  <div class="collection-collapse-block-content" [ngStyle]="{ 'display' : isOpenPrice == true ? 'block' : 'none'}">
+    <div class="wrapper">
+      <div class="range-slider">
+        <ngx-slider [(value)]="priceMinValue" [(highValue)]="priceMaxValue" [options]="options" (userChangeEnd)="priceChange($event)"></ngx-slider>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="modal-content add-payment-modal ">
+  <div class="modal-header">
+    <h4 class="modal-title">Add Payment</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="total-payment">
+      <p>Total Amount</p>
+      <h6>$22314</h6>
+    </div>
+    <div class="choose-payment-info">
+      <h5>Choose your Payment Method</h5>
+      <div class="choose-payment">
+        <label class="custom_radio">
+          <input type="radio" name="payment_one" value="wallet_one">
+          <span class="checkmark"></span>
+          <img src="assets/icons/payment/payment-1.svg" alt="Icon">
+        </label>
+        <label class="custom_radio">
+          <input type="radio" name="payment_one" value="wallet_one">
+          <span class="checkmark"></span>
+          <img src="assets/icons/payment/payment-2.svg" alt="Icon">
+        </label>
+        <label class="custom_radio">
+          <input type="radio" name="payment_one" value="wallet_one" checked="">
+          <span class="checkmark"></span>
+          <img src="assets/icons/payment/payment-3.svg" alt="Icon">
+        </label>
+      </div>
+      <div class="add-payment-table-info">
+        <div class="wallet-table add-payment-table">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="custom_radio">
+                      <input type="radio" name="payment_two" value="wallet_two" checked="">
+                      <span class="checkmark"></span>
+                      <img src="assets/icons/payment/wallet-01.svg" alt="Icon">
+                    </label>
+                  </td>
+                  <td>
+                    <h6>3210 **** **** **12</h6>
+                    <p>Card Number</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="wallet-table add-payment-table">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="custom_radio">
+                      <input type="radio" name="payment_two" value="wallet_two">
+                      <span class="checkmark"></span>
+                      <img src="assets/icons/payment/wallet-02.svg" alt="Icon">
+                    </label>
+                  </td>
+                  <td>
+                    <h6>7847 **** **** **78</h6>
+                    <p>Card Number</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="wallet-table add-payment-table">
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="custom_radio">
+                      <input type="radio" name="payment_two" value="wallet_two">
+                      <span class="checkmark"></span>
+                      <img src="assets/icons/payment/wallet-03.svg" alt="Icon">
+                    </label>
+                  </td>
+                  <td>
+                    <h6>4710 **** **** **64</h6>
+                    <p>Card Number</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-btn">
+      <button (click)="onConfirm()" class="btn btn-theme w-100">Add to Wallet</button>
+      <button (click)="closeModal()" class="btn btn-outline-cancel" data-bs-dismiss="modal">Cancel</button>
+    </div>
+  </div>
+</div>

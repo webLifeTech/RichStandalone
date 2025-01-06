@@ -1,0 +1,243 @@
+<div>
+  <mat-accordion class="accordion-align">
+    <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="section.isOpen = true"
+      (closed)="section.isOpen = false" *ngFor="let section of companyInfoTabs; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ section.title | translate }}
+        </mat-panel-title>
+        <mat-panel-description>
+          <i class="feather" [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Office details -->
+      <ng-container *ngIf="section.tab === 'office_details'">
+        <div class="profile-info-grid">
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.first_name' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_first_name" name="office_dtl_first_name" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.last_name' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_last_name" name="office_dtl_last_name" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.contact_number' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_contact_number" name="office_dtl_contact_number"
+                  type="text" class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.email_id' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_email_id" name="office_dtl_email_id" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.city' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_city" name="office_dtl_city" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.postal_code' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_postal_code" name="office_dtl_postal_code" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.company_address' | translate }}
+                </label>
+                <textarea [(ngModel)]="fleetOwnerForm.office_dtl_company_address" name="office_dtl_company_address"
+                  type="text" class="form-control open-select"></textarea>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.office_details.map_location' | translate }}
+                </label>
+                <input [(ngModel)]="fleetOwnerForm.office_dtl_map_location" name="office_dtl_map_location" type="text"
+                  class="form-control open-select" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row my-4">
+          <div class="col-lg-12 text-end">
+            <button type="button" (click)="onSubmit()" class="btn btn-theme no-text-transorm mx-2 mb-2">
+              Save and Update
+            </button>
+            <button type="button" (click)="onCancel()" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <!-- Branch info -->
+      <ng-container *ngIf="section.tab === 'branch_info'">
+        <div class="profile-info-grid">
+
+          <div class="row m-0 align-items-end">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label>
+                  {{ 'userDashboard.kyc.branch_info.multiple_location' | translate }}
+                </label>
+                <ng-select clearable="false" (change)="changeMulti()" [items]="multipleLocation" bindLabel="value"
+                  placeholder="-- Select One --" bindValue="name" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="fleetOwnerForm.isMultipleLoctn" name="isMultipleLoctn">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="fleetOwnerForm.isMultipleLoctn === 'Yes'">
+            <div *ngFor="let item of fleetOwnerForm.branchInfo;let idx = index" class="row m-0 align-items-end">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.dba_name' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_dba_name" name="branch_dba_name"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.first_name' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_first_name"
+                    name="branch_first_name" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.last_name' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_last_name"
+                    name="branch_last_name" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.contact_number' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_contact_number"
+                    name="branch_contact_number" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.email_id' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_email_id" name="branch_email_id"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.city' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_city" name="branch_city"
+                    type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.postal_code' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_postal_code"
+                    name="branch_postal_code" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.branch_address' | translate }}
+                  </label>
+                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_address"
+                    name="branch_address" type="text" class="form-control open-select"></textarea>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.branch_address2' | translate }}
+                  </label>
+                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_address2"
+                    name="branch_address2" type="text" class="form-control open-select"></textarea>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label>
+                    {{ 'userDashboard.kyc.branch_info.map_location' | translate }}
+                  </label>
+                  <input [ngModelOptions]="{standalone: true}" [(ngModel)]="item.branch_map_location"
+                    name="branch_map_location" type="text" class="form-control open-select" />
+                </div>
+              </div>
+              <div class="col-lg-12 text-end">
+                <button type="button" (click)="onSubmit()" class="btn btn-theme no-text-transorm mx-2 mb-2">
+                  Save and Update
+                </button>
+                <button type="button" (click)="onCancelBranchInfo()"
+                  class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+                  Cancel
+                </button>
+              </div>
+
+              <hr *ngIf="fleetOwnerForm.isMultipleLoctn === 'Yes'" class="div-line1" />
+            </div>
+
+            <div *ngIf="fleetOwnerForm.isMultipleLoctn === 'Yes'" class="row m-0">
+              <div class="col-lg-6 offset-md-6">
+                <div class="form-group text-end">
+                  <a (click)="addMoreBranch()" class="btn btn-solid color2 no-text-transorm">
+                    <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.branch_info.add_more' | translate
+                    }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+      </ng-container>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

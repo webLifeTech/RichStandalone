@@ -1,0 +1,15 @@
+<div class="collection-collapse-block" [class.open]="isOpenElectric">
+    <h6 class="collapse-block-title" (click)="openElectric()">{{'car_list_page.filter.car_electric'| translate}}</h6>
+    <div class="collection-collapse-block-content" [ngStyle]="{ 'display' : isOpenElectric == true ? 'block' : 'none'}">
+      <div class="collection-brand-filter">
+        @for(ele of carElectrics; track ele){
+          <div class="form-check collection-filter-checkbox">
+            <input type="checkbox" class="form-check-input" id="{{ ele.checkId }}" [value]="ele.checkId" [checked]="checked(ele.checkId)" (change)="applyFilter($event)" [disabled]="!ele.availability">
+            <label class="form-check-label" for="{{ ele.checkId }}">{{ ele.title | translate }}</label>
+            <label class="form-check-count" for="{{ ele.checkId }}">{{ ele.availability || 0 }}</label>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,55 @@
+<div class="modal-content user-modal">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="first">first name</label>
+          <input type="text" class="form-control" id="first" placeholder="first name">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="last">last name</label>
+          <input type="text" class="form-control" id="last" placeholder="last name">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="gender">gender</label>
+          <select id="gender" class="form-control">
+            <option selected>Choose...</option>
+            <option>female</option>
+            <option>male</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label>birthday</label>
+          <input class="form-control" placeholder="18 april" name="dp" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" />
+        </div>
+        <div class="form-group col-12">
+          <label for="inputAddress">Address</label>
+          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="inputCity">City</label>
+          <input type="text" class="form-control" id="inputCity">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputState">State</label>
+          <select id="inputState" class="form-control">
+            <option selected>Choose...</option>
+            <option>...</option>
+          </select>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="inputZip">Zip</label>
+          <input type="text" class="form-control" id="inputZip">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-solid">Save changes</button>
+  </div>
+</div>

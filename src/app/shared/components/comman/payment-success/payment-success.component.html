@@ -1,0 +1,24 @@
+<div class="section-b-space success-section">
+  <div class="container">
+    <div class="row success-detail">
+      <div class="col">
+        <img src="assets/images/premium-icon.jpg" width="130px" class="img-fluid blur-up lazyload mb-0"
+          alt="cab-success">
+        <h4><strong>{{'Basic/Free Plan' | translate}}</strong></h4>
+        <h2>{{'pricing_payment_success.title' | translate}}</h2>
+        <p>{{'pricing_payment_success.massage1' | translate}} {{'Basic/Free Plan' | translate}}
+          {{'pricing_payment_success.massage1_1' | translate}}
+          {{'pricing_payment_success.massage2' | translate}}
+          "SHJG12155215", {{'pricing_payment_success.massage3' | translate}}</p>
+
+        <button type="button" (click)="downloadInvoice()"
+          class="btn btn-theme">{{'pricing_payment_success.download_invoice' |
+          translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isShowInvoice" class="mb-5">
+  <app-subscription-template [type]="type"></app-subscription-template>
+</div>

@@ -1,0 +1,19 @@
+<div class="content">
+  <div class="container">
+    <div class="content-header">
+      <h4>Favourite</h4>
+    </div>
+    <div class="row">
+      <div *ngFor="let item of myWishlist" class="col-md-12">
+        <app-cab-card-view [from]="'wishlist'" [type]="type" [singleItem]="item"
+          (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
+      </div>
+      <div *ngIf="!myWishlist.length" class="col-md-12">
+        <p class="text-center">
+          <b>No Favourite</b>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

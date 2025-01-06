@@ -1,0 +1,188 @@
+<div class="content">
+  <div class="container wallet-section">
+
+    <div class="content-header">
+      <h4>Wallet</h4>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-5 col-md-12 d-flex">
+        <div class="card wallet-card flex-fill">
+          <div class="card-body">
+            <div class="balance-info">
+              <div class="balance-grid">
+                <div class="balance-content">
+                  <h6>Available Balance</h6>
+                  <h4>{{4544 | currencyPipe: gs.currency}}</h4>
+                </div>
+                <div class="refersh-icon">
+                  <a>
+                    <i class="fas fa-arrows-rotate"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="balance-list">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 d-flex">
+                    <div class="balance-inner credit-info">
+                      <h6>{{123464 | currencyPipe: gs.currency}}</h6>
+                      <p>Total Credit</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 d-flex">
+                    <div class="balance-inner debit-info">
+                      <h6>{{7357 | currencyPipe: gs.currency}}</h6>
+                      <p>Total Debit</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 d-flex">
+                    <div class="balance-inner transaction-info">
+                      <h6>{{656415 | currencyPipe: gs.currency}}</h6>
+                      <p>Total Transaction</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group wallet-form-group">
+              <label>Add Wallet Credits ($)</label>
+              <input type="text" class="form-control" placeholder="1000">
+            </div>
+            <div class="wallet-btn">
+              <a class="btn" (click)="addPayment()">
+                Add Payment
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 col-md-12 d-flex">
+        <div class="card your-card flex-fill">
+          <div class="card-body">
+            <div class="wallet-header">
+              <h4>Your Cards</h4>
+              <a (click)="addCard()">
+                <i class="feather icon-plus-circle"></i>
+              </a>
+            </div>
+            <div class="wallet-table">
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr *ngFor="let item of cardLists; let idx = index">
+                      <td>
+                        <label class="custom_radio">
+                          <input type="radio" name="payment" value="wallet" checked="">
+                          <span class="checkmark"></span>
+                          <img [src]="item.image" alt="Icon">
+                        </label>
+                      </td>
+                      <td>
+                        <h6>{{item.hiddenNumber}}</h6>
+                        <p>Card Number</p>
+                      </td>
+                      <td>
+                        <h6>{{item.balance | currencyPipe: gs.currency}}</h6>
+                        <p>Balance</p>
+                      </td>
+                      <td>
+                        <h6>{{item.status}}</h6>
+                        <p>Status</p>
+                      </td>
+                      <td class="text-center">
+                        <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
+                          aria-label="Example icon-button with a menu">
+                          <i class="feather icon-more-vertical"></i>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                          <button type="button" (click)="onEdit(item)" mat-menu-item>
+                            <i class="feather icon-edit"></i>
+                            <span class="ms-2">Edit</span>
+                          </button>
+                          <button type="button" (click)="onDelete(idx)" mat-menu-item>
+                            <i class="feather icon-trash"></i>
+                            <span class="ms-2">Delete</span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 d-flex">
+        <div class="card book-card flex-fill mb-0 mt-4">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-5">
+                <h4>Wallet Usage History</h4>
+              </div>
+              <div class="col-md-7 text-md-end">
+                <div class="table-search">
+                  <div id="tablefilter" class="me-0">
+                    <div class="dataTables_filter">
+                      <label>
+                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
+                          [ngModelOptions]="{standalone: true}" (ngModelChange)="searchData(searchDataValue)"
+                          type="search" class="form-control" placeholder="Search" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive dashboard-table  mb-4">
+              <table class="table datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>#Sn</th>
+                    <th>Ref Id</th>
+                    <th>Transaction For</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+                    <tr>
+                      <td>{{idx+1}}</td>
+                      <td><a> {{item.refId}}</a></td>
+                      <td>
+                        <div class="table-avatar">
+                          <div class="table-head-name flex-grow-1">
+                            <a class="mb-0">{{item.transactionFor}}</a>
+                          </div>
+                        </div>
+                      </td>
+                      <td>{{item.date}}</td>
+                      <td [ngClass]="{ 'text-danger': item.type === '-' }" class="text-success-light">
+                        <span>{{item.type}}</span>{{item.total | currencyPipe: gs.currency}}
+                      </td>
+                      <td>
+                        <span
+                          [ngClass]="{ 'badge-light-success': item.status === 'Completed','badge-light-warning': item.status === 'Pending','badge-light-danger':item.status === 'Failed' }"
+                          class="badge">{{item.status}}</span>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

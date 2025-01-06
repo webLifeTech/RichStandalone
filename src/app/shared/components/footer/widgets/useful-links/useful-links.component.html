@@ -1,0 +1,16 @@
+<div class="footer-space">
+  <div class="footer-title">
+    <h5>useful links</h5>
+  </div>
+  <div class="footer-content">
+    <div class="footer-links">
+      <ul>
+        @for(links of footerUsefulLink; track links){
+          <li>
+            <a href="javascript:void(0)" [routerLink]="links.path">{{ links.title }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

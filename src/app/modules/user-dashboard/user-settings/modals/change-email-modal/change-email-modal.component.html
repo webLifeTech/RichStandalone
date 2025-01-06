@@ -1,0 +1,40 @@
+<div class="modal-content form-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">Change Email Address</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form action="#">
+      <div class="modal-form-group">
+        <label>Current Email Address <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="modal-form-group">
+        <label>New Email Address <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="modal-form-group">
+        <p>
+          <i class="feather icon-alert-circle"></i> New Email Address Only
+          Updated Once You Verified
+        </p>
+      </div>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              Change Email
+            </a>
+          </div>
+          <div class="col-6">
+            <a (click)="closeModal()" class="btn btn-primary w-100">
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="title-top">
+  <h5>{{'have_coupon.title' | translate}}</h5>
+</div>
+<div class="flight_detail">
+  <div class="promo-section">
+    <div class="form-group mb-0">
+      <div class="input-group">
+        <input type="text" class="form-control" [placeholder]="'have_coupon.input_plchold' | translate">
+        <div class="input-group-prepend">
+          <span class="input-group-text">{{'have_coupon.apply' | translate}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="promos">
+      <form>
+        @for(details of cabPromoCode; track details){
+        <div class="form-check">
+          <input class="form-check-input radio_animated" type="radio" name="exampleRadios2" id="{{ details.radioId }}"
+            value="{{ details.radioValue }}" [checked]="details.checked" (change)="selectCode()">
+          <div>
+            <label class="form-check-label title" for="{{ details.radioId }}">
+              {{ details.title }}
+            </label>
+            <label class="form-check-label" for="{{ details.radioId }}">
+              {{ details.description }}
+            </label>
+          </div>
+        </div>
+        }
+      </form>
+    </div>
+  </div>
+</div>

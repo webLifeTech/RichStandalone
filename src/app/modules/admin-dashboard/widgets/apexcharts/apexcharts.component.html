@@ -1,0 +1,45 @@
+<ng-container *ngIf="chartSize == 1 || chartSize == 2">
+  <div id="card">
+    <div *ngIf="this.data.series.length" id="chart">
+      <apx-chart style="height: 500px;" [series]="chartOptions.series" [chart]="chartOptions.chart"
+        [plotOptions]="chartOptions.plotOptions" [labels]="chartOptions.labels" [stroke]="chartOptions.stroke"
+        [fill]="chartOptions.fill"></apx-chart>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="chartSize == 3 || chartSize == 4">
+  <div id="chart">
+    <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [dataLabels]="chartOptions1.dataLabels"
+      [plotOptions]="chartOptions1.plotOptions" [xaxis]="chartOptions1.xaxis"></apx-chart>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="chartSize == 5">
+  <div id="card">
+    <div *ngIf="this.data.series.length" id="chart">
+      <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart" [plotOptions]="chartOptions5.plotOptions"
+        [labels]="chartOptions5.labels" [legend]="chartOptions5.legend" [colors]="chartOptions5.colors"
+        [responsive]="chartOptions5.responsive"></apx-chart>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="chartType === 'simplepie'">
+  <div id="card">
+    <div *ngIf="this.data.series.length" id="chart">
+      <apx-chart [series]="chartSimplePie.series" [chart]="chartSimplePie.chart" [labels]="chartSimplePie.labels"
+        [responsive]="chartSimplePie.responsive"></apx-chart>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="chartType === 'column_charts'">
+  <div id="chart">
+    <apx-chart [series]="chartColumnCharts.series" [chart]="chartColumnCharts.chart"
+      [dataLabels]="chartColumnCharts.dataLabels" [plotOptions]="chartColumnCharts.plotOptions"
+      [yaxis]="chartColumnCharts.yaxis" [legend]="chartColumnCharts.legend" [fill]="chartColumnCharts.fill"
+      [stroke]="chartColumnCharts.stroke" [tooltip]="chartColumnCharts.tooltip"
+      [xaxis]="chartColumnCharts.xaxis"></apx-chart>
+  </div>
+</ng-container>

@@ -1,0 +1,33 @@
+<div class="container-fluid border-top">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav mix-pills nav-pills" id="pills-tab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" id="pills-hotel-tab" [class.active]="activeTab == 'hotel'" (click)="tabbed('hotel')">
+            <svg-icon [src]="'assets/images/svg/mix/hotel.svg'"></svg-icon> hotel
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" id="pills-holiday-tab" [class.active]="activeTab == 'holiday'" (click)="tabbed('holiday')">
+            <svg-icon [src]="'assets/images/svg/mix/holiday.svg'"></svg-icon> holiday
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" id="pills-flight-tab" [class.active]="activeTab == 'flight'" (click)="tabbed('flight')">
+            <svg-icon [src]="'assets/images/svg/mix/flight.svg'"></svg-icon> flight
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" id="pills-cab-tab" [class.active]="activeTab == 'cab'" (click)="tabbed('cab')">
+            <svg-icon [src]="'assets/images/svg/mix/cab.svg'"></svg-icon> cab
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" id="pills-food-tab" [class.active]="activeTab == 'food'" (click)="tabbed('food')">
+            <svg-icon [src]="'assets/images/svg/mix/food.svg'"></svg-icon> food
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

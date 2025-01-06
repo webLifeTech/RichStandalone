@@ -1,0 +1,57 @@
+<div class="modal-content custom-form-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">Check Availability</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #cardF="ngForm">
+      <div class="modal-form-group">
+        <label>{{ 'global.location' | translate }} <span class="text-danger">*</span></label>
+        <input type="text" name="same_location" [(ngModel)]="searchObj.same_location" class="form-control"
+          placeholder="{{ 'global.pick_up' | translate }}-{{ 'global.drop_off' | translate }}">
+      </div>
+      <div class="modal-form-group">
+        <label> {{ 'global.pick_up_time' | translate }} <span class="text-danger">*</span></label>
+        <div class="form-icon">
+          <input name="pick_time" [(ngModel)]="searchObj.pick_time" class="form-control datetimepicker digits"
+            placeholder="{{ 'global.pick_up_time' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
+            [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+          <owl-date-time #pickup></owl-date-time>
+          <span class="cus-icon">
+            <img src="assets/icons/payment/calendar-icon.svg" alt="Icon">
+          </span>
+        </div>
+      </div>
+      <div class="modal-form-group">
+        <label>{{ 'global.drop_off_time' | translate }} <span class="text-danger">*</span></label>
+        <div class="form-icon">
+          <input name="drop_time" [(ngModel)]="searchObj.drop_time" class="form-control datetimepicker digits"
+            placeholder="{{ 'global.drop_off_time' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
+            [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+          <owl-date-time #drop></owl-date-time>
+          <span class="cus-icon">
+            <img src="assets/icons/payment/calendar-icon.svg" alt="Icon">
+          </span>
+        </div>
+      </div>
+      <div *ngIf="isAvailabilityForBook" class="alert alert-success" role="alert">
+        Car is <a class="alert-link">Available </a> For Book.
+      </div>
+      <div *ngIf="isAvailabilityForBook" class="alert alert-danger" role="alert">
+        Car <a class="alert-link">Not Available </a> For Book.
+      </div>
+      <div class="modal-btn mt-4">
+        <button *ngIf="!isAvailabilityForBook" type="button" (click)="onConfirm()"
+          class="btn btn-theme w-100 no-text-transorm">
+          Check Now
+        </button>
+        <button *ngIf="isAvailabilityForBook" type="button" (click)="bookNow()"
+          class="btn btn-theme w-100 no-text-transorm">
+          Book Now
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

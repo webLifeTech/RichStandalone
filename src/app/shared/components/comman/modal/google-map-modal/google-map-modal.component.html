@@ -1,0 +1,22 @@
+<div class="modal-content map-modal">
+  <button type="button" class="btn-close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-3 col-lg-5">
+          @if(filterType == 'hotel'){
+            <app-filter [type]="'hotel'" [district]="true" [price]="true" [hotels]="true" [facility]="false" [rating]="false" [language]="false"></app-filter>
+          }
+          @if(filterType == 'restaurant'){
+            <app-filter [type]="'restaurant'" [tags]="true" [price]="true" [restaurant]="true" [cuisines]="false" [rating]="false" [time]="false"></app-filter>
+          }
+        </div>
+        <div class="col-xl-9 col-lg-7 map-section mt-0">
+          <app-google-map></app-google-map>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

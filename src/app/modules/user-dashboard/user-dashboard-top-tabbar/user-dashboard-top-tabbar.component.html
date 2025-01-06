@@ -1,0 +1,23 @@
+<div class="dashboard-section dash-top-bar">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="dashboard-menu">
+          <ul>
+            <ng-container *ngFor="let tab of userDashboardTopTabs">
+              <li *ngIf="tab.visible">
+                <a [routerLink]="tab.route" routerLinkActive="active" [class.disabled]="activeTab !== tab.value"
+                  (click)="changeTab(tab.value)">
+                  <img [src]="tab.icon" alt="Icon">
+                  <span>{{tab.title | translate}}</span>
+                </a>
+              </li>
+            </ng-container>
+            @for(tab of userDashboardTopTabs; track tab){
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

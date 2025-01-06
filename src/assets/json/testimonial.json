@@ -1,0 +1,22 @@
+{
+  "testimonial": [
+    {
+      "id": 1,
+      "name": "lara denal",
+      "description": "When you innovate, you make mistakes.It is best to admit them quickly, & get on with improving your other innovations.",
+      "profileURL": "assets/images/avtar/1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "John Smith",
+      "description": "I had a fantastic stay at this hotel! The service was exceptional, and the room was so comfortable. Will definitely be back!",
+      "profileURL": "assets/images/avtar/2.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Sarah Johnson",
+      "description": " A wonderful stay at this hotel! Exceptional service and a stunning view from my room. Will definitely return!",
+      "profileURL": "assets/images/avtar/3.jpg"
+    }
+  ]
+}

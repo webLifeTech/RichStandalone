@@ -1,0 +1,104 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'Driver details' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.is_active_inactive' | translate }}</h6>
+                <p>{{driverInfoData.is_active_inactive || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.is_available_for_private_booking' | translate }}</h6>
+                <p>{{driverInfoData.is_available_for_private_booking || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.price_per_day' | translate }}</h6>
+                <p>{{driverInfoData.price_per_day || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.price_per_week' | translate }}</h6>
+                <p>{{driverInfoData.price_per_week || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.other_info.price_per_month' | translate }}</h6>
+                <p>{{driverInfoData.price_per_month || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.other_info.working_hours' | translate}}</h6>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <ng-container *ngIf="driverInfoData.is_available_for_private_booking === 'Yes'">
+                <div class="table-responsive dashboard-table">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                        </th>
+                        <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
+                        <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
+                        <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
+                        <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of driverInfoData.workingHours">
+                        <td class="text-center">{{item.no}}</td>
+                        <td>
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{item.name}}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span *ngIf="!item.isEdit">{{item.from_time}}</span>
+                          <input *ngIf="item.isEdit" type="time" [(ngModel)]="item.from_time" name="from_time">
+                        </td>
+                        <td class="text-success-light">
+                          <span *ngIf="!item.isEdit">{{item.to_time}}</span>
+                          <input *ngIf="item.isEdit" type="time" [(ngModel)]="item.to_time" name="to_time">
+                        </td>
+                        <td class="text-center">
+                          <a *ngIf="item.status === 'ON'">
+                            <span class="badge badge-success">
+                              {{item.status}}
+                            </span>
+                          </a>
+                          <a *ngIf="item.status === 'OFF'">
+                            <span class="badge badge-danger">
+                              {{item.status}}
+                            </span>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

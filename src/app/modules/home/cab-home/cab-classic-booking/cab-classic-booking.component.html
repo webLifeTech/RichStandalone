@@ -1,0 +1,26 @@
+<section class="section-b-space process-steps bg-size">
+  <img src="assets/images/cab/app-bg.jpg" class="img-fluid blur-up lazyload bg-img" alt="background-image"
+    style="display: none;">
+  <div class="container">
+    <div class="title-1 detail-title">
+      <h2 class="text-white pt-0">super easy booking</h2>
+      <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias aperiam
+        at, aut commodi corporis dolorum ducimus labore magnam mollitia natus porro possimus quae sit
+        tenetur veniam veritatis voluptate voluptatem!</p>
+    </div>
+    <div class="step-bg">
+      <div class="row">
+        @for(details of booking; track details){
+        <div class="col-md-3">
+          <div class="step-box wow zoomIn">
+            <div>
+              <img [src]="details.image" class="img-fluid blur-up lazyload" alt="icon">
+              <h4>{{ details.title }}</h4>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

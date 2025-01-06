@@ -1,0 +1,114 @@
+<div class="content dashboard-content dash-driver-owned-car">
+  <div class="container">
+    <div class="content-header">
+      <h4>Driver owned Car Dashboard</h4>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-lg-12 ">
+        <div class="dash-box-card flex-fill py-2">
+          <div class="overview-box">
+            <div class="row">
+              <div class="col-md-2 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content mt-2">
+                      <h3>Wallet Balance</h3>
+                      <div class="widget-icon">
+                        <span class="total-count">
+                          {{dashboardDetails.totalWalletBalance | currencyPipe: gs.currency}}
+                        </span>
+                      </div>
+                      <div class="text-center">
+                        <a class="btn view-btn mb-2" (click)="goWallet()">View</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div class="col-md-2 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content mt-2">
+                      <h3>Favourite</h3>
+                      <div class="widget-icon">
+                        <span class="total-count">
+                          {{dashboardDetails.totalFavourite}}
+                        </span>
+                      </div>
+                      <div class="text-center">
+                        <a class="btn view-btn mb-2" (click)="goWishlist()">View</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div class="col-md-2 p-0">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Driver Risk Score</h3>
+                    </div>
+                  </div>
+                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="170"
+                    [name]="'Performance grade'"></app-user-apexcharts>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div class="col-md-2 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Driver Average</h3>
+                      <h3>Star Rating</h3>
+                      <div class="review-rating mt-3">
+                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div class="col-md-2 p-0">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Vehicle Risk Score</h3>
+                    </div>
+                  </div>
+                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="170"
+                    [name]="'Performance grade'"></app-user-apexcharts>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+              <div class="col-md-2 p-0 d-flex">
+                <div class="widget-box  flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content text-center">
+                      <h3>Vehicle Average</h3>
+                      <h3>Star Rating</h3>
+                      <div class="review-rating mt-3">
+                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <app-doc-trip-book-details></app-doc-trip-book-details>
+      </div>
+      <div class="col-lg-6">
+        <app-doc-vehicle-book-details></app-doc-vehicle-book-details>
+      </div>
+      <!-- <div class="col-lg-4">
+        <app-my-earning-details></app-my-earning-details>
+      </div> -->
+    </div>
+  </div>

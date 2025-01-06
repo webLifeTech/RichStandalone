@@ -1,0 +1,20 @@
+<div class="bg-inner small-section pb-0">
+  <div class="container">
+    <div class="flight-search">
+      <app-cab-search></app-cab-search>
+    </div>
+  </div>
+</div>
+
+<section class="pt-0 bg-inner small-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3">
+        <app-filter [type]="'cab'"></app-filter>
+      </div>
+      <div class="col-lg-9">
+        <app-details [type]="'cab-list'" [responsiveLatestFilter]="true"></app-details>
+      </div>
+    </div>
+  </div>
+</section>

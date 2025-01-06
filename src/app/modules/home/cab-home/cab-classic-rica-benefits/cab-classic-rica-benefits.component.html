@@ -1,0 +1,23 @@
+<section class="about-section section-b-space">
+  <div class="container">
+    <app-title [type]="'classic'" [titleClass]="'detail-title'" [title]="'why choose TL Hub?'"
+      [subTitle]="'welcome to TL Hub'" [description]="description"></app-title>
+    <div class="highlight-section">
+      <div class="row">
+        @for(benefits of benefits; track benefits){
+        <div class="col-xl-3 col-6">
+          <div class="highlight-box wow fadeInUp">
+            <div>
+              <svg-icon [src]="benefits.icon"></svg-icon>
+            </div>
+            <div class="content-sec">
+              <h5>{{ benefits.title }}</h5>
+              <p>{{ benefits.description }}</p>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

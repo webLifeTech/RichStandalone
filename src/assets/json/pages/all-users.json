@@ -1,0 +1,113 @@
+{
+  "data": [
+    {
+      "license_number": "1HGCM82633A004352",
+      "user_name": "Michael Johnson",
+      "user_img": "assets/images/driver/d1.png",
+      "model": "2023",
+      "user_type": "Car Owner",
+      "kyc_status": "KYC Pending",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "3FAHP0HA6CR241584",
+      "user_name": "Emily Carter",
+      "user_img": "assets/images/driver/d2.png",
+      "model": "2022",
+      "user_type": "Drivers",
+      "kyc_status": "Completed",
+      "status": "Active"
+    },
+    {
+      "license_number": "2C3KA63H76H456789",
+      "user_name": "Sarah Thompson",
+      "user_img": "assets/images/driver/d4.png",
+      "model": "2021",
+      "user_type": "Fleet Company",
+      "kyc_status": "Completed",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "JH4KA8260MC000124",
+      "user_name": "James Anderson",
+      "user_img": "assets/images/driver/d3.png",
+      "model": "2020",
+      "user_type": "Driver Owned Car",
+      "kyc_status": "Completed",
+      "status": "Active"
+    },
+    {
+      "license_number": "1N4AL11D75C109151",
+      "user_name": "Olivia Martinez",
+      "user_img": "assets/images/driver/d1.png",
+      "model": "2023",
+      "user_type": "Fleet Company",
+      "kyc_status": "KYC Pending",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "1FTSW21P07EB73990",
+      "user_name": "David Wilson",
+      "user_img": "assets/images/driver/d5.png",
+      "model": "2022",
+      "user_type": "Car Owner",
+      "kyc_status": "KYC Pending",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "2G1WB58K281236475",
+      "user_name": "Sophia Lopez",
+      "user_img": "assets/images/driver/d1.png",
+      "model": "2021",
+      "user_type": "Driver Owned Car",
+      "kyc_status": "Completed",
+      "status": "Active"
+    },
+    {
+      "license_number": "WDBUF56X77B123456",
+      "user_name": "Michael Johnson",
+      "user_img": "assets/images/driver/d1.png",
+      "model": "2020",
+      "user_type": "Drivers",
+      "kyc_status": "KYC Pending",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "1C4RJFAG8FC123456",
+      "user_name": "Emily Carter",
+      "user_img": "assets/images/driver/d2.png",
+      "model": "2023",
+      "user_type": "Drivers",
+      "kyc_status": "Completed",
+      "status": "Active"
+    },
+    {
+      "license_number": "5NPEB4AC8CH123456",
+      "user_name": "Sarah Thompson",
+      "user_img": "assets/images/driver/d4.png",
+      "model": "2022",
+      "user_type": "Fleet Company",
+      "kyc_status": "Completed",
+      "status": "Inactive"
+    },
+    {
+      "license_number": "JTEBU5JR2F1234567",
+      "user_name": "James Anderson",
+      "user_img": "assets/images/driver/d3.png",
+      "model": "2021",
+      "user_type": "Drivers",
+      "kyc_status": "Completed",
+      "status": "Active"
+    },
+    {
+      "license_number": "WA1L2AFP5FA123456",
+      "user_name": "Olivia Martinez",
+      "user_img": "assets/images/driver/d1.png",
+      "model": "2023",
+      "user_type": "Driver Owned Car",
+      "kyc_status": "Completed",
+      "status": "Inactive"
+    }
+  ],
+  "totalData": 12
+}

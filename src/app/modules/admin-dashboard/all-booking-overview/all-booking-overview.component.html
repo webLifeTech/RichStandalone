@@ -1,0 +1,192 @@
+<div class="content">
+  <div class="container">
+
+    <div class="content-header">
+      <div class="row">
+        <div class="col-lg-4">
+          <h4>{{activeTypes}} Booking Overview</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="row d-flex align-items-center">
+            <div *ngIf="activeTypes === 'cars'" class="col-lg-8 col-sm-12 col-12">
+              <div class="booking-lists">
+                <ul class="nav">
+                  <li *ngFor="let item of booktabs">
+                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="activeTypes === 'drivers'" class="col-lg-10 col-sm-12 col-12">
+              <div class="booking-lists">
+                <ul class="nav">
+                  <li *ngFor="let item of driverBooktabs">
+                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="activeTypes === 'cars'" class="col-lg-2 col-sm-12 col-12 text-end">
+              <div class="filter-group">
+                <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
+                  <ng-container *ngFor="let item of vehicleStatusList">
+                    <option [value]="item.value">{{item.name}}</option>
+                  </ng-container>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12 justify-content-end">
+              <div class="booking-lists justify-content-end d-flex">
+                <ul class="nav">
+                  <li *ngFor="let item of bookTypes">
+                    <a [class.active]="activeTypes == item.value" (click)="changeTypes(item)">{{item.title}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-12 d-flex">
+        <div class="card book-card flex-fill mb-0">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-5">
+                <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+              </div>
+              <div class="col-md-7 text-md-end">
+                <div class="table-search">
+                  <div id="tablefilter">
+
+                    <div class="dataTables_filter">
+                      <label>
+                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
+                          placeholder="Search" />
+                      </label>
+                    </div>
+                  </div>
+                  <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
+                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
+                    Booking</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive dashboard-table mb-4">
+              <table class="table datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th>
+                      <span>#Sn</span>
+                    </th>
+                    <th class="text-center">Booking ID</th>
+                    <th *ngIf="activeTypes === 'cars'" class="text-start">Car Name</th>
+                    <th *ngIf="activeTypes === 'drivers'" class="text-start">Driver Name</th>
+                    <th class="text-center">Location</th>
+                    <th class="text-center">Booking Date</th>
+                    <th class="text-center">Pickup Date</th>
+                    <th class="text-center">End Date</th>
+                    <th class="text-center">Days</th>
+                    <th class="text-center">Price Per Day</th>
+                    <th class="text-center">Total Amount</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                    <td>
+                      <span>{{idx+1}}</span>
+                    </td>
+                    <td><a>{{data.bookingId}}</a></td>
+                    <td *ngIf="activeTypes === 'cars'" class="text-start">
+                      <div class="table-avatar">
+                        <a class="avatar avatar-lg flex-shrink-0">
+                          <img class="avatar-img" [src]="data.img" alt="Booking">
+                        </a>
+                        <div class="table-head-name flex-grow-1">
+                          <a>{{data.carName}}</a>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td *ngIf="activeTypes === 'drivers'" class="text-start">
+                      <div class="table-avatar">
+                        <a class="avatar avatar-lg flex-shrink-0">
+                          <img class="avatar-img" [src]="data.driver_img" alt="Booking">
+                        </a>
+                        <div class="table-head-name flex-grow-1">
+                          <a>{{data.driver_name}}</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.pickupDeliveryLocation1}}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.bookedOn}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.pickup_date_time}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.end_date_time}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.number_of_days}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{data.price_per_day | currencyPipe: gs.currency}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span class="text-red">{{data.total_amount | currencyPipe: gs.currency}}</span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                          'badge-light-secondary': data.status === 'Upcoming',
+                          'badge-light-warning': data.status === 'Inprogress' ,
+                          'badge-light-danger': data.status === 'Cancelled' || data.status === 'Refund Started' || data.status === 'Refund Completed' || data.status === 'Refund Rejected',
+                          'badge-light-success': data.status === 'Completed'}">
+                        {{data.status}}
+                      </span>
+                    </td>
+                    <td class="text-end">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <i class="feather icon-more-vertical"></i>
+                      </button>
+                      <mat-menu #menu="matMenu" xPosition="before">
+                        <button *ngIf="activeTypes === 'cars'" (click)="onView(data)" type="button" mat-menu-item>
+                          <i class="feather icon-eye"></i>
+                          <span class="ms-2">View</span>
+                        </button>
+                        <button *ngIf="activeTypes === 'drivers'" (click)="onViewDriversBooking(data)" type="button"
+                          mat-menu-item>
+                          <i class="feather icon-eye"></i>
+                          <span class="ms-2">View</span>
+                        </button>
+                      </mat-menu>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

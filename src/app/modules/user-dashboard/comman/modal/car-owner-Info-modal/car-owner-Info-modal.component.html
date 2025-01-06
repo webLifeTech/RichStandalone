@@ -1,0 +1,502 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="booking-header">
+        <div class="booking-img-wrap">
+          <div class="book-img">
+            <img [src]="singleDetails.profile_picture" alt="img">
+          </div>
+          <div class="book-info">
+            <h6>{{singleDetails.carName}}</h6>
+            <p>{{ 'userDashboard.kyc.driverInfo.profile_picture' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="booking-group">
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>{{ 'userDashboard.kyc.driverInfo.title' | translate }}</h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.driver_license_number' | translate }}</h6>
+                <p>{{singleDetails.driver_license_number || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_state' | translate }}</h6>
+                <p>{{singleDetails.dl_state || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.license_document_upload' | translate }}</h6>
+                <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile()"></i></p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.firstname' | translate }}</h6>
+                <p>{{singleDetails.firstName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.middlename' | translate }}</h6>
+                <p>{{singleDetails.middleName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.lastname' | translate }}</h6>
+                <p>{{singleDetails.lastName || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.prefix' | translate}}</h6>
+                <p>{{singleDetails.prefix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.suffix' | translate}}</h6>
+                <p>{{singleDetails.suffix || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.date_of_birth' | translate}}</h6>
+                <p>{{singleDetails.date_of_birth || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_effective_date' | translate}}</h6>
+                <p>{{singleDetails.dl_effective_date || '-'}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>{{ 'userDashboard.kyc.driverInfo.dl_expiration_date' | translate}}</h6>
+                <p>{{singleDetails.dl_expiration_date || '-'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.foreign_drv_lics_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.foreign_drv_lics_info.have_foreign_licns' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.isHaveForeignLicense || '-'}}
+                </p>
+              </div>
+            </div>
+            <ng-container *ngIf="singleDetails.isHaveForeignLicense === 'Yes'">
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.country' | translate }}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_country || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.state' | translate }}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_state || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.city' | translate}}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_city || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.postal_code' | translate }}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_postal_code || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.issue_date' | translate}}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_issue_date || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.expire_date' | translate }}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_expire_date || '-'}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="booking-view">
+                  <h6>
+                    {{ 'userDashboard.kyc.foreign_drv_lics_info.document_upload' | translate }}
+                  </h6>
+                  <p>
+                    {{singleDetails.forn_licn_document_upload || '-'}}
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+
+        <!-- Personal info -->
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.personal_info.title' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.gender' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.gender || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.date_of_birth' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.date_of_birth || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.year_of_experience' | translate}}
+                </h6>
+                <p>
+                  {{singleDetails.year_of_experience || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.marital_status' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.marital_status || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.number_of_children' | translate}}
+                </h6>
+                <p>
+                  {{singleDetails.number_of_children || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.contact_number' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.contact || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.email_id' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.email_id || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.personal_info.emergency_contact_number' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.emergency_contact_number || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{'userDashboard.kyc.personal_info.emergency_contact_person_name'| translate }}
+                </h6>
+                <p>
+                  {{singleDetails.emergency_contact_person_name || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Current address -->
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.current_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.country || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.state || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permanent address -->
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.permanent_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_state || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.perm_add_country || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing Address -->
+        <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              {{ 'userDashboard.kyc.address.billing_address' | translate }}
+            </h6>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_1' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_address_1 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.address_2' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_address_2 || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.zip_code' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_zip_code || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.city' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_city || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.state' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_state || '-'}}
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>
+                  {{ 'userDashboard.kyc.address.country' | translate }}
+                </h6>
+                <p>
+                  {{singleDetails.bill_add_country || '-'}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,503 @@
+{
+  "menu": {
+    "home": "Inicio",
+    "aboutus": "Sobre",
+    "car_rentals": "Alquiler",
+    "driver_rentals": "Alquiler",
+    "submenu": {
+      "listing": "Listado",
+      "booking": "Reserva",
+      "car_details": "Detalles",
+      "child_menu": {
+        "grid_view": "vista",
+        "hotel": "Hotel"
+      }
+    }
+  },
+  "admin_menu": {
+    "dashboard": "Tablero",
+    "cars": "Coches",
+    "trasaction": "Transacción",
+    "report": "Informes",
+    "submenus": {
+      "payment": "pago",
+      "enquiry": "consulta",
+      "micromenu": {
+        "payment1": "pago 1",
+        "payment2": "pago 2"
+      }
+    }
+  },
+  "global": {
+    "location": "ubicación",
+    "search": "buscar",
+    "different": "diferente",
+    "same": "igual",
+    "pick_up": "recoger",
+    "drop_off": "dejar",
+    "date": "fecha",
+    "time": "hora",
+    "date_and_time": "fecha y hora",
+    "enter": "Introducir",
+    "select": "Seleccionar",
+    "or": "O",
+    "type": "Tipo",
+    "am": "a.m.",
+    "pm": "p.m."
+  },
+  "cab_home_page": {
+    "title": "reserva tu taxi",
+    "descriptipn": "alquila un taxi a un precio asequible con tl hub cab"
+  },
+  "cab_list_page": {
+    "description": "alquila un taxi para cualquier tipo de viaje"
+  },
+  "cab_list": {
+    "cab_search": "búsqueda de taxi"
+  },
+  "auth": {
+    "login": "iniciar sesión",
+    "signup": "registrarse",
+    "form": {
+      "full_name": "Nombre completo",
+      "username": "Número de móvil o dirección de correo electrónico",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "remember_me": "recuérdame",
+      "create_account": "crear cuenta",
+      "send": "enviar",
+      "resend": "reenviar",
+      "otp": "OTP",
+      "seconds": "segundos",
+      "otp_enable": "se habilitará en"
+    }
+  },
+  "car_list_page": {
+    "seater": "plazas",
+    "luggage": "equipaje",
+    "AC": "AC",
+    "mileage": "Kilometraje ilimitado",
+    "fare_per_km": "tarifa/km",
+    "book_now": "reservar ahora",
+    "book": "reservar",
+    "view_deal": "Ver oferta",
+    "d_rating": "Valoración",
+    "d_location": "Ubicación",
+    "d_experience": "Experiencia",
+    "details": "detalles",
+    "need_help": "necesita ayuda",
+    "monday-to-friday": "Lunes a viernes",
+    "apply": "aplicar",
+    "close_filter": "cerrar filtro",
+    "search_here": "Buscar aquí..",
+    "offer_discount": "Oferta de festival",
+    "discount_for": "Descuento para",
+    "free_cancellation": "Cancelación gratuita",
+    "add_to_wishlist": "Add to wishlist",
+    "remove_to_wishlist": "Remove to wishlist",
+    "important_info": "Información importante",
+    "email_quote": "Enviar cotización por correo electrónico",
+    "back": "atrás",
+    "status": {
+      "available": "Disponible",
+      "booked": "Reservado"
+    },
+    "filter": {
+      "latest_filter": "Filtrar",
+      "clear_filter": "Borrar filtro",
+      "car_option": "Transmisión",
+      "capacity": "Capacidad",
+      "experience": "Experiencia",
+      "car_type": "Categoría del vehículo",
+      "price": "Precio",
+      "review_score": "Revisión del vehículo",
+      "car_location": "Ubicación",
+      "price_per_day": "Precio por día",
+      "fuel_policy": "Política de combustible",
+      "deposit_required": "Depósito requerido",
+      "supplier": "Compañía de flotas",
+      "mileage_kilometres": "Kilometraje/kilómetros",
+      "car_electric": "Coches eléctricos",
+      "car_specs": "Especificaciones del vehículo"
+    },
+    "car_type": {
+      "mini": "Mini",
+      "medium": "Mediano",
+      "luxury": "Lujo",
+      "sadan": "Sadan",
+      "SUV": "SUV",
+      "standard": "Estándar",
+      "tempo": "Tempo"
+    },
+    "capacity": {
+      "1-5_passenger": "1-5 pasajeros",
+      "6-10_passenger": "6-10 pasajeros",
+      "10_or_more": "10 o más"
+    },
+    "experience": {
+      "1-5_years": "1-5 years",
+      "6-10_years": "6-10 years",
+      "11-15_years": "11-15 years",
+      "16-20_years": "16-20 years",
+      "20_or_more": "20 or more"
+    },
+    "car_option": {
+      "automatic": "automático",
+      "manual": "manual"
+    },
+    "location": {
+      "rajajinagar": "Rajajinagar",
+      "basaveshwarnagar": "Basaveshwarnagar",
+      "vijayanagar": "Vijayanagar",
+      "jayanagar": "Jayanagar",
+      "madivala": "Madivala",
+      "all_other_location": "All other locations"
+    },
+    "price_per_day": {
+      "0_5000": "₹0 - ₹5,000",
+      "5000_10000": "₹5,000 - ₹10,000",
+      "10000_15000": "₹10,000 - ₹15,000",
+      "15000_20000": "₹15,000 - ₹20,000",
+      "20000+": "₹20,000 +"
+    },
+    "car_specs": {
+      "air_condition": "Aire acondicionado",
+      "4+doors": "4+ puertas"
+    },
+    "car_electric": {
+      "fully_electric": "Totalmente eléctrico",
+      "hybrid": "Híbrido",
+      "plugin_hybrid": "Híbrido enchufable"
+    },
+    "mileage_kilometres": {
+      "unlimited": "Ilimitado"
+    },
+    "fuel_policy": {
+      "free_tank": "Tanque gratis",
+      "like_or_like": "Igual por igual"
+    },
+    "deposit_required": {
+      "0_25000": "₹0 - ₹25,000",
+      "25000_50000": "₹25,000 - ₹50,000",
+      "50000+": "₹50,000 +"
+    },
+    "carowner": {
+      "carowner": "Propietario del vehículo"
+    },
+    "supplier": {
+      "peugeot": "Peugeot",
+      "suzuki": "Suzuki",
+      "fiat": "Fiat",
+      "honda": "Honda",
+      "ford": "Ford",
+      "hyundai": "Hyundai",
+      "general": "General",
+      "avis": "Avis",
+      "budget": "Budget",
+      "dollar": "Dollar",
+      "hertz": "Hertz",
+      "sixt": "Sixs"
+    }
+  },
+  "booking_page": {
+    "back_results": "Volver a los resultados de búsqueda",
+    "deal_title": "Tu oferta",
+    "free_cancellation_up": "Cancelación gratuita hasta 48 horas antes de la recogida",
+    "continue_to_book": "Continuar con la reserva"
+  },
+  "booking_payment_page": {
+    "back_results": "Volver a tu oferta",
+    "title": "Ir a caja",
+    "book_now": "Reservar ahora",
+    "cancel": "Cancelar"
+  },
+  "booking_summary": {
+    "title": "Resumen de la reserva",
+    "pickup": "Recogida",
+    "dropoff": "Devolución",
+    "pickup_date": "Fecha de recogida",
+    "return_date": "Fecha de devolución",
+    "car_type": "Tipo de coche",
+    "driver_name": "Nombre del conductor",
+    "discount": "Descuento",
+    "total_fare": "Tarifa total"
+  },
+  "have_coupon": {
+    "title": "¿Tiene un código de cupón?",
+    "input_plchold": "Código promocional",
+    "apply": "aplicar"
+  },
+  "great_choice": {
+    "title": "¡Gran elección!",
+    "customer_rating": "Calificación del cliente",
+    "short_queues": "Colas cortas",
+    "helpful_counter_staff": "Personal de mostrador servicial",
+    "most_popular_fuel_policy": "Política de combustible más popular",
+    "easy_to_find_counter": "Fácil de encontrar mostrador",
+    "free_cancellation": "Cancelación gratuita"
+  },
+  "payment_success": {
+    "car_title": "¡Pago exitoso! Prepárese para viajar",
+    "car_massage1": "Gracias por su pago. Hemos recibido su pago exitosamente.",
+    "car_massage2": "Su ID de transacción es",
+    "car_massage3": "¡Recibirá una factura por correo electrónico pronto!",
+    "driver_title": "¡Pago exitoso! Conductor Prepárese para viajar",
+    "driver_massage1": "Gracias por su pago. Hemos recibido su pago exitosamente.",
+    "driver_massage2": "Su ID de transacción es",
+    "driver_massage3": "¡Recibirá una factura por correo electrónico pronto!",
+    "download_invoice": "descargar factura"
+  },
+  "invoice_summary": {
+    "car_title": "¡Pago exitoso! El auto está listo para viajar",
+    "car_subtitle": "Gracias por su pago. Hemos recibido su pago exitosamente. Comparta sus planes con amigos y familiares",
+    "driver_title": "¡Pago exitoso! El conductor se prepara para llegar a su ubicación",
+    "driver_subtitle": "Gracias por su pago. Hemos recibido su pago exitosamente. Comparta sus planes con amigos y familiares",
+    "view_itinerary": "ver itinerario",
+    "booking_details": "Detalles de la reserva",
+    "transaction_id": "ID de transacción",
+    "booking_status": "Estado de la reserva",
+    "car_details": "Detalles del auto",
+    "driver_details": "Detalles del conductor",
+    "pickup": "Recogida",
+    "dropoff": "Devolución",
+    "pickup_date": "Fecha de recogida",
+    "return_date": "Fecha de devolución",
+    "car_type": "Tipo de auto",
+    "driver_name": "Nombre del conductor",
+    "discount": "Descuento",
+    "total_fare": "Tarifa total",
+    "total_days": "Días totales",
+    "total_day": "Día total",
+    "your_details": "Sus detalles",
+    "name": "Nombre",
+    "address": "Dirección",
+    "email": "Correo electrónico",
+    "phone_no": "Número de teléfono"
+  },
+  "payment_failed": {
+    "car_title": "¡Ups! No podemos procesar tu pago",
+    "car_massage1": "Parece que hemos encontrado un error. Vuelve a intentarlo. Si sigues teniendo problemas, prueba con otro método de pago.",
+    "driver_title": "¡Ups! No podemos procesar tu pago",
+    "driver_massage1": "Parece que hemos encontrado un error. Vuelve a intentarlo. Si sigues teniendo problemas, prueba con otro método de pago.",
+    "try_again": "Inténtalo de nuevo"
+  },
+  "userDashboard": {
+    "kyc": {
+      "toptabs": {
+        "dashboard": "Panel de control",
+        "my_bookings": "Mis reservas",
+        "reviews": "Opiniones",
+        "wishlist": "Lista de deseos",
+        "messages": "Mensajes",
+        "wallet": "Billetera",
+        "payments": "Pagos",
+        "my_profile": "Mi perfil",
+        "settings": "Configuración"
+      },
+      "driverInfo": {
+        "title": "Información del conductor",
+        "profile_picture": "Foto de perfil",
+        "upload": "Subir",
+        "submit": "Enviar",
+        "driver_license_number": "Número de licencia de conducir",
+        "license_document_upload": "Subir documento de licencia",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "date_of_birth": "Fecha de nacimiento",
+        "dl_state": "Estado de la licencia de conducir",
+        "dl_effective_date": "Fecha de vigencia de la licencia de conducir",
+        "dl_expiration_date": "Fecha de vencimiento de la licencia de conducir",
+        "edit": "Editar información",
+        "completed_msg": "Su verificación de KYC se completó correctamente."
+      },
+      "personal_info": {
+        "title": "Información personal",
+        "gender": "Sexo",
+        "date_of_birth": "Fecha de nacimiento",
+        "year_of_experience": "Año de experiencia",
+        "marital_status": "Estado civil",
+        "number_of_children": "Número de hijos",
+        "contact_number": "Número de contacto",
+        "email_id": "Correo electrónico",
+        "emergency_contact_number": "Número de contacto de emergencia",
+        "emergency_contact_person_name": "Nombre de la persona de contacto de emergencia",
+        "credit_score": "Puntaje crediticio"
+      },
+      "address": {
+        "current_address": "Dirección actual",
+        "permanent_address": "Dirección permanente",
+        "billing_address": "Dirección de facturación",
+        "country": "País",
+        "state": "Estado",
+        "city": "Ciudad",
+        "zip_code": "Código postal",
+        "address_1": "Dirección 1",
+        "address_2": "Dirección 2"
+      },
+      "other_info": {
+        "title": "Otra información",
+        "taxid": "TaxID",
+        "ssn": "SSN",
+        "price_per_day": "Precio por día",
+        "location": "Ubicación",
+        "pickup_location": "Lugar de recogida",
+        "drop_location": "Lugar de entrega",
+        "is_available_for_private_booking": "¿Está disponible para reserva privada?",
+        "is_active_inactive": "¿Está activo/inactivo?",
+        "shift_timing": "Horario del turno",
+        "from": "Horario del turno desde",
+        "to": "Horario del turno hasta",
+        "working_hours": "Horas de trabajo",
+        "serial_number": "N.º",
+        "day_of_week": "Día de la semana",
+        "from_time": "Hora desde",
+        "to_time": "Hora hasta",
+        "action": "Acción",
+        "status": "Estado"
+      },
+      "tlc_info": {
+        "title": "Información sobre la licencia de TLC",
+        "driver_license_number": "Número de licencia de TLC",
+        "license_document_upload": "Carga de documento de licencia de TLC",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "date_of_birth": "Fecha de nacimiento",
+        "dl_state": "Estado de la licencia",
+        "dl_effective_date": "Fecha de vigencia de la licencia de TLC",
+        "dl_expiration_date": "Fecha de vencimiento de la licencia de TLC"
+      },
+      "company_details": {
+        "title": "Datos de la empresa",
+        "logo": "Logotipo de la empresa",
+        "taxid": "Número de identificación fiscal",
+        "registration_document": "Carga del documento de registro",
+        "company_name": "Nombre de la empresa",
+        "date_of_registration": "Fecha de registro",
+        "city": "Ciudad",
+        "postal_code": "Código postal",
+        "registration_address": "Dirección de registro"
+      },
+      "fleet_owner_details": {
+        "title": "Datos del propietario de la flota",
+        "first_name": "Nombre",
+        "last_name": "Apellido",
+        "contact_number": "Número de contacto",
+        "email_id": "ID de correo electrónico",
+        "ssn": "SSN",
+        "driver_license_number": "Número de licencia de conducir",
+        "driver_license_document": "Cargar documento de licencia de conducir"
+      },
+      "office_details": {
+        "title": "Datos de la oficina",
+        "first_name": "Nombre de la persona de contacto",
+        "last_name": "Apellido",
+        "contact_number": "Número de contacto",
+        "email_id": "ID de correo electrónico",
+        "city": "Ciudad",
+        "postal_code": "Código postal",
+        "company_address": "Dirección de la empresa",
+        "map_location": "Ubicación en el mapa"
+      },
+      "branch_info": {
+        "title": "Información de la sucursal",
+        "multiple_location": "¿Tiene varias sucursales?",
+        "dba_name": "Nombre comercial",
+        "first_name": "Nombre de la persona de contacto",
+        "last_name": "Apellido",
+        "contact_number": "Número de contacto",
+        "email_id": "ID de correo electrónico",
+        "city": "Ciudad",
+        "postal_code": "Código postal",
+        "branch_address": "Dirección de la sucursal",
+        "map_location": "Ubicación en el mapa",
+        "add_more": "Agregar una sucursal más"
+      },
+      "vehicles_info": {
+        "title": "Información del vehículo",
+        "vin_number": "Número de VIN",
+        "vin_document_upload": "Cargar documento de VIN",
+        "plate_number": "Número de matrícula",
+        "model_year": "Año del modelo",
+        "vehicle_age": "Antigüedad del vehículo",
+        "make": "Marca",
+        "model": "Modelo",
+        "gross_vehicle_weight": "Peso bruto del vehículo",
+        "seating_capacity": "Capacidad de asientos",
+        "registration_state": "Estado de registro",
+        "territory_code": "Código de territorio",
+        "garage_zip_code": "Código postal del garaje",
+        "fuel_type": "Tipo de combustible",
+        "dashboard_camera": "Cámara del tablero",
+        "collision_avoidance": "Sistema anticolisión",
+        "transmission": "Transmisión",
+        "car_category": "Categoría del vehículo"
+      },
+      "vehicle_inspection_detail": {
+        "title": "Detalle de la inspección del vehículo",
+        "is_inspection_report": "¿Está disponible el informe de inspección?",
+        "vehicle_tlh": "El vehículo no tiene informe de inspección Iniciar desde TLH",
+        "valid_date": "Datos válidos",
+        "upload_inspection_report": "Cargar informe de inspección"
+      },
+      "vehicle_insurance_detail": {
+        "title": "Detalles del seguro del vehículo",
+        "is_insurance_covered": "¿Está cubierto el seguro?",
+        "insurance_quote": "¿El seguro no está cubierto? Busco cotización",
+        "carriers_name": "Nombre de la compañía aseguradora",
+        "policy_number": "Número de póliza",
+        "limits_coverage": "Límites y cobertura",
+        "coverage_expire_date": "Fecha de vencimiento de la cobertura",
+        "coverage_effective_date": "Fecha de vigencia de la cobertura"
+      },
+      "other_details": {
+        "title": "Otros detalles",
+        "branch": "Sucursal",
+        "price_per_day": "Precio por día",
+        "car_image_upload": "Subir imagen del coche"
+      },
+      "upload_bulk_vehicle": {
+        "title": "Cargar vehículo en bloque",
+        "table_title": "Todas las sucursales",
+        "upload_vin_number": "Cargar hoja de cálculo con número de VIN",
+        "vin_number": "Número de VIN",
+        "tlc_plate_number": "Número de placa TLC",
+        "car_category": "Categoría del vehículo",
+        "fuel_type": "Tipo de combustible",
+        "transmission": "Transmisión",
+        "kyc": "KYC",
+        "action": "Acción"
+      },
+      "car_owner_info": {
+        "title": "Datos del propietario del vehículo",
+        "first_name": "Nombre",
+        "last_name": "Apellido",
+        "contact_number": "Número de contacto",
+        "email_id": "ID de correo electrónico",
+        "ssn": "SSN",
+        "driver_license_number": "Número de licencia de conducir",
+        "driver_license_document": "Cargar documento de licencia de conducir"
+      }
+    },
+    "try_again": "intentar otra vez"
+  },
+  "adminDashboard": {
+    "security": {
+      "menu": "Menú",
+      "submenu": "Submenú",
+      "all_menu": "TODOS los menús",
+      "search": "Buscar",
+      "add_menu": "Agregar nuevo menú",
+      "add_sub_menu": "Agregar nuevo submenú",
+      "sn": "S#",
+      "menu_name": "Nombre del menú",
+      "status": "Estado",
+      "action": "Acción",
+      "sub_menu_name": "Nombre del submenú",
+      "redirect_url": "URL de redireccionamiento",
+      "description": "Descripción",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "upload": "Subir"
+    }
+  }
+}

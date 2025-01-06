@@ -1,0 +1,43 @@
+<div class="modal-content form-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">Deactivate Account</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="deactive-content">
+      <p>
+        Are you sureyou want to delete This Account? To delete your account,
+        Type your password.
+      </p>
+    </div>
+    <form action="#">
+      <div class="modal-form-group">
+        <label>Password <span class="text-danger">*</span></label>
+        <div class="pass-group">
+          <input [type]="password[4] ? 'text' : 'password'" class="form-control pass-input-six"
+            placeholder="............." />
+          <span class="feather icon-eye-off toggle-password-six" [ngClass]="{
+              'icon-eye': password[4],
+              'icon-eye-off': !password[4]
+            }" (click)="togglePassword(4)"></span>
+        </div>
+      </div>
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              Delete Account
+            </a>
+          </div>
+          <div class="col-6">
+            <a (click)="closeModal()" class="btn btn-primary w-100">
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
