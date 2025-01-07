@@ -201,8 +201,20 @@ export class ProfileService {
 
   // Vehicle KYC -> getVehicleDetails
   public getVehicleDetails(dataParams: any) {
-    const params = new HttpParams().set('userId', dataParams.userId);
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+      .set('vehicleId', dataParams.vehicleId);
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getVehicleDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Vehicle KYC -> getAllVehicles
+  public getAllVehicles(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllVehicles', { params }).pipe(
       map((res: any) => {
         return res;
       })

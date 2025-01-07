@@ -1,19 +1,12 @@
 <div>
-  <div>
-    <!-- {{sections.value | json}} -->
-  </div>
-
   <form [formGroup]="dynamicForm">
     <div formArrayName="sections">
-      <mat-accordion class="accordion-align" *ngIf="sections && sections.controls">
+      <mat-accordion [multi]="true" class="accordion-align" *ngIf="sections && sections.controls">
         <ng-container *ngFor="let section of sections.controls; let i = index">
-          <mat-expansion-panel hideToggle [expanded]="section?.get('isOpen')?.value" (opened)="onToggle(true, section)"
+          <mat-expansion-panel hideToggle [expanded]="true" (opened)="onToggle(true, section)"
             (closed)="onToggle(false, section)" [formGroupName]="i">
-            <!-- hideToggle [expanded]="section?.get('isOpen')?.value" (opened)="onToggle()"
-          (closed)="onToggle()" -->
             <mat-expansion-panel-header
               [ngClass]="{'validation': section?.get('isInvalidSection')?.value && submitted}">
-              <!-- *ngIf="( && (field.get('value')?.touched || submitted) )" // [ngClass]="{'validation': section?.invalid && submitted}"-->
               <mat-panel-title>
                 {{ section?.get('sectionName')?.value }}
                 <span class="header-validation-mgs" *ngIf="section?.get('isInvalidSection')?.value && submitted">
@@ -29,7 +22,6 @@
               <div formArrayName="fields" *ngIf="section?.get('fields') as fields">
                 <div class="row m-0 align-items-start">
                   <ng-container *ngFor="let field of fields.controls; let j = index" [formGroupName]="j">
-                    <!-- && field.get('isActive')?.value -->
                     <ng-container *ngIf="field.get('isVisible')?.value && field.get('isConditionValid')?.value">
                       <!-- TEXT -->
                       <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'TEXT'">
@@ -146,8 +138,6 @@
                             {{ field.get('fieldName')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
-                          <!-- <input [formControlName]="'value'" [readonly]="field.get('isReadOnly')?.value" type="date"
-                            class="form-control open-select" /> -->
 
                           <ng-container
                             *ngIf="field.get('validationType')?.value === '' || field.get('validationType')?.value === 'ALL'">
@@ -190,10 +180,6 @@
                             <owl-date-time [pickerType]="'calendar'" #drop5></owl-date-time>
                           </ng-container>
 
-                          <!-- <ng-container *ngIf="field.get('fieldName')?.value !== 'DATE OF BIRTH'">
-                            <input [formControlName]="'value'" [readonly]="field.get('isReadOnly')?.value" type="text"
-                              class="form-control open-select" />
-                          </ng-container> -->
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
                             class="text-danger mt-2">
                             This field is required.
@@ -246,7 +232,6 @@
                           <input class="form-check-input" type="radio" [name]="field.get('description')?.value"
                             [id]="field.get('fieldCode')?.value" [attr.readonly]="field.get('isReadOnly')?.value"
                             (change)="onChangeRadio(field, section)">
-                          <!-- [formControlName]="'value'" -->
                           <label class="form-check-label text-primary ms-2" [for]="field.get('fieldCode')?.value">
                             {{ field.get('fieldName')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
@@ -295,7 +280,6 @@
                             </h5>
                             <p class="upload-text">
                               {{field.get('validationType')?.value}} under 15 MB
-                              <!-- str.split(",").join("") -->
                             </p>
                           </div>
                         </div>
@@ -310,7 +294,6 @@
                             {{ field.get('fieldName')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
-                          <!-- accept=".png" -->
                           <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
                             type="file" class="form-control open-select" />
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
@@ -323,13 +306,12 @@
                       <!-- BUTTON -->
                       <div [ngClass]="field.get('fieldClass')?.value"
                         *ngIf="field.get('fieldType')?.value === 'BUTTON' && field.get('isMandatory')?.value">
-                        <button
-                          *ngIf="field.get('modalValue')?.value === 'add' || field.get('modalValue')?.value === 'Add'"
+                        <button *ngIf="field.get('action')?.value === 'ADD' || field.get('action')?.value === 'Add'"
                           (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button">
                           {{ field.get('fieldName')?.value }}
                         </button>
                         <button
-                          *ngIf="(field.get('modalValue')?.value === 'save' || field.get('modalValue')?.value === 'Save') && !isTableEdit"
+                          *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'Save') && !isTableEdit"
                           (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"
                           type="button">
                           {{ field.get('fieldName')?.value }}
@@ -339,13 +321,13 @@
                           Update
                         </button>
                         <button
-                          *ngIf="(field.get('modalValue')?.value === 'update' || field.get('modalValue')?.value === 'Update') && isEditInfo"
+                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && isEditInfo"
                           (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
                           type="button">
                           {{ field.get('fieldName')?.value }}
                         </button>
                         <button
-                          *ngIf="(field.get('modalValue')?.value === 'save' || field.get('modalValue')?.value === 'Save') && section?.value?.loopArray?.length"
+                          *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'UPDATE')"
                           (click)="cancelForm(field, section)" class="btn btn-solid color3 no-text-transorm ms-3"
                           type="button">
                           Cancel
@@ -353,11 +335,6 @@
                       </div>
 
                       <div *ngIf="field.get('lineBreak')?.value" [ngClass]="field.get('lineBreak')?.value"></div>
-
-                      <!-- <div class="col-lg-4" *ngIf="field.get('fieldType')?.value === 'TEXT'">
-                        <app-input-type-text [field]="field">
-                        </app-input-type-text>
-                      </div> -->
                     </ng-container>
                   </ng-container>
                 </div>
@@ -397,12 +374,6 @@
                             </span>
                           </td>
                         </ng-container>
-                        <!-- <td class="">{{item.insuranceType || '-'}}</td> -->
-                        <!-- <td class="">{{item.companyName || '-'}}</td> -->
-                        <!-- <td class="">{{item.other || '-'}}</td> -->
-                        <!-- <td class="">{{item.policynumber || '-'}}</td> -->
-                        <!-- <td class="">{{item.policyIssueDate || '-'}}</td>
-                        <td class="">{{item.policyExpiryDate || '-'}}</td> -->
                         <td class="text-center">
                           <button mat-icon-button [matMenuTriggerFor]="menu"
                             aria-label="Example icon-button with a menu">
@@ -440,14 +411,7 @@
         class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
         Confirmed
       </button>
-      <!-- <button *ngIf="isEditInfo" type="button" (click)="onSubmit()" class="btn btn-theme no-text-transorm mx-2 mb-2">
-        Update
-      </button> -->
-      <!-- <button *ngIf="" type="button" (click)="onChangeKycTab('TLC license info')"
-        class="btn btn-theme no-text-transorm mx-2 mb-2">
-        Next
-      </button> -->
-      <button *ngIf="isEditInfo" (click)="onCancel()" type="button"
+      <button *ngIf="isEditInfo" (click)="handleCancel()" type="button"
         class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
         Cancel
       </button>

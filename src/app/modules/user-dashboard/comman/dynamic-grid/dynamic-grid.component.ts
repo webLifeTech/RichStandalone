@@ -35,8 +35,6 @@ export class DynamicGridComponent {
   @Input() driverInfoData: any = {};
   @Input() selectedTabObj: any = {};
   @Output() onEditInfo = new EventEmitter<any>();
-  // editInfo
-
 
   formName: string = '';
   @Input() columns: any[] = [];
@@ -78,11 +76,11 @@ export class DynamicGridComponent {
       const body = {
         userId: this.gs.loggedInUserInfo.userId
       }
-      this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
+      this.profileService.getAllVehicles(body).subscribe(async (response: any) => {
         console.log("getVehicleDetails >>>>>>>>", response);
-        if (response && response.vehicleKYC && response.vehicleKYC.length) {
-          this.filteredData = response.vehicleKYC;
-          this.totalData = response.vehicleKYC.length
+        if (response && response.length) {
+          this.filteredData = response;
+          this.totalData = response.length
         }
       })
     }
@@ -92,15 +90,13 @@ export class DynamicGridComponent {
   getConfigUIFields() {
     this.gs.isSpinnerShow = true;
 
-    console.log("this.formName >>>>", this.formName);
-
     let body = {
       "clientID": null,
       "stateCode": 42,
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
       "countryId": 230,
-      "transactionId": 1,
+      "transactionId": 2,
       "formName": this.formName,//THis is name you have send form names
       "menuId": 27
     }
@@ -111,7 +107,6 @@ export class DynamicGridComponent {
       this.formArray = response;
       console.log("aaaaaaaaaaaa >>>>>>>>", this.formArray);
       const groupedSections = this.groupBy(this.formArray, 'sectionID');
-      console.log("groupedSections >>>>>>>>", groupedSections);
 
       Object.keys(groupedSections).forEach((sectionID, index) => {
         const fieldsArray: any = groupedSections[sectionID].sort(
@@ -129,7 +124,7 @@ export class DynamicGridComponent {
         const section: any = {
           sectionID: sectionID,
           sectionName: (fieldsArray[0]?.sectionName || ''),
-          modalObject: mostFrequentModalObject, // (fieldsArray[0]?.modalObject || ''),
+          modalObject: mostFrequentModalObject,
           fields: fieldsArray
         };
         this.groupedSectionsData.push(section);
@@ -137,7 +132,6 @@ export class DynamicGridComponent {
 
       this.getSearchData();
       console.log("this.groupedSectionsData >>>>>>>>>>", this.groupedSectionsData);
-
 
       this.gs.isSpinnerShow = false;
     }, (err: any) => {
@@ -156,22 +150,31 @@ export class DynamicGridComponent {
   }
 
   onView(item: any) {
-    console.log("view -------->", item);
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+      vehicleId: item.vehicleId
+    }
 
-    const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-      size: 'lg'
-    });
-    modalRef.componentInstance.driverInfoData = item;
-    modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
-    modalRef.result.then((res: any) => {
+    this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
+      console.log("getVehicleDetails >>>>>>>>", response);
+      if (response && response.vehicleKYC && response.vehicleKYC.length) {
+        const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+          size: 'lg'
+        });
+        modalRef.componentInstance.driverInfoData = response.vehicleKYC[0];
+        modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+        modalRef.result.then((res: any) => {
 
-    }, () => {
-    });
+        });
+      }
+    })
+
   }
 
   onEdit(item: any, index: any) {
     this.onEditInfo.emit();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // this.actionEvent.emit({ action, rowData });
   }
 
   async onDelete(index: any) {
@@ -184,9 +187,6 @@ export class DynamicGridComponent {
     });
   }
 
-  onAction(action: string, rowData: any) {
-    // this.actionEvent.emit({ action, rowData });
-  }
 
   pageChanged(event: any) {
     this.currentPage = event;

@@ -45,15 +45,17 @@ import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
   styleUrl: './dynamic-form.component.scss'
 })
 export class DynamicFormComponent {
-  @Input() activeKycTab: any;
   @Input() selectedTabObj: any = {};
   @Input() userInfoData: any = {};
-  @Input() fleetOwnerForm: any;
   @Input() isEditInfo: any;
-  @Input() upload_type: any;
-  @Input() isVehicleInfoEdit: any;
   @Input() kycForm: any;
   @Input() formType: any = "";
+  @Input() formArray: any[] = []; // Input data from API
+  @Output() onHandleSubmit = new EventEmitter<any>();
+  @Output() onVehicleUploadSubmit = new EventEmitter<any>();
+  @Output() onDivInfoSubmit = new EventEmitter<any>();
+  @Output() vfVehicleKycUpdate = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<any>();
 
   todayDate: any = new Date();
   items = ['First', 'Second', 'Third'];
@@ -70,55 +72,9 @@ export class DynamicFormComponent {
   mvrDriverDetailsRes: any = {};
 
 
-  @Input() formArray: any[] = []; // Input data from API
-  @Output() onDynamicFormSubmit = new EventEmitter<any>();
-  @Output() onVehicleUploadSubmit = new EventEmitter<any>();
-  @Output() onDivInfoSubmit = new EventEmitter<any>();
-  @Output() vfVehicleKycUpdate = new EventEmitter<any>();
-  @Output() changeKycTab = new EventEmitter<any>();
-  @Output() cancel = new EventEmitter<any>();
+
 
   profileUrl: any = "";
-
-  usaStatesArray: any = [];
-
-  infoTabs: any = [
-    {
-      title: "userDashboard.kyc.driverInfo.title",
-      tab: "driver_info",
-      isOpen: true,
-    },
-    {
-      title: "userDashboard.kyc.foreign_drv_lics_info.title",
-      tab: "foreign_driver_license",
-      isOpen: false,
-    },
-    {
-      title: "userDashboard.kyc.personal_info.title",
-      tab: "personal_info",
-      isOpen: false,
-    },
-    {
-      title: "userDashboard.kyc.address.current_address",
-      tab: "current_address",
-      isOpen: false,
-    },
-    {
-      title: "userDashboard.kyc.address.permanent_address",
-      tab: "permanent_address",
-      isOpen: false,
-    },
-    {
-      title: "userDashboard.kyc.address.billing_address",
-      tab: "billing_address",
-      isOpen: false,
-    },
-    {
-      title: "userDashboard.kyc.other_info.title",
-      tab: "other_information",
-      isOpen: false,
-    },
-  ]
 
   constructor(
     private fb: FormBuilder,
@@ -131,9 +87,6 @@ export class DynamicFormComponent {
     this.dynamicForm = this.fb.group({
       sections: this.fb.array([])
     });
-    this.gs.usStates().subscribe(response => {
-      this.usaStatesArray = response;
-    })
   }
 
   ngOnInit() {
@@ -179,11 +132,6 @@ export class DynamicFormComponent {
               this.formArray[i].apiDropdownList.push(this.configMasterDp[mdItem]);
             }
           }
-          // if (this.formArray[i].fieldId === 1 || this.formArray[i].fieldId === 151) {
-          //   this.formArray[i].isMandatory = true;
-          // } else {
-          //   this.formArray[i].isMandatory = false;
-          // }
         }
         console.log("this.formArray >>>", this.formArray);
         if (this.formType !== 'vehicleUpload') {
@@ -215,12 +163,7 @@ export class DynamicFormComponent {
 
     this.profileService.getMasterPolicyCodes(body).subscribe((res: any) => {
       if (res && res.length) {
-        // for (let i in res) {
-        //   res[i].disabled = true;
-        // }
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
-
-        console.log("masterDropdwonList >>>>>>", this.masterDropdwonList);
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -242,15 +185,9 @@ export class DynamicFormComponent {
       "typeCode": null,
       "effectiveDate": effectiveDate,
     }
-
     this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
       if (res && res.length) {
-        // for (let i in res) {
-        //   res[i].disabled = true;
-        // }
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
-
-        console.log("getMasterVehicleCodes >>>>>>", this.masterDropdwonList);
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -278,6 +215,35 @@ export class DynamicFormComponent {
     })
   }
 
+  // Get Master States List
+  drivLicnStateDropdownList() {
+    let body = {
+      "CountryCode": "230",
+      "Code": "",
+    }
+    this.profileService.getMasterStatesList(body).subscribe((res: any) => {
+      if (res && res.length) {
+        const statesArray = res;
+        this.sections.controls.forEach((section: any) => {
+          const fieldsArray = section.get('fields') as FormArray;
+          fieldsArray.controls.forEach((field: any) => {
+            // For 'DRIVER LICENSE STATE' and 'LICENSE STATE'
+            if (this.formType !== 'vehicleUpload') {
+              if (field.get('fieldId').value === 2 || field.get('fieldId').value === 52 || field.get('fieldId').value === 98) {
+                field.get('dropdownList').setValue(statesArray);
+              }
+            }
+            if (this.formType === 'vehicleUpload') {
+              if (field.get('fieldId').value === 88) {
+                field.get('dropdownList').setValue(statesArray);
+              }
+            }
+          });
+        });
+      }
+    })
+  }
+
   // Get All Dropdwon List
   fetchGetMasterTerritoryZip(zipCode: any) {
 
@@ -301,129 +267,6 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       this.toast.errorToastr(err || "Something went wrong");
     })
-  }
-
-  // Get
-  onCallDpField(dpItem: any, field: any, section: any) {
-
-
-    if (!field.value.value) {
-      this.toast.errorToastr("Please enter " + field.value.fieldName);
-      return;
-    }
-    if (dpItem.action === "DRIVER") {
-      if (dpItem.dropDownCode === "GET_MVR") { // for "GET_MVR"
-        let dataParams = {
-          "licenseNo": field.value.value, // field.value.value "000000001"
-          "state": "NY",
-          "userId": this.gs.loggedInUserInfo.userId,
-        }
-
-        this.profileService.getMVRDetails(dataParams).subscribe((res: any) => {
-          console.log("res.mvrDriverDetails >>>>>", res.mvrDriverDetails);
-
-          if (res && res.responseMessage && !res.responseMessage.status) {
-            this.toast.errorToastr(res.responseMessage.message);
-            return;
-          }
-          if (res && res.mvrDriverDetails) {
-            this.mvrDriverDetailsRes = res.mvrDriverDetails;
-
-            this.mvrDriverDetailsRes.country = 230;
-
-            for (let adI in field.value.apiDropdownList) {
-              if (field.value.apiDropdownList[adI].dropDownClass === "1") {
-                field.value.apiDropdownList[adI].isVisible = false;
-              } else {
-                field.value.apiDropdownList[adI].isVisible = true;
-              }
-            }
-            const autoFillObj: any = {
-              4: "firstName",
-              5: "middleName",
-              6: "lastName",
-              8: "nameSuffix",
-              9: "dReference",
-              13: "genderCd",
-              15: "maritalStatusCd",
-              48: "tLCLicenseNo",
-              53: "tLCEffectiveDt",
-              54: "tLCExpirationDt",
-              21: "address1",
-              22: "address2",
-              23: "zipcode",
-              24: "city",
-
-              100: "firstName",
-              101: "middleName",
-              102: "lastName",
-              104: "nameSuffix",
-              105: "dReference",
-              111: "genderCd",
-              113: "maritalStatusCd",
-              119: "address1",
-              120: "address2",
-              121: "zipcode",
-              122: "city",
-              // 25: "state",
-              // 157: "country",
-              // 0 : "stateCd",
-            }
-
-            this.sections.controls.forEach((section: any) => {
-              const fieldsArray = section.get('fields') as FormArray;
-              fieldsArray.controls.forEach((fieldRow: any) => {
-                // 'DRIVER LICENSE STATE' and 'LICENSE STATE'
-                if (autoFillObj[fieldRow.value.fieldId]) {
-
-                  if (fieldRow.value.fieldType === "DATE" || fieldRow.value.fieldType === "date") { // Date MM/dd/yyyy
-                    fieldRow.get('value')?.setValue(this.parseDate(this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]));
-                  } else {
-                    fieldRow.get('value')?.setValue(this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]);
-                  }
-                }
-
-                if (fieldRow.value.fieldId === 157 || fieldRow.value.fieldId === 190) {
-                  let countryOptions = fieldRow.value.dropdownList.find((sItem: any) => sItem.ID == this.mvrDriverDetailsRes.country) || {};
-
-                  fieldRow.get('value')?.setValue(countryOptions.Name);
-                  fieldRow.get('valueCd')?.setValue(countryOptions.ID);
-
-                  let body = {
-                    "CountryCode": this.mvrDriverDetailsRes.country || "", // "11001"
-                    "Code": "",
-                  }
-                  this.profileService.getMasterStatesList(body).subscribe((res: any) => {
-                    if (res && res.length) {
-                      const statesArray = res;
-                      let stateOptions = statesArray.find((sItem: any) => sItem.ID == this.mvrDriverDetailsRes.stateCd) || {};
-                      if (stateOptions.ID) {
-                        const stateIndex = this.findControlIndex(fieldsArray, 'STATE');
-                        if (stateIndex !== -1) {
-                          const statusField: any = fieldsArray.at(stateIndex);
-
-                          statusField.get('value')?.setValue(stateOptions.Name);
-                          statusField.get('dropdownList')?.setValue(statesArray);
-                          if (statusField.get('valueCd')?.value) {
-                            statusField.get('valueCd')?.setValue(stateOptions.ID);
-                          } else {
-                            statusField.addControl("valueCd", new FormControl(countryOptions.ID));
-                          }
-                        }
-                      }
-                    }
-                  })
-                }
-              });
-            });
-          }
-        })
-      }
-
-      if (dpItem.id === 3) { // for "VIEW_MVR_DETAILS"
-        window.open(this.mvrDriverDetailsRes?.mvrlog?.requestedURL, "_blank");
-      }
-    }
   }
 
   get sections(): FormArray | any {
@@ -464,19 +307,21 @@ export class DynamicFormComponent {
                 isMandatory: [field.isMandatory],
                 isReadOnly: [field.isReadOnly],
                 modalValue: [field.modalValue],
+                valueCode: [field.modalValueCode], // field.modalValue + "Cd"
                 fieldClass: [field.fieldClass],
-                valueCode: [field.modalValue + "Cd"],
                 modalObject: [field.modalObject],
                 dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
-                lineBreak: [field.fieldId === 150 || field.fieldId === 221 ? "col-md-8" : null], // need to do
-                selectUnique: [field.fieldId === 151 ? true : false], // need to do
+                lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
+                selectUnique: [field.selectUnique],
                 fieldId: [field.fieldId],
                 validationType: [field.validationType],
+                staticValue: [field.staticValue],
                 condition: [parseInt(field.condition)],
                 conditionValue: [field.conditionValue],
                 isConditionValid: [(field.condition && field.conditionValue) ? false : true],
                 dropdownList: [this.masterDropdwonList[field.dropdownValues] || []],
                 apiDropdownList: [field.apiDropdownList || []],
+                action: [field.action],
                 value: [
                   field.defaultValue || null,
                   this.getValidators(field)
@@ -508,20 +353,22 @@ export class DynamicFormComponent {
                 isMandatory: [field.isMandatory],
                 isReadOnly: [field.isReadOnly],
                 modalValue: [field.modalValue],
+                valueCode: [field.modalValueCode], // + "Cd"
                 fieldClass: [field.fieldClass],
-                valueCode: [field.modalValue + "Cd"],
                 modalObject: [field.modalObject],
                 dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
-                lineBreak: [field.fieldId === 150 ? "col-md-8" : null], // need to do
-                selectUnique: [field.fieldId === 151 ? true : false], // need to do
+                lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
+                selectUnique: [field.selectUnique],
                 fieldId: [field.fieldId],
                 validationType: [field.validationType],
+                staticValue: [field.staticValue],
                 condition: [parseInt(field.condition)],
                 conditionValue: [field.conditionValue],
                 isConditionValid: [(field.condition && field.conditionValue) ? false : true],
                 dropdownList: [this.masterDropdwonList[field.dropdownValues] || []],
                 apiDropdownList: [field.apiDropdownList || []],
-                valueCd: [field.fieldType === "DROPDOWN" ? this.userInfoData[field.modalObject][field.modalValue + "Cd"] : null],
+                action: [field.action],
+                valueCd: [field.fieldType === "DROPDOWN" ? this.userInfoData[field.modalObject][field.modalValueCode] : null],
                 value: [
                   field.fieldType === "DATE" ? this.parseDate(this.userInfoData[field.modalObject][field.modalValue]) : this.userInfoData[field.modalObject][field.modalValue] || null, //
                   this.getValidators(field)
@@ -537,59 +384,12 @@ export class DynamicFormComponent {
       }
     });
 
-    if (this.isEditInfo) {
-
-      this.sections.controls.forEach((section: any) => {
-        const privFieldsArray = section.get('fields') as FormArray;
-        privFieldsArray.controls.forEach((fieldTwo: any) => {
-          if (fieldTwo.get('fieldType').value === "DROPDOWN") {
-            // this.onChangeDrop()
-          }
-          //   if (field.get('modalValue').value && field.get('modalValue').value === fieldTwo.get('modalValue').value) {
-          //     field.get('value')?.setValue(fieldTwo.get('value')?.value || null);
-          //     if (field.get('fieldType').value === "DROPDOWN") {
-          //       if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
-          //         field.get('valueCd')?.setValue(fieldTwo.get('valueCd')?.value || null);
-          //       } else {
-          //         field.addControl("valueCd", new FormControl(fieldTwo.get('valueCd')?.value || null));
-          //       }
-          //       field.get('dropdownList')?.setValue(fieldTwo.get('dropdownList')?.value);
-          //     }
-          //   }
-          // fieldsFmArray.controls.forEach((fieldTwo: any) => {
-          //   if (fieldTwo?.get('conditionValue')?.value && fieldTwo?.get('condition')?.value) {
-          //     if (fieldTwo.get('condition').value === field.value.fieldId) {
-          //       if (event.Code === fieldTwo.get('conditionValue').value) {
-          //         fieldTwo.get('isConditionValid')?.setValue(true);
-          //       } else {
-          //         fieldTwo.get('isConditionValid')?.setValue(false);
-          //       }
-          //     }
-          //   }
-          // });
-        });
-      });
-
-    }
 
     console.log("sections >>>>>>>", this.sections);
 
     this.gs.isSpinnerShow = false;
     this.fetchMasterCountriesList();
     this.drivLicnStateDropdownList();
-  }
-
-
-  getValidators(field: any) { // isMandatory : boolean, validationType?: any
-    const validators = [];
-    if (field.isMandatory && field.fieldType !== 'BUTTON') {
-      validators.push(Validators.required);
-    }
-    // if (field.validationType) {
-    //   validators.push(Validators.pattern(validationType));
-    // }
-
-    return validators;
   }
 
   groupBy(array: any[], key: string) {
@@ -601,6 +401,8 @@ export class DynamicFormComponent {
     }, {});
   }
 
+
+  // On Change Input
   async onChangeInput(event: any, fieldRow: any, section: any) {
 
     let fieldsFmArray: any = section.get('fields') as FormArray;
@@ -693,7 +495,130 @@ export class DynamicFormComponent {
     }
   }
 
+  // On Select Menu
+  onCallDpField(dpItem: any, field: any, section: any) {
 
+    if (!field.value.value) {
+      this.toast.errorToastr("Please enter " + field.value.fieldName);
+      return;
+    }
+    if (dpItem.action === "DRIVER") {
+      if (dpItem.dropDownCode === "GET_MVR") { // for "GET_MVR"
+        let dataParams = {
+          "licenseNo": field.value.value,
+          "state": "NY",
+          "userId": this.gs.loggedInUserInfo.userId,
+        }
+
+        this.profileService.getMVRDetails(dataParams).subscribe((res: any) => {
+          console.log("res.mvrDriverDetails >>>>>", res.mvrDriverDetails);
+
+          if (res && res.responseMessage && !res.responseMessage.status) {
+            this.toast.errorToastr(res.responseMessage.message);
+            return;
+          }
+          if (res && res.mvrDriverDetails) {
+            this.mvrDriverDetailsRes = res.mvrDriverDetails;
+
+            this.mvrDriverDetailsRes.country = 230;
+
+            for (let adI in field.value.apiDropdownList) {
+              if (field.value.apiDropdownList[adI].dropDownClass === "1") {
+                field.value.apiDropdownList[adI].isVisible = false;
+              } else {
+                field.value.apiDropdownList[adI].isVisible = true;
+              }
+            }
+            const autoFillObj: any = {
+              4: "firstName",
+              5: "middleName",
+              6: "lastName",
+              8: "nameSuffix",
+              9: "dReference",
+              13: "genderCd",
+              15: "maritalStatusCd",
+              48: "tLCLicenseNo",
+              53: "tLCEffectiveDt",
+              54: "tLCExpirationDt",
+              21: "address1",
+              22: "address2",
+              23: "zipcode",
+              24: "city",
+              10: "licenseissuedate",
+              11: "expiration",
+
+              100: "firstName",
+              101: "middleName",
+              102: "lastName",
+              104: "nameSuffix",
+              105: "dReference",
+              111: "genderCd",
+              113: "maritalStatusCd",
+              119: "address1",
+              120: "address2",
+              121: "zipcode",
+              122: "city",
+            }
+
+            this.sections.controls.forEach((section: any) => {
+              const fieldsArray = section.get('fields') as FormArray;
+              fieldsArray.controls.forEach((fieldRow: any) => {
+                if (autoFillObj[fieldRow.value.fieldId]) {
+                  if (fieldRow.value.fieldType === "DATE" || fieldRow.value.fieldType === "date") { // Date MM/dd/yyyy
+                    fieldRow.get('value')?.setValue(this.parseDate(this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]));
+                  } else {
+                    fieldRow.get('value')?.setValue(this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]);
+                  }
+                }
+
+                if (fieldRow.value.fieldId === 157 || fieldRow.value.fieldId === 190) {
+                  let countryOptions = fieldRow.value.dropdownList.find((sItem: any) => sItem.ID == this.mvrDriverDetailsRes.country) || {};
+
+                  fieldRow.get('value')?.setValue(countryOptions.Name);
+                  fieldRow.get('valueCd')?.setValue(countryOptions.ID);
+
+                  let body = {
+                    "CountryCode": this.mvrDriverDetailsRes.country || "", // "11001"
+                    "Code": "",
+                  }
+                  this.profileService.getMasterStatesList(body).subscribe((res: any) => {
+                    if (res && res.length) {
+                      const statesArray = res;
+                      let stateOptions = statesArray.find((sItem: any) => sItem.ID == this.mvrDriverDetailsRes.stateCd) || {};
+                      if (stateOptions.ID) {
+                        const stateIndex = this.findControlIndex(fieldsArray, 'STATE');
+                        if (stateIndex !== -1) {
+                          const statusField: any = fieldsArray.at(stateIndex);
+
+                          statusField.get('value')?.setValue(stateOptions.Name);
+                          statusField.get('dropdownList')?.setValue(statesArray);
+                          if (statusField.get('valueCd')?.value) {
+                            statusField.get('valueCd')?.setValue(stateOptions.ID);
+                          } else {
+                            statusField.addControl("valueCd", new FormControl(countryOptions.ID));
+                          }
+                        }
+                      }
+                    }
+                  })
+                }
+
+                if (fieldRow.value.fieldId === 10 || fieldRow.value.fieldId === 11) {
+                  fieldRow.get('value')?.setValue(this.parseDate(this.mvrDriverDetailsRes['mvrLicenseInformation'][autoFillObj[fieldRow.value.fieldId]]));
+                }
+              });
+            });
+          }
+        })
+      }
+
+      if (dpItem.id === 3) { // for "VIEW_MVR_DETAILS"
+        window.open(this.mvrDriverDetailsRes?.mvrlog?.requestedURL, "_blank");
+      }
+    }
+  }
+
+  // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
     console.log("field >>>>", field);
 
@@ -755,6 +680,7 @@ export class DynamicFormComponent {
     }
   }
 
+  // On Select Checkbox
   onChangeCheckbox(field: any, sectionRow: any) {
 
     if (field.value.value === true) {
@@ -790,6 +716,7 @@ export class DynamicFormComponent {
     }
   }
 
+  // On Select Radio
   onChangeRadio(field: any, section: any) {
 
     let fieldsFmArray = section.get('fields') as FormArray;
@@ -820,51 +747,14 @@ export class DynamicFormComponent {
     }
   }
 
+  // On Select Date
   onDateSelect() {
     if (this.submitted) {
       this.findInvalidControls();
     }
   }
 
-  updateCountryDropdownList(countryOptions: any[]) {
-    this.sections.controls.forEach((section: any) => {
-      const fieldsArray = section.get('fields') as FormArray;
-      fieldsArray.controls.forEach((field: any) => {
-        if (field.get('fieldName').value === 'COUNTRY') {
-          field.get('dropdownList').setValue(countryOptions);
-        }
-      });
-    });
-  }
-
-  drivLicnStateDropdownList() {
-    let body = {
-      "CountryCode": "230",
-      "Code": "",
-    }
-    this.profileService.getMasterStatesList(body).subscribe((res: any) => {
-      if (res && res.length) {
-        const statesArray = res;
-        this.sections.controls.forEach((section: any) => {
-          const fieldsArray = section.get('fields') as FormArray;
-          fieldsArray.controls.forEach((field: any) => {
-            // 'DRIVER LICENSE STATE' and 'LICENSE STATE'
-            if (this.formType !== 'vehicleUpload') {
-              if (field.get('fieldId').value === 2 || field.get('fieldId').value === 52 || field.get('fieldId').value === 98) {
-                field.get('dropdownList').setValue(statesArray);
-              }
-            }
-            if (this.formType === 'vehicleUpload') {
-              if (field.get('fieldId').value === 88) {
-                field.get('dropdownList').setValue(statesArray);
-              }
-            }
-          });
-        });
-      }
-    })
-  }
-
+  // Table Add
   addNew(section: any) {
     const fields = section.get('fields') as FormArray;
 
@@ -873,10 +763,10 @@ export class DynamicFormComponent {
         field.get('isVisible')?.setValue(true);
       }
 
-      if (field.get('modalValue')?.value === "add" || field.get('modalValue')?.value === "Add") {
+      if (field.get('action')?.value === "ADD" || field.get('action')?.value === "Add") {
         field.get('isMandatory')?.setValue(false);
       }
-      if (field.get('modalValue')?.value === "save" || field.get('modalValue')?.value === "Save") {
+      if (field.get('action')?.value === "SAVE" || field.get('action')?.value === "Save") {
         field.get('isMandatory')?.setValue(true);
       }
     });
@@ -884,7 +774,7 @@ export class DynamicFormComponent {
     this.isTableVisible = false;
   }
 
-
+  // Table Save and Update
   saveSubmit(fieldRow: any, section: any) {
     const fields = section.get('fields') as FormArray;
     const loopArray = section.get('loopArray') as FormArray;
@@ -941,10 +831,10 @@ export class DynamicFormComponent {
         // field.get('isConditionValid')?.setValue(false);
       }
 
-      if (field.get('modalValue')?.value === "add" || field.get('modalValue')?.value === "Add") {
+      if (field.get('action')?.value === "ADD" || field.get('action')?.value === "Add") {
         field.get('isMandatory')?.setValue(true);
       }
-      if (field.get('modalValue')?.value === "save" || field.get('modalValue')?.value === "Save") {
+      if (field.get('action')?.value === "SAVE" || field.get('action')?.value === "Save") {
         field.get('isMandatory')?.setValue(false);
       }
 
@@ -985,29 +875,7 @@ export class DynamicFormComponent {
     section.get('tableGridValueList').setValue(tempTableGridValueList);
   }
 
-  cancelForm(fieldRow: any, section: any) {
-    const fields = section.get('fields') as FormArray;
-
-    fields.controls.forEach((field: any) => {
-      if (field.get('modalValue')?.value && fieldRow?.value.dependentFields.indexOf(field.get('fieldId')?.value) !== -1) {
-        field.get('isVisible')?.setValue(false);
-        // reset value
-        field.get('value')?.setValue(null);
-        field.get('valueCd')?.setValue(null);
-        // field.get('isConditionValid')?.setValue(false);
-      }
-
-      if (field.get('modalValue')?.value === "add" || field.get('modalValue')?.value === "Add") {
-        field.get('isMandatory')?.setValue(true);
-      }
-      if (field.get('modalValue')?.value === "save" || field.get('modalValue')?.value === "Save") {
-        field.get('isMandatory')?.setValue(false);
-      }
-      this.isTableVisible = true;
-      this.isTableEdit = false;
-    });
-  }
-
+  // Table Edit
   editTableItem(tgIndex: any, itemValue: any, section: any) {
     const fields = section.get('fields') as FormArray;
 
@@ -1026,10 +894,10 @@ export class DynamicFormComponent {
         }
       }
 
-      if (field.get('modalValue')?.value === "add" || field.get('modalValue')?.value === "Add") {
+      if (field.get('action')?.value === "ADD" || field.get('action')?.value === "Add") {
         field.get('isMandatory')?.setValue(false);
       }
-      if (field.get('modalValue')?.value === "save" || field.get('modalValue')?.value === "Save") {
+      if (field.get('action')?.value === "SAVE" || field.get('action')?.value === "Save") {
         field.get('isMandatory')?.setValue(true);
       }
     });
@@ -1038,6 +906,31 @@ export class DynamicFormComponent {
     this.isTableEditIndex = tgIndex;
   }
 
+  // Table From Cancel
+  cancelForm(fieldRow: any, section: any) {
+    const fields = section.get('fields') as FormArray;
+
+    fields.controls.forEach((field: any) => {
+      if (field.get('modalValue')?.value && fieldRow?.value.dependentFields.indexOf(field.get('fieldId')?.value) !== -1) {
+        field.get('isVisible')?.setValue(false);
+        // reset value
+        field.get('value')?.setValue(null);
+        field.get('valueCd')?.setValue(null);
+        // field.get('isConditionValid')?.setValue(false);
+      }
+
+      if (field.get('action')?.value === "ADD" || field.get('action')?.value === "Add") {
+        field.get('isMandatory')?.setValue(true);
+      }
+      if (field.get('action')?.value === "SAVE" || field.get('action')?.value === "Save") {
+        field.get('isMandatory')?.setValue(false);
+      }
+      this.isTableVisible = true;
+      this.isTableEdit = false;
+    });
+  }
+
+  // Table Item Delete
   async onDelete(index: any, section: any) {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
@@ -1046,36 +939,30 @@ export class DynamicFormComponent {
       if (res.confirmed) {
         const loopArray = section.get('loopArray') as FormArray;
         loopArray.removeAt(index);
-        // this.userList.splice(index, 1);
         this.toast.successToastr("Deleted successfully");
       }
     }, () => {
     });
   }
 
+  // On Upload
   handleUpload(event: any, field: any) {
     const file = event.target.files[0];
     this.uploadFile(file, field);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      if (field.value.conditionValue === 'DRI_PRO_PIC') { // field.value.fieldCode === 'FLD_DRI_PRO_PIC'
+      if (field.value.staticValue === 'DRI_PRO_PIC') { // field.value.fieldCode === 'FLD_DRI_PRO_PIC'
         this.profileUrl = reader.result;
       }
     };
   }
 
   uploadFile(file: any, field: any) {
-    // CAR_IMG	Car Image
-    // INSPC_RPT	Inspection Report
-    // VIN_DOC	Vin Document
-    // TLC_LIC_DOC	TLC License Document
-    // DRI_LIC_DOC	Driver License Document
-    // DRI_PRO_PIC	Driver Profile Picture
 
     let dataParams = {
       "UserId": this.gs.loggedInUserInfo.userId,
-      "DocumentType": field.value.conditionValue,
+      "DocumentType": field.value.staticValue,
     }
     let fileFormData: any = new FormData();
     fileFormData.append('Doc', file, file.name);
@@ -1090,35 +977,17 @@ export class DynamicFormComponent {
     })
   }
 
-  findControlIndex(formAry: any, value: string) {
-    return formAry.controls.findIndex((control: any) => control.value.fieldName === value);
-  }
-
-  findControlIndexByCode(formAry: any, value: string) {
-    return formAry.controls.findIndex((control: any) => control.value.fieldCode === value);
-  }
-
-  getFutureDate() {
-    const date = new Date();
-    const last = new Date(date.getTime() + (15 * 24 * 60 * 60 * 1000));
-    return last;
-  }
-
-  getPastDate() {
-    const date = new Date();
-    const last = new Date(date.getTime() - (15 * 24 * 60 * 60 * 1000));
-    return last;
-  }
-
+  // All From Submit
   onSubmit() {
 
     const getFormInfo = this.findInvalidControls();
     console.log("this.gs.loggedInUserInfo >>>>", this.gs.loggedInUserInfo);
     console.log('this.kycForm.state >>>>', this.kycForm.state);
     console.log('findInvalidControls >>>>', getFormInfo);
+    console.log('sections >>>>', this.dynamicForm.value.sections);
     // return
     this.submitted = true;
-    if (getFormInfo.valid) {
+    if (getFormInfo.valid) { // need to do
       let finalBody: any = {};
       if (this.formType !== 'vehicleUpload') {
 
@@ -1130,27 +999,35 @@ export class DynamicFormComponent {
 
           if (!section.loopArray.length) {
             section.fields.forEach((field: any) => {
-              if (field.modalValue) {
-                let sectionData: any = {}; // changed
-                if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-                  sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
-                } else {
-                  sectionData[field.modalValue] = field.value || "";
-                }
+              // if (field.modalValue) {
+              let sectionData: any = {}; // changed
+              if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
+                sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
+              } else {
+                console.log("field.fieldName >>>>>", field.fieldName);
 
-                if (field.county) { // set county
-                  sectionData["county"] = field.county || "";
-                }
-                if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
+                if (field.modalValue) {
+                  sectionData[field.modalValue] = field.value || "";
+                } else {
                   sectionData[field.valueCode] = field.valueCd || "";
                 }
-
-                if (!finalBody[field.modalObject]) {
-                  finalBody[field.modalObject] = sectionData;
-                } else {
-                  finalBody[field.modalObject] = { ...finalBody[field.modalObject], ...sectionData };
-                }
               }
+
+              if (field.county) { // set county
+                sectionData["county"] = field.county || "";
+              }
+              if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
+                sectionData[field.valueCode] = field.valueCd || "";
+              }
+
+              console.log("sectionData >>>>>", sectionData);
+
+              if (!finalBody[field.modalObject]) {
+                finalBody[field.modalObject] = sectionData;
+              } else {
+                finalBody[field.modalObject] = { ...finalBody[field.modalObject], ...sectionData };
+              }
+              // }
             });
           }
         });
@@ -1169,7 +1046,7 @@ export class DynamicFormComponent {
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode === "200") {
             this.toast.successToastr(res.message);
-            this.onDynamicFormSubmit.emit(null)
+            this.onHandleSubmit.emit(null)
           } else {
             this.toast.errorToastr(res.message);
           }
@@ -1239,8 +1116,7 @@ export class DynamicFormComponent {
     }
   }
 
-
-
+  // All From Handle Update
   async updateDetails(section: any) {
 
     let todayDate = new Date();
@@ -1306,7 +1182,6 @@ export class DynamicFormComponent {
         this.gs.isSpinnerShow = false;
         if (res && res.statusCode === "200") {
           this.toast.successToastr("Updated successfully");
-          // this.onDynamicFormSubmit.emit(null)
         } else {
           this.toast.errorToastr(res.message);
         }
@@ -1344,7 +1219,6 @@ export class DynamicFormComponent {
         this.gs.isSpinnerShow = false;
         if (res && res.statusCode === "200") {
           this.toast.successToastr("Updated successfully");
-          // this.onDynamicFormSubmit.emit(null)
         } else {
           this.toast.errorToastr(res.message);
         }
@@ -1355,7 +1229,12 @@ export class DynamicFormComponent {
     }
   }
 
-  // use for full fields
+  // From Cancel
+  handleCancel() {
+    this.cancel.emit(null);
+  }
+
+  // Use for full fields
   findInvalidControls() {
     const formStatus: any = {
       valid: true,
@@ -1383,23 +1262,45 @@ export class DynamicFormComponent {
     return formStatus;
   }
 
-  findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray): string[] {
-    var invalidControls: string[] = [];
-    let recursiveFunc = (form: FormGroup | FormArray) => {
-      Object.keys(form.controls).forEach(field => {
-        const control: any = form.get(field);
-        if (control.invalid) {
-          invalidControls.push(field);
-        }
-        if (control instanceof FormGroup) {
-          recursiveFunc(control);
-        } else if (control instanceof FormArray) {
-          recursiveFunc(control);
+  getValidators(field: any) { // isMandatory : boolean, validationType?: any
+    const validators = [];
+    if (field.isMandatory && field.fieldType !== 'BUTTON') {
+      validators.push(Validators.required);
+    }
+    return validators;
+  }
+
+  updateCountryDropdownList(countryOptions: any[]) {
+    this.sections.controls.forEach((section: any) => {
+      const fieldsArray = section.get('fields') as FormArray;
+      fieldsArray.controls.forEach((field: any) => {
+        if (field.get('fieldName').value === 'COUNTRY') {
+          field.get('dropdownList').setValue(countryOptions);
         }
       });
-    }
-    recursiveFunc(formToInvestigate);
-    return invalidControls;
+    });
+  }
+
+  // Find Index by fieldName
+  findControlIndex(formAry: any, value: string) {
+    return formAry.controls.findIndex((control: any) => control.value.fieldName === value);
+  }
+
+  // Find Index by fieldCode
+  findControlIndexByCode(formAry: any, value: string) {
+    return formAry.controls.findIndex((control: any) => control.value.fieldCode === value);
+  }
+
+  getFutureDate() {
+    const date = new Date();
+    const last = new Date(date.getTime() + (15 * 24 * 60 * 60 * 1000));
+    return last;
+  }
+
+  getPastDate() {
+    const date = new Date();
+    const last = new Date(date.getTime() - (15 * 24 * 60 * 60 * 1000));
+    return last;
   }
 
   transformDate(date: any, format: any) {
@@ -1417,21 +1318,6 @@ export class DynamicFormComponent {
 
   onToggle(value: any, section: any) {
     section.get('isOpen').setValue(value);
-  }
-
-  setPrimaryAddress(event: any, type: any) {
-
-  }
-
-  vehicleKycUpdate() {
-    this.vfVehicleKycUpdate.emit(null)
-  }
-
-  onChangeKycTab(value: any) {
-    this.changeKycTab.emit(value)
-  }
-  onCancel() {
-    this.cancel.emit(null)
   }
 
 }
