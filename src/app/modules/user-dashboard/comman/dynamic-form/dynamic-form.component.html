@@ -27,7 +27,7 @@
                       <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'TEXT'">
                         <div class="form-group">
                           <label for="driver_license_number">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
@@ -49,12 +49,13 @@
                         *ngIf="field.get('fieldType')?.value === 'TEXTMASK'">
                         <div class="form-group">
                           <label for="driver_license_number">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
                             [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
                             [mask]="field.get('validationType')?.value" />
+                          <!-- [value]="maskedSSN" (input)="onSSNInput($event, field)" -->
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
                             class="text-danger mt-2">
                             This field is required.
@@ -72,7 +73,7 @@
                         *ngIf="field.get('fieldType')?.value === 'TEXTGROUP'">
                         <div class="form-group ">
                           <label for="driver_license_number">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <div class="input-group mb-3">
@@ -112,7 +113,7 @@
                         *ngIf="field.get('fieldType')?.value === 'HIDDENTEXT'">
                         <div class="form-group">
                           <label for="driver_license_number">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
@@ -135,7 +136,7 @@
                         *ngIf="field.get('fieldType')?.value === '' || field.get('fieldType')?.value === 'date' || field.get('fieldType')?.value === 'DATE'">
                         <div class="form-group">
                           <label for="date_of_birth">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
 
@@ -192,7 +193,7 @@
                         *ngIf="field.get('fieldType')?.value === 'DROPDOWN'">
                         <div class="form-group">
                           <label for="isHaveForeignLicense">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <ng-select clearable="false" (change)="onChangeDrop($event, field, section)"
@@ -207,15 +208,35 @@
                         </div>
                       </div>
 
+                      <!-- <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'DROPDOWN' && !field.get('modalValue')?.value">
+                        <div class="form-group">
+                          <label for="isHaveForeignLicense">
+                            {{ field.get('description')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <ng-select clearable="false" (change)="onChangeDrop($event, field, section)"
+                            [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
+                            bindLabel="Name" placeholder="-- Select One --" bindValue="Code"
+                            [formControlName]="'value'">
+                          </ng-select>
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div> -->
+
                       <!-- CHECKBOX -->
                       <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
                         *ngIf="field.get('fieldType')?.value === 'CHECKBOX'">
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" [id]="field.get('fieldCode')?.value"
-                            [formControlName]="'value'" [attr.disabled]="field.get('isReadOnly')?.value"
+                            [formControlName]="'value'" [value]="field.get('value')?.value"
+                            [attr.disabled]="field.get('isReadOnly')?.value"
                             (change)="onChangeCheckbox(field, section)">
                           <label class="form-check-label text-primary ms-2" [for]="field.get('fieldCode')?.value">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                         </div>
@@ -229,11 +250,11 @@
                       <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
                         *ngIf="field.get('fieldType')?.value === 'RADIO'">
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" [name]="field.get('description')?.value"
+                          <input class="form-check-input" type="radio" [name]="field.get('fieldName')?.value"
                             [id]="field.get('fieldCode')?.value" [attr.readonly]="field.get('isReadOnly')?.value"
-                            (change)="onChangeRadio(field, section)">
+                            (change)="onChangeRadio($event,field, section)">
                           <label class="form-check-label text-primary ms-2" [for]="field.get('fieldCode')?.value">
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                         </div>
@@ -248,7 +269,7 @@
                         *ngIf="field.get('fieldType')?.value === 'TEXTAREA'">
                         <div class="form-group">
                           <label>
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <textarea [formControlName]="'value'" [attr.disabled]="field.get('isReadOnly')?.value"
@@ -264,7 +285,8 @@
                       <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'LOGO'">
                         <div class="upload-card mb-3">
                           <div class="position-relative profile-info-img">
-                            <img [src]="profileUrl || 'assets/images/driver/Male.jpg'" class="avatar" alt="...">
+                            <img [src]="field.get('profileUrl')?.value || 'assets/images/driver/Male.jpg'"
+                              class="avatar" alt="...">
                             <div class="centered">
                               <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
                               <input (change)="handleUpload($event, field)" #myInput hidden type="file"
@@ -275,7 +297,7 @@
 
                           <div class="ms-3">
                             <h5 class="upload-title">
-                              {{ field.get('fieldName')?.value }}
+                              {{ field.get('description')?.value }}
                               <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                             </h5>
                             <p class="upload-text">
@@ -291,7 +313,7 @@
                         *ngIf="field.get('fieldType')?.value === 'SELECTION'">
                         <div class="form-group">
                           <label>
-                            {{ field.get('fieldName')?.value }}
+                            {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
@@ -308,13 +330,13 @@
                         *ngIf="field.get('fieldType')?.value === 'BUTTON' && field.get('isMandatory')?.value">
                         <button *ngIf="field.get('action')?.value === 'ADD' || field.get('action')?.value === 'Add'"
                           (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button">
-                          {{ field.get('fieldName')?.value }}
+                          {{ field.get('description')?.value }}
                         </button>
                         <button
                           *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'Save') && !isTableEdit"
                           (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"
                           type="button">
-                          {{ field.get('fieldName')?.value }}
+                          {{ field.get('description')?.value }}
                         </button>
                         <button *ngIf="isTableEdit" (click)="saveSubmit(field, section)"
                           class="btn btn-solid color2 no-text-transorm" type="button">
@@ -324,7 +346,7 @@
                           *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && isEditInfo"
                           (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
                           type="button">
-                          {{ field.get('fieldName')?.value }}
+                          {{ field.get('description')?.value }}
                         </button>
                         <button
                           *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'UPDATE')"

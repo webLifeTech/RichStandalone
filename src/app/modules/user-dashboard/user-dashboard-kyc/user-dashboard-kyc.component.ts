@@ -75,16 +75,23 @@ export class UserDashboardKycComponent {
   allPendingKycVehicleList: any = [];
   allComplateKycVehicleList: any = [];
 
-  // Product List Columns and Data
+  // Driver List Columns and Data
+  driverColumns = [
+    { header: 'Last name', fieldObject: null, field: 'lastName' },
+    { header: 'Driver License Number', fieldObject: null, field: 'driverLicenseNumber' },
+    { header: 'Driver license effective date', fieldObject: null, field: 'driverLicenseEffectiveDate' },
+    { header: 'Driver license expiration date', fieldObject: null, field: 'driverLicenseExpirationDate' },
+  ];
+
+  // Vehicle List Columns and Data
   myVehicleColumns = [
     { header: 'VIN Number', fieldObject: null, field: 'vinNumber' },
     { header: 'Fuel Type', fieldObject: null, field: 'fuelType' },
     { header: 'Territory Code', fieldObject: null, field: 'territoryCode' },
-    // { header: 'Plate Number', fieldObject: null, field: 'plateNumber' },
-    // { header: 'Car Category', fieldObject: null, field: 'carCategory' },
-    // { header: 'Transmission', fieldObject: null, field: 'transmission' }
   ];
 
+  // Actions for both grids
+  driverActions = ['View', 'Edit'];
   // Actions for both grids
   myVehicleActions = ['View'];
 
@@ -221,7 +228,7 @@ export class UserDashboardKycComponent {
       this.kycForm.state = null;
     }
     this.sidebarTabs = [];
-    this.filter(); // need to do uncomment
+    // this.filter(); // need to do uncomment
 
     // this.kycForm.state = 42; // need to do for direct
     // this.onSelectState() // // need to do for direct
@@ -233,15 +240,14 @@ export class UserDashboardKycComponent {
   }
 
   getDriverDetails() {
-    this.profileService.getDriverDetails({
+    this.profileService.getAllDrivers({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      if (response.driverInfo.driverId) {
-        this.gs.isLicenseVerified = true;
+      if (response && response.length) {
         this.driverInfoData = response;
+        this.gs.isLicenseVerified = true;
       }
       console.log("getDriverDetails >>>>>", response);
-      console.log("this.gs.isLicenseVerified >>>>>", this.gs.isLicenseVerified);
     })
   }
   getConfigUIForms() {

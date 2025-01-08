@@ -64,8 +64,8 @@
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
-                (onEditInfo)="onEditInfo()"></app-driver-info-details>
+              <app-dynamic-grid [type]="'driver'" [data]="driverInfoData" [columns]="driverColumns"
+                [actions]="driverActions" (actionEvent)="handleAction($event)"></app-dynamic-grid>
             </div>
           </div>
         </div>

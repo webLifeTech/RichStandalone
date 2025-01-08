@@ -44,7 +44,7 @@ export class DynamicGridComponent {
   sortDirection: 'asc' | 'desc' = 'asc';
   currentPage = 1;
   pageSize = 1;
-  totalData = 0;
+  totalData: any = 0;
   filteredData: any[] = [];
   paginatedData: any[] = [];
 
@@ -67,6 +67,10 @@ export class DynamicGridComponent {
   ngOnInit() {
     if (this.type === 'my_vehicle') {
       this.formName = 'VEHICLE UPLOAD';
+    } else {
+      this.formName = 'DRIVER INFO';
+      this.filteredData = this.data;
+      this.totalData = this.data.length
     }
     this.getConfigUIFields();
   }
@@ -150,24 +154,45 @@ export class DynamicGridComponent {
   }
 
   onView(item: any) {
-    const body = {
-      userId: this.gs.loggedInUserInfo.userId,
-      vehicleId: item.vehicleId
-    }
-
-    this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-      console.log("getVehicleDetails >>>>>>>>", response);
-      if (response && response.vehicleKYC && response.vehicleKYC.length) {
-        const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-          size: 'lg'
-        });
-        modalRef.componentInstance.driverInfoData = response.vehicleKYC[0];
-        modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
-        modalRef.result.then((res: any) => {
-
-        });
+    if (this.type === 'my_vehicle') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+        vehicleId: item.vehicleId
       }
-    })
+
+      this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
+        console.log("getVehicleDetails >>>>>>>>", response);
+        if (response && response.messageCode === "200") {
+          const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+            size: 'lg'
+          });
+          modalRef.componentInstance.driverInfoData = response.vehicleKYC;
+          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.result.then((res: any) => {
+
+          });
+        }
+      })
+    }
+    if (this.type === 'driver') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+      }
+
+      this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
+        console.log("getVehicleDetails >>>>>>>>", response);
+        if (response && response.driverInfo.driverId) {
+          const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+            size: 'lg'
+          });
+          modalRef.componentInstance.driverInfoData = response;
+          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.result.then((res: any) => {
+
+          });
+        }
+      })
+    }
 
   }
 

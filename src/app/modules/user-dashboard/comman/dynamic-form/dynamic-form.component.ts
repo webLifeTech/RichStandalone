@@ -117,6 +117,9 @@ export class DynamicFormComponent {
       if (response && response.length) {
         for (let i in this.formArray) {
           this.formArray[i].isOpen = false;
+          if (this.formArray[i].fieldId === 1) {
+            this.formArray[i].dependentFields = "[2]";
+          }
 
           for (let mdItem in this.configMasterDp) {
             if (this.configMasterDp[mdItem].fieldID === this.formArray[i].fieldId) {
@@ -310,6 +313,7 @@ export class DynamicFormComponent {
                 valueCode: [field.modalValueCode], // field.modalValue + "Cd"
                 fieldClass: [field.fieldClass],
                 modalObject: [field.modalObject],
+                checkUnique: [field.checkUnique],
                 dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
                 lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
                 selectUnique: [field.selectUnique],
@@ -323,9 +327,21 @@ export class DynamicFormComponent {
                 apiDropdownList: [field.apiDropdownList || []],
                 action: [field.action],
                 value: [
-                  field.defaultValue || null,
+                  field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : field.defaultValue, // field.fieldType !== "DROPDOWN" ?
                   this.getValidators(field)
                 ]
+
+                // value: [
+                //   field.fieldType === "DATE"
+                //     ? this.parseDate(this.userInfoData && this.userInfoData[field.modalObject] ? this.userInfoData[field.modalObject][field.modalValue] : null)
+                //     : (field.value || (this.userInfoData && this.userInfoData[field.modalObject] ? this.userInfoData[field.modalObject][field.modalValue] : null) || null),
+                //   this.getValidators(field)
+                // ],
+                // valueCd: [
+                //   field.fieldType === "DROPDOWN" && this.userInfoData && this.userInfoData[field.modalObject] && this.userInfoData[field.modalObject][field.modalValue + "Cd"]
+                //     ? this.userInfoData[field.modalObject][field.modalValue + "Cd"]
+                //     : null
+                // ],
               })
             )
           )
@@ -377,12 +393,32 @@ export class DynamicFormComponent {
             )
           )
         });
-
-
-
         this.sections.push(section);
       }
     });
+
+
+    this.sections.controls.forEach((section: any) => {
+      const privFieldsArray = section.get('fields') as FormArray;
+      privFieldsArray.controls.forEach((fieldTwo: any) => {
+        if (fieldTwo.value.value) {
+          if (fieldTwo.value.fieldType === "DROPDOWN") {
+            let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => citem.ID == fieldTwo.value.value) || {};
+            if (dataOptions.ID) {
+              fieldTwo.get('value')?.setValue(dataOptions.Name);
+              this.onChangeDrop(dataOptions, fieldTwo, section)
+              if (fieldTwo.get('valueCd')?.value) {
+                fieldTwo.get('valueCd')?.setValue(dataOptions.ID);
+              } else {
+                fieldTwo.addControl("valueCd", new FormControl(dataOptions.ID));
+              }
+            }
+          }
+        }
+      });
+    });
+    // if (this.isEditInfo) {
+    // }
 
 
     console.log("sections >>>>>>>", this.sections);
@@ -502,11 +538,27 @@ export class DynamicFormComponent {
       this.toast.errorToastr("Please enter " + field.value.fieldName);
       return;
     }
+
     if (dpItem.action === "DRIVER") {
       if (dpItem.dropDownCode === "GET_MVR") { // for "GET_MVR"
+
+        if (!field.value.dependentFields || !field.value.dependentFields?.length) {
+          this.toast.errorToastr("Invalid State");
+          return;
+        }
+
+        let fieldsFmArray = section.get('fields') as FormArray;
+        const stateIndex = this.findControlIndexByFieldId(fieldsFmArray, field.value.dependentFields[0]);
+        if (stateIndex === -1 || !fieldsFmArray.value[stateIndex].value) {
+          this.toast.errorToastr("Please enter " + fieldsFmArray.value[stateIndex].fieldName);
+          return;
+        }
+
+        let selectedState = fieldsFmArray.value[stateIndex].dropdownList.find((sItem: any) => sItem.ID == fieldsFmArray.value[stateIndex].valueCd) || {};
+
         let dataParams = {
           "licenseNo": field.value.value,
-          "state": "NY",
+          "state": selectedState.Code,
           "userId": this.gs.loggedInUserInfo.userId,
         }
 
@@ -683,6 +735,9 @@ export class DynamicFormComponent {
   // On Select Checkbox
   onChangeCheckbox(field: any, sectionRow: any) {
 
+    console.log("sectionRow >>>>>", sectionRow);
+    console.log("field.value >>>>>", field.value);
+
     if (field.value.value === true) {
       if (field.value.fieldId === field.value.dependentFields[0]) {
         let currentFieldsFmArray = sectionRow.get('fields') as FormArray;
@@ -692,16 +747,18 @@ export class DynamicFormComponent {
           if (section.get('sectionID')?.value === String(field.value.dependentFields[1])) {
             currentFieldsFmArray.controls.forEach((field: any) => {
               privFieldsArray.controls.forEach((fieldTwo: any) => {
+                if (field.get('fieldType').value !== 'CHECKBOX') {
 
-                if (field.get('modalValue').value && field.get('modalValue').value === fieldTwo.get('modalValue').value) {
-                  field.get('value')?.setValue(fieldTwo.get('value')?.value || null);
-                  if (field.get('fieldType').value === "DROPDOWN") {
-                    if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
-                      field.get('valueCd')?.setValue(fieldTwo.get('valueCd')?.value || null);
-                    } else {
-                      field.addControl("valueCd", new FormControl(fieldTwo.get('valueCd')?.value || null));
+                  if (field.get('modalValue').value && field.get('modalValue').value === fieldTwo.get('modalValue').value) {
+                    field.get('value')?.setValue(fieldTwo.get('value')?.value || null);
+                    if (field.get('fieldType').value === "DROPDOWN") {
+                      if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
+                        field.get('valueCd')?.setValue(fieldTwo.get('valueCd')?.value || null);
+                      } else {
+                        field.addControl("valueCd", new FormControl(fieldTwo.get('valueCd')?.value || null));
+                      }
+                      field.get('dropdownList')?.setValue(fieldTwo.get('dropdownList')?.value);
                     }
-                    field.get('dropdownList')?.setValue(fieldTwo.get('dropdownList')?.value);
                   }
                 }
               });
@@ -711,36 +768,68 @@ export class DynamicFormComponent {
       }
     }
 
+    this.setPrimaryAddress(field);
+
     if (this.submitted) {
       this.findInvalidControls();
     }
   }
 
+  setPrimaryAddress(currentField: any) {
+    console.log("currentField >>>>>", currentField.value);
+
+    if (!currentField.value.value) {
+      currentField.get('value')?.setValue(true);
+      return;
+    }
+
+    this.sections.controls.forEach((section: any) => {
+      const fieldsArray = section.get('fields') as FormArray;
+      fieldsArray.controls.forEach((fieldTwo: any) => {
+        if (fieldTwo.value.fieldType === 'CHECKBOX') {
+          console.log("fieldTwo.value >>>>>>>", fieldTwo.value);
+
+          if (fieldTwo.value.fieldName === currentField.value.fieldName && fieldTwo.value.fieldId !== currentField.value.fieldId) {
+            fieldTwo.get('value')?.setValue(false);
+          }
+        }
+      });
+    });
+  }
+
   // On Select Radio
-  onChangeRadio(field: any, section: any) {
+  onChangeRadio(fieldValue: any, field: any, section: any) {
+
+    console.log("checked >>>>>", fieldValue.target.checked);
+    console.log("fieldValue >>>>>", fieldValue);
+    console.log("field >>>>>", field);
+    if (fieldValue && fieldValue.target) {
+      field.get('value')?.setValue(fieldValue.target.checked); // on click radio
+    } else {
+      field.get('value')?.setValue(fieldValue); // on defaultValue create form
+    }
 
     let fieldsFmArray = section.get('fields') as FormArray;
-    if (field.value.fieldId === 191 || field.value.fieldId === 196) {
-      fieldsFmArray.controls.forEach((fieldTwo: any) => {
-        if (fieldTwo?.get('conditionValue')?.value && fieldTwo?.get('condition')?.value) {
+    fieldsFmArray.controls.forEach((fieldTwo: any) => {
+
+      if (fieldTwo.value.fieldId !== field.value.fieldId && fieldTwo.value.fieldName === field.value.fieldName) {
+        fieldTwo.get('value')?.setValue(false);
+      }
+      if (fieldTwo?.get('conditionValue')?.value && fieldTwo?.get('condition')?.value) {
+        if (field.value.fieldId === 191 || field.value.fieldId === 196) {
           if (fieldTwo.get('condition').value === field.value.fieldId) {
             if (fieldTwo.get('conditionValue').value) {
               fieldTwo.get('isConditionValid')?.setValue(true);
             }
           }
         }
-      });
-    }
-
-    if (field.value.fieldId === 193 || field.value.fieldId === 197) {
-      fieldsFmArray.controls.forEach((fieldTwo: any) => {
-        if (fieldTwo?.get('conditionValue')?.value && fieldTwo?.get('condition')?.value) {
+        if (field.value.fieldId === 193 || field.value.fieldId === 197) {
           if (fieldTwo.get('conditionValue').value) {
             fieldTwo.get('isConditionValid')?.setValue(false);
           }
         }
-      });
-    }
+      }
+    });
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -952,8 +1041,10 @@ export class DynamicFormComponent {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      if (field.value.staticValue === 'DRI_PRO_PIC') { // field.value.fieldCode === 'FLD_DRI_PRO_PIC'
-        this.profileUrl = reader.result;
+      if (field.get('profileUrl')?.value || ('profileUrl' in field.value)) {
+        field.get('profileUrl')?.setValue(reader.result);
+      } else {
+        field.addControl("profileUrl", new FormControl(reader.result));
       }
     };
   }
@@ -993,42 +1084,42 @@ export class DynamicFormComponent {
 
         this.dynamicForm.value.sections.forEach((section: any) => {
 
+          // if (!section.loopArray.length) {
+          section.fields.forEach((field: any) => {
+            // if (field.modalValue) {
+            let sectionData: any = {}; // changed
+            if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
+              sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
+            } else {
+              console.log("field.fieldName >>>>>", field.fieldName);
+
+              if (field.modalValue) {
+                sectionData[field.modalValue] = field.value;
+              } else {
+                sectionData[field.valueCode] = field.valueCd;
+              }
+            }
+
+            if (field.county) { // set county
+              sectionData["county"] = field.county;
+            }
+            if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
+              sectionData[field.valueCode] = field.valueCd;
+            }
+
+            console.log("sectionData >>>>>", sectionData);
+
+            if (!finalBody[field.modalObject]) {
+              finalBody[field.modalObject] = sectionData;
+            } else {
+              finalBody[field.modalObject] = { ...finalBody[field.modalObject], ...sectionData };
+            }
+            // }
+          });
+          // }
+
           if (section.loopArray.length) {
             finalBody[section.tableGrid[0]['modalObject']] = section.loopArray;
-          }
-
-          if (!section.loopArray.length) {
-            section.fields.forEach((field: any) => {
-              // if (field.modalValue) {
-              let sectionData: any = {}; // changed
-              if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-                sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
-              } else {
-                console.log("field.fieldName >>>>>", field.fieldName);
-
-                if (field.modalValue) {
-                  sectionData[field.modalValue] = field.value || "";
-                } else {
-                  sectionData[field.valueCode] = field.valueCd || "";
-                }
-              }
-
-              if (field.county) { // set county
-                sectionData["county"] = field.county || "";
-              }
-              if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
-                sectionData[field.valueCode] = field.valueCd || "";
-              }
-
-              console.log("sectionData >>>>>", sectionData);
-
-              if (!finalBody[field.modalObject]) {
-                finalBody[field.modalObject] = sectionData;
-              } else {
-                finalBody[field.modalObject] = { ...finalBody[field.modalObject], ...sectionData };
-              }
-              // }
-            });
           }
         });
 
@@ -1036,9 +1127,10 @@ export class DynamicFormComponent {
         finalBody.driverInfo["contactId"] = this.gs.loggedInUserInfo.contactId;
         finalBody.driverInfo["driverId"] = 0// this.gs.generateUniqueId();
 
+
         console.log("finalBody >>>>>>", finalBody);
 
-        // return;
+        // return; // need to do
 
 
         this.profileService.insertAndUpdateDriverKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
@@ -1071,14 +1163,14 @@ export class DynamicFormComponent {
                 if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
                   sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
                 } else {
-                  sectionData[field.modalValue] = field.value || "";
+                  sectionData[field.modalValue] = field.value;
                 }
 
                 if (field.county) { // set county
-                  sectionData["county"] = field.county || "";
+                  sectionData["county"] = field.county;
                 }
                 if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
-                  sectionData[field.valueCode] = field.valueCd || "";
+                  sectionData[field.valueCode] = field.valueCd;
                 }
                 if (!finalBody[field.modalObject]) {
                   finalBody[field.modalObject] = sectionData;
@@ -1095,6 +1187,8 @@ export class DynamicFormComponent {
         finalBody.vehicleInfo["vehicleId"] = 0// this.gs.generateUniqueId();
 
         console.log("finalBody >>>>>>", finalBody);
+
+        // return // need to do
 
         this.profileService.insertAndUpdateVehicleKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
           console.log("res >>>>>", res);
@@ -1291,6 +1385,11 @@ export class DynamicFormComponent {
     return formAry.controls.findIndex((control: any) => control.value.fieldCode === value);
   }
 
+  // Find Index by fieldCode
+  findControlIndexByFieldId(formAry: any, fieldId: any) {
+    return formAry.controls.findIndex((control: any) => control.value.fieldId === fieldId);
+  }
+
   getFutureDate() {
     const date = new Date();
     const last = new Date(date.getTime() + (15 * 24 * 60 * 60 * 1000));
@@ -1318,6 +1417,141 @@ export class DynamicFormComponent {
 
   onToggle(value: any, section: any) {
     section.get('isOpen').setValue(value);
+
+    let dd = {
+      "driverInfo": {
+        "profilePicturePath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074819.jpg",
+        "driverLicenseState": "NEW YORK",
+        "driverLicenseStateCd": 42,
+        "driverLicenseNumber": "000000001",
+        "licenseDocumentUploadPath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074846.pdf",
+        "firstName": "HAFEDH",
+        "middleName": "LUTF",
+        "lastName": "ALGAHIM",
+        "prefix": "Mr",
+        "prefixCd": "13A2E7E5-161E-49A8-9DFF-8DB591FDA8BF",
+        "suffix": "III",
+        "suffixCd": "C27BD1E2-620E-4004-AE19-C301B4EE7147",
+        "dateOfBirth": "07/03/1972",
+        "driverLicenseEffectiveDate": "01/01/2025",
+        "driverLicenseExpirationDate": "07/03/2023",
+        "isForeignDriverLicense": "Yes",
+        "isForeignDriverLicenseCd": "true",
+        "foreignDriverLicenseNum": "2432423423",
+        "issueDate": "01/01/2025",
+        "expireDate": "01/14/2025",
+        "foreignDriverDocumentPath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074910.pdf",
+        "fdCountry": "UNITED STATES",
+        "fdCountryCd": 230,
+        "fdState": "NEW YORK CITY",
+        "fdStateCd": 53,
+        "doYouHaveInsurance": "Yes",
+        "doYouHaveInsuranceCd": "true",
+        "contactId": 1001,
+        "driverId": 0,
+
+        "driverInfo.maskDriverLicenseNumber": "sample string 5",
+        "driverInfo.maskDateOfBirth": "sample string 18",
+        "driverInfo.encryptedDriverLicenseNumber": "sample string 6",
+        "driverInfo.encryptedDateOfBirth": "sample string 19",
+        "personalInfo.maskSSN": "sample string 13",
+        "personalInfo.encryptedSSN": "sample string 14",
+      },
+      "personalInfo": {
+        "gender": "Male",
+        "ssn": "44444444",
+        "creditScore": "Very Good ",
+        "creditScoreCd": "837",
+        "maritalStatus": "Married",
+        "maritalStatusCd": "1F6F56DC-65C7-4181-8130-8221195DC18D",
+        "numberOfChildren": "",
+        "contactNumber": "paras",
+        "emailId": "paras@gmail.com",
+        "emergencyContactNumber": "545454545",
+        "emergencyContactPersonName": "Paras",
+        "relationType": "Son",
+        "relationTypeCd": "832",
+        "location": "cccccc",
+
+        "genderCd": "sample string 2",
+        "personalInfo.maskSSN": "sample string 13",
+        "personalInfo.encryptedSSN": "sample string 14",
+      },
+      "permanentAddress": {
+        "address1": "173 BUFFALO AVE FL 3",
+        "address2": "Surat",
+        "postalCode": "11213",
+        "city": "BROOKLYN",
+        "country": "UNITED STATES",
+        "state": "NEW YORK",
+        "stateCd": 230,
+        "isPrimaryAddress": false,
+
+        "cityCd": "sample string 5",
+        "countryCd": "sample string 9",
+        "county": "sample string 10",
+      },
+      "mailingAddress": {
+        "address1": "173 BUFFALO AVE FL 3",
+        "address2": "Surat",
+        "postalCode": "11213",
+        "city": "BROOKLYN",
+        "state": "NEW YORK",
+        "stateCd": 230,
+        "country": "UNITED STATES",
+        "countryCd": null,
+        "isPrimaryAddress": false,
+
+        "cityCd": "sample string 5",
+        "county": "sample string 10",
+      },
+      "billingAddress": {
+        "address1": "173 BUFFALO AVE FL 3",
+        "address2": "Surat",
+        "postalCode": "11213",
+        "city": "BROOKLYN",
+        "state": "NEW YORK",
+        "stateCd": 230,
+        "country": "UNITED STATES",
+        "countryCd": null,
+        "isPrimaryAddress": true,
+
+        "cityCd": "sample string 5",
+        "county": "sample string 10",
+      },
+      "otherInfo": [
+        {
+          "insuranceType": "Auto",
+          "insuranceTypeCd": "839",
+          "companyName": "TATA AIA LIFE INSURANCE",
+          "companyNameCd": "843",
+          "otherCompanyName": "",
+          "policynumber": "5454545",
+          "policyIssueDate": "01/01/2025",
+          "policyExpiryDate": "01/30/2025",
+        }
+      ],
+      "driveInCity": 42
+    }
+  }
+
+  private rawSSN = '';
+  get maskedSSN(): string {
+    if (this.rawSSN.length <= 5) return 'XXX-XX';
+    return `XXX-XX-${this.rawSSN.slice(5)}`;
+  }
+
+
+
+  onSSNInput(event: Event, field: any): void {
+    const input = (event.target as HTMLInputElement).value.replace(/\D/g, '');
+    console.log("input >>>>", input);
+    this.rawSSN = input.slice(0, 9);
+
+    console.log("this.rawSSN >>>>", this.rawSSN);
+
+    // field.get('value')?.setValue(this.rawSSN);
+    // console.log("field >>>>>", field)
   }
 
 }

@@ -106,11 +106,22 @@ export class ProfileService {
     );
   }
 
-  // KYC -> getDriverDetails
+  // KYC -> Single getDriverDetails
   public getDriverDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId);
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getDriverDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> All getAllDrivers
+  public getAllDrivers(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllDrivers', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -199,7 +210,7 @@ export class ProfileService {
     );
   }
 
-  // Vehicle KYC -> getVehicleDetails
+  // Vehicle KYC -> Single getVehicleDetails
   public getVehicleDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
@@ -211,7 +222,7 @@ export class ProfileService {
     );
   }
 
-  // Vehicle KYC -> getAllVehicles
+  // Vehicle KYC -> All getAllVehicles
   public getAllVehicles(dataParams: any) {
     const params = new HttpParams().set('userId', dataParams.userId);
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllVehicles', { params }).pipe(

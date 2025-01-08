@@ -1492,7 +1492,7 @@ header {
   .booking-title {
     padding: 12px !important;
     border-radius: 6px !important;
-    margin-bottom: 12px !important;
+    // margin-bottom: 12px !important;
     background-color: rgba(var(--theme-color), 1) !important;
 
     h6 {
@@ -1609,7 +1609,7 @@ header {
     border-radius: 5px;
     background-color: #ffffff;
     margin: 0 0 20px;
-    padding: 15px 15px 0;
+    padding: 0; // 15px 15px
 
     .booking-title h6 {
       border-bottom: 1px solid #F4F4F4;
@@ -1618,6 +1618,10 @@ header {
       font-weight: 700;
       font-size: 18px;
       color: #111111;
+    }
+
+    .booking-body {
+      padding: 15px;
     }
 
     .booking-view {
@@ -2566,6 +2570,10 @@ header {
         transform: rotateZ(0deg);
         transition: all 0.4s ease;
       }
+    }
+
+    .modal-body {
+      padding: 0;
     }
   }
 }
