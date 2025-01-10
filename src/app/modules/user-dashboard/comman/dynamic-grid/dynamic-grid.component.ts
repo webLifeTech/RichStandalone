@@ -70,7 +70,9 @@ export class DynamicGridComponent {
     } else {
       this.formName = 'DRIVER INFO';
       this.filteredData = this.data;
-      this.totalData = this.data.length
+      this.totalData = this.data.length;
+
+      // this.onEdit(this.filteredData[0]); // need to do
     }
     this.getConfigUIFields();
   }
@@ -84,7 +86,7 @@ export class DynamicGridComponent {
         console.log("getVehicleDetails >>>>>>>>", response);
         if (response && response.length) {
           this.filteredData = response;
-          this.totalData = response.length
+          this.totalData = response.length;
         }
       })
     }
@@ -154,6 +156,8 @@ export class DynamicGridComponent {
   }
 
   onView(item: any) {
+    console.log("item >>>>>>", item);
+
     if (this.type === 'my_vehicle') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
@@ -177,6 +181,7 @@ export class DynamicGridComponent {
     if (this.type === 'driver') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
+        driverId: item.driverId,
       }
 
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
@@ -196,10 +201,11 @@ export class DynamicGridComponent {
 
   }
 
-  onEdit(item: any, index: any) {
-    this.onEditInfo.emit();
+  onEdit(item: any) {
+    console.log("item >>>>>>", item);
+    const singleDetail = item;
+    this.actionEvent.emit({ singleDetail });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // this.actionEvent.emit({ action, rowData });
   }
 
   async onDelete(index: any) {

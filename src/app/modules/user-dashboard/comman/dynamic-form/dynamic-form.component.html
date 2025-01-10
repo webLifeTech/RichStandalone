@@ -208,25 +208,6 @@
                         </div>
                       </div>
 
-                      <!-- <div [ngClass]="field.get('fieldClass')?.value"
-                        *ngIf="field.get('fieldType')?.value === 'DROPDOWN' && !field.get('modalValue')?.value">
-                        <div class="form-group">
-                          <label for="isHaveForeignLicense">
-                            {{ field.get('description')?.value }}
-                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
-                          </label>
-                          <ng-select clearable="false" (change)="onChangeDrop($event, field, section)"
-                            [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
-                            bindLabel="Name" placeholder="-- Select One --" bindValue="Code"
-                            [formControlName]="'value'">
-                          </ng-select>
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
-                          </div>
-                        </div>
-                      </div> -->
-
                       <!-- CHECKBOX -->
                       <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
                         *ngIf="field.get('fieldType')?.value === 'CHECKBOX'">
@@ -285,8 +266,8 @@
                       <div [ngClass]="field.get('fieldClass')?.value" *ngIf="field.get('fieldType')?.value === 'LOGO'">
                         <div class="upload-card mb-3">
                           <div class="position-relative profile-info-img">
-                            <img [src]="field.get('profileUrl')?.value || 'assets/images/driver/Male.jpg'"
-                              class="avatar" alt="...">
+                            <img [src]="field.get('value')?.value || 'assets/images/driver/Male.jpg'" class="avatar"
+                              alt="...">
                             <div class="centered">
                               <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
                               <input (change)="handleUpload($event, field)" #myInput hidden type="file"
@@ -315,6 +296,9 @@
                           <label>
                             {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                            <a class="mx-2" (click)="gs.viewDocumentFile(field.get('value')?.value)">
+                              <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
                           </label>
                           <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
                             type="file" class="form-control open-select" />
@@ -349,7 +333,7 @@
                           {{ field.get('description')?.value }}
                         </button>
                         <button
-                          *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'UPDATE')"
+                          *ngIf="(field.get('action')?.value === 'SAVE' || (field.get('action')?.value === 'UPDATE' && isTableEdit))"
                           (click)="cancelForm(field, section)" class="btn btn-solid color3 no-text-transorm ms-3"
                           type="button">
                           Cancel

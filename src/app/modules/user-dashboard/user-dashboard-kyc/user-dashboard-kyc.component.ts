@@ -62,6 +62,8 @@ export class UserDashboardKycComponent {
   driverInfoData: any = {};
   fleetOwnerInfoData: any = {};
 
+  singleDetailInfo: any = {};
+
   isStartGetKyc: boolean = false;
   isVehicleInfoEdit: boolean = false;
   activeKycTab: any = "";
@@ -230,8 +232,8 @@ export class UserDashboardKycComponent {
     this.sidebarTabs = [];
     // this.filter(); // need to do uncomment
 
-    // this.kycForm.state = 42; // need to do for direct
-    // this.onSelectState() // // need to do for direct
+    this.kycForm.state = 42; // need to do for direct
+    this.onSelectState() // // need to do for direct
     // this.getDriverDetails(); // need to do
   }
 
@@ -247,7 +249,7 @@ export class UserDashboardKycComponent {
         this.driverInfoData = response;
         this.gs.isLicenseVerified = true;
       }
-      console.log("getDriverDetails >>>>>", response);
+      console.log("getAllDrivers >>>>>", response);
     })
   }
   getConfigUIForms() {
@@ -418,7 +420,19 @@ export class UserDashboardKycComponent {
     }, () => { });
   }
 
-  handleAction(event: any) {
-    console.log("event >>>>>>", event);
+  handleAction(event: any, type: any) {
+    const singleDetail = event.singleDetail;
+    if (type === 'driver') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+        driverId: singleDetail.driverId,
+      }
+      this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
+        if (response && response.driveInCity) {
+          this.isEditDriverInfo = true;
+          this.singleDetailInfo = response;
+        }
+      })
+    }
   }
 }

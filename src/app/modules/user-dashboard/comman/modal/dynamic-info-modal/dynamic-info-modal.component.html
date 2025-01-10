@@ -16,9 +16,9 @@
                   <!-- [ngClass]="field.fieldClass" -->
                   <div class="col-lg-4 col-md-6 mb-3">
                     <div class="booking-view">
-                      <h6>{{ field.fieldName }}</h6>
+                      <h6>{{ field.description }}</h6>
                       <ng-container *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION'">
-                        <p>{{driverInfoData[field.modalObject][field.modalValue] || '-'}}</p>
+                        <p>{{driverInfoData[field.modalObject][field.modalValue]}}</p>
                       </ng-container>
 
                       <ng-container *ngIf="field.fieldType === 'LOGO' || field.fieldType === 'SELECTION'">
@@ -43,7 +43,7 @@
                             <ng-container *ngFor="let field of item.fields; let j = index">
                               <th *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
                                 class="text-center">
-                                {{ field.fieldName }}
+                                {{ field.description }}
                               </th>
                             </ng-container>
                           </tr>
@@ -54,7 +54,7 @@
                             <ng-container *ngFor="let field of item.fields; let j = index">
                               <td *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
                                 class="text-center">
-                                {{tblItem[field.modalValue] || '-'}}
+                                {{tblItem[field.modalValue]}}
                               </td>
                             </ng-container>
                           </tr>

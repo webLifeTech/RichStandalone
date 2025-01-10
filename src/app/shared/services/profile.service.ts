@@ -109,8 +109,9 @@ export class ProfileService {
   // KYC -> Single getDriverDetails
   public getDriverDetails(dataParams: any) {
     const params = new HttpParams()
-      .set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getDriverDetails', { params }).pipe(
+      .set('userId', dataParams.userId)
+      .set('driverId', dataParams.driverId);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getDriverDetailsByDriverId', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -192,6 +193,33 @@ export class ProfileService {
     );
   }
 
+  // Vehicle KYC -> updateDriverInfo
+  public updateDriverInfo(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverInfo`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Vehicle KYC -> updateDriverTlcInfo
+  public updateDriverTlcInfo(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverTlcInfo`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Vehicle KYC -> updateForeignDriverInfo
+  public updateForeignDriverInfo(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateForeignDriverInfo`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
   // Vehicle KYC -> updatePersonalInfo
   public updatePersonalInfo(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updatePersonalInfo`, data).pipe(
@@ -204,6 +232,15 @@ export class ProfileService {
   // Vehicle KYC -> updateDriverKycAddress
   public updateDriverKycAddress(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverKycAddress`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Vehicle KYC -> updateDriverKycOtherInfo
+  public updateDriverKycOtherInfo(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverKycOtherInfo`, data).pipe(
       map((res: any) => {
         return res;
       })

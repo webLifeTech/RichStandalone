@@ -46,7 +46,7 @@ import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 })
 export class DynamicFormComponent {
   @Input() selectedTabObj: any = {};
-  @Input() userInfoData: any = {};
+  @Input() singleDetailInfo: any = {};
   @Input() isEditInfo: any;
   @Input() kycForm: any;
   @Input() formType: any = "";
@@ -78,7 +78,7 @@ export class DynamicFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private toast: ToastService,
     private profileService: ProfileService,
     private datePipe: DatePipe,
@@ -91,6 +91,7 @@ export class DynamicFormComponent {
 
   ngOnInit() {
     this.getConfigUIFields();
+    console.log("singleDetailInfo >>>>>>", this.singleDetailInfo);
   }
 
   // Get Config UI Fields
@@ -287,114 +288,60 @@ export class DynamicFormComponent {
         (a: any, b: any) => a.fieldOrder - b.fieldOrder
       );
 
-
-      if (!this.isEditInfo) {
-        const section: any = this.fb.group({
-          sectionID: [sectionID],
-          isOpen: [index === 0 ? true : false], // need to do
-          isInvalidSection: false,
-          sectionName: [fieldsArray[0]?.sectionName || ''],
-          modalObject: [fieldsArray[0]?.modalObject || ''],
-          tableGrid: [[]], // for table header
-          tableGridValueList: [[]], // for table value
-          loopArray: this.fb.array([]), // for value
-          fields: this.fb.array(
-            fieldsArray.map((field: any) =>
-              this.fb.group({
-                fieldName: [field.fieldName],
-                fieldCode: [field.fieldCode],
-                description: [field.description],
-                fieldType: [field.fieldType],
-                isVisible: [field.isVisible],
-                isActive: [field.isActive],
-                isMandatory: [field.isMandatory],
-                isReadOnly: [field.isReadOnly],
-                modalValue: [field.modalValue],
-                valueCode: [field.modalValueCode], // field.modalValue + "Cd"
-                fieldClass: [field.fieldClass],
-                modalObject: [field.modalObject],
-                checkUnique: [field.checkUnique],
-                dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
-                lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
-                selectUnique: [field.selectUnique],
-                fieldId: [field.fieldId],
-                validationType: [field.validationType],
-                staticValue: [field.staticValue],
-                condition: [parseInt(field.condition)],
-                conditionValue: [field.conditionValue],
-                isConditionValid: [(field.condition && field.conditionValue) ? false : true],
-                dropdownList: [this.masterDropdwonList[field.dropdownValues] || []],
-                apiDropdownList: [field.apiDropdownList || []],
-                action: [field.action],
-                value: [
-                  field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : field.defaultValue, // field.fieldType !== "DROPDOWN" ?
-                  this.getValidators(field)
-                ]
-
-                // value: [
-                //   field.fieldType === "DATE"
-                //     ? this.parseDate(this.userInfoData && this.userInfoData[field.modalObject] ? this.userInfoData[field.modalObject][field.modalValue] : null)
-                //     : (field.value || (this.userInfoData && this.userInfoData[field.modalObject] ? this.userInfoData[field.modalObject][field.modalValue] : null) || null),
-                //   this.getValidators(field)
-                // ],
-                // valueCd: [
-                //   field.fieldType === "DROPDOWN" && this.userInfoData && this.userInfoData[field.modalObject] && this.userInfoData[field.modalObject][field.modalValue + "Cd"]
-                //     ? this.userInfoData[field.modalObject][field.modalValue + "Cd"]
-                //     : null
-                // ],
-              })
-            )
+      const section: any = this.fb.group({
+        sectionID: [sectionID],
+        isOpen: [index === 0 ? true : false], // need to do
+        isInvalidSection: false,
+        sectionName: [fieldsArray[0]?.sectionName || ''],
+        modalObject: [fieldsArray[0]?.modalObject || ''],
+        tableGrid: [[]], // for table header
+        tableGridValueList: [[]], // for table value
+        loopArray: this.fb.array([]), // for value
+        fields: this.fb.array(
+          fieldsArray.map((field: any) =>
+            this.fb.group({
+              fieldName: [field.fieldName],
+              fieldCode: [field.fieldCode],
+              description: [field.description],
+              fieldType: [field.fieldType],
+              isVisible: [field.isVisible],
+              isActive: [field.isActive],
+              isMandatory: [field.isMandatory],
+              isReadOnly: [field.isReadOnly],
+              modalValue: [field.modalValue],
+              valueCode: [field.modalValueCode],
+              fieldClass: [field.fieldClass],
+              modalObject: [field.modalObject],
+              checkUnique: [field.checkUnique],
+              dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
+              lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
+              selectUnique: [field.selectUnique],
+              fieldId: [field.fieldId],
+              validationType: [field.validationType],
+              staticValue: [field.staticValue],
+              condition: [parseInt(field.condition)],
+              conditionValue: [field.conditionValue],
+              isConditionValid: [(field.condition && field.conditionValue) ? false : true],
+              dropdownList: [this.masterDropdwonList[field.dropdownValues] || []],
+              apiDropdownList: [field.apiDropdownList || []],
+              action: [field.action],
+              defaultValue: [field.defaultValue],
+              value: [
+                field.fieldType === "DATE"
+                  ? this.parseDate(this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : null)
+                  : (this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
+                this.getValidators(field)
+              ],
+              valueCd: [
+                field.fieldType === "DROPDOWN" && this.singleDetailInfo && this.singleDetailInfo[field.modalObject] && this.singleDetailInfo[field.modalObject][field.modalValueCode]
+                  ? this.singleDetailInfo[field.modalObject][field.modalValueCode]
+                  : null
+              ],
+            })
           )
-        });
-        this.sections.push(section);
-      } else {
-        const section: any = this.fb.group({
-          sectionID: [sectionID],
-          isOpen: [index === 0 ? true : false], // need to do
-          isInvalidSection: false,
-          sectionName: [fieldsArray[0]?.sectionName || ''],
-          modalObject: [fieldsArray[0]?.modalObject || ''],
-          tableGrid: [[]], // for table header
-          tableGridValueList: [[]], // for table value
-          loopArray: this.fb.array([]), // for value
-          fields: this.fb.array(
-            fieldsArray.map((field: any) =>
-              this.fb.group({
-                fieldName: [field.fieldName],
-                fieldCode: [field.fieldCode],
-                description: [field.description],
-                fieldType: [field.fieldType],
-                isVisible: [field.isVisible],
-                isActive: [field.isActive],
-                isMandatory: [field.isMandatory],
-                isReadOnly: [field.isReadOnly],
-                modalValue: [field.modalValue],
-                valueCode: [field.modalValueCode], // + "Cd"
-                fieldClass: [field.fieldClass],
-                modalObject: [field.modalObject],
-                dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
-                lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
-                selectUnique: [field.selectUnique],
-                fieldId: [field.fieldId],
-                validationType: [field.validationType],
-                staticValue: [field.staticValue],
-                condition: [parseInt(field.condition)],
-                conditionValue: [field.conditionValue],
-                isConditionValid: [(field.condition && field.conditionValue) ? false : true],
-                dropdownList: [this.masterDropdwonList[field.dropdownValues] || []],
-                apiDropdownList: [field.apiDropdownList || []],
-                action: [field.action],
-                valueCd: [field.fieldType === "DROPDOWN" ? this.userInfoData[field.modalObject][field.modalValueCode] : null],
-                value: [
-                  field.fieldType === "DATE" ? this.parseDate(this.userInfoData[field.modalObject][field.modalValue]) : this.userInfoData[field.modalObject][field.modalValue] || null, //
-                  this.getValidators(field)
-                ]
-              })
-            )
-          )
-        });
-        this.sections.push(section);
-      }
+        )
+      });
+      this.sections.push(section);
     });
 
 
@@ -403,7 +350,7 @@ export class DynamicFormComponent {
       privFieldsArray.controls.forEach((fieldTwo: any) => {
         if (fieldTwo.value.value) {
           if (fieldTwo.value.fieldType === "DROPDOWN") {
-            let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => citem.ID == fieldTwo.value.value) || {};
+            let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => (citem.ID == fieldTwo.value.value || citem.Name == fieldTwo.value.value)) || {};
             if (dataOptions.ID) {
               fieldTwo.get('value')?.setValue(dataOptions.Name);
               this.onChangeDrop(dataOptions, fieldTwo, section)
@@ -417,9 +364,6 @@ export class DynamicFormComponent {
         }
       });
     });
-    // if (this.isEditInfo) {
-    // }
-
 
     console.log("sections >>>>>>>", this.sections);
 
@@ -672,8 +616,6 @@ export class DynamicFormComponent {
 
   // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
-    console.log("field >>>>", field);
-
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
@@ -689,6 +631,7 @@ export class DynamicFormComponent {
           if (event.Code === fieldTwo.get('conditionValue').value) {
             fieldTwo.get('isConditionValid')?.setValue(true);
           } else {
+            fieldTwo.get('value')?.setValue(null);
             fieldTwo.get('isConditionValid')?.setValue(false);
           }
         }
@@ -735,9 +678,6 @@ export class DynamicFormComponent {
   // On Select Checkbox
   onChangeCheckbox(field: any, sectionRow: any) {
 
-    console.log("sectionRow >>>>>", sectionRow);
-    console.log("field.value >>>>>", field.value);
-
     if (field.value.value === true) {
       if (field.value.fieldId === field.value.dependentFields[0]) {
         let currentFieldsFmArray = sectionRow.get('fields') as FormArray;
@@ -768,7 +708,17 @@ export class DynamicFormComponent {
       }
     }
 
-    this.setPrimaryAddress(field);
+    if (field.value.fieldName === "primary_address") {
+      const exceptFields = [27, 35, 133, 125];
+      const checkAllFill = this.findInvalidControlsBySection(sectionRow, exceptFields);
+      if (!checkAllFill.valid) {
+        this.toast.errorToastr("Please fill all the details of " + sectionRow.value.sectionName);
+        field.get('value')?.setValue(false);
+        return;
+      }
+      this.setPrimaryAddress(field);
+
+    }
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -776,19 +726,14 @@ export class DynamicFormComponent {
   }
 
   setPrimaryAddress(currentField: any) {
-    console.log("currentField >>>>>", currentField.value);
-
     if (!currentField.value.value) {
       currentField.get('value')?.setValue(true);
       return;
     }
-
     this.sections.controls.forEach((section: any) => {
       const fieldsArray = section.get('fields') as FormArray;
       fieldsArray.controls.forEach((fieldTwo: any) => {
         if (fieldTwo.value.fieldType === 'CHECKBOX') {
-          console.log("fieldTwo.value >>>>>>>", fieldTwo.value);
-
           if (fieldTwo.value.fieldName === currentField.value.fieldName && fieldTwo.value.fieldId !== currentField.value.fieldId) {
             fieldTwo.get('value')?.setValue(false);
           }
@@ -800,9 +745,6 @@ export class DynamicFormComponent {
   // On Select Radio
   onChangeRadio(fieldValue: any, field: any, section: any) {
 
-    console.log("checked >>>>>", fieldValue.target.checked);
-    console.log("fieldValue >>>>>", fieldValue);
-    console.log("field >>>>>", field);
     if (fieldValue && fieldValue.target) {
       field.get('value')?.setValue(fieldValue.target.checked); // on click radio
     } else {
@@ -1041,11 +983,11 @@ export class DynamicFormComponent {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      if (field.get('profileUrl')?.value || ('profileUrl' in field.value)) {
-        field.get('profileUrl')?.setValue(reader.result);
-      } else {
-        field.addControl("profileUrl", new FormControl(reader.result));
-      }
+      // if (field.get('profileUrl')?.value || ('profileUrl' in field.value)) {
+      //   field.get('profileUrl')?.setValue(reader.result);
+      // } else {
+      //   field.addControl("profileUrl", new FormControl(reader.result));
+      // }
     };
   }
 
@@ -1126,6 +1068,13 @@ export class DynamicFormComponent {
         finalBody.driveInCity = this.kycForm.state;
         finalBody.driverInfo["contactId"] = this.gs.loggedInUserInfo.contactId;
         finalBody.driverInfo["driverId"] = 0// this.gs.generateUniqueId();
+
+        finalBody.driverInfo["maskDriverLicenseNumber"] = "XXXXX0001"
+        finalBody.driverInfo["encryptedDriverLicenseNumber"] = "";
+        finalBody.driverInfo["maskDateOfBirth"] = "XX/XX/1972"
+        finalBody.driverInfo["encryptedDateOfBirth"] = "";
+        finalBody.personalInfo["maskSSN"] = "XXXX3333"
+        finalBody.personalInfo["encryptedSSN"] = "";
 
 
         console.log("finalBody >>>>>>", finalBody);
@@ -1213,11 +1162,7 @@ export class DynamicFormComponent {
   // All From Handle Update
   async updateDetails(section: any) {
 
-    let todayDate = new Date();
-    const effectiveDate = this.transformDate(todayDate, 'MM/dd/yy');
 
-
-    const fields = section.get('fields') as FormArray;
     let finalBody: any = {};
     let sectionData: any = {};
 
@@ -1245,82 +1190,173 @@ export class DynamicFormComponent {
 
     console.log("finalBody >>>>>", finalBody);
 
+    if (section.value.sectionID === "1") {
+      this.updateDriverInfo(finalBody);
+    }
+
+    if (section.value.sectionID === "3") {
+      this.updateForeignDriverInfo(finalBody);
+    }
+
     if (section.value.sectionID === "4") {
-
-      let emailTypes: any = await this.profileService.getMasterTypeIds({
-        "stateCode": this.kycForm.state || "42",
-        "typeCode": 12,
-        "effectiveDate": effectiveDate,
-      });
-      let phoneTypes: any = await this.profileService.getMasterTypeIds({
-        "stateCode": this.kycForm.state || "42",
-        "typeCode": 13,
-        "effectiveDate": effectiveDate,
-      });
-
-      let emailTypeIds = emailTypes.find((sItem: any) => sItem.Name == "Personal") || {};
-      let phoneTypeIds = phoneTypes.find((sItem: any) => sItem.Name == "Home") || {};
-
-      // updatePersonalInfo
-      let Body = {
-        "contactId": this.gs.loggedInUserInfo.contactId,
-        "userId": this.gs.loggedInUserInfo.userId,
-        "phoneTypeId": phoneTypeIds.ID || null,
-        "emailTypeId": emailTypeIds.ID || null,
-        "pInfo": finalBody
-      }
-      console.log("Body >>>>>", Body);
-      // return
-      this.profileService.updatePersonalInfo(Body).subscribe((res: any) => {
-        console.log("res >>>>>", res);
-        this.gs.isSpinnerShow = false;
-        if (res && res.statusCode === "200") {
-          this.toast.successToastr("Updated successfully");
-        } else {
-          this.toast.errorToastr(res.message);
-        }
-      }, (err: any) => {
-        this.toast.errorToastr("Something went wrong");
-        this.gs.isSpinnerShow = false;
-      })
+      this.updatePersonalInfo(finalBody);
     }
 
     if (section.value.sectionID === "5" || section.value.sectionID === "6" || section.value.sectionID === "7") {
-
-      let addressTypes: any = await this.profileService.getMasterTypeIds({
-        "stateCode": this.kycForm.state || "42",
-        "typeCode": 11,
-        "effectiveDate": effectiveDate,
-      });
-
-      const addType: any = {
-        "5": "Home",
-        "6": "Mailing",
-        "7": "Billing"
-      }
-
-      let addressTypeIds = addressTypes.find((sItem: any) => sItem.Name === addType[section.value.sectionID]) || {};
-      let Body = {
-        "userId": this.gs.loggedInUserInfo.userId,
-        "contactId": this.gs.loggedInUserInfo.contactId,
-        "addressTypeId": addressTypeIds.ID || null,
-        "address": finalBody
-      }
-      console.log("Body >>>>>", Body);
-      // return
-      this.profileService.updateDriverKycAddress(Body).subscribe((res: any) => {
-        console.log("res >>>>>", res);
-        this.gs.isSpinnerShow = false;
-        if (res && res.statusCode === "200") {
-          this.toast.successToastr("Updated successfully");
-        } else {
-          this.toast.errorToastr(res.message);
-        }
-      }, (err: any) => {
-        this.toast.errorToastr("Something went wrong");
-        this.gs.isSpinnerShow = false;
-      })
+      this.updateDriverKycAddress(finalBody, section);
     }
+
+    if (section.value.sectionID === "8") {
+      console.log("finalBody >>>>>>", finalBody);
+
+      // this.updateDriverKycOtherInfo(finalBody);
+    }
+  }
+
+  // updateForeignDriverInfo
+  async updateForeignDriverInfo(finalBody: any) {
+    finalBody["doYouHaveInsurance"] = "Yes";
+    finalBody["doYouHaveInsuranceCd"] = "true";
+
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "contactId": this.singleDetailInfo.driverInfo.contactId,
+      "driverId": this.singleDetailInfo.driverInfo.driverId,
+      // "doYouWantToGetQuotesFromTLH": this.singleDetailInfo.driverInfo.doYouWantToGetQuotesFromTLH,
+      // "doYouHaveInsurance": this.singleDetailInfo.driverInfo.doYouHaveInsurance,
+      // "doYouHaveInsuranceCd": this.singleDetailInfo.driverInfo.doYouHaveInsuranceCd,
+      ...finalBody
+    }
+
+    console.log("singleDetailInfo >>>>>", this.singleDetailInfo);
+    console.log("Body >>>>>", Body);
+    // return
+    this.profileService.updateForeignDriverInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode === "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateDriverInfo
+  async updateDriverInfo(finalBody: any) {
+
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "contactId": this.singleDetailInfo.driverInfo.contactId,
+      "driverId": this.singleDetailInfo.driverInfo.driverId,
+      ...finalBody
+    }
+
+    console.log("singleDetailInfo >>>>>", this.singleDetailInfo);
+    console.log("Body >>>>>", Body);
+    // return
+    this.profileService.updateDriverInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode === "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updatePersonalInfo
+  async updatePersonalInfo(finalBody: any) {
+
+    let Body = {
+      "contactId": this.gs.loggedInUserInfo.contactId,
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pInfo": finalBody
+    }
+
+    console.log("Body >>>>>", Body);
+    // return
+    this.profileService.updatePersonalInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode === "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateDriverKycAddress
+  async updateDriverKycAddress(finalBody: any, section: any) {
+    const effectiveDate = this.transformDate(this.todayDate, 'MM/dd/yy');
+    let addressTypes: any = await this.profileService.getMasterTypeIds({
+      "stateCode": this.kycForm.state || "42",
+      "typeCode": 11,
+      "effectiveDate": effectiveDate,
+    });
+
+    const addType: any = {
+      "5": "Home",
+      "6": "Mailing",
+      "7": "Billing"
+    }
+
+    let addressTypeIds = addressTypes.find((sItem: any) => sItem.Name === addType[section.value.sectionID]) || {};
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "contactId": this.gs.loggedInUserInfo.contactId,
+      "addressTypeId": addressTypeIds.ID || null,
+      "address": finalBody
+    }
+    console.log("Body >>>>>", Body);
+    // return
+    this.profileService.updateDriverKycAddress(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode === "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateDriverKycOtherInfo
+  async updateDriverKycOtherInfo(finalBody: any) {
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "driverId": this.singleDetailInfo.driverInfo.driverId,
+      "otherInfo": finalBody
+    }
+
+    console.log("Body >>>>>", Body);
+    return
+    this.profileService.updateDriverKycOtherInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode === "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   // From Cancel
@@ -1362,6 +1398,22 @@ export class DynamicFormComponent {
       validators.push(Validators.required);
     }
     return validators;
+  }
+
+  // Use for full fields
+  findInvalidControlsBySection(section: any, except?: any) {
+    const formStatus: any = {
+      valid: true,
+    };
+    const privFieldsArray = section.get('fields') as FormArray;
+    for (const name in privFieldsArray.controls) {
+      if (privFieldsArray.controls[name].invalid && (except && !except.includes(privFieldsArray.controls[name]?.value?.fieldId))) {
+        if (privFieldsArray.controls[name]?.value?.isVisible && privFieldsArray.controls[name]?.value?.isMandatory && privFieldsArray.controls[name]?.value?.isConditionValid) {
+          formStatus.valid = false;
+        }
+      }
+    }
+    return formStatus;
   }
 
   updateCountryDropdownList(countryOptions: any[]) {
@@ -1417,122 +1469,6 @@ export class DynamicFormComponent {
 
   onToggle(value: any, section: any) {
     section.get('isOpen').setValue(value);
-
-    let dd = {
-      "driverInfo": {
-        "profilePicturePath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074819.jpg",
-        "driverLicenseState": "NEW YORK",
-        "driverLicenseStateCd": 42,
-        "driverLicenseNumber": "000000001",
-        "licenseDocumentUploadPath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074846.pdf",
-        "firstName": "HAFEDH",
-        "middleName": "LUTF",
-        "lastName": "ALGAHIM",
-        "prefix": "Mr",
-        "prefixCd": "13A2E7E5-161E-49A8-9DFF-8DB591FDA8BF",
-        "suffix": "III",
-        "suffixCd": "C27BD1E2-620E-4004-AE19-C301B4EE7147",
-        "dateOfBirth": "07/03/1972",
-        "driverLicenseEffectiveDate": "01/01/2025",
-        "driverLicenseExpirationDate": "07/03/2023",
-        "isForeignDriverLicense": "Yes",
-        "isForeignDriverLicenseCd": "true",
-        "foreignDriverLicenseNum": "2432423423",
-        "issueDate": "01/01/2025",
-        "expireDate": "01/14/2025",
-        "foreignDriverDocumentPath": "http://209.10.88.76:2022/TLHUB_API/Documents/UploadedDocuments/DOC_20250108_074910.pdf",
-        "fdCountry": "UNITED STATES",
-        "fdCountryCd": 230,
-        "fdState": "NEW YORK CITY",
-        "fdStateCd": 53,
-        "doYouHaveInsurance": "Yes",
-        "doYouHaveInsuranceCd": "true",
-        "contactId": 1001,
-        "driverId": 0,
-
-        "driverInfo.maskDriverLicenseNumber": "sample string 5",
-        "driverInfo.maskDateOfBirth": "sample string 18",
-        "driverInfo.encryptedDriverLicenseNumber": "sample string 6",
-        "driverInfo.encryptedDateOfBirth": "sample string 19",
-        "personalInfo.maskSSN": "sample string 13",
-        "personalInfo.encryptedSSN": "sample string 14",
-      },
-      "personalInfo": {
-        "gender": "Male",
-        "ssn": "44444444",
-        "creditScore": "Very Good ",
-        "creditScoreCd": "837",
-        "maritalStatus": "Married",
-        "maritalStatusCd": "1F6F56DC-65C7-4181-8130-8221195DC18D",
-        "numberOfChildren": "",
-        "contactNumber": "paras",
-        "emailId": "paras@gmail.com",
-        "emergencyContactNumber": "545454545",
-        "emergencyContactPersonName": "Paras",
-        "relationType": "Son",
-        "relationTypeCd": "832",
-        "location": "cccccc",
-
-        "genderCd": "sample string 2",
-        "personalInfo.maskSSN": "sample string 13",
-        "personalInfo.encryptedSSN": "sample string 14",
-      },
-      "permanentAddress": {
-        "address1": "173 BUFFALO AVE FL 3",
-        "address2": "Surat",
-        "postalCode": "11213",
-        "city": "BROOKLYN",
-        "country": "UNITED STATES",
-        "state": "NEW YORK",
-        "stateCd": 230,
-        "isPrimaryAddress": false,
-
-        "cityCd": "sample string 5",
-        "countryCd": "sample string 9",
-        "county": "sample string 10",
-      },
-      "mailingAddress": {
-        "address1": "173 BUFFALO AVE FL 3",
-        "address2": "Surat",
-        "postalCode": "11213",
-        "city": "BROOKLYN",
-        "state": "NEW YORK",
-        "stateCd": 230,
-        "country": "UNITED STATES",
-        "countryCd": null,
-        "isPrimaryAddress": false,
-
-        "cityCd": "sample string 5",
-        "county": "sample string 10",
-      },
-      "billingAddress": {
-        "address1": "173 BUFFALO AVE FL 3",
-        "address2": "Surat",
-        "postalCode": "11213",
-        "city": "BROOKLYN",
-        "state": "NEW YORK",
-        "stateCd": 230,
-        "country": "UNITED STATES",
-        "countryCd": null,
-        "isPrimaryAddress": true,
-
-        "cityCd": "sample string 5",
-        "county": "sample string 10",
-      },
-      "otherInfo": [
-        {
-          "insuranceType": "Auto",
-          "insuranceTypeCd": "839",
-          "companyName": "TATA AIA LIFE INSURANCE",
-          "companyNameCd": "843",
-          "otherCompanyName": "",
-          "policynumber": "5454545",
-          "policyIssueDate": "01/01/2025",
-          "policyExpiryDate": "01/30/2025",
-        }
-      ],
-      "driveInCity": 42
-    }
   }
 
   private rawSSN = '';

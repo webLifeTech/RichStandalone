@@ -60,8 +60,17 @@ export class CommanLoginFormComponent {
       "password": "123123",
       "role": "user",
       "roleName": "53D8CF61-E99B-43A9-AA8F-4CE5B0E12872",
-      "userId": "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5", // 7e4fa1e0-9860-427f-be8e-1a324ae39872
+      // New york (Driver User 2)
+      "userId": "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5",
       "contactId": 1001,
+
+      // New york (Driver User 1)
+      // "userId": "bd485943-ece2-4d67-85a4-113fd36f3908",
+      // "contactId": 10020,
+
+      // New york city (Driver User 1)
+      // "userId": "f408b99f-6ec4-4603-b89d-be8fb828238e",
+      // "contactId": 10029,
       "id": 1
     },
     {
@@ -90,8 +99,17 @@ export class CommanLoginFormComponent {
       "password": "123123",
       "role": "user_4",
       "roleName": "416D4E0F-32BB-4218-B2EA-499764D5F62E",
-      "userId": "d837179a-44cd-4fec-b45e-bb16bf572966",
-      "contactId": 297,
+      // New york (Driverwithownedcar User 2)
+      // "userId": "d837179a-44cd-4fec-b45e-bb16bf572966",
+      // "contactId": 297,
+
+      // New york (Driverwithownedcar User 1)
+      "userId": "fbe52ab4-3bf2-4131-9265-1f8fb6a1d152",
+      "contactId": 1002,
+
+      // New york city (Driverwithownedcar User 1)
+      // "userId": "00a25198-7a94-4265-9ae1-2446c7928fb3",
+      // "contactId": 304,
       "id": 4
     }
   ]

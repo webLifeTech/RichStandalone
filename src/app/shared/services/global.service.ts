@@ -5,6 +5,8 @@ import { usaStates } from '../interface/common';
 import { ImageFileModalComponent } from '../components/comman/modal/image-file-modal/image-file-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PdfViewerModalComponent } from '../components/comman/modal/pdf-viewer-modal/pdf-viewer-modal.component';
+import { ToastService } from './toast.service';
 // import { DatePipe } from '@angular/common';
 
 @Injectable({
@@ -30,6 +32,7 @@ export class GlobalService {
     private http: HttpClient,
     private dialog: MatDialog,
     private modalService: NgbModal,
+    private toast: ToastService,
     // private datePipe: DatePipe
   ) {
     this.isLicenseVerified = localStorage.getItem('isLicenseVerified') === 'true' || false;
@@ -102,15 +105,28 @@ export class GlobalService {
   }
 
 
-  viewDocumentFile(image?: any): void {
-    const modalRef = this.modalService.open(ImageFileModalComponent, {
-      centered: true,
-    });
-    modalRef.componentInstance.image = image;
-    modalRef.result.then((res: any) => {
+  viewDocumentFile(documentFile?: any): void {
 
-    }, () => {
-    });
+    if (!documentFile) {
+      this.toast.warningToastr("File Not Uploaded!");
+      return;
+    }
+
+    if (documentFile.includes('.pdf')) {
+      const modalRef = this.modalService.open(PdfViewerModalComponent, {
+        centered: true,
+        size: 'lg'
+      });
+      modalRef.componentInstance.pdfIframe = documentFile;
+    } else {
+
+      // PdfViewerModalComponent
+      const modalRef = this.modalService.open(ImageFileModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.image = documentFile;
+    }
+
   }
 
   viewTest() {
