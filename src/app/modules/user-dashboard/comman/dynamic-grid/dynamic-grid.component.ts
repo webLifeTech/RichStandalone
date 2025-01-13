@@ -166,11 +166,11 @@ export class DynamicGridComponent {
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
         console.log("getVehicleDetails >>>>>>>>", response);
-        if (response && response.messageCode === "200") {
+        if (response && response.driveInCity) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
-          modalRef.componentInstance.driverInfoData = response.vehicleKYC;
+          modalRef.componentInstance.driverInfoData = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
 
@@ -185,7 +185,7 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
-        console.log("getVehicleDetails >>>>>>>>", response);
+        console.log("getDriverDetails >>>>>>>>", response);
         if (response && response.driverInfo.driverId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'

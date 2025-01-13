@@ -32,6 +32,7 @@ import { AdminDashboardComponent } from './modules/admin-dashboard/admin-dashboa
 import { UserCarsListingComponent } from './modules/admin-dashboard/user-cars-listing/user-cars-listing.component';
 import { UsersListingComponent } from './modules/admin-dashboard/users-listing/users-listing.component';
 import { AllBookingOverviewComponent } from './modules/admin-dashboard/all-booking-overview/all-booking-overview.component';
+import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
 
 export const routes: Routes = [
   {
@@ -129,7 +130,8 @@ export const routes: Routes = [
       },
       {
         path: 'my-profile',
-        component: UserDashboardKycComponent
+        component: UserDashboardKycComponent,
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: 'my-cars',

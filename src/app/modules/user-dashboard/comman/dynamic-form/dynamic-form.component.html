@@ -32,14 +32,11 @@
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
                             [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text" />
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
-                          </div>
-                          <div
-                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
-                            class="text-danger mt-2">
-                            Invalid format.
+
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
                       </div>
@@ -52,18 +49,20 @@
                             {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
-                          <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
-                            [mask]="field.get('validationType')?.value" />
-                          <!-- [value]="maskedSSN" (input)="onSSNInput($event, field)" -->
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
-                          </div>
-                          <div
-                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
-                            class="text-danger mt-2">
-                            Invalid format.
+                          <ng-container *ngIf="field.get('action')?.value !== 'MASK'">
+                            <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
+                              [mask]="field.get('validationType')?.value" />
+                          </ng-container>
+                          <ng-container *ngIf="field.get('action')?.value === 'MASK'">
+                            <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
+                              [patterns]="customPatterns" [mask]="field.get('validationType')?.value" />
+                          </ng-container>
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
                       </div>
@@ -96,14 +95,10 @@
                               </mat-menu>
                             </span>
                           </div>
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
-                          </div>
-                          <div
-                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
-                            class="text-danger mt-2">
-                            Invalid format.
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
                       </div>
@@ -119,14 +114,10 @@
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
                             [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="password"
                             [name]="field.get('fieldCode')?.value" />
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
-                          </div>
-                          <div
-                            *ngIf="(field.get('value')?.hasError('pattern') && (field.get('value')?.touched || submitted))"
-                            class="text-danger mt-2">
-                            Invalid format.
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
                       </div>
@@ -196,7 +187,7 @@
                             {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
-                          <ng-select clearable="false" (change)="onChangeDrop($event, field, section)"
+                          <ng-select (change)="onChangeDrop($event, field, section)" clearable="false"
                             [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
                             bindLabel="Name" placeholder="-- Select One --" bindValue="Name"
                             [formControlName]="'value'">
@@ -253,11 +244,13 @@
                             {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
-                          <textarea [formControlName]="'value'" [attr.disabled]="field.get('isReadOnly')?.value"
-                            type="text" class="form-control open-select"></textarea>
-                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
-                            class="text-danger mt-2">
-                            This field is required.
+                          <textarea (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                            [attr.disabled]="field.get('isReadOnly')?.value" type="text"
+                            class="form-control open-select"></textarea>
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
                       </div>
@@ -271,7 +264,7 @@
                             <div class="centered">
                               <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
                               <input (change)="handleUpload($event, field)" #myInput hidden type="file"
-                                class="form-control open-select" />
+                                [attr.accept]="field.get('acceptedTypes')?.value" class="form-control open-select" />
                               <i class="fas fa-trash pointer" style="color: #fff;"></i>
                             </div>
                           </div>
@@ -296,12 +289,19 @@
                           <label>
                             {{ field.get('description')?.value }}
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
-                            <a class="mx-2" (click)="gs.viewDocumentFile(field.get('value')?.value)">
-                              <i class="fa fa-eye" aria-hidden="true"></i>
-                            </a>
                           </label>
-                          <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
-                            type="file" class="form-control open-select" />
+
+                          <div class="input-group mb-3">
+                            <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
+                              type="file" [attr.accept]="field.get('acceptedTypes')?.value"
+                              class="form-control open-select" />
+                            <span class="input-group-text" id="addon-wrapping">
+                              <a (click)="gs.viewDocumentFile(field.get('value')?.value)" [title]="'View Document'">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                              </a>
+                            </span>
+                          </div>
+
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
                             class="text-danger mt-2">
                             This field is required.
@@ -327,7 +327,7 @@
                           Update
                         </button>
                         <button
-                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && isEditInfo"
+                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && !section?.get('tableGridValueList')?.value?.length && isEditInfo"
                           (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
                           type="button">
                           {{ field.get('description')?.value }}
@@ -347,7 +347,7 @@
               </div>
 
               <!-- Table -->
-              <div class="col-lg-12 mt-3" *ngIf="section.value?.tableGrid?.length && isTableVisible">
+              <div class="col-lg-12 mt-3" *ngIf="section?.get('tableGridValueList')?.value?.length && isTableVisible">
                 <div class="table-responsive dashboard-table mb-3">
                   <table class="table">
                     <thead class="thead-light">
@@ -399,6 +399,12 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div class="text-end">
+                  <button *ngIf="isEditInfo" (click)="updateDetails(section)"
+                    class="btn btn-solid color2 no-text-transorm my-2" type="button">
+                    UPDATE
+                  </button>
                 </div>
               </div>
             </div>

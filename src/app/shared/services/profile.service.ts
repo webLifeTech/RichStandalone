@@ -94,6 +94,7 @@ export class ProfileService {
     );
   }
 
+  // MVR -> Get MVR Details
   public getMVRDetails(dataParams: any) {
     const params = new HttpParams()
       .set('licenseNo', dataParams.licenseNo)
@@ -292,5 +293,19 @@ export class ProfileService {
         reject(err)
       })
     })
+  }
+
+
+  // MVR -> Get MVR Details
+  public getVindecode(dataParams: any) {
+    // GET TLHUB/VIN/GetVindecode ? vinNumber = { vinNumber } & userId={ userId }
+    const params = new HttpParams()
+      .set('vinNumber', dataParams.vinNumber)
+      .set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VIN/GetVindecode', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 }

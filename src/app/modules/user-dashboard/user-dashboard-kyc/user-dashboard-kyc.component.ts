@@ -124,13 +124,13 @@ export class UserDashboardKycComponent {
     }
   ];
 
-  bulkVehicleUploadTabs: any = [
-    {
-      title: "userDashboard.kyc.upload_bulk_vehicle.title",
-      tab: "upload_bulk_vehicle",
-      isOpen: true,
-    }
-  ]
+  // bulkVehicleUploadTabs: any = [
+  //   {
+  //     title: "userDashboard.kyc.upload_bulk_vehicle.title",
+  //     tab: "upload_bulk_vehicle",
+  //     isOpen: true,
+  //   }
+  // ]
 
   allVehicleList: any = [
     {
@@ -219,6 +219,13 @@ export class UserDashboardKycComponent {
     this.onChangeIam();
   }
 
+  canDeactivate(): boolean {
+    if (!this.gs.isLicenseVerified || this.isEditDriverInfo) {
+      return confirm('Are you sure you want to leave this page? You will lose any unsaved data.');
+    }
+    return true;
+  }
+
   changeKycTab(tab: any) {
     this.selectedTabObj = tab;
     this.activeKycTab = tab.formId;
@@ -232,9 +239,9 @@ export class UserDashboardKycComponent {
     this.sidebarTabs = [];
     // this.filter(); // need to do uncomment
 
-    this.kycForm.state = 42; // need to do for direct
-    this.onSelectState() // // need to do for direct
-    // this.getDriverDetails(); // need to do
+    // this.kycForm.state = 42; // need to do for direct
+    // this.onSelectState() // // need to do for direct
+    this.getDriverDetails(); // need to do
   }
 
   onSelectState() {
@@ -242,12 +249,15 @@ export class UserDashboardKycComponent {
   }
 
   getDriverDetails() {
+    this.gs.isLicenseVerified = false;
     this.profileService.getAllDrivers({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       if (response && response.length) {
         this.driverInfoData = response;
         this.gs.isLicenseVerified = true;
+        this.kycForm.state = 42;
+        this.onSelectState();
       }
       console.log("getAllDrivers >>>>>", response);
     })
@@ -279,17 +289,12 @@ export class UserDashboardKycComponent {
 
   filter() {
     this.activeKycTab = "";
-    console.log("this.kycForm >>>>", this.kycForm);
-
     setTimeout(() => {
-      if (this.kycForm.state) {
-        this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
-        this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
-        for (let i in this.sidebarTabs) {
-          this.sidebarTabs[i].isHidden = false;
-        }
+      this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
+      this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
+      for (let i in this.sidebarTabs) {
+        this.sidebarTabs[i].isHidden = false;
       }
-
     }, 200);
     return;
   }
@@ -388,6 +393,7 @@ export class UserDashboardKycComponent {
     this.isEditDriverInfo = false;
     this.isEditCompanyInfo = false;
     this.isEditCarOwnerInfo = false;
+    this.getDriverDetails();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -431,6 +437,9 @@ export class UserDashboardKycComponent {
         if (response && response.driveInCity) {
           this.isEditDriverInfo = true;
           this.singleDetailInfo = response;
+          console.log("this.singleDetailInfo >>>>>>>>", this.singleDetailInfo);
+
+          this.kycForm.state = this.singleDetailInfo.driveInCity
         }
       })
     }

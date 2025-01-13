@@ -55,7 +55,7 @@
         <!-- Driver - driver come owned car // Driver info -->
         <div *ngIf="activeKycTab === 1">
           <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
-            <app-dynamic-form [kycForm]="kycForm" [formType]="'driverInfo'" [isEditInfo]="isEditDriverInfo"
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isEditDriverInfo"
               (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
@@ -108,146 +108,125 @@
 
         <!-- Vehicle Upload -->
         <div *ngIf="activeKycTab === 7">
-          <mat-accordion class="accordion-align">
-            <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="section.isOpen = true"
-              (closed)="section.isOpen = false" *ngFor="let section of bulkVehicleUploadTabs; let i = index">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{ section.title | translate }}
-                </mat-panel-title>
-                <mat-panel-description>
-                  <i class="feather" [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-
-              <!-- upload_bulk_vehicle -->
-              <ng-container *ngIf="section.tab === 'upload_bulk_vehicle'">
-                <div class="profile-info-grid">
-                  <div class="row m-0 align-items-end">
-                    <div class="col-lg-12">
-                      <div class="form-group d-sm-flex d-block">
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report1"
-                            value="single" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
-                          <label class="form-check-label ms-2" for="is_inspection_report1">
-                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops1' | translate }}
-                          </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report2"
-                            value="bulk" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
-                          <label class="form-check-label ms-2" for="is_inspection_report2">
-                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops2' | translate }}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+          <div class="profile-info-grid">
+            <div class="row m-0 align-items-end">
+              <div class="col-lg-12">
+                <div class="form-group d-sm-flex d-block">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report1"
+                      value="single" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
+                    <label class="form-check-label ms-2" for="is_inspection_report1">
+                      {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops1' | translate }}
+                    </label>
                   </div>
-
-                  <ng-container
-                    *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
-                    <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isEditCarOwnerInfo"
-                      (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="cancel()"
-                      [selectedTabObj]="selectedTabObj"></app-dynamic-form>
-                  </ng-container>
-
-                  <ng-container *ngIf="vehicleUploadType === 'bulk' && !isStartGetKyc">
-                    <div class="row m-0 align-items-end">
-                      <div class="col-lg-4">
-                        <div class="form-group">
-                          <label>
-                            {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
-                            <span class="mandatory">*</span>
-                          </label>
-                          <input [(ngModel)]="vin_document_upload" (change)="uploadFile($event)"
-                            name="vin_document_upload" type="file" class="form-control open-select" />
-                        </div>
-                      </div>
-                      <div class="col-lg-4">
-                        <div class="form-group">
-                          <a class="btn btn-solid color2 no-text-transorm me-2">
-                            {{ 'userDashboard.kyc.driverInfo.upload' | translate }}
-                          </a>
-                          <a class="btn btn-theme no-text-transorm">
-                            {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
-                          </a>
-                        </div>
-                      </div>
-
-                      <div class="col-lg-12">
-                        <div class="table-responsive dashboard-table">
-                          <table class="table">
-                            <thead class="thead-light">
-                              <tr>
-                                <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
-                                </th>
-                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.vin_number' | translate}}</th>
-                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.tlc_plate_number' | translate}}</th>
-                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.car_category' | translate}}</th>
-                                <th>{{'userDashboard.kyc.upload_bulk_vehicle.fuel_type' | translate}}</th>
-                                <th class="text-center">
-                                  {{'userDashboard.kyc.upload_bulk_vehicle.kyc' | translate}}
-                                </th>
-                                <th class="text-center">
-                                  {{'userDashboard.kyc.upload_bulk_vehicle.status' | translate}}
-                                </th>
-                                <th class="text-center">
-                                  {{'userDashboard.kyc.upload_bulk_vehicle.action' | translate}}
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let item of allPendingKycVehicleList; let idx = index">
-                                <td class="text-center">{{idx+1}}</td>
-                                <td class="text-center">{{item.vin_number}}</td>
-                                <td class="text-center">{{item.plate_number}}</td>
-                                <td class="text-center">{{item.car_category}}</td>
-                                <td class="text-center">{{item.fuel_type}}</td>
-                                <td class="text-center">
-                                  <span *ngIf="item.kyc" class="badge badge-success">
-                                    Active
-                                  </span>
-                                  <button *ngIf="!item.kyc" type="button" (click)="getKyc(item)"
-                                    class="btn btn-solid color4 no-text-transorm">
-                                    Get KYC
-                                  </button>
-                                </td>
-                                <td class="text-center">
-                                  <span *ngIf="item.status === 'Pending'" class="bold text-danger">
-                                    {{item.status}}
-                                  </span>
-                                  <span *ngIf="item.status !== 'Pending'" class="bold text-warning">
-                                    {{item.status}}
-                                  </span>
-                                </td>
-                                <td class="text-center">
-                                  <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
-                                    aria-label="Example icon-button with a menu">
-                                    <i class="feather icon-more-vertical"></i>
-                                  </button>
-                                  <mat-menu #menu="matMenu">
-                                    <button type="button" (click)="getKyc(item)" mat-menu-item>
-                                      <i class="feather icon-edit"></i>
-                                      <span>Edit</span>
-                                    </button>
-                                    <button type="button" (click)="deleteFormBulk(allPendingKycVehicleList, idx)"
-                                      mat-menu-item>
-                                      <i class="feather icon-trash"></i>
-                                      <span>Delete</span>
-                                    </button>
-                                  </mat-menu>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-container>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="upload_type" id="is_inspection_report2"
+                      value="bulk" [(ngModel)]="vehicleUploadType" (change)="onChangeUpload()">
+                    <label class="form-check-label ms-2" for="is_inspection_report2">
+                      {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_ops2' | translate }}
+                    </label>
+                  </div>
                 </div>
-              </ng-container>
-            </mat-expansion-panel>
-          </mat-accordion>
+              </div>
+            </div>
+
+            <ng-container *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
+              <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isEditCarOwnerInfo"
+                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="cancel()"
+                [selectedTabObj]="selectedTabObj"></app-dynamic-form>
+            </ng-container>
+
+            <ng-container *ngIf="vehicleUploadType === 'bulk' && !isStartGetKyc">
+              <div class="row m-0 align-items-end">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label>
+                      {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
+                      <span class="mandatory">*</span>
+                    </label>
+                    <input [(ngModel)]="vin_document_upload" (change)="uploadFile($event)" name="vin_document_upload"
+                      type="file" class="form-control open-select" />
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <a class="btn btn-theme no-text-transorm">
+                      {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
+                    </a>
+                  </div>
+                </div>
+
+                <div class="col-lg-12">
+                  <div class="table-responsive dashboard-table">
+                    <table class="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                          </th>
+                          <th>{{'userDashboard.kyc.upload_bulk_vehicle.vin_number' | translate}}</th>
+                          <th>{{'userDashboard.kyc.upload_bulk_vehicle.tlc_plate_number' | translate}}</th>
+                          <th>{{'userDashboard.kyc.upload_bulk_vehicle.car_category' | translate}}</th>
+                          <th>{{'userDashboard.kyc.upload_bulk_vehicle.fuel_type' | translate}}</th>
+                          <th class="text-center">
+                            {{'userDashboard.kyc.upload_bulk_vehicle.kyc' | translate}}
+                          </th>
+                          <th class="text-center">
+                            {{'userDashboard.kyc.upload_bulk_vehicle.status' | translate}}
+                          </th>
+                          <th class="text-center">
+                            {{'userDashboard.kyc.upload_bulk_vehicle.action' | translate}}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of allPendingKycVehicleList; let idx = index">
+                          <td class="text-center">{{idx+1}}</td>
+                          <td class="text-center">{{item.vin_number}}</td>
+                          <td class="text-center">{{item.plate_number}}</td>
+                          <td class="text-center">{{item.car_category}}</td>
+                          <td class="text-center">{{item.fuel_type}}</td>
+                          <td class="text-center">
+                            <span *ngIf="item.kyc" class="badge badge-success">
+                              Active
+                            </span>
+                            <button *ngIf="!item.kyc" type="button" (click)="getKyc(item)"
+                              class="btn btn-solid color4 no-text-transorm">
+                              Get KYC
+                            </button>
+                          </td>
+                          <td class="text-center">
+                            <span *ngIf="item.status === 'Pending'" class="bold text-danger">
+                              {{item.status}}
+                            </span>
+                            <span *ngIf="item.status !== 'Pending'" class="bold text-warning">
+                              {{item.status}}
+                            </span>
+                          </td>
+                          <td class="text-center">
+                            <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
+                              aria-label="Example icon-button with a menu">
+                              <i class="feather icon-more-vertical"></i>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                              <button type="button" (click)="getKyc(item)" mat-menu-item>
+                                <i class="feather icon-edit"></i>
+                                <span>Edit</span>
+                              </button>
+                              <button type="button" (click)="deleteFormBulk(allPendingKycVehicleList, idx)"
+                                mat-menu-item>
+                                <i class="feather icon-trash"></i>
+                                <span>Delete</span>
+                              </button>
+                            </mat-menu>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
         </div>
 
         <!-- Account info -->
@@ -261,7 +240,7 @@
           <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isEditDriverInfo"
               (onHandleSubmit)="handleSubmit()" (cancel)="cancel()" [selectedTabObj]="selectedTabObj"
-              [singleDetailInfo]="driverInfoData"></app-dynamic-form>
+              [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
           <div *ngIf="gs.isLicenseVerified && !isEditDriverInfo" class="col-lg-12">
@@ -269,8 +248,10 @@
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
-                (onEditInfo)="onEditInfo()"></app-driver-info-details>
+              <app-dynamic-grid [type]="'driver'" [data]="driverInfoData" [columns]="driverColumns"
+                [actions]="driverActions" (actionEvent)="handleAction($event, 'driver')"></app-dynamic-grid>
+              <!-- <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
+                (onEditInfo)="onEditInfo()"></app-driver-info-details> -->
             </div>
           </div>
         </div>
