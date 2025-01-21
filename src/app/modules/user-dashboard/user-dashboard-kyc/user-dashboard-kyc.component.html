@@ -54,12 +54,12 @@
 
         <!-- Driver - driver come owned car // Driver info -->
         <div *ngIf="activeKycTab === 1">
-          <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
-            <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isEditDriverInfo"
+          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
-          <div *ngIf="gs.isLicenseVerified && !isEditDriverInfo" class="col-lg-12">
+          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
@@ -72,26 +72,28 @@
 
         <!--  Driver details -->
         <div *ngIf="activeKycTab === 3">
-          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isEditDriverInfo"
+          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isFormEdit"
             (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
             (cancel)="handleCancel()"></app-driver-details-form>
         </div>
 
         <!-- fleet Owner -->
         <div *ngIf="activeKycTab === 5">
-          <div *ngIf="!gs.isFleetOwnerLicenseVerified || isEditCompanyInfo">
-            <app-dynamic-form [kycForm]="kycForm" [formType]="'fleetOwner'" [isEditInfo]="isEditDriverInfo"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
-              [singleDetailInfo]="driverInfoData"></app-dynamic-form>
+          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'fleetOwner'" [isEditInfo]="isFormEdit"
+              (onHandleSubmit)="handleFleetSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
-          <div *ngIf="gs.isFleetOwnerLicenseVerified && !isEditCompanyInfo" class="col-lg-12">
+          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-fleet-owner-details [onlyCompanyInfo]="true" (onEditInfo)="onEditInfo()"
-                [fleetOwnerInfoData]="fleetOwnerInfoData"></app-fleet-owner-details>
+              <app-dynamic-grid [type]="'fleetOwner'" [data]="driverInfoData" [columns]="fleetOwnerColumns"
+                [actions]="driverActions" (actionEvent)="handleAction($event, 'fleetOwner')"></app-dynamic-grid>
+              <!-- <app-fleet-owner-details [onlyCompanyInfo]="true" (onEditInfo)="onEditInfo()"
+                [fleetOwnerInfoData]="fleetOwnerInfoData"></app-fleet-owner-details> -->
             </div>
           </div>
         </div>
@@ -104,6 +106,10 @@
         <!-- Branch Info / Office Details -->
         <div *ngIf="activeKycTab === 6">
           <app-branch-list></app-branch-list>
+        </div>
+
+        <div *ngIf="activeKycTab === 13">
+          <app-nfts-info></app-nfts-info>
         </div>
 
         <!-- Vehicle Upload -->
@@ -229,6 +235,13 @@
           </div>
         </div>
 
+        <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
+        <div *ngIf="isVehicleInfoEdit">
+          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            [singleDetailInfo]="driverInfoData"></app-dynamic-form>
+        </div>
+
         <!-- Account info -->
         <div *ngIf="activeKycTab === 8">
           <app-dynamic-grid [type]="'my_vehicle'" [columns]="myVehicleColumns" [actions]="myVehicleActions"
@@ -237,13 +250,13 @@
 
         <!-- Individual Car owner info -->
         <div *ngIf="activeKycTab === 12">
-          <div *ngIf="!gs.isLicenseVerified || isEditDriverInfo">
-            <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isEditDriverInfo"
+          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (cancel)="cancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
-          <div *ngIf="gs.isLicenseVerified && !isEditDriverInfo" class="col-lg-12">
+          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
@@ -254,13 +267,6 @@
                 (onEditInfo)="onEditInfo()"></app-driver-info-details> -->
             </div>
           </div>
-        </div>
-
-        <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
-        <div *ngIf="isVehicleInfoEdit">
-          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicle_info_update'" [isEditInfo]="isEditDriverInfo"
-            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
-            [singleDetailInfo]="driverInfoData"></app-dynamic-form>
         </div>
 
       </div>

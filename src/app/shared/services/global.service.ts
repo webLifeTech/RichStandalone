@@ -15,6 +15,8 @@ import { ToastService } from './toast.service';
 export class GlobalService {
 
   isLicenseVerified: boolean = false;
+  isModificationOn: boolean = false;
+
   isFleetOwnerLicenseVerified: boolean = false;
   isIndCarOwnerLicenseVerified: boolean = false;
   isDivComeOwnedCarLicenseVerified: boolean = false;

@@ -308,4 +308,24 @@ export class ProfileService {
       })
     );
   }
+
+  // Vehicle KYC -> insertCompanyKyc
+  public insertCompanyKyc(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/insertCompanyKyc`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> Single getCompanyKyc
+  public getCompanyKyc(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getCompanyKyc', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

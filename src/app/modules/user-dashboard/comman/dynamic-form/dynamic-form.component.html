@@ -322,9 +322,14 @@
                           type="button">
                           {{ field.get('description')?.value }}
                         </button>
-                        <button *ngIf="isTableEdit" (click)="saveSubmit(field, section)"
-                          class="btn btn-solid color2 no-text-transorm" type="button">
+                        <button *ngIf="field.get('action')?.value === 'SAVE' && isTableEdit"
+                          (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"
+                          type="button">
                           Update
+                        </button>
+                        <button *ngIf="field.get('action')?.value === 'SAVE'" (click)="cancelForm(field, section)"
+                          class="btn btn-solid color3 no-text-transorm ms-3" type="button">
+                          Cancel
                         </button>
                         <button
                           *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && !section?.get('tableGridValueList')?.value?.length && isEditInfo"
@@ -332,12 +337,11 @@
                           type="button">
                           {{ field.get('description')?.value }}
                         </button>
-                        <button
-                          *ngIf="(field.get('action')?.value === 'SAVE' || (field.get('action')?.value === 'UPDATE' && isTableEdit))"
+                        <!-- <button *ngIf="(field.get('action')?.value === 'SAVE' || (isTableEdit))"
                           (click)="cancelForm(field, section)" class="btn btn-solid color3 no-text-transorm ms-3"
                           type="button">
                           Cancel
-                        </button>
+                        </button> -->
                       </div>
 
                       <div *ngIf="field.get('lineBreak')?.value" [ngClass]="field.get('lineBreak')?.value"></div>

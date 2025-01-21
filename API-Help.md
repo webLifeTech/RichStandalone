@@ -1,10 +1,19 @@
 <!-- Fleet owner -->
--> Prefix and Suffix dropdown not comming (dropdownValues missing)
--> Which API use for Fleetowner dropdown
--> SSN Action Missing
+-> COMPANY LOGO validationType missing
+-> 
+"fieldId": 57,
+"fieldName": "TAX ID",
+"modalValueCode": null, // maskTaxId
 
--> Which fields should bind on DRIVER LICENSE NUMBER get mvr
--> What's State pass for get mvr
+->
+"fieldId": 73,
+"modalValue": "driverLicenseState",
+"modalValueCode": null, // driverLicenseStateCd
+
+-> driverLicenseStateCd missing in Submit API
+-> maskSsn missing in Submit API
+
+-> On get mvr ADDRESS should auto fill ?
 -> Address
 -> Submit API for Add-Update Fleetowner
 

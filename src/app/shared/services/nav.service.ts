@@ -68,6 +68,13 @@ export class NavService {
       queryParams: { type: 'vendor' }
     },
     {
+      title: "menu.services",
+      type: 'link',
+      active: false,
+      level: 1,
+      path: '/services',
+    },
+    {
       title: "menu.pricing",
       type: 'link',
       active: false,

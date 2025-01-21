@@ -21,6 +21,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileService } from '../../../shared/services/profile.service';
 import { DynamicFormComponent } from '../comman/dynamic-form/dynamic-form.component';
 import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.component';
+import { NftsInfoComponent } from '../comman/nfts-info/nfts-info.component';
+import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-user-dashboard-kyc',
@@ -28,6 +30,7 @@ import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.compon
   imports: [
     DriverInfoDetailsComponent,
     FleetOwnerDetailsComponent,
+    NftsInfoComponent,
 
     // Common
     DriverDetailsFormComponent,
@@ -45,6 +48,7 @@ import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.compon
     MatExpansionModule,
     MatButtonModule
   ],
+  // providers: [GlobalService],
   templateUrl: './user-dashboard-kyc.component.html',
   styleUrl: './user-dashboard-kyc.component.scss'
 })
@@ -56,10 +60,10 @@ export class UserDashboardKycComponent {
     state: null,   // New York City need to do null
   }
 
-  isEditDriverInfo: boolean = false;
+  isFormEdit: boolean = false;
   isEditCompanyInfo: boolean = false;
   isEditCarOwnerInfo: boolean = false;
-  driverInfoData: any = {};
+  driverInfoData: any = [];
   fleetOwnerInfoData: any = {};
 
   singleDetailInfo: any = {};
@@ -80,9 +84,16 @@ export class UserDashboardKycComponent {
   // Driver List Columns and Data
   driverColumns = [
     { header: 'Last name', fieldObject: null, field: 'lastName' },
-    { header: 'Driver License Number', fieldObject: null, field: 'driverLicenseNumber' },
-    { header: 'Driver license effective date', fieldObject: null, field: 'driverLicenseEffectiveDate' },
-    { header: 'Driver license expiration date', fieldObject: null, field: 'driverLicenseExpirationDate' },
+    { header: 'License Number', fieldObject: null, field: 'driverLicenseNumber' },
+    { header: 'License effective date', fieldObject: null, field: 'driverLicenseEffectiveDate' },
+    { header: 'License expiration date', fieldObject: null, field: 'driverLicenseExpirationDate' },
+  ];
+
+  fleetOwnerColumns = [
+    { header: 'Last name', fieldObject: null, field: 'lastName' },
+    { header: 'License Number', fieldObject: null, field: 'driverLicNum' },
+    { header: 'License effective date', fieldObject: null, field: 'driverLicenceEffDate' },
+    { header: 'License expiration date', fieldObject: null, field: 'driverLicenceExpDate' },
   ];
 
   // Vehicle List Columns and Data
@@ -92,9 +103,8 @@ export class UserDashboardKycComponent {
     { header: 'Territory Code', fieldObject: null, field: 'territoryCode' },
   ];
 
-  // Actions for both grids
+  // Actions grids
   driverActions = ['View', 'Edit'];
-  // Actions for both grids
   myVehicleActions = ['View'];
 
   iAmArray: any = [
@@ -123,14 +133,6 @@ export class UserDashboardKycComponent {
       roleName: "416D4E0F-32BB-4218-B2EA-499764D5F62E",
     }
   ];
-
-  // bulkVehicleUploadTabs: any = [
-  //   {
-  //     title: "userDashboard.kyc.upload_bulk_vehicle.title",
-  //     tab: "upload_bulk_vehicle",
-  //     isOpen: true,
-  //   }
-  // ]
 
   allVehicleList: any = [
     {
@@ -193,24 +195,14 @@ export class UserDashboardKycComponent {
     private modalService: NgbModal,
     private profileService: ProfileService,
   ) {
-
+    this.gs.isModificationOn = false;
     this.allPendingKycVehicleList = this.allVehicleList;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.fleetOwnerInfoData = this.gs.getFleetOwnerInfo();
 
     for (let i in this.iAmArray) {
       if (this.gs.loggedInUserInfo.roleName === this.iAmArray[i].roleName) {
         this.kycForm.i_am = this.iAmArray[i].id;
       }
-    }
-
-    if (this.driverInfoData && this.driverInfoData.sr_state) {
-      this.kycForm.i_am = this.driverInfoData.sr_i_am;
-      this.kycForm.state = this.driverInfoData.sr_state;
-    }
-    if (this.fleetOwnerInfoData && this.fleetOwnerInfoData.sr_state) {
-      this.kycForm.i_am = this.fleetOwnerInfoData.sr_i_am;
-      this.kycForm.state = this.fleetOwnerInfoData.sr_state;
     }
 
     this.gs.usStates().subscribe(response => {
@@ -220,20 +212,42 @@ export class UserDashboardKycComponent {
   }
 
   canDeactivate(): boolean {
-    if (!this.gs.isLicenseVerified || this.isEditDriverInfo) {
+    if (!this.gs.isLicenseVerified || this.isFormEdit) {
       return confirm('Are you sure you want to leave this page? You will lose any unsaved data.');
     }
     return true;
   }
 
   changeKycTab(tab: any) {
-    this.selectedTabObj = tab;
-    this.activeKycTab = tab.formId;
-    window.scrollTo({ top: 300, behavior: 'smooth' });
+    console.log("this.isFormEdit >>>>>", this.isFormEdit);
+
+    const confirm = () => {
+      this.selectedTabObj = tab;
+      this.activeKycTab = tab.formId;
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+
+    if (this.gs.isModificationOn) {
+      const modalRef = this.modalService.open(ConfirmationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = 'Are you sure you want to leave this page? You will lose any unsaved data.';
+      modalRef.componentInstance.confirmButton = "Yes";
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) {
+          this.isFormEdit = false;
+          this.gs.isModificationOn = false;
+          confirm();
+        }
+      }, () => { });
+    } else {
+      confirm();
+    }
+
   }
 
   onChangeIam() {
-    if (!this.isEditDriverInfo) {
+    if (!this.isFormEdit) {
       this.kycForm.state = null;
     }
     this.sidebarTabs = [];
@@ -242,6 +256,7 @@ export class UserDashboardKycComponent {
     // this.kycForm.state = 42; // need to do for direct
     // this.onSelectState() // // need to do for direct
     this.getDriverDetails(); // need to do
+    this.getCompanyKyc(); // need to do
   }
 
   onSelectState() {
@@ -262,6 +277,30 @@ export class UserDashboardKycComponent {
       console.log("getAllDrivers >>>>>", response);
     })
   }
+
+  getCompanyKyc() {
+    this.gs.isLicenseVerified = false;
+    this.profileService.getCompanyKyc({
+      "userId": this.gs.loggedInUserInfo.userId, // "Narendra"
+    }).subscribe((response: any) => {
+      if (response && response.userId) {
+        this.driverInfoData.push({
+          driverLicenceEffDate: response.fleetOwnerDetails.driverLicenceEffDate,
+          driverLicenceExpDate: response.fleetOwnerDetails.driverLicenceExpDate,
+          driverLicNum: response.fleetOwnerDetails.driverLicNum,
+          lastName: response.fleetOwnerDetails.contactInfo.lastName,
+        });
+        console.log(" >>>>>", this.driverInfoData);
+
+        this.gs.isLicenseVerified = true;
+        this.kycForm.state = 42;
+        this.onSelectState();
+      }
+      console.log("getAllDrivers >>>>>", response);
+    })
+  }
+
+
   getConfigUIForms() {
     const findRoleObj = this.iAmArray.find((item: any) => item.id == this.kycForm.i_am) || {};
 
@@ -316,19 +355,19 @@ export class UserDashboardKycComponent {
   }
 
   onEditInfo() {
-    this.isEditDriverInfo = true;
-
-    if (this.driverInfoData && this.driverInfoData.sr_state) {
-      this.kycForm.i_am = this.driverInfoData.sr_i_am;
-      this.kycForm.state = this.driverInfoData.sr_state;
-    }
-
+    this.isFormEdit = true;
+    this.gs.isModificationOn = true;
     this.onChangeIam();
     this.onSelectState();
   }
 
   handleSubmit() {
     this.getDriverDetails();
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  handleFleetSubmit() {
+    this.getCompanyKyc();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -360,12 +399,12 @@ export class UserDashboardKycComponent {
     this.driverInfoData = this.gs.getDriverInfo();
 
     this.activeKycTab = "Driver info";
-    if (this.isEditDriverInfo) {
+    if (this.isFormEdit) {
       this.toast.successToastr("Updated Successfully");
     } else {
       this.toast.successToastr("KYC Completed Successfully");
     }
-    this.isEditDriverInfo = false;
+    this.isFormEdit = false;
   }
 
   uploadFile(event: any) {
@@ -383,14 +422,14 @@ export class UserDashboardKycComponent {
   }
 
   handleCancel() {
-    this.isEditDriverInfo = false;
+    this.isFormEdit = false;
     this.isEditCompanyInfo = false;
     this.isEditCarOwnerInfo = false;
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   cancel() {
-    this.isEditDriverInfo = false;
+    this.isFormEdit = false;
     this.isEditCompanyInfo = false;
     this.isEditCarOwnerInfo = false;
     this.getDriverDetails();
@@ -407,7 +446,7 @@ export class UserDashboardKycComponent {
 
   onChangeUpload() {
     this.isStartGetKyc = false;
-    this.isEditDriverInfo = false;
+    this.isFormEdit = false;
     this.isEditCompanyInfo = false;
     this.isEditCarOwnerInfo = false;
 
@@ -435,11 +474,27 @@ export class UserDashboardKycComponent {
       }
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
         if (response && response.driveInCity) {
-          this.isEditDriverInfo = true;
+          this.isFormEdit = true;
           this.singleDetailInfo = response;
-          console.log("this.singleDetailInfo >>>>>>>>", this.singleDetailInfo);
+          console.log("getDriverDetails -------->>>>>>>>", this.singleDetailInfo);
 
           this.kycForm.state = this.singleDetailInfo.driveInCity
+        }
+      })
+    }
+
+    if (type === 'fleetOwner') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+      }
+
+      this.profileService.getCompanyKyc(body).subscribe(async (response: any) => {
+        console.log("getCompanyKyc -------->>>>>>>>", response);
+        if (response && response.userId) {
+          this.isFormEdit = true;
+          this.singleDetailInfo = response;
+
+          this.kycForm.state = this.singleDetailInfo.driveInCity || 42
         }
       })
     }
