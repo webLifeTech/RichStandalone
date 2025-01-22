@@ -126,11 +126,13 @@ export class DynamicFormComponent {
             this.formArray[i].isMandatory = false;
           }
 
-          if (this.isEditInfo && this.formType === 'fleetOwner' && this.formArray[i].modalObject) {
-            this.formArray[i].modalObject = this.formArray[i].modalObject + '.' + this.formArray[i].modalValue;
-            this.formArray[i].defaultValue = this.resolveNestedValue(this.formArray[i].modalObject, this.singleDetailInfo) || this.formArray[i].defaultValue;
-            // console.log("this.value >>>>>>>", this.formArray[i].defaultValue);
-          }
+          // if (this.isEditInfo && this.formType === 'fleetOwner' && this.formArray[i].modalObject) {
+          // this.formArray[i].modalObject = this.formArray[i].modalObject + '.' + this.formArray[i].modalValue;
+          this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
+          this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
+          // this.formArray[i].defaultValue = this.resolveNestedValue(this.formArray[i].modalObject, this.singleDetailInfo) || this.formArray[i].defaultValue;
+          // console.log("this.value >>>>>>>", this.formArray[i].defaultValue);
+          // }
           if (this.formArray[i].fieldType === 'LOGO' || this.formArray[i].fieldType === 'SELECTION') {
             this.formArray[i].acceptedTypes = this.getAcceptUploadTypes(this.formArray[i].validationType);
           }
@@ -166,6 +168,18 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       this.toast.errorToastr(err || "Something went wrong");
     })
+  }
+
+
+  getFieldValue(obj: any, path: string, key: string): any {
+    try {
+      const value = path
+        .split('.')
+        .reduce((acc, curr) => acc && acc[curr], obj);
+      return Array.isArray(value) ? value[0]?.[key] : value?.[key];
+    } catch (error) {
+      return null;
+    }
   }
 
   resolveNestedValue(path: string, obj: any): any {
@@ -248,6 +262,47 @@ export class DynamicFormComponent {
     }, (err: any) => {
       this.toast.errorToastr(err || "Something went wrong");
     })
+  }
+
+  // Get Countries // addresses, emails, phoneNumbers
+  async getAndSetMasterTypeIds() {
+    const effectiveDate = this.transformDate(this.todayDate, 'MM/dd/yy');
+
+    let addressTypes: any = await this.profileService.getMasterTypeIds({
+      "stateCode": this.kycForm.state || "42",
+      "typeCode": 11,
+      "effectiveDate": effectiveDate,
+    });
+    let emailTypes: any = await this.profileService.getMasterTypeIds({
+      "stateCode": this.kycForm.state || "42",
+      "typeCode": 12,
+      "effectiveDate": effectiveDate,
+    });
+    let phoneTypes: any = await this.profileService.getMasterTypeIds({
+      "stateCode": this.kycForm.state || "42",
+      "typeCode": 13,
+      "effectiveDate": effectiveDate,
+    });
+
+    let addressTypeIds = addressTypes.find((sItem: any) => sItem.Name == "Home") || {};
+    let emailTypeIds = emailTypes.find((sItem: any) => sItem.Name == "Personal") || {};
+    let phoneTypeIds = phoneTypes.find((sItem: any) => sItem.Name == "Home") || {};
+
+
+    this.sections.controls.forEach((section: any) => {
+      const fieldsArray = section.get('fields') as FormArray;
+      fieldsArray.controls.forEach((field: any) => {
+        if (field.get('fieldName').value == 'EMAIL ID') {
+          field.addControl("MasterTypeIds", new FormControl(emailTypeIds));
+        }
+        if (field.get('fieldName').value == 'CONTACT NUMBER') {
+          field.addControl("MasterTypeIds", new FormControl(phoneTypeIds));
+        }
+        if (field.get('fieldName').value == 'ADDRESS 1') {
+          field.addControl("MasterTypeIds", new FormControl(addressTypeIds));
+        }
+      });
+    });
   }
 
   // Get Master States List
@@ -375,17 +430,30 @@ export class DynamicFormComponent {
               action: [field.action],
               acceptedTypes: [field.acceptedTypes],
               defaultValue: [field.defaultValue],
+              // fValue
+              // fValueCode
               value: [
                 field.fieldType === "DATE"
-                  ? this.parseDate(this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : null)
-                  : (this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
+                  ? this.parseDate(this.isEditInfo ? field.fValue : null)
+                  : (this.isEditInfo ? field.fValue : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
                 this.getValidators(field)
               ],
               valueCd: [
-                field.fieldType === "DROPDOWN" && this.singleDetailInfo && this.singleDetailInfo[field.modalObject] && this.singleDetailInfo[field.modalObject][field.modalValueCode]
-                  ? this.singleDetailInfo[field.modalObject][field.modalValueCode]
+                field.fieldType === "DROPDOWN" && this.isEditInfo
+                  ? field.fValueCode
                   : null
               ],
+              // value: [
+              //   field.fieldType === "DATE"
+              //     ? this.parseDate(this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : null)
+              //     : (this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
+              //   this.getValidators(field)
+              // ],
+              // valueCd: [
+              //   field.fieldType === "DROPDOWN" && this.singleDetailInfo && this.singleDetailInfo[field.modalObject] && this.singleDetailInfo[field.modalObject][field.modalValueCode]
+              //     ? this.singleDetailInfo[field.modalObject][field.modalValueCode]
+              //     : null
+              // ],
             })
           )
         )
@@ -428,6 +496,7 @@ export class DynamicFormComponent {
     this.gs.isSpinnerShow = false;
     this.fetchMasterCountriesList();
     this.drivLicnStateDropdownList();
+    this.getAndSetMasterTypeIds();
   }
 
   bindTable(fieldRow: any, section: any) {
@@ -1420,75 +1489,29 @@ export class DynamicFormComponent {
         finalBody = {
           "companyDetails": {
             "contactInfo": {
-              "addresses": [],
-              "emails": [],
-              "phoneNumbers": [],
-
               "contactId": null,
               "entityTypeId": null,
               "personNumber": null,
-              "firstName": null,
-              "middleName": null,
-              "lastName": null,
-              "dateOfBirth": null,
-              "encryptedDateOfBirth": null,
-              "maskDateOfBirth": null,
-              "gender": null,
-              "genderCd": null,
-              "maritalstatusId": null,
-              "maritalstatusIdCd": null,
-              "prefixId": null,
-              "prefixIdCd": null,
-              "suffixId": null,
-              "suffixIdCd": null,
-              "ssn": null,
-              "encryptedSSN": null,
-              "maskSSN": null,
-              "encryptedTaxId": null,
-              "commercialName": null,
-              "currentInd": null
             },
-
             "fleetCompanyId": 0,
-            "Registrationaddress": null
           },
           "fleetOwnerDetails": {
             "contactInfo": {
-              "addresses": [],
-              "emails": [],
-              "phoneNumbers": [],
-
               "contactId": null, // 9268B933-71C7-4E25-A035-D3C146D43055
               "entityTypeId": null,
               "personNumber": this.gs.loggedInUserInfo.contactId,
-              "dateOfBirth": null,
-              "encryptedDateOfBirth": null,
-              "maskDateOfBirth": null,
-              "gender": null,
-              "genderCd": null,
-              "maritalstatusId": null,
-              "maritalstatusIdCd": null,
-              "encryptedSSN": null,
-              "taxId": null,
-              "maskTaxId": null,
-              "encryptedTaxId": null,
-              "dbaName": null,
-              "commercialName": null,
-              "currentInd": null
             },
-
             "maskDriverLicNum": "XXXXX0001",
             "encryptedDriverLicNum": ""
           },
-          "userId": "sample string 1",
-          "driveInCity": 2
+          "userId": null,
+          "driveInCity": 0
         }
 
         this.dynamicForm.value.sections.forEach((section: any) => {
           section.fields.forEach(async (field: any) => {
             const keys = field.modalObject.split(".");
             let sectionData: any = {};
-            console.log("keys >>>>", keys);
 
             if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
               sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
@@ -1520,51 +1543,28 @@ export class DynamicFormComponent {
               finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
             }
             if (keys.length == 3) {
-              if (!finalBody[keys[0]][keys[1]][keys[2]]?.length) {
-                finalBody[keys[0]][keys[1]][keys[2]][0] = {};
-
-                // const typeCodes: any = {
-                //   "addresses": 11,
-                //   "emails": 12,
-                //   "phoneNumbers": 13
-                // }
-
-                // const effectiveDate = this.transformDate(this.todayDate, 'MM/dd/yy');
-                // let TypesIds: any = await this.profileService.getMasterTypeIds({
-                //   "stateCode": this.kycForm.state || "42",
-                //   "typeCode": typeCodes[keys[2]],
-                //   "effectiveDate": effectiveDate,
-                // });
-
-                // const addType: any = {
-                //   "addresses": "Home",
-                //   "emails": "Personal",
-                //   "phoneNumbers": "Home"
-                // }
-
-                // let selectedType = TypesIds.find((sItem: any) => sItem.Name === addType[keys[2]]) || {};
-                // console.log("TypesIds >>>>>", TypesIds);
-                // console.log("selectedType >>>>>", selectedType);
+              if (!(finalBody[keys[0]][keys[1]][keys[2]] && finalBody[keys[0]][keys[1]][keys[2]]?.length)) {
+                finalBody[keys[0]][keys[1]][keys[2]] = [{}];
 
                 let createObj: any = {};
 
                 if (keys[2] == 'addresses') {
                   createObj.addressId = null;
-                  createObj.addressTypeId = "7D826BEB-91B0-429F-8598-6FFC4388A219";
+                  createObj.addressTypeId = field.MasterTypeIds.ID;
                   createObj.isPrimaryAddress = true;
                   createObj.currentInd = true;
                 }
 
                 if (keys[2] == 'emails') {
                   createObj.personEmailId = null;
-                  createObj.emailTypeId = "83F4239C-99D8-4117-93C7-50801935D070";
+                  createObj.emailTypeId = field.MasterTypeIds.ID;
                   createObj.primaryEmailFlag = true;
                   createObj.currentInd = true;
                 }
 
                 if (keys[2] == 'phoneNumbers') {
                   createObj.phoneId = null;
-                  createObj.phoneTypeId = "55B652E4-3FC8-4DB7-A84B-C7B58A92A2A3";
+                  createObj.phoneTypeId = field.MasterTypeIds.ID;
                   createObj.extension = 4;
                   createObj.primaryPhoneFlag = true;
                   createObj.currentInd = true;

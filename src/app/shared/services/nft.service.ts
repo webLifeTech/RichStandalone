@@ -28,6 +28,8 @@ export class NftService {
 
         console.log("this.contract >>>>>", this.contract);
 
+        this.contract.methods.viewNFT('driver_1').call().then(console.log).catch(console.error);
+
 
         return accounts[0]; // Return the connected wallet address
       } catch (error) {

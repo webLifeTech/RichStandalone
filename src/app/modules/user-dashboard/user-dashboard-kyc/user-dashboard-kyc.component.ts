@@ -61,7 +61,6 @@ export class UserDashboardKycComponent {
   }
 
   isFormEdit: boolean = false;
-  isEditCompanyInfo: boolean = false;
   isEditCarOwnerInfo: boolean = false;
   driverInfoData: any = [];
   fleetOwnerInfoData: any = {};
@@ -253,10 +252,17 @@ export class UserDashboardKycComponent {
     this.sidebarTabs = [];
     // this.filter(); // need to do uncomment
 
-    // this.kycForm.state = 42; // need to do for direct
-    // this.onSelectState() // // need to do for direct
-    this.getDriverDetails(); // need to do
-    this.getCompanyKyc(); // need to do
+    console.log("this.kycForm.i_am >>>", this.kycForm.i_am);
+
+
+    this.kycForm.state = 42; // need to do for direct
+    this.onSelectState() // // need to do for direct
+    if (this.kycForm.i_am != 2) {
+      this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
+    }
+    if (this.kycForm.i_am == 2) {
+      this.getCompanyKyc(); // Fleet owner
+    }
   }
 
   onSelectState() {
@@ -284,12 +290,12 @@ export class UserDashboardKycComponent {
       "userId": this.gs.loggedInUserInfo.userId, // "Narendra"
     }).subscribe((response: any) => {
       if (response && response.userId) {
-        this.driverInfoData.push({
+        this.driverInfoData = [{
           driverLicenceEffDate: response.fleetOwnerDetails.driverLicenceEffDate,
           driverLicenceExpDate: response.fleetOwnerDetails.driverLicenceExpDate,
           driverLicNum: response.fleetOwnerDetails.driverLicNum,
           lastName: response.fleetOwnerDetails.contactInfo.lastName,
-        });
+        }];
         console.log(" >>>>>", this.driverInfoData);
 
         this.gs.isLicenseVerified = true;
@@ -372,22 +378,26 @@ export class UserDashboardKycComponent {
   }
 
   onVehicleUploadSubmit() {
-    this.changeKycTab({ // need to do
-      "menuId": 0,
-      "roleName": "E56F8C18-B4F6-4EE4-976D-A693AA6F98FF",
-      "transactionId": 1,
-      "languageId": "1",
-      "formId": 8,
-      "formName": "MY VEHICLE",
-      "description": "My Vehicle",
-      "formClass": null,
-      "formIcon": "fa fa-car",
-      "formAction": null,
-      "isVisible": true,
-      "isActive": false,
-      "priority": 4,
-      "isHidden": false
-    });
+    this.gs.isModificationOn = false;
+    let setMyVehicle = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
+    console.log("setMyVehicle >>>>", setMyVehicle);
+    this.changeKycTab(setMyVehicle);
+    // { // need to do
+    //   "menuId": 0,
+    //   "roleName": "E56F8C18-B4F6-4EE4-976D-A693AA6F98FF",
+    //   "transactionId": 1,
+    //   "languageId": "1",
+    //   "formId": 8,
+    //   "formName": "MY VEHICLE",
+    //   "description": "My Vehicle",
+    //   "formClass": null,
+    //   "formIcon": "fa fa-car",
+    //   "formAction": null,
+    //   "isVisible": true,
+    //   "isActive": false,
+    //   "priority": 4,
+    //   "isHidden": false
+    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
   // Confirm
@@ -423,16 +433,13 @@ export class UserDashboardKycComponent {
 
   handleCancel() {
     this.isFormEdit = false;
-    this.isEditCompanyInfo = false;
-    this.isEditCarOwnerInfo = false;
+    this.getDriverDetails();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
-  cancel() {
+  cancelFleet() {
     this.isFormEdit = false;
-    this.isEditCompanyInfo = false;
-    this.isEditCarOwnerInfo = false;
-    this.getDriverDetails();
+    this.getCompanyKyc();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -447,8 +454,6 @@ export class UserDashboardKycComponent {
   onChangeUpload() {
     this.isStartGetKyc = false;
     this.isFormEdit = false;
-    this.isEditCompanyInfo = false;
-    this.isEditCarOwnerInfo = false;
 
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }

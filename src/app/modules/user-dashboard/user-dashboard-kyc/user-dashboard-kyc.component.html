@@ -81,7 +81,7 @@
         <div *ngIf="activeKycTab === 5">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'fleetOwner'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleFleetSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleFleetSubmit()" (cancel)="cancelFleet()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
@@ -106,10 +106,6 @@
         <!-- Branch Info / Office Details -->
         <div *ngIf="activeKycTab === 6">
           <app-branch-list></app-branch-list>
-        </div>
-
-        <div *ngIf="activeKycTab === 13">
-          <app-nfts-info></app-nfts-info>
         </div>
 
         <!-- Vehicle Upload -->
@@ -137,8 +133,8 @@
             </div>
 
             <ng-container *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
-              <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isEditCarOwnerInfo"
-                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="cancel()"
+              <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="handleCancel()"
                 [selectedTabObj]="selectedTabObj"></app-dynamic-form>
             </ng-container>
 
@@ -252,7 +248,7 @@
         <div *ngIf="activeKycTab === 12">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="cancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
@@ -267,6 +263,10 @@
                 (onEditInfo)="onEditInfo()"></app-driver-info-details> -->
             </div>
           </div>
+        </div>
+
+        <div *ngIf="activeKycTab === 13">
+          <app-nfts-info></app-nfts-info>
         </div>
 
       </div>

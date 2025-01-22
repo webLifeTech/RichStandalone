@@ -37,6 +37,30 @@
       </div>
       <!-- <h5 class="title-5">{{ "NFT'S Manager" | translate }}</h5> -->
     </div>
+
+    <div class="container">
+      <h1>Purchase NFT</h1>
+      <button class="button" onclick="connectWallet()">Connect Wallet</button>
+      <div id="walletAddress"></div>
+      <div class="input-group">
+        <label for="uniqId">Unique ID:</label>
+        <input type="text" id="uniqId" placeholder="Enter Unique ID">
+      </div>
+      <!-- <div class="input-group">
+              <label for="price">Price (in ETH):</label>
+              <input type="text" id="price" placeholder="Enter Price">
+          </div> -->
+      <button class="button" onclick="purchaseNFT()">Purchase NFT</button>
+
+      <h1>View NFT</h1>
+
+      <div class="input-group">
+        <label for="uniqIdForView">Unique ID:</label>
+        <input type="text" id="uniqIdForView" placeholder="Enter Unique ID">
+      </div>
+      <button class="button" onclick="viewNFT()">View NFT</button>
+      <div id="nftDetails"></div>
+    </div>
     <div class="col-lg-4 mb-2 text-center">
       <button (click)="connectWallet()" class="btn btn-theme no-text-transorm ms-2">
         {{ 'Connect Wallet' | translate }}

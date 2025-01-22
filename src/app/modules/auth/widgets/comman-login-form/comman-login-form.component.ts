@@ -102,27 +102,19 @@ export class CommanLoginFormComponent {
       "role": "user_3",
       "roleName": "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
 
+
       // New york (Fleetowner User)
-      // "userId": "2991e709-4966-4b64-beb4-4e9ff34f4a4f",
-      // "contactId": 10066,
+      "userId": "2991e709-4966-4b64-beb4-4e9ff34f4a4f",
+      "contactId": 10066,
 
       // New york city (Fleetowner User)
-      "userId": "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
-      "contactId": 10081,
+      // "userId": "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
+      // "contactId": 10081,
 
       // Other (Fleetowner User)
-      // "userId": "7bbe15b3-9070-4166-b9ef-e5e033dc039b",
-      // "contactId": 296,
-
-
       // "userId": "f7cce929-b2bf-422c-9383-35480e468ff0",
       // "contactId": 10025,
-      // "userId": "f7cce929-b2bf-422c-9383-35480e468ff0",
-      // "contactId": 10025,
-      // 2991e709-4966-4b64-beb4-4e9ff34f4a4f    10066
-      // 5901c8d4-6a9b-400e-b063-fa2d217b2af5   10081
-      // 7bbe15b3-9070-4166-b9ef-e5e033dc039b   296
-      // f7cce929-b2bf-422c-9383-35480e468ff0     10025
+
       "id": 3
     },
     {
