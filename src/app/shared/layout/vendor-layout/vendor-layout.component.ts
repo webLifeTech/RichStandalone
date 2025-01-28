@@ -34,30 +34,6 @@ export class VendorLayoutComponent {
 
   public activeTab: string = 'My Bookings'; //dashboard
 
-  public userDashboardTopTabs: any = [
-    {
-      title: "userDashboard.kyc.toptabs.dashboard",
-      value: "Dashboard",
-      icon: "assets/images/icon/dashboard/dashboard-icon.svg"
-    },
-    {
-      title: "userDashboard.kyc.toptabs.messages",
-      value: "Messages",
-      icon: "assets/images/icon/dashboard/message-icon.svg"
-    },
-    {
-      title: "userDashboard.kyc.toptabs.my_profile",
-      value: "My Profile",
-      // route: "/user/my-profile",
-      icon: "assets/images/icon/dashboard/user-icon.svg"
-    },
-    {
-      title: "userDashboard.kyc.toptabs.settings",
-      value: "Settings",
-      icon: "assets/images/icon/dashboard/settings-icon.svg"
-    },
-  ];
-
   constructor(
     public router: Router
   ) {

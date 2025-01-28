@@ -1,33 +1,5 @@
 <div class="container-fluid">
 
-  <!-- <div>
-    <h2>Connect Wallet</h2>
-    <button (click)="connectWallet()">Connect MetaMask</button>
-    <p *ngIf="walletAddress">Wallet Connected: {{ walletAddress }}</p>
-
-    <hr />
-
-    <h2>Purchase NFT</h2>
-    <input type="text" placeholder="Enter Unique ID" [(ngModel)]="uniqIdToPurchase" />
-    <input type="text" placeholder="Enter Price (ETH)" [(ngModel)]="priceToPurchase" />
-    <button (click)="purchaseNFT()">Purchase NFT</button>
-
-    <hr />
-
-    <h2>View NFT</h2>
-    <input type="text" placeholder="Enter Unique ID" [(ngModel)]="uniqIdToView" />
-    <button (click)="viewNFT()">View NFT</button>
-    <div *ngIf="nftDetails">
-      <h3>NFT Details:</h3>
-      <p><strong>ID:</strong> {{ nftDetails[0] }}</p>
-      <p><strong>Price:</strong> {{ nftDetails[1] }}</p>
-      <p><strong>IPFS Hashes:</strong></p>
-      <ul>
-        <li *ngFor="let hash of nftDetails[2]">{{ hash }}</li>
-      </ul>
-    </div>
-  </div> -->
-
   <div class="row align-items-center mt-4 mb-2">
     <div class="col-lg-12 mb-4">
       <div class="booking-wrapper">
@@ -35,10 +7,9 @@
           <h6>{{ "NFT'S Manager" | translate }}</h6>
         </div>
       </div>
-      <!-- <h5 class="title-5">{{ "NFT'S Manager" | translate }}</h5> -->
     </div>
 
-    <div class="container">
+    <!-- <div class="container">
       <h1>Purchase NFT</h1>
       <button class="button" onclick="connectWallet()">Connect Wallet</button>
       <div id="walletAddress"></div>
@@ -46,36 +17,34 @@
         <label for="uniqId">Unique ID:</label>
         <input type="text" id="uniqId" placeholder="Enter Unique ID">
       </div>
-      <!-- <div class="input-group">
-              <label for="price">Price (in ETH):</label>
-              <input type="text" id="price" placeholder="Enter Price">
-          </div> -->
       <button class="button" onclick="purchaseNFT()">Purchase NFT</button>
-
       <h1>View NFT</h1>
-
       <div class="input-group">
         <label for="uniqIdForView">Unique ID:</label>
         <input type="text" id="uniqIdForView" placeholder="Enter Unique ID">
       </div>
       <button class="button" onclick="viewNFT()">View NFT</button>
       <div id="nftDetails"></div>
-    </div>
+    </div> -->
     <div class="col-lg-4 mb-2 text-center">
+      <!-- (click)="connectWallet()" angular -->
       <button (click)="connectWallet()" class="btn btn-theme no-text-transorm ms-2">
         {{ 'Connect Wallet' | translate }}
       </button>
+      <!-- <button onclick="connectWallet()" class="btn btn-theme no-text-transorm ms-2">
+        {{ 'Connect Wallet' | translate }}
+      </button> -->
     </div>
     <div class="col-lg-8 mb-2">
       <div class="card dash-box-card flex-fill mb-0">
         <div class="card-header">
           <div class="row align-items-center">
-            <div *ngIf="walletAddress" class="col-md-12 mb-4">
-              <!-- <div>
-                <button (click)="connectToMetaMask()">Connect to MetaMask</button>
-                <p *ngIf="connectedAccount">Connected: {{ connectedAccount }}</p>
-                <p *ngIf="!connectedAccount && metaMaskChecked">MetaMask is not connected.</p>
-              </div> -->
+            <!-- <div class="col-md-12">
+              <h5>
+                <div id="walletAddress"></div>
+              </h5>
+            </div> -->
+            <div *ngIf="walletAddress" class="col-md-12 mb-2">
               <h4>Wallet Connected</h4>
             </div>
             <div *ngIf="walletAddress" class="col-md-12">
@@ -86,18 +55,14 @@
             </div>
           </div>
         </div>
-        <!-- <div class="card-body booking-history">
-          <div class="widget-box p-0">
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
   <div class="row align-items-center mt-4 mb-2">
-    <div class="col-lg-12 mb-2">
+    <!-- <div class="col-lg-12 mb-2">
       <h5 class="title-5">{{ "Search NFT'S" | translate }}</h5>
-    </div>
-    <div class="col-lg-6">
+    </div> -->
+    <!-- <div class="col-lg-6">
       <form class="form-inline align-self-end">
         <div class="d-flex">
           <input [(ngModel)]="uniqIdToView" name="sub_menu_name" type="text" [placeholder]="'Driver ID' | translate"
@@ -110,17 +75,10 @@
           </button>
         </div>
       </form>
-    </div>
-    <!-- <div class="col-lg-6">
-      <div *ngIf="!isAdd" class="text-end">
-        <a (click)="isAdd = true" class="btn btn-solid color2 no-text-transorm">
-          <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.branch_info.add_more' | translate }}
-        </a>
-      </div>
     </div> -->
-    <div *ngIf="!userList.length" class="col-lg-12 mt-5">
+    <div *ngIf="!tableData.length" class="col-lg-12 mt-5">
       <div class="text-center">
-        <p>Branch Info Not Found</p>
+        <p>Driver Not Found</p>
       </div>
     </div>
     <div class="col-lg-12 mt-3">
@@ -141,25 +99,38 @@
           </thead>
           <tbody>
             <tr
-              *ngFor="let item of userList | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+              *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
               <td class="text-center">{{idx+1}}</td>
-              <td class="">{{item.driver_name || '-'}}</td>
+              <td class="text-start">
+                <div class="table-avatar">
+                  <a class="avatar avatar-lg flex-shrink-0">
+                    <img class="avatar-img" [src]="item.driverImage || 'assets/images/driver/Male.jpg'" alt="Booking">
+                  </a>
+                  <div class="table-head-name flex-grow-1">
+                    <a>{{item.driverName}}</a>
+                    <p class="my-1"><b class="text-theme">KYC ID</b> : {{item.kyc_id}}</p>
+                    <p class="mb-0"><b class="text-theme">Hash Key</b> : {{item.hash_key || '-'}}</p>
+                  </div>
+                </div>
+              </td>
               <td class="text-center">
-                <a *ngIf="item.purchased_status">
-                  <span class="badge badge-success">
-                    Buy
-                  </span>
-                </a>
-                <a *ngIf="!item.purchased_status">
+                <button *ngIf="!item.isPurchased" (click)="purchaseNFT(item.kyc_id)"
+                  class="btn btn-theme no-text-transorm ms-2">
+                  {{ 'Buy' | translate }}
+                </button>
+                <a *ngIf="item.isPurchased">
                   <span class="badge badge-light-secondary">
                     Purchased
                   </span>
                 </a>
-                <button class="btn btn-solid color3 no-text-transorm ms-2">
+                <button (click)="viewNFT(item, 'view')" [disabled]="!item.isPurchased"
+                  class="btn btn-solid color3 no-text-transorm ms-2">
                   {{ 'View' | translate }}
                 </button>
-                <button class="btn btn-theme no-text-transorm ms-2">
-                  {{ 'Download' | translate }}
+                <button (click)="viewNFT(item, 'download')" [disabled]="!item.isPurchased"
+                  class="btn btn-theme no-text-transorm ms-2" title="Download">
+                  <i class="feather icon-download"></i>
+                  <!-- {{ 'Download' | translate }} -->
                 </button>
               </td>
             </tr>

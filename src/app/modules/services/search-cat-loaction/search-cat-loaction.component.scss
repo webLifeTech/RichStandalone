@@ -1,0 +1,77 @@
+.service-search-box {
+  // display: flex;
+  // align-items: center;
+  /* gap: 10px; */
+  /* padding: 10px; */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 18px 0px;
+  margin-bottom: 12px;
+
+  .category-select {
+    flex: 1;
+
+    .ng-select {
+      width: 100%;
+
+      .ng-select-container {
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .location-input {
+    display: flex;
+    align-items: center;
+    flex: 2;
+
+    input {
+      flex: 1;
+      // padding: 8px;
+      height: 48px;
+      padding: 13px 16px;
+      transition: box-shadow .2s ease-in-out;
+      font-size: 16px !important;
+      font-weight: 600;
+      border: 0;
+      border-radius: 4px;
+      outline: none;
+
+      &:focus {
+        border-color: #1976d2;
+      }
+    }
+
+  }
+
+  button {
+    margin-left: 5px;
+    margin-right: 5px;
+    line-height: normal;
+  }
+
+}
+
+
+.example-form {
+  // min-width: 150px;
+  // max-width: 500px;
+  // width: 100%;
+  display: flex;
+  align-items: center;
+  flex: 2;
+}
+
+.example-form-field {
+  width: 100%;
+}
+
+.example-option-img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+[dir='rtl'] .example-option-img {
+  margin-right: 0;
+  margin-left: 8px;
+}

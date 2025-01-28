@@ -33,6 +33,7 @@ import { UserCarsListingComponent } from './modules/admin-dashboard/user-cars-li
 import { UsersListingComponent } from './modules/admin-dashboard/users-listing/users-listing.component';
 import { AllBookingOverviewComponent } from './modules/admin-dashboard/all-booking-overview/all-booking-overview.component';
 import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
+import { ServicesComponent } from './modules/services/services.component';
 
 export const routes: Routes = [
   {
@@ -233,6 +234,15 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: VendorsComponent
+      },
+    ]
+  },
+  {
+    path: 'services',
+    component: LayoutHeadFootComponent, children: [
+      {
+        path: '',
+        component: ServicesComponent
       },
     ]
   },

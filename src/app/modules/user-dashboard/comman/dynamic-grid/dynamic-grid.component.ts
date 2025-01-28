@@ -67,6 +67,7 @@ export class DynamicGridComponent {
   ngOnInit() {
     if (this.type === 'my_vehicle') {
       this.formName = 'VEHICLE UPLOAD';
+      // this.onEdit(this.filteredData[2]); // need to do
     } else if (this.type === 'fleetOwner') {
       this.formName = 'COMPANY INFO';
       this.filteredData = this.data;
@@ -74,7 +75,12 @@ export class DynamicGridComponent {
 
       // this.onEdit(this.filteredData[0]); // need to do
     } else {
-      this.formName = 'DRIVER INFO';
+      if (this.type === 'driver') {
+        this.formName = 'DRIVER INFO';
+      }
+      if (this.type === 'individualCarOwner') {
+        this.formName = 'CAR OWNER INFO';
+      }
       this.filteredData = this.data;
       this.totalData = this.data.length;
 
@@ -164,7 +170,7 @@ export class DynamicGridComponent {
   onView(item: any) {
     console.log("item >>>>>>", item);
 
-    if (this.type === 'driver') {
+    if (this.type === 'driver' || this.type === 'individualCarOwner') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         driverId: item.driverId,
@@ -176,10 +182,9 @@ export class DynamicGridComponent {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
-          modalRef.componentInstance.driverInfoData = response;
+          modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
-
           });
         }
       })
@@ -187,7 +192,7 @@ export class DynamicGridComponent {
 
     if (this.type === 'fleetOwner') {
       const body = {
-        userId: this.gs.loggedInUserInfo.userId,
+        companyId: item.companyId,
       }
 
       this.profileService.getCompanyKyc(body).subscribe(async (response: any) => {
@@ -196,10 +201,9 @@ export class DynamicGridComponent {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
-          modalRef.componentInstance.driverInfoData = response;
+          modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
-
           });
         }
       })
@@ -217,10 +221,9 @@ export class DynamicGridComponent {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
-          modalRef.componentInstance.driverInfoData = response;
+          modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
-
           });
         }
       })

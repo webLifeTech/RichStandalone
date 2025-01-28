@@ -235,11 +235,11 @@
         <div *ngIf="isVehicleInfoEdit">
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
             (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
-            [singleDetailInfo]="driverInfoData"></app-dynamic-form>
+            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
         </div>
 
-        <!-- Account info -->
-        <div *ngIf="activeKycTab === 8">
+        <!-- My Vehicle -->
+        <div *ngIf="activeKycTab === 8 && !isVehicleInfoEdit">
           <app-dynamic-grid [type]="'my_vehicle'" [columns]="myVehicleColumns" [actions]="myVehicleActions"
             (actionEvent)="handleAction($event, 'my_vehicle')"></app-dynamic-grid>
         </div>
@@ -257,10 +257,8 @@
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-dynamic-grid [type]="'driver'" [data]="driverInfoData" [columns]="driverColumns"
-                [actions]="driverActions" (actionEvent)="handleAction($event, 'driver')"></app-dynamic-grid>
-              <!-- <app-driver-info-details [driverInfoData]="driverInfoData" [selectedTabObj]="selectedTabObj"
-                (onEditInfo)="onEditInfo()"></app-driver-info-details> -->
+              <app-dynamic-grid [type]="'individualCarOwner'" [data]="driverInfoData" [columns]="driverColumns"
+                [actions]="driverActions" (actionEvent)="handleAction($event, 'individualCarOwner')"></app-dynamic-grid>
             </div>
           </div>
         </div>

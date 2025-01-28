@@ -46,6 +46,7 @@ export class ProfileComponent {
         localStorage.removeItem('divComeOwnedCarKycData');
         localStorage.removeItem('driverDetailsData');
         localStorage.removeItem('MyWishlistStore');
+        localStorage.removeItem('purchasedNFTUser');
         this.gs.isLicenseVerified = false;
         this.gs.isFleetOwnerLicenseVerified = false;
         this.gs.isIndCarOwnerLicenseVerified = false;

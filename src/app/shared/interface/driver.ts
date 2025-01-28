@@ -17,6 +17,9 @@ export interface driver {
   offer_discount: number;
   brandLogo: images[];
   isAddWishlist: boolean;
+  hash_key: string;
+  kyc_id: string;
+  isPurchased: boolean;
   price: number;
   location: string;
   experience: string;

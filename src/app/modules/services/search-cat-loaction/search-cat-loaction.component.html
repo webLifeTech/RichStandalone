@@ -1,0 +1,42 @@
+<div class="service-search-box">
+  <form class="example-form">
+    <mat-form-field class="example-form-field">
+      <mat-label>Category</mat-label>
+      <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (state of filteredStates | async; track state) {
+        <mat-option [value]="state.name">
+          <img alt="" class="example-option-img" [src]="state.flag" height="25">
+          <span>{{state.name}}</span>
+        </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="example-form-field">
+      <mat-label>Location</mat-label>
+      <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (state of filteredStates | async; track state) {
+        <mat-option [value]="state.name">
+          <img alt="" class="example-option-img" [src]="state.flag" height="25">
+          <span>{{state.name}}</span>
+        </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <button class="btn btn-theme" (click)="onSearch()">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+  <!-- <div class="location-input">
+    <input matInput [(ngModel)]="location" placeholder="Enter location" autocomplete="off" />
+  </div>
+
+  <div class="location-input">
+    <input matInput [(ngModel)]="location" placeholder="Enter location" autocomplete="off" />
+  </div>
+
+  <button class="btn btn-theme" (click)="onSearch()">
+    <i class="fas fa-search"></i>
+  </button> -->
+</div>

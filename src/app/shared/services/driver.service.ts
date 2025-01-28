@@ -56,6 +56,14 @@ export class DriverService {
     return this.http.get<drivers>('assets/json/grid/drivers.json')
   }
 
+  public getVerifiedDriver() {
+    return this.http.get('assets/json/grid/drivers.json').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
   // Cab SinglePage
   cabPage(): Observable<cabDetails> {
     return this.http.get<cabDetails>('assets/json/pages/cab-details.json')

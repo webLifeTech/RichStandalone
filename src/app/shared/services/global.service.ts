@@ -146,4 +146,17 @@ export class GlobalService {
   // transformDate(date: any, format: any) {
   //   return this.datePipe.transform(date, format);
   // }
+
+  downloadFile(filename: any, url: string): void {
+    console.log("url >>>>", url);
+
+    this.http.get(url, { responseType: 'blob' }).subscribe((blob) => {
+      const fileURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = fileURL;
+      a.download = filename + ' KYC'; // Set the file name or extract it from the URL
+      a.click();
+      window.URL.revokeObjectURL(fileURL);
+    });
+  }
 }

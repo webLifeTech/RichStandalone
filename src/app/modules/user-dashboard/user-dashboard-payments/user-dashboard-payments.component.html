@@ -129,9 +129,12 @@
                       <span>{{data.total_amount | currencyPipe: gs.currency}}</span>
                     </td>
                     <td>
-                      <span
-                        [ngClass]="{ 'badge-light-success': data.status === 'Completed','badge-light-warning': data.status === 'Pending','badge-light-danger':data.status === 'Failed' }"
-                        class="badge">{{data.status}}</span>
+                      <span [ngClass]="{
+                          'badge-light-success': data.status === 'Completed' || data.status === 'Complete',
+                          'badge-light-warning': data.status === 'Pending',
+                          'badge-light-danger':data.status === 'Failed',
+                          'badge-light-secondary': data.status !== 'Completed' || data.status !== 'Pending' || data.status !== 'Failed'
+                           }" class="badge">{{data.status}}</span>
                     </td>
                     <td class="text-end">
                       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">

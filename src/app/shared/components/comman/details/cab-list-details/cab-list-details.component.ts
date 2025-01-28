@@ -28,6 +28,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InformationModalComponent } from '../../modal/information-modal/information-modal.component';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../../services/toast.service';
+import { NftService } from '../../../../services/nft.service';
 // import { provideStore } from '@ngxs/store';
 
 @Component({
@@ -86,6 +87,13 @@ export class CabListDetailsComponent {
   public d_title: string = 'drivers';
   public d_description: string = 'no drivers were found for this route and date combination. modify your search and try again';
 
+
+  walletAddress: string | null = null;
+  uniqIdToPurchase: string = '';
+  priceToPurchase: string = '';
+  uniqIdToView: string = '';
+  nftDetails: any = null;
+
   @Select(cabState.cab) cab$: Observable<cab[]>;
   @Select(driverState.driver) driver$: Observable<driver[]>;
 
@@ -104,6 +112,7 @@ export class CabListDetailsComponent {
     private alert: AlertService,
     private modalService: NgbModal,
     private toast: ToastService,
+    private nftService: NftService,
     private dialog: MatDialog
   ) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -155,7 +164,8 @@ export class CabListDetailsComponent {
         this.paramsTag = [...this.getCarLocationParams, ...this.getRatingParams];
         this.driver$.subscribe((res) => {
           this.totalCabAvailable = res.length;
-          this.driverDetails = res;
+          this.driverDetails = this.nftService.checkNFTPurchased(res);
+          console.log("this.driverDetails >>>>>", this.driverDetails);
           this.d_pagination = this.paginationService.getPager(this.driverDetails?.length, +this.pageNo, 10);
           this.driverDetails = this.driverDetails?.slice(this.d_pagination.startIndex, this.d_pagination.endIndex + 1);
         })
@@ -212,7 +222,7 @@ export class CabListDetailsComponent {
 
   async bookNow(details: any) {
     if (this.auth.isLoggedIn) {
-      if (!this.gs.isLicenseVerified) {
+      if (this.gs.isLicenseVerified) { // need to do
         const modalRef = this.modalService.open(ConfirmationModalComponent, {
           centered: true,
         });
@@ -312,5 +322,46 @@ export class CabListDetailsComponent {
       return true;
     }
     return false;
+  }
+
+  async purchaseNFT(uniqId: any) {
+    try {
+      if (!this.walletAddress) {
+        this.walletAddress = await this.nftService.connectWallet();
+      }
+      await this.nftService.purchaseNFT(uniqId);
+      // this.tableData = this.nftService.checkNFTPurchased(this.tableData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async viewNFT(item: any, type: any) {
+    try {
+
+      if (!this.walletAddress) {
+        this.walletAddress = await this.nftService.connectWallet();
+      }
+      this.nftDetails = await this.nftService.viewNFT(item.kyc_id);
+      const hashKey = this.nftDetails[2][this.nftDetails[2].length - 1];
+
+      for (let i in this.driverDetails) {
+        if (this.driverDetails[i].kyc_id == item.kyc_id) {
+          this.driverDetails[i].hash_key = hashKey;
+        }
+      }
+      if (!hashKey) {
+        this.toast.warningToastr("You dont have access to this driver profile");
+        return;
+      }
+      if (type === 'view') {
+        window.open('https://indigo-magnetic-yak-978.mypinata.cloud/ipfs/' + hashKey, "_blank");
+      }
+      if (type === 'download') {
+        this.gs.downloadFile(item.driverName + ' KYC', 'https://indigo-magnetic-yak-978.mypinata.cloud/ipfs/' + hashKey)
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

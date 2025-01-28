@@ -73,12 +73,34 @@ export class UserDashboardPaymentsComponent {
   }
 
   getTableData() {
-    // let tabName = this.booktabs.find((item: any) => item.value === type)?.title;
-    // this.activeTabName = tabName;
+    // this.paymentService.getUserPayment().subscribe((apiRes: apiResultFormat) => {
+    //   this.totalData = apiRes.totalData;
+    //   this.tableData = apiRes.data;
+    // });
 
     this.paymentService.getUserPayment().subscribe((apiRes: apiResultFormat) => {
       this.totalData = apiRes.totalData;
       this.tableData = apiRes.data;
+
+      this.paymentService.getCryptoPaymentTxnByIds({
+        arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
+      }).subscribe((pRes: any) => {
+        this.gs.isSpinnerShow = false;
+        if (pRes.status == 200) {
+          let cryptoPaymentTxn = pRes.data;
+          for (let i in cryptoPaymentTxn) {
+            if (this.gs.loggedInUserInfo?.cryptoTransactions && this.gs.loggedInUserInfo.cryptoTransactions.indexOf(cryptoPaymentTxn[i].id) !== -1) {
+              let tempObj = JSON.parse(JSON.stringify(this.tableData[0]));
+              tempObj.paymentID = cryptoPaymentTxn[i].id;
+              tempObj.total_amount = cryptoPaymentTxn[i].amountf;
+              tempObj.status = cryptoPaymentTxn[i].status_text;
+              tempObj.mode = `Crypto ${cryptoPaymentTxn[i].type} (${cryptoPaymentTxn[i].coin})`;
+              this.tableData.unshift(tempObj);
+            }
+          }
+          this.totalData = this.tableData.length;
+        }
+      });
     });
   }
 

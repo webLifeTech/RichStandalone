@@ -1309,6 +1309,14 @@
       "panel": "Third",
       "checkId": "r_four",
       "checked": false
+    },
+    {
+      "id": 5,
+      "title": "crypto",
+      "value": "crypto",
+      "panel": "Four",
+      "checkId": "r_five",
+      "checked": false
     }
   ]
 }

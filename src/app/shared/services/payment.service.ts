@@ -26,6 +26,7 @@ export class PaymentService {
       })
     );
   }
+
   public getuserWallet() {
     return this.http.get<apiResultFormat>('assets/json/pages/user-wallet.json').pipe(
       map((res: apiResultFormat) => {
@@ -49,7 +50,21 @@ export class PaymentService {
     );
   }
 
+  // Crypto Coin
+  public getCryptoPaymentTxn() {
+    return this.http.get(this.baseUrl + 'getTxnList').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
-
-
+  // Crypto Coin
+  public getCryptoPaymentTxnByIds(data: any) {
+    return this.http.post(this.baseUrl + 'getTransactionByIds', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

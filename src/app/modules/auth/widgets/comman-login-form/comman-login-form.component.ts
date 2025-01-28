@@ -39,10 +39,10 @@ export class CommanLoginFormComponent {
   timer: number = 0;
 
   vendorTypes: any = [
-    { id: 1, name: "Agents", value: "Agents" },
-    { id: 2, name: "Brokers", value: "Brokers" },
-    { id: 3, name: "Carriers", value: "Carriers" },
-    { id: 4, name: "Inspection Agents", value: "Inspection Agents" },
+    { id: 1, name: "Attorney", value: "Attorney" },
+    { id: 2, name: "Mortgage brokers", value: "Mortgage brokers" },
+    { id: 3, name: "Insurance Agent", value: "Insurance Agent" },
+    { id: 4, name: "Vehicle Inspections", value: "Vehicle Inspections" },
     { id: 5, name: "Others", value: "Others" },
   ];
 
@@ -62,16 +62,16 @@ export class CommanLoginFormComponent {
       "roleName": "53D8CF61-E99B-43A9-AA8F-4CE5B0E12872",
 
       // New york (Driver User)
-      "userId": "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5",
-      "contactId": 1001,
+      // "userId": "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5",
+      // "contactId": 1001,
 
       // New york city (Driver User)
       // "userId": "bd485943-ece2-4d67-85a4-113fd36f3908",
       // "contactId": 10020,
 
       // Other (Driver User)
-      // "userId": "f408b99f-6ec4-4603-b89d-be8fb828238e",
-      // "contactId": 10029,
+      "userId": "f408b99f-6ec4-4603-b89d-be8fb828238e",
+      "contactId": 10029,
       "id": 1
     },
     {

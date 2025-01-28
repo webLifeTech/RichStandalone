@@ -104,7 +104,7 @@ export class UserDashboardKycComponent {
 
   // Actions grids
   driverActions = ['View', 'Edit'];
-  myVehicleActions = ['View'];
+  myVehicleActions = ['View', 'Edit'];
 
   iAmArray: any = [
     {
@@ -221,7 +221,7 @@ export class UserDashboardKycComponent {
     console.log("this.isFormEdit >>>>>", this.isFormEdit);
 
     const confirm = () => {
-      this.selectedTabObj = tab;
+      this.selectedTabObj = JSON.parse(JSON.stringify(tab));
       this.activeKycTab = tab.formId;
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
@@ -236,6 +236,7 @@ export class UserDashboardKycComponent {
         if (res.confirmed) {
           this.isFormEdit = false;
           this.gs.isModificationOn = false;
+          this.isVehicleInfoEdit = false;
           confirm();
         }
       }, () => { });
@@ -251,12 +252,8 @@ export class UserDashboardKycComponent {
     }
     this.sidebarTabs = [];
     // this.filter(); // need to do uncomment
-
-    console.log("this.kycForm.i_am >>>", this.kycForm.i_am);
-
-
-    this.kycForm.state = 42; // need to do for direct
-    this.onSelectState() // // need to do for direct
+    // this.kycForm.state = 42; // need to do for direct
+    // this.onSelectState() // // need to do for direct
     if (this.kycForm.i_am != 2) {
       this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
     }
@@ -286,16 +283,21 @@ export class UserDashboardKycComponent {
 
   getCompanyKyc() {
     this.gs.isLicenseVerified = false;
-    this.profileService.getCompanyKyc({
-      "userId": this.gs.loggedInUserInfo.userId, // "Narendra"
+    // getCompanyKycByUserId
+    this.profileService.getCompanyKycByUserId({
+      "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      if (response && response.userId) {
-        this.driverInfoData = [{
-          driverLicenceEffDate: response.fleetOwnerDetails.driverLicenceEffDate,
-          driverLicenceExpDate: response.fleetOwnerDetails.driverLicenceExpDate,
-          driverLicNum: response.fleetOwnerDetails.driverLicNum,
-          lastName: response.fleetOwnerDetails.contactInfo.lastName,
-        }];
+      if (response && response.length) {
+        console.log("response[0] >>>>>>>", response[0]);
+        for (let i in response) {
+          this.driverInfoData.push({
+            driverLicenceEffDate: response[i].fleetOwnerDetails.driverLicenceEffDate,
+            driverLicenceExpDate: response[i].fleetOwnerDetails.driverLicenceExpDate,
+            driverLicNum: response[i].fleetOwnerDetails.driverLicNum,
+            lastName: response[i].fleetOwnerDetails.contactInfo.lastName,
+            companyId: response[i].companyDetails.contactInfo.personNumber,
+          });
+        }
         console.log(" >>>>>", this.driverInfoData);
 
         this.gs.isLicenseVerified = true;
@@ -382,22 +384,6 @@ export class UserDashboardKycComponent {
     let setMyVehicle = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
     console.log("setMyVehicle >>>>", setMyVehicle);
     this.changeKycTab(setMyVehicle);
-    // { // need to do
-    //   "menuId": 0,
-    //   "roleName": "E56F8C18-B4F6-4EE4-976D-A693AA6F98FF",
-    //   "transactionId": 1,
-    //   "languageId": "1",
-    //   "formId": 8,
-    //   "formName": "MY VEHICLE",
-    //   "description": "My Vehicle",
-    //   "formClass": null,
-    //   "formIcon": "fa fa-car",
-    //   "formAction": null,
-    //   "isVisible": true,
-    //   "isActive": false,
-    //   "priority": 4,
-    //   "isHidden": false
-    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
   // Confirm
@@ -433,12 +419,15 @@ export class UserDashboardKycComponent {
 
   handleCancel() {
     this.isFormEdit = false;
+    this.gs.isModificationOn = false;
+    this.isVehicleInfoEdit = false;
     this.getDriverDetails();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   cancelFleet() {
     this.isFormEdit = false;
+    this.gs.isModificationOn = false;
     this.getCompanyKyc();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
@@ -472,7 +461,9 @@ export class UserDashboardKycComponent {
 
   handleAction(event: any, type: any) {
     const singleDetail = event.singleDetail;
-    if (type === 'driver') {
+    console.log("singleDetail >>>>", singleDetail);
+
+    if (type === 'driver' || type === 'individualCarOwner') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         driverId: singleDetail.driverId,
@@ -482,7 +473,6 @@ export class UserDashboardKycComponent {
           this.isFormEdit = true;
           this.singleDetailInfo = response;
           console.log("getDriverDetails -------->>>>>>>>", this.singleDetailInfo);
-
           this.kycForm.state = this.singleDetailInfo.driveInCity
         }
       })
@@ -490,16 +480,35 @@ export class UserDashboardKycComponent {
 
     if (type === 'fleetOwner') {
       const body = {
-        userId: this.gs.loggedInUserInfo.userId,
+        companyId: singleDetail.companyId,
+        // userId: this.gs.loggedInUserInfo.userId,
       }
 
       this.profileService.getCompanyKyc(body).subscribe(async (response: any) => {
-        console.log("getCompanyKyc -------->>>>>>>>", response);
         if (response && response.userId) {
           this.isFormEdit = true;
           this.singleDetailInfo = response;
-
+          console.log("getCompanyKyc -------->>>>>>>>", response);
           this.kycForm.state = this.singleDetailInfo.driveInCity || 42
+        }
+      })
+    }
+
+    if (type === 'my_vehicle') {
+      console.log("singleDetail >>>>>>", singleDetail);
+
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+        vehicleId: singleDetail.vehicleId
+      }
+
+      this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
+        console.log("getVehicleDetails >>>>>>>>", response);
+        if (response && response.driveInCity) {
+          this.isFormEdit = true;
+          this.isVehicleInfoEdit = true;
+          this.singleDetailInfo = response;
+          this.selectedTabObj.formName = "VEHICLE UPLOAD";
         }
       })
     }

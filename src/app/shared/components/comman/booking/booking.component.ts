@@ -61,11 +61,12 @@ export class BookingComponent {
 
   getCrypto() {
     this.paymentService.getSupportedCoins().subscribe((response: any) => {
-      for (const property in response) {
-        // if (property == "LTCT") {
-        response[property]['coin'] = property;
-        this.coinList.push(response[property])
-        // }
+      console.log(response);
+      if (response.status == 200) {
+        for (const property in response.data) {
+          response.data[property]['coin'] = property;
+          this.coinList.push(response.data[property])
+        }
       }
     })
   }
@@ -93,19 +94,27 @@ export class BookingComponent {
     }
     this.paymentService.createTransaction(body).subscribe(response => {
       this.isLoader = false;
-      if (response && response.checkout_url) {
-        localStorage.setItem("cryptoTransaction", JSON.stringify(response));
-        this.toast.successToastr("Transaction created successfully");
-        setTimeout(() => {
-          window.open(response.status_url, "_blank");
-          window.open(response.checkout_url, "_blank");
-          this.router.navigate(['/cab/booking/booking-success', this.params.type], {
-            queryParams: { paymentType: 'crypto' },
-            queryParamsHandling: "merge"
-          });
-        }, 1000);
-      } else {
-        this.toast.errorToastr("Something went wrong");
+      if (response.status == 201) {
+        let responseData = response.data;
+        if (responseData && responseData.checkout_url) {
+          localStorage.setItem("cryptoTransaction", JSON.stringify(responseData));
+          this.toast.successToastr("Transaction created successfully");
+          if (!this.gs.loggedInUserInfo.cryptoTransactions) {
+            this.gs.loggedInUserInfo.cryptoTransactions = [];
+          }
+          this.gs.loggedInUserInfo.cryptoTransactions.push(responseData.txn_id);
+          localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+          setTimeout(() => {
+            window.open(responseData.status_url, "_blank");
+            window.open(responseData.checkout_url, "_blank");
+            this.router.navigate(['/cab/booking/booking-success', this.params.type], {
+              queryParams: { paymentType: 'crypto' },
+              queryParamsHandling: "merge"
+            });
+          }, 1000);
+        } else {
+          this.toast.errorToastr("Something went wrong");
+        }
       }
     }, err => {
       this.isLoader = false;

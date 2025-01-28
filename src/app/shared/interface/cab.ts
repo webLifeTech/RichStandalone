@@ -19,6 +19,7 @@ export interface cab {
   brandLogo: images[];
   carType: string;
   isAddWishlist: boolean;
+  hash_key: boolean;
   unlimittedMileage: boolean;
   offer_discount: boolean;
   price: number;

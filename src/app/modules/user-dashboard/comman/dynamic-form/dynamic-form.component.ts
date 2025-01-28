@@ -126,13 +126,10 @@ export class DynamicFormComponent {
             this.formArray[i].isMandatory = false;
           }
 
-          // if (this.isEditInfo && this.formType === 'fleetOwner' && this.formArray[i].modalObject) {
-          // this.formArray[i].modalObject = this.formArray[i].modalObject + '.' + this.formArray[i].modalValue;
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
           this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
-          // this.formArray[i].defaultValue = this.resolveNestedValue(this.formArray[i].modalObject, this.singleDetailInfo) || this.formArray[i].defaultValue;
-          // console.log("this.value >>>>>>>", this.formArray[i].defaultValue);
-          // }
+
+
           if (this.formArray[i].fieldType === 'LOGO' || this.formArray[i].fieldType === 'SELECTION') {
             this.formArray[i].acceptedTypes = this.getAcceptUploadTypes(this.formArray[i].validationType);
           }
@@ -416,7 +413,7 @@ export class DynamicFormComponent {
               modalObject: [field.modalObject],
               checkUnique: [field.checkUnique],
               dependentFields: [field.dependentFields ? JSON.parse(field.dependentFields) : []],
-              lineBreak: [(field.staticValue && field.staticValue?.includes('col-')) ? field.staticValue : null],
+              lineBreak: [(field.staticValue && typeof field.staticValue === 'string' && field.staticValue?.includes('col-')) ? field.staticValue : field.fieldId == 58 ? "col-md-8" : null],
               selectUnique: [field.selectUnique],
               fieldId: [field.fieldId],
               validationType: [field.validationType],
@@ -430,30 +427,13 @@ export class DynamicFormComponent {
               action: [field.action],
               acceptedTypes: [field.acceptedTypes],
               defaultValue: [field.defaultValue],
-              // fValue
-              // fValueCode
               value: [
-                field.fieldType === "DATE"
-                  ? this.parseDate(this.isEditInfo ? field.fValue : null)
-                  : (this.isEditInfo ? field.fValue : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
-                this.getValidators(field)
+                field.fieldType === "DATE" ? this.parseDate(this.isEditInfo ? field.fValue : field.defaultValue || null)
+                  : (this.isEditInfo ? field.fValue : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)), this.getValidators(field)
               ],
               valueCd: [
-                field.fieldType === "DROPDOWN" && this.isEditInfo
-                  ? field.fValueCode
-                  : null
-              ],
-              // value: [
-              //   field.fieldType === "DATE"
-              //     ? this.parseDate(this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : null)
-              //     : (this.singleDetailInfo && this.singleDetailInfo[field.modalObject] ? this.singleDetailInfo[field.modalObject][field.modalValue] : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)),
-              //   this.getValidators(field)
-              // ],
-              // valueCd: [
-              //   field.fieldType === "DROPDOWN" && this.singleDetailInfo && this.singleDetailInfo[field.modalObject] && this.singleDetailInfo[field.modalObject][field.modalValueCode]
-              //     ? this.singleDetailInfo[field.modalObject][field.modalValueCode]
-              //     : null
-              // ],
+                field.fieldType === "DROPDOWN" && this.isEditInfo ? field.fValueCode : null
+              ]
             })
           )
         )
@@ -479,10 +459,22 @@ export class DynamicFormComponent {
               }
             }
           }
+          if (fieldTwo.value.fieldType === "RADIO") {
+            this.onChangeRadio(fieldTwo.value.value, fieldTwo, section)
+          }
 
-          if (fieldTwo.value.fieldName === 'SSN') {
+
+          if (fieldTwo.get('fieldName').value === "CITY") {
+            const county = this.getFieldValue(this.singleDetailInfo, fieldTwo.value.modalObject, "county");
+            fieldTwo.addControl("county", new FormControl(county));
+          }
+
+          if (fieldTwo.value.fieldType === 'TEXTMASK' && fieldTwo.value.action === 'MASK') {
             this.addMaskLayer(fieldTwo);
           }
+          // if (fieldTwo.value.fieldName === 'SSN') {
+          //   this.addMaskLayer(fieldTwo);
+          // }
         }
 
         if (fieldTwo.value.action === "SAVE") {
@@ -590,7 +582,9 @@ export class DynamicFormComponent {
       let body = {
         "postalCode": event.target.value || "",
       }
+      this.gs.isSpinnerShow = true;
       this.profileService.getMasterPostalCodes(body).subscribe((cityRes: any) => {
+        this.gs.isSpinnerShow = false;
         if (cityRes && cityRes.length) {
 
           const cityObj = cityRes[0];
@@ -639,6 +633,8 @@ export class DynamicFormComponent {
             }
           })
         }
+      }, (err: any) => {
+        this.gs.isSpinnerShow = false;
       })
     }
 
@@ -757,10 +753,18 @@ export class DynamicFormComponent {
 
     if (rawValue.length == 9) {
       fieldRow.get('valueCd')?.setValue(rawValue);
-      fieldRow.get('value')?.setValue(
-        `XXX-XX-${rawValue.slice(-4)}`,
-        { emitEvent: false }
-      );
+      if (fieldRow.value.fieldName === 'SSN') {
+        fieldRow.get('value')?.setValue(
+          `XXX-XX-${rawValue.slice(-4)}`,
+          { emitEvent: false }
+        );
+      }
+      if (fieldRow.value.fieldName === 'TAX ID') {
+        fieldRow.get('value')?.setValue(
+          `XX-XXX${rawValue.slice(-4)}`,
+          { emitEvent: false }
+        );
+      }
     }
   }
 
@@ -794,10 +798,10 @@ export class DynamicFormComponent {
           "state": selectedState.Code,
           "userId": this.gs.loggedInUserInfo.userId,
         }
-
+        this.gs.isSpinnerShow = true;
         this.profileService.getMVRDetails(dataParams).subscribe((res: any) => {
           console.log("res.mvrDriverDetails >>>>>", res.mvrDriverDetails);
-
+          this.gs.isSpinnerShow = false;
           if (res && res.responseMessage && !res.responseMessage.status) {
             this.toast.errorToastr(res.responseMessage.message);
             return;
@@ -906,6 +910,8 @@ export class DynamicFormComponent {
               });
             });
           }
+        }, (err) => {
+          this.gs.isSpinnerShow = false;
         })
       }
 
@@ -1111,7 +1117,11 @@ export class DynamicFormComponent {
           }
         }
       }
+
     });
+
+    console.log("fieldsFmArray >>>", fieldsFmArray);
+
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -1134,7 +1144,9 @@ export class DynamicFormComponent {
     fields.controls.forEach((field: any) => {
       if (field.get('isVisible')?.value === false) {
         field.get('isVisible')?.setValue(true);
-        field.get('isConditionValid')?.setValue(true);
+        if (field.get('fieldName')?.value !== "OTHER") {
+          field.get('isConditionValid')?.setValue(true);
+        }
       }
 
       if (field.get('action')?.value === "ADD" || field.get('action')?.value === "Add") {
@@ -1150,8 +1162,20 @@ export class DynamicFormComponent {
 
   // Table Save and Update
   saveSubmit(fieldRow: any, section: any) {
+    const exceptFields = [27, 35, 133, 125];
+    const checkAllFill = this.findInvalidControlsBySection(section, exceptFields);
+    console.log("checkAllFill >>>>>>>", checkAllFill);
+
+    if (!checkAllFill.valid) {
+      this.toast.errorToastr("Please fill all the details of " + section.value.sectionName);
+      fieldRow.get('value')?.setValue(false);
+      return;
+    }
+
     const fields = section.get('fields') as FormArray;
     const loopArray = section.get('loopArray') as FormArray;
+
+
     const tempTableGridValueList = section.value?.tableGridValueList;
 
     let tableFields = JSON.parse(JSON.stringify(fieldRow?.value.dependentFields));
@@ -1256,11 +1280,8 @@ export class DynamicFormComponent {
     const fields = section.get('fields') as FormArray;
 
     fields.controls.forEach((field: any) => {
-      console.log("field.get('isVisible')?.value >>>>>>", field.get('isVisible')?.value);
-
       if (field.get('isVisible')?.value === false) {
         field.get('isVisible')?.setValue(true);
-        field.get('isConditionValid')?.setValue(true);
 
         if (field.get('fieldType')?.value === "DATE" || field.get('fieldType')?.value === "date") { // Date MM/dd/yyyy
           field.get('value')?.setValue(this.parseDate(itemValue[field.get('modalValue').value]));
@@ -1270,6 +1291,10 @@ export class DynamicFormComponent {
 
         if (field.get('fieldType')?.value === "DROPDOWN") {
           field.get('valueCd')?.setValue(itemValue[field.get('valueCode').value]);
+        }
+
+        if (field.get('fieldName')?.value !== "OTHER" || field.get('value')?.value) {
+          field.get('isConditionValid')?.setValue(true);
         }
       }
 
@@ -1594,7 +1619,7 @@ export class DynamicFormComponent {
         this.profileService.insertCompanyKyc(finalBody).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
-          if (res && res.messageCode == "200") {
+          if (res && res.statusCode == "200") {
             this.toast.successToastr(res.message);
             this.onHandleSubmit.emit(null)
           } else {
@@ -1630,40 +1655,128 @@ export class DynamicFormComponent {
     let finalBody: any = {};
     let sectionData: any = {};
 
-    section.value.fields.forEach((field: any) => {
-      if (field.modalValue && field.fieldType !== "BUTTON") {
-        if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-          sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
-        } else {
-          sectionData[field.modalValue] = field.value || "";
-        }
+    if (this.formType !== 'fleetOwner') {
+      section.value.fields.forEach((field: any) => {
+        if (field.modalValue && field.fieldType !== "BUTTON") {
+          if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
+            sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
+          } else {
+            sectionData[field.modalValue] = (field.value || field.value == false) ? field.value : null;
+          }
 
-        if (field.county) { // set county
-          sectionData["county"] = field.county || "";
-        }
-        if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
-          sectionData[field.valueCode] = field.valueCd || "";
-        }
+          if (field.county) { // set county
+            sectionData["county"] = field.county || "";
+          }
+          if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
+            sectionData[field.valueCode] = field.valueCd || "";
+          }
 
-        if (field.fieldType === "TEXTMASK") {
-          sectionData[field.modalValue] = field.valueCd;
-          sectionData[field.valueCode] = field.value;
-        }
+          if (field.fieldType === "TEXTMASK") {
+            sectionData[field.modalValue] = field.valueCd;
+            sectionData[field.valueCode] = field.value;
+          }
 
-        if (!finalBody) {
-          finalBody = sectionData;
-        } else {
-          finalBody = { ...finalBody, ...sectionData };
-        }
+          if (!finalBody) {
+            finalBody = sectionData;
+          } else {
+            finalBody = { ...finalBody, ...sectionData };
+          }
 
-        if (section.value.loopArray && section.value.loopArray.length) {
-          finalBody[section.value.tableGrid[0]['modalObject']] = section.value.loopArray;
+          if (section.value.loopArray && section.value.loopArray.length) {
+            finalBody[section.value.tableGrid[0]['modalObject']] = section.value.loopArray;
+          }
         }
+      });
+    }
+
+    if (this.formType === 'fleetOwner') {
+      finalBody = {
+        "companyDetails": {
+          "contactInfo": {
+            "contactId": this.singleDetailInfo.companyDetails.contactInfo.contactId,
+            "entityTypeId": this.singleDetailInfo.companyDetails.contactInfo.entityTypeId,
+            "personNumber": this.singleDetailInfo.companyDetails.contactInfo.personNumber,
+          },
+          "fleetCompanyId": this.singleDetailInfo.companyDetails.fleetCompanyId,
+        },
+        "fleetOwnerDetails": {
+          "contactInfo": {
+            "contactId": this.singleDetailInfo.fleetOwnerDetails.contactInfo.contactId,
+            "entityTypeId": this.singleDetailInfo.fleetOwnerDetails.contactInfo.entityTypeId,
+            "personNumber": this.singleDetailInfo.fleetOwnerDetails.contactInfo.personNumber,
+          }
+        },
       }
-    });
+
+      section.value.fields.forEach(async (field: any) => {
+        if (field.modalValue && field.fieldType !== "BUTTON") {
+          const keys = field.modalObject.split(".");
+          let sectionData: any = {};
+
+          if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
+            sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy') || null;
+          } else {
+            if (field.modalValue) {
+              sectionData[field.modalValue] = field.value;
+            } else {
+              sectionData[field.valueCode] = field.valueCd;
+            }
+          }
+          if (field.county) { // set county
+            sectionData["county"] = field.county;
+          }
+          if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
+            sectionData[field.valueCode] = field.valueCd;
+          }
+          if (field.fieldType === "TEXTMASK") {
+            sectionData[field.modalValue] = field.valueCd;
+            sectionData[field.valueCode] = field.value;
+          }
+          if (keys.length == 1) {
+            finalBody[keys[0]] = { ...finalBody[keys[0]], ...sectionData }
+          }
+          if (keys.length == 2) {
+            finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
+          }
+          if (keys.length == 3) {
+            if (!(finalBody[keys[0]][keys[1]][keys[2]] && finalBody[keys[0]][keys[1]][keys[2]]?.length)) {
+              finalBody[keys[0]][keys[1]][keys[2]] = [{}];
+
+              let createObj: any = {};
+
+              if (keys[2] == 'addresses') {
+                createObj.addressId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressId");
+                createObj.addressTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressTypeId");
+                createObj.isPrimaryAddress = this.getFieldValue(this.singleDetailInfo, field.modalObject, "isPrimaryAddress");
+                createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
+              }
+
+              if (keys[2] == 'emails') {
+                createObj.personEmailId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "personEmailId");
+                createObj.emailTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "emailTypeId");
+                createObj.primaryEmailFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryEmailFlag");
+                createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
+              }
+
+              if (keys[2] == 'phoneNumbers') {
+                createObj.phoneId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneId");
+                createObj.phoneTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneTypeId");
+                createObj.extension = this.getFieldValue(this.singleDetailInfo, field.modalObject, "extension");
+                createObj.primaryPhoneFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryPhoneFlag");
+                createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
+              }
+              finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
+            }
+            finalBody[keys[0]][keys[1]][keys[2]][0] = { ...finalBody[keys[0]][keys[1]][keys[2]][0], ...sectionData };
+          }
+        }
+      });
+    }
 
     console.log("finalBody >>>>>", finalBody);
     console.log("section >>>>>", section);
+
+    // return;
 
     if (section.value.sectionID === "1" || section.value.sectionID === "18") {
       this.updateDriverInfo(finalBody);
@@ -1687,9 +1800,29 @@ export class DynamicFormComponent {
 
     if (section.value.sectionID === "8" || section.value.sectionID === "24") {
       console.log("finalBody >>>>>>", finalBody);
-
       this.updateDriverKycOtherInfo(finalBody);
     }
+
+    if (section.value.sectionID === "11") {
+      this.updateCompanyInfo(finalBody);
+    }
+    if (section.value.sectionID === "12") {
+      this.updateFleetOwner(finalBody);
+    }
+
+    if (section.value.sectionID === "14") {
+      this.updateVehicleInfo(finalBody);
+    }
+    if (section.value.sectionID === "15") {
+      this.updateVehicleInspection(finalBody);
+    }
+    if (section.value.sectionID === "16") {
+      this.updateVehicleInsuranceInfo(finalBody);
+    }
+    if (section.value.sectionID === "17") {
+      this.updateVehicleOtherInfo(finalBody);
+    }
+
   }
 
   // updateForeignDriverInfo
@@ -1803,7 +1936,11 @@ export class DynamicFormComponent {
     const addType: any = {
       "5": "Home",
       "6": "Mailing",
-      "7": "Billing"
+      "7": "Billing",
+
+      "21": "Home",
+      "22": "Mailing",
+      "23": "Billing"
     }
 
     let addressTypeIds = addressTypes.find((sItem: any) => sItem.Name === addType[section.value.sectionID]) || {};
@@ -1841,6 +1978,147 @@ export class DynamicFormComponent {
 
     // return
     this.profileService.updateDriverKycOtherInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateCompanyInfo
+  async updateCompanyInfo(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.userId,
+      "driveInCity": this.singleDetailInfo.driveInCity,
+      "companyDetails": finalBody['companyDetails']
+    }
+
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateCompanyInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateFleetOwner
+  async updateFleetOwner(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.userId,
+      "fleetCompanyId": this.singleDetailInfo.companyDetails.fleetCompanyId,
+      "fleetOwnerDetails": finalBody['fleetOwnerDetails']
+    }
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateFleetOwner(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+
+  // updateVehicleInfo
+  async updateVehicleInfo(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.vehicleInfo.userId,
+      "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+      ...finalBody
+    }
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateVehicleInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateVehicleInspection
+  async updateVehicleInspection(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.vehicleInfo.userId,
+      "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+      "vehicleInspectionDetails": finalBody
+    }
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateVehicleInspection(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateVehicleInsuranceInfo
+  async updateVehicleInsuranceInfo(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.vehicleInfo.userId,
+      "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+      "coverageId": this.singleDetailInfo.vehicleInsuranceDetails.coverageId,
+      ...finalBody
+    }
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateVehicleInsuranceInfo(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateVehicleOtherInfo
+  async updateVehicleOtherInfo(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.vehicleInfo.userId,
+      "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+      ...finalBody
+    }
+    console.log("Body >>>>>", Body)
+    // return;
+    this.profileService.updateVehicleOtherInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {

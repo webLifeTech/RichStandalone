@@ -1,5 +1,5 @@
 @if(responsiveLatestFilter == true){
-<a href="javascript:void(0)" class="mobile-filter border-top-0" (click)="openResponsiveFilter()">
+<a class="mobile-filter border-top-0" (click)="openResponsiveFilter()">
   <h5>{{'car_list_page.filter.latest_filter'| translate}}</h5>
   <img src="assets/images/icon/adjust.png" class="img-fluid blur-up lazyload" alt="filter-icon">
 </a>
@@ -87,9 +87,9 @@
                 <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
               </div>
               <div class="book-flight">
-                <!-- <a href="javascript:void(0)" class="btn btn-solid color1 margin-5"
+                <!-- <a  class="btn btn-solid color1 margin-5"
                     [routerLink]="['/cab/single-details']">{{'car_list_page.view_deal' | translate}}</a> -->
-                <a href="javascript:void(0)" class="btn btn-theme margin-5" (click)="bookNow(details)">
+                <a class="btn btn-theme margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}</a>
               </div>
               <br>
@@ -121,12 +121,10 @@
                 (click)="addRemoveWishlist(details)">
                 <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
               </a>
-              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
-                (click)="openImportantNoticeDialog()">
+              <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openImportantNoticeDialog()">
                 <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
               </a>
-              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
-                (click)="openEmailQuoteDialog()">
+              <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openEmailQuoteDialog()">
                 <i class="fas fa-envelope"></i> {{'car_list_page.email_quote' | translate}}
               </a>
             </div>
@@ -209,7 +207,7 @@
                 </div>
               </div>
               <div class="book-flight">
-                <a href="javascript:void(0)" class="btn btn-theme book-btn margin-5" (click)="bookNow(details)">
+                <a class="btn btn-theme book-btn margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}</a>
               </div>
               <br>
@@ -220,7 +218,7 @@
           </div>
           <hr class="div-line1" />
           <div class="row align-items-center">
-            <div class="col-md-6 d-flex brand-sec align-items-center">
+            <div class="col-md-3 d-flex brand-sec align-items-center">
               <div class="rating">
                 {{details.rating}}
               </div>
@@ -228,7 +226,24 @@
                 <p class="mb-0 reviews">{{details.reviews}} reviews</p>
               </div>
             </div>
-            <div class="col-md-6 end">
+            <div class="col-md-9 end align-items-center">
+              <span class="kyc-area" *ngIf="details.kyc_id">
+                <span class="me-2"> <b>KYC : </b> </span>
+                <button *ngIf="!details.isPurchased" (click)="purchaseNFT(details.kyc_id)"
+                  class="btn btn-theme no-text-transorm ms-2">
+                  {{ 'Buy' | translate }}
+                </button>
+                <a *ngIf="details.isPurchased">
+                  <span class="badge badge-light-secondary">
+                    Purchased
+                  </span>
+                </a>
+                <button [disabled]="!details.isPurchased" (click)="viewNFT(details, 'view')"
+                  class="btn btn-solid color3 no-text-transorm ms-2 py-2 px-3">
+                  {{ 'View' | translate }}
+                </button>
+              </span>
+
               <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
                 (click)="addRemoveWishlist(details)">
                 <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
@@ -237,11 +252,10 @@
                 (click)="addRemoveWishlist(details)">
                 <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
               </a>
-              <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
-                (click)="openImportantNoticeDialog()">
+              <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openImportantNoticeDialog()">
                 <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
               </a>
-              <!-- <a href="javascript:void(0)" class="btn btn-subscribe btn1 no-text-transorm"
+              <!-- <a  class="btn btn-subscribe btn1 no-text-transorm"
                 (click)="openEmailQuoteDialog()">
                 <i class="fas fa-envelope"></i> {{'car_list_page.email_quote' | translate}}
               </a> -->

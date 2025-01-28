@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, Renderer2 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../../shared/services/alert.service';
 import { PaginationService } from '../../../../shared/services/pagination.service';
 import { ToastService } from '../../../../shared/services/toast.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -14,6 +14,8 @@ import { BranchInfoModalComponent } from '../modal/branch-info-modal/branch-info
 import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { NftService } from '../../../../shared/services/nft.service';
+import { DriverService } from '../../../../shared/services/driver.service';
+import { GlobalService } from '../../../../shared/services/global.service';
 
 @Component({
   selector: 'app-nfts-info',
@@ -57,7 +59,7 @@ export class NftsInfoComponent {
     { name: 'Deactive', value: false },
   ];
 
-  userList: any = [
+  tableData: any = [
     {
       "id": 1,
       "driver_name": "Jhon",
@@ -81,80 +83,72 @@ export class NftsInfoComponent {
     private alert: AlertService,
     private paginationService: PaginationService,
     private modalService: NgbModal,
-    private nftService: NftService
+    private nftService: NftService,
+    private driverService: DriverService,
+    public gs: GlobalService,
+    private _renderer2: Renderer2,
+    @Inject(DOCUMENT) private _document: Document
   ) {
   }
 
-  ngOnInit() {
+  public ngOnInit() {
+    this.driverService.getVerifiedDriver().subscribe((apiRes: any) => {
+      console.log("apiRes >>>>>>>", apiRes);
+      const driverList = apiRes.driver.filter((item: any) => item.kyc_id)
+      this.totalRecord = driverList.length;
+      this.tableData = this.nftService.checkNFTPurchased(driverList);
+    });
   }
+
 
   async connectWallet() {
     try {
       this.walletAddress = await this.nftService.connectWallet();
       console.log("this.walletAddress >>>>>", this.walletAddress);
-
     } catch (error) {
       console.error(error);
     }
   }
 
-  async purchaseNFT() {
+  async purchaseNFT(uniqId: any) {
     try {
-      await this.nftService.purchaseNFT(this.uniqIdToPurchase, this.priceToPurchase);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async viewNFT() {
-    try {
-      this.nftDetails = await this.nftService.viewNFT(this.uniqIdToView);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  connectedAccount: string | null = null;
-  metaMaskChecked: boolean = false;
-
-
-
-  async connectToMetaMask() {
-    this.metaMaskChecked = true;
-    this.connectedAccount = await this.connectMetaMask();
-
-    console.log("this.connectedAccount >>>>>>>", this.connectedAccount);
-
-  }
-
-  async checkMetaMask(): Promise<boolean> {
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
-      return true;
-    } else {
-      console.error('MetaMask is not installed.');
-      return false;
-    }
-  }
-
-  // Connect to MetaMask and retrieve accounts
-  async connectMetaMask(): Promise<string | null> {
-    if (await this.checkMetaMask()) {
-      try {
-        const accounts = await (window as any).ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        console.log('Connected account:', accounts[0]);
-        this.toast.successToastr("Wallet Connected")
-        return accounts[0];
-      } catch (error) {
-        console.error('Error connecting to MetaMask:', error);
-        return null;
+      if (!this.walletAddress) {
+        this.walletAddress = await this.nftService.connectWallet();
       }
-    } else {
-      alert('MetaMask not installed. Please install it from https://metamask.io/');
-      return null;
+      console.log("uniqId >>>>>>", uniqId);
+      console.log("this.walletAddress >>>>>", this.walletAddress);
+
+      await this.nftService.purchaseNFT(uniqId);
+      this.tableData = this.nftService.checkNFTPurchased(this.tableData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async viewNFT(item: any, type: any) {
+    try {
+      if (!this.walletAddress) {
+        this.walletAddress = await this.nftService.connectWallet();
+      }
+      this.nftDetails = await this.nftService.viewNFT(item.kyc_id);
+      const hashKey = this.nftDetails[2][this.nftDetails[2].length - 1];
+      for (let i in this.tableData) {
+        if (this.tableData[i].kyc_id == item.kyc_id) {
+          this.tableData[i].hash_key = hashKey;
+        }
+      }
+      if (!hashKey) {
+        this.toast.warningToastr("You dont have access to this driver profile");
+        return;
+      }
+      if (type === 'view') {
+        window.open('https://indigo-magnetic-yak-978.mypinata.cloud/ipfs/' + hashKey, "_blank");
+      }
+      if (type === 'download') {
+        this.gs.downloadFile(item.driverName + ' KYC', 'https://indigo-magnetic-yak-978.mypinata.cloud/ipfs/' + hashKey)
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 
