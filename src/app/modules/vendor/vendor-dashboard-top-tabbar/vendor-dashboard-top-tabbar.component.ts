@@ -20,18 +20,20 @@ export class VendorDashboardTopTabBarComponent {
     {
       title: "userDashboard.kyc.toptabs.dashboard",
       value: "Dashboard",
-      icon: "assets/images/icon/dashboard/dashboard-icon.svg"
+      icon: "assets/images/icon/dashboard/dashboard-icon.svg",
+      route: "/vendor/dashboard",
     },
     {
       title: "userDashboard.kyc.toptabs.enquiries",
       value: "Enquiries",
-      icon: "assets/images/icon/dashboard/message-icon.svg"
+      icon: "assets/images/icon/dashboard/message-icon.svg",
+      route: "/vendor/enquiries",
     },
     {
       title: "userDashboard.kyc.toptabs.my_profile",
       value: "My Profile",
-      // route: "/user/my-profile",
-      icon: "assets/images/icon/dashboard/user-icon.svg"
+      icon: "assets/images/icon/dashboard/user-icon.svg",
+      route: "/vendor/service-profile"
     },
     {
       title: "userDashboard.kyc.toptabs.settings",

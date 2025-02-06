@@ -111,7 +111,8 @@
         <!-- Vehicle Upload -->
         <div *ngIf="activeKycTab === 7">
           <div class="profile-info-grid">
-            <div class="row m-0 align-items-end">
+            <div *ngIf="this.gs.loggedInUserInfo.roleName === 'B5107AB1-19BF-430B-9553-76F39DB1CDCD'"
+              class="row m-0 align-items-end">
               <div class="col-lg-12">
                 <div class="form-group d-sm-flex d-block">
                   <div class="form-check form-check-inline">

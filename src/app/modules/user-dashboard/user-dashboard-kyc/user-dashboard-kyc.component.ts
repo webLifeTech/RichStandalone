@@ -204,6 +204,10 @@ export class UserDashboardKycComponent {
       }
     }
 
+    if (this.gs.loggedInUserInfo.roleName !== 'B5107AB1-19BF-430B-9553-76F39DB1CDCD') {
+      this.vehicleUploadType = 'single';
+    }
+
     this.gs.usStates().subscribe(response => {
       this.usaStatesArray = response;
     })
@@ -258,7 +262,7 @@ export class UserDashboardKycComponent {
       this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
     }
     if (this.kycForm.i_am == 2) {
-      this.getCompanyKyc(); // Fleet owner
+      this.getAllCompanies(); // Fleet owner
     }
   }
 
@@ -281,25 +285,15 @@ export class UserDashboardKycComponent {
     })
   }
 
-  getCompanyKyc() {
+  getAllCompanies() {
     this.gs.isLicenseVerified = false;
-    // getCompanyKycByUserId
-    this.profileService.getCompanyKycByUserId({
+    this.profileService.getAllCompanies({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       if (response && response.length) {
         console.log("response[0] >>>>>>>", response[0]);
-        for (let i in response) {
-          this.driverInfoData.push({
-            driverLicenceEffDate: response[i].fleetOwnerDetails.driverLicenceEffDate,
-            driverLicenceExpDate: response[i].fleetOwnerDetails.driverLicenceExpDate,
-            driverLicNum: response[i].fleetOwnerDetails.driverLicNum,
-            lastName: response[i].fleetOwnerDetails.contactInfo.lastName,
-            companyId: response[i].companyDetails.contactInfo.personNumber,
-          });
-        }
+        this.driverInfoData = response;
         console.log(" >>>>>", this.driverInfoData);
-
         this.gs.isLicenseVerified = true;
         this.kycForm.state = 42;
         this.onSelectState();
@@ -375,7 +369,7 @@ export class UserDashboardKycComponent {
   }
 
   handleFleetSubmit() {
-    this.getCompanyKyc();
+    this.getAllCompanies();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -428,7 +422,7 @@ export class UserDashboardKycComponent {
   cancelFleet() {
     this.isFormEdit = false;
     this.gs.isModificationOn = false;
-    this.getCompanyKyc();
+    this.getAllCompanies();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -480,15 +474,15 @@ export class UserDashboardKycComponent {
 
     if (type === 'fleetOwner') {
       const body = {
-        companyId: singleDetail.companyId,
-        // userId: this.gs.loggedInUserInfo.userId,
+        userId: singleDetail.userId,
+        fleetCompanyId: singleDetail.fleetCompanyId,
       }
 
-      this.profileService.getCompanyKyc(body).subscribe(async (response: any) => {
+      this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
         if (response && response.userId) {
           this.isFormEdit = true;
           this.singleDetailInfo = response;
-          console.log("getCompanyKyc -------->>>>>>>>", response);
+          console.log("getCompanyDetailsByCompanyId -------->>>>>>>>", response);
           this.kycForm.state = this.singleDetailInfo.driveInCity || 42
         }
       })

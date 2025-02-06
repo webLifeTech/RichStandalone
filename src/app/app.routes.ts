@@ -34,6 +34,9 @@ import { UsersListingComponent } from './modules/admin-dashboard/users-listing/u
 import { AllBookingOverviewComponent } from './modules/admin-dashboard/all-booking-overview/all-booking-overview.component';
 import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
 import { ServicesComponent } from './modules/services/services.component';
+import { EnquiriesComponent } from './modules/vendor/enquiries/enquiries.component';
+import { ServiceProfileComponent } from './modules/vendor/service-profile/service-profile.component';
+import { UserMasterConfigurationComponent } from './modules/user-dashboard/user-master-configuration/user-master-configuration.component';
 
 export const routes: Routes = [
   {
@@ -138,9 +141,6 @@ export const routes: Routes = [
         path: 'my-cars',
         component: MyCarsComponent
       },
-      // SecurityComponent
-      // PreferencesComponent
-      // NotificationsComponent
       {
         path: 'settings',
         component: UserSettingsComponent, children: [
@@ -157,6 +157,41 @@ export const routes: Routes = [
             component: NotificationsComponent
           },
         ]
+      },
+      {
+        path: 'master-configuration',
+        component: UserMasterConfigurationComponent, children: [
+          {
+            path: 'security',
+            component: SecurityComponent
+          }
+        ]
+      },
+    ]
+  },
+  {
+    path: 'vendor',
+    component: VendorLayoutComponent, children: [
+      {
+        path: 'dashboard',
+        component: VendorsComponent
+      },
+      {
+        path: 'enquiries',
+        component: EnquiriesComponent
+      },
+      {
+        path: 'service-profile',
+        component: ServiceProfileComponent
+      },
+    ]
+  },
+  {
+    path: 'services',
+    component: LayoutHeadFootComponent, children: [
+      {
+        path: '',
+        component: ServicesComponent
       },
     ]
   },
@@ -225,24 +260,6 @@ export const routes: Routes = [
             component: NotificationsComponent
           },
         ]
-      },
-    ]
-  },
-  {
-    path: 'vendor',
-    component: VendorLayoutComponent, children: [
-      {
-        path: 'dashboard',
-        component: VendorsComponent
-      },
-    ]
-  },
-  {
-    path: 'services',
-    component: LayoutHeadFootComponent, children: [
-      {
-        path: '',
-        component: ServicesComponent
       },
     ]
   },

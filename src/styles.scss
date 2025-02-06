@@ -244,6 +244,10 @@ a {
   max-width: 150px;
 }
 
+.font-b {
+  font-weight: 700;
+}
+
 
 // =========================
 // header navbar
@@ -390,6 +394,10 @@ header {
 
 .btn-red {
   background-color: rgba(var(--theme-color4), 1) !important;
+}
+
+.btn-green {
+  background-color: rgba(var(--theme-green), 1) !important;
 }
 
 .pagi-btn {
@@ -937,13 +945,12 @@ header {
     font-size: 14px;
     color: #737373;
     background: #f2f7f6;
-    border: 2px solid #e0e0e091;
+    border: 2px solid rgba(224, 224, 224, 0.568627451);
     border-radius: 5px;
-    padding: 22px;
+    padding: 22px 10px;
     display: inline-block;
     text-align: center;
-    min-width: 130px;
-    // line-height: normal;
+    min-width: 110px;
   }
 
   .dashboard-menu ul li:hover {
@@ -2185,6 +2192,41 @@ header {
   }
 }
 
+.enquiry-modal {
+  .side-line {
+    border-right: 1px solid #ede6e6;
+  }
+
+  .blogcategories-list {
+    padding: 0 0 0 17px;
+    color: #717171;
+
+    li {
+      list-style: disc;
+      display: list-item;
+      margin-bottom: 19px;
+
+      &:hover {
+        color: rgba(var(--theme-color1), 1);
+      }
+
+      a {
+        color: #717171;
+        font-weight: 700;
+
+        &:hover {
+          // padding-left: 10px;
+          color: rgba(var(--theme-color1), 1);
+        }
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
 .invoice-modal {
   .modal-header .invoice-btns {
     position: absolute;
@@ -2713,4 +2755,8 @@ header {
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: #ffffff !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+  border: 0 !important;
 }

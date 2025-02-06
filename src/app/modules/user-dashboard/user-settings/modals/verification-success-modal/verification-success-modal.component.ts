@@ -12,7 +12,8 @@ export class VerificationSuccessModalComponent {
   @Input() title: string;
   constructor(
     private modalService: NgbModal,
-  ) { }
+  ) {
+  }
 
   closeModal() {
     this.modalService.dismissAll();

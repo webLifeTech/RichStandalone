@@ -1,0 +1,81 @@
+<div class="modal-content form-modal enquiry-modal">
+  <div class="modal-header p-0 border-0">
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-6 side-line">
+        <div class="mb-4">
+          <h3 class="text-theme font-b">Get the List of Top</h3>
+          <h3 class="text-cyan font-b">{{title}}</h3>
+        </div>
+        <form>
+          <div class="modal-form-group">
+            <label>Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="modal-form-group">
+            <label>Mobile Number <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="modal-form-group">
+            <label>Email Address <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="modal-form-group">
+            <label>Sub Category <span class="text-danger">*</span></label>
+            <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="name" placeholder="-- Select One --"
+              bindValue="value" name="sub_category" name="sub_category">
+            </ng-select>
+          </div>
+          <!-- <div class="modal-form-group">
+            <p>
+              <i class="feather icon-alert-circle"></i> New Email Address Only
+              Updated Once You Verified
+            </p>
+          </div> -->
+          <div class="modal-btn">
+            <div class="row">
+              <div class="col-8">
+                <a (click)="onConfirm()" class="btn btn-theme w-100">
+                  Send Enquiry
+                </a>
+              </div>
+              <!-- <div class="col-6">
+                <a (click)="closeModal()" class="btn btn-primary w-100">
+                  Cancel
+                </a>
+              </div> -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-6 align-items-center d-flex">
+        <ul class="blogcategories-list">
+          <li>
+            <a>
+              Your requirement is sent to the selected relevant businesses
+            </a>
+          </li>
+          <li>
+            <a>
+              Businesses compete with each other to get you the Best Deal
+            </a>
+          </li>
+          <li>
+            <a>
+              You choose whichever suits you best
+            </a>
+          </li>
+          <li>
+            <a>
+              Contact info sent to you by SMS/Email
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -44,7 +44,8 @@
                               {{'#' | translate}}
                             </th>
                             <ng-container *ngFor="let field of item.fields; let j = index">
-                              <th *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
+                              <th
+                                *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
                                 class="text-center">
                                 {{ field.description }}
                               </th>
@@ -55,9 +56,10 @@
                           <tr *ngFor="let tblItem of viewInfoDetails[item.modalObject]; let tgIdx = index">
                             <td class="text-center">{{tgIdx+1}}</td>
                             <ng-container *ngFor="let field of item.fields; let j = index">
-                              <td *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
+                              <td
+                                *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
                                 class="text-center">
-                                {{tblItem[field.modalValue]}}
+                                {{tblItem[field.modalValue] }}
                               </td>
                             </ng-container>
                           </tr>
@@ -73,81 +75,3 @@
       </div>
     </div>
   </div>
-
-
-  <!-- <div class="new-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
-    </div>
-    <div class="modal-body">
-      <div class="booking-group">
-        <div *ngFor="let item of groupedSectionsData" class="booking-wrapper">
-          <div class="booking-title">
-            <h6>{{ item.sectionName }}</h6>
-          </div>
-          <div class="booking-body">
-            <div class="row">
-              <ng-container *ngIf="!(driverInfoData[item.modalObject] && driverInfoData[item.modalObject]?.length)">
-                <ng-container *ngFor="let field of item.fields">
-                  <div class="col-lg-4 col-md-6 mb-3">
-                    <div class="booking-view">
-                      <h6>{{ field.description }}</h6>
-                      <ng-container
-                        *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION' && field.fieldType !== 'TEXTMASK'">
-                        <p>{{driverInfoData[field.modalObject][field.modalValue]}}</p>
-                      </ng-container>
-
-                      <ng-container *ngIf="field.fieldType === 'TEXTMASK'">
-                        <p>{{driverInfoData[field.modalObject][field.modalValueCode]}}</p>
-                      </ng-container>
-
-                      <ng-container *ngIf="field.fieldType === 'LOGO' || field.fieldType === 'SELECTION'">
-                        <p><i class="fa fa-eye pointer"
-                            (click)="gs.viewDocumentFile(driverInfoData[field.modalObject][field.modalValue])"></i></p>
-                      </ng-container>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-container>
-              <ng-container *ngIf="(
-                driverInfoData[item.modalObject] && driverInfoData[item.modalObject]?.length)">
-                <div class="booking-view">
-                  <div class="col-lg-12 mt-3">
-                    <div class="table-responsive dashboard-table mb-3">
-                      <table class="table">
-                        <thead class="thead-light">
-                          <tr>
-                            <th class="text-center">
-                              {{'#' | translate}}
-                            </th>
-                            <ng-container *ngFor="let field of item.fields; let j = index">
-                              <th *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
-                                class="text-center">
-                                {{ field.description }}
-                              </th>
-                            </ng-container>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let tblItem of driverInfoData[item.modalObject]; let tgIdx = index">
-                            <td class="text-center">{{tgIdx+1}}</td>
-                            <ng-container *ngFor="let field of item.fields; let j = index">
-                              <td *ngIf="field.fieldType !== 'BUTTON' && field.modalObject === item.modalObject"
-                                class="text-center">
-                                {{tblItem[field.modalValue]}}
-                              </td>
-                            </ng-container>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->

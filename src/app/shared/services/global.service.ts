@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { usaStates } from '../interface/common';
 import { ImageFileModalComponent } from '../components/comman/modal/image-file-modal/image-file-modal.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -143,20 +143,22 @@ export class GlobalService {
     return Math.floor(100000 + Math.random() * 900000); // Ensures a 6-digit number
   }
 
-  // transformDate(date: any, format: any) {
-  //   return this.datePipe.transform(date, format);
-  // }
-
   downloadFile(filename: any, url: string): void {
-    console.log("url >>>>", url);
-
     this.http.get(url, { responseType: 'blob' }).subscribe((blob) => {
       const fileURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = fileURL;
-      a.download = filename + ' KYC'; // Set the file name or extract it from the URL
+      a.download = filename + ' KYC';
       a.click();
       window.URL.revokeObjectURL(fileURL);
     });
+  }
+
+  public getEnquiries() {
+    return this.http.get('assets/json/pages/enquiries.json').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 }

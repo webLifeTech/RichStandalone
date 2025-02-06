@@ -112,7 +112,7 @@ export class DynamicFormComponent {
       "countryId": 230,
       "transactionId": transactionId,
       "formName": this.selectedTabObj.formName,//THis is name you have send form names
-      "menuId": 27
+      "menuId": this.kycForm?.menuId || 27
     }
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
@@ -984,6 +984,7 @@ export class DynamicFormComponent {
     if (field.value.fieldName === 'MAKE') {
       let body = {
         "MakeId": event.ID,
+        "description": null,
       }
       this.profileService.getVehicleModelByID(body).subscribe((res: any) => {
         if (res && res.length) {
@@ -1097,6 +1098,8 @@ export class DynamicFormComponent {
       field.get('value')?.setValue(fieldValue); // on defaultValue create form
     }
 
+    console.log("field.value.fieldId >>>>>>", field.value.fieldId);
+
     let fieldsFmArray = section.get('fields') as FormArray;
     fieldsFmArray.controls.forEach((fieldTwo: any) => {
 
@@ -1104,14 +1107,14 @@ export class DynamicFormComponent {
         fieldTwo.get('value')?.setValue(false);
       }
       if (fieldTwo?.get('conditionValue')?.value && fieldTwo?.get('condition')?.value) {
-        if (field.value.fieldId === 191 || field.value.fieldId === 196) {
-          if (fieldTwo.get('condition').value === field.value.fieldId) {
+        if (field.value.fieldId === 191 || field.value.fieldId === 196 || field.value.fieldId === 276) {
+          if (fieldTwo.get('condition').value == field.value.fieldId) {
             if (fieldTwo.get('conditionValue').value) {
               fieldTwo.get('isConditionValid')?.setValue(true);
             }
           }
         }
-        if (field.value.fieldId === 193 || field.value.fieldId === 197) {
+        if (field.value.fieldId === 193 || field.value.fieldId === 197 || field.value.fieldId === 277) {
           if (fieldTwo.get('conditionValue').value) {
             fieldTwo.get('isConditionValid')?.setValue(false);
           }
@@ -1341,16 +1344,16 @@ export class DynamicFormComponent {
     });
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        console.log("section >>>>>", section);
         const loopArray: any = (section.get('loopArray') as FormArray).value;
-        console.log("loopArray >>>>>", loopArray);
-        loopArray[index].isActive = false;
+        if (this.isEditInfo) {
+          loopArray[index].isActive = false;
+        } else {
+          loopArray.splice(index, 1);
+        }
 
         const tempTableGridValueList = loopArray.filter((tRow: any) => tRow.isActive);
-        section.get('loopArray').setValue(loopArray);
+        // section.get('loopArray').setValue(loopArray);
         section.get('tableGridValueList').setValue(tempTableGridValueList);
-        // loopArray[index].isActive = false;
-        // loopArray.setValue(loopArray);
         this.toast.successToastr("Deleted successfully");
       }
     }, () => {
@@ -1514,6 +1517,7 @@ export class DynamicFormComponent {
         finalBody = {
           "companyDetails": {
             "contactInfo": {
+              "userId": this.gs.loggedInUserInfo.userId,
               "contactId": null,
               "entityTypeId": null,
               "personNumber": null,
@@ -1522,7 +1526,8 @@ export class DynamicFormComponent {
           },
           "fleetOwnerDetails": {
             "contactInfo": {
-              "contactId": null, // 9268B933-71C7-4E25-A035-D3C146D43055
+              "userId": this.gs.loggedInUserInfo.userId,
+              "contactId": null,
               "entityTypeId": null,
               "personNumber": this.gs.loggedInUserInfo.contactId,
             },
@@ -1616,7 +1621,7 @@ export class DynamicFormComponent {
 
         // return; // need to do
 
-        this.profileService.insertCompanyKyc(finalBody).subscribe((res: any) => {
+        this.profileService.insertAndUpdateCompanyKyc(finalBody).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
@@ -1807,7 +1812,7 @@ export class DynamicFormComponent {
       this.updateCompanyInfo(finalBody);
     }
     if (section.value.sectionID === "12") {
-      this.updateFleetOwner(finalBody);
+      this.updateFleetOwnerInfo(finalBody);
     }
 
     if (section.value.sectionID === "14") {
@@ -1816,10 +1821,10 @@ export class DynamicFormComponent {
     if (section.value.sectionID === "15") {
       this.updateVehicleInspection(finalBody);
     }
-    if (section.value.sectionID === "16") {
+    if (section.value.sectionID === "16" || section.value.sectionID === "26") {
       this.updateVehicleInsuranceInfo(finalBody);
     }
-    if (section.value.sectionID === "17") {
+    if (section.value.sectionID === "17" || section.value.sectionID === "25") {
       this.updateVehicleOtherInfo(finalBody);
     }
 
@@ -2015,8 +2020,8 @@ export class DynamicFormComponent {
     })
   }
 
-  // updateFleetOwner
-  async updateFleetOwner(finalBody: any) {
+  // updateFleetOwnerInfo
+  async updateFleetOwnerInfo(finalBody: any) {
     let Body = {
       "userId": this.singleDetailInfo.userId,
       "fleetCompanyId": this.singleDetailInfo.companyDetails.fleetCompanyId,
@@ -2024,7 +2029,7 @@ export class DynamicFormComponent {
     }
     console.log("Body >>>>>", Body)
     // return;
-    this.profileService.updateFleetOwner(Body).subscribe((res: any) => {
+    this.profileService.updateFleetOwnerInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {

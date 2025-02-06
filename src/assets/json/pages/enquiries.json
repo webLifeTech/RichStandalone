@@ -1,0 +1,68 @@
+{
+  "data": [
+    {
+      "leadid": "L001",
+      "contact_person": "John Doe",
+      "mobile": "+1 234-567-8901",
+      "email": "johndoe@example.com",
+      "category": "Attorney",
+      "subcategory": "Family Lawyer",
+      "date": "2025-01-15"
+    },
+    {
+      "leadid": "L002",
+      "contact_person": "Jane Smith",
+      "mobile": "+1 987-654-3210",
+      "email": "janesmith@example.com",
+      "category": "Mortgage Brokers",
+      "subcategory": "Residential Loans",
+      "date": "2025-01-18"
+    },
+    {
+      "leadid": "L003",
+      "contact_person": "Michael Johnson",
+      "mobile": "+1 555-789-1234",
+      "email": "michael.johnson@example.com",
+      "category": "Insurance Agent",
+      "subcategory": "Life Insurance",
+      "date": "2025-01-20"
+    },
+    {
+      "leadid": "L004",
+      "contact_person": "Emily Davis",
+      "mobile": "+1 678-901-2345",
+      "email": "emilydavis@example.com",
+      "category": "Attorney",
+      "subcategory": "Corporate Lawyer",
+      "date": "2025-01-22"
+    },
+    {
+      "leadid": "L005",
+      "contact_person": "William Brown",
+      "mobile": "+1 890-123-4567",
+      "email": "williambrown@example.com",
+      "category": "Vehicle Inspections",
+      "subcategory": "Pre-Purchase Inspection",
+      "date": "2025-01-25"
+    },
+    {
+      "leadid": "L006",
+      "contact_person": "Olivia Wilson",
+      "mobile": "+1 321-654-9870",
+      "email": "oliviawilson@example.com",
+      "category": "Mortgage Brokers",
+      "subcategory": "Commercial Loans",
+      "date": "2025-01-27"
+    },
+    {
+      "leadid": "L007",
+      "contact_person": "James Taylor",
+      "mobile": "+1 543-210-6789",
+      "email": "jamestaylor@example.com",
+      "category": "Insurance Agent",
+      "subcategory": "Property Insurance",
+      "date": "2025-01-30"
+    }
+  ],
+  "totalData": 7
+}

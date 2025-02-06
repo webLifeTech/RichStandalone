@@ -1,0 +1,26 @@
+<div class="category-list">
+
+  <div class="category-sect">
+    <h4 class="title">People Also Search For</h4>
+    <div *ngFor="let category of categories" class="category-card">
+      <div class="category-image">
+        <img [src]="category.imageUrl" alt="{{ category.title }} Logo">
+      </div>
+      <div class="category-details">
+        <h2 class="main-title">{{ category.title }}</h2>
+        <p class="location">
+          {{ category.listings }}+ listings
+        </p>
+        <div class="contact-options">
+          <a class="btn btn-outline color1 no-text-transorm">
+            Get Best Deals
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <img src="https://tpc.googlesyndication.com/simgad/5043549155393525950" width="300" height="250" alt="img_ad"
+        class="img_ad" />
+    </div>
+  </div>
+</div>

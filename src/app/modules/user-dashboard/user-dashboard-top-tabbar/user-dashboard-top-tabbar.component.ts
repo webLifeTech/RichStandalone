@@ -135,14 +135,22 @@ export class UserDashboardTopTabBarComponent {
       route: "/admin/booking-overview",
       icon: "assets/images/icon/dashboard/booking-icon.svg"
     },
+    {
+      id: 13,
+      visible: false,
+      title: "userDashboard.kyc.toptabs.master_configuration",
+      value: "Master Configuration",
+      route: "/user/master-configuration",
+      icon: "assets/images/icon/dashboard/booking-icon.svg"
+    },
   ];
 
   accessList: any = {
     "admin": [101, 6, 8, 10, 11, 12], //
-    "user": [1, 2, 3, 4, 5, 6, 7, 8], // Driver
-    "user_2": [1, 102, 3, 4, 5, 6, 7, 8, 9], //
-    "user_3": [1, 102, 3, 4, 5, 6, 7, 8, 9], // Fleetowner
-    "user_4": [1, 2, 3, 4, 5, 6, 7, 8, 9], //
+    "user": [1, 2, 3, 4, 5, 6, 7, 8, 13], // Driver
+    "user_2": [1, 102, 3, 4, 5, 6, 7, 8, 9, 13], //
+    "user_3": [1, 102, 3, 4, 5, 6, 7, 8, 9, 13], // Fleetowner
+    "user_4": [1, 2, 3, 4, 5, 6, 7, 8, 9, 13], //
   }
 
   @Output() tabValue = new EventEmitter<string>();

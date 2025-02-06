@@ -361,7 +361,8 @@
         "my_cars": "My Cars",
         "all_user": "All User",
         "all_vehicles": "All Vehicles",
-        "booking_overview": "Booking Overview"
+        "booking_overview": "Booking Overview",
+        "master_configuration": "Master Configuration"
       },
       "driverInfo": {
         "title": "Driver info",

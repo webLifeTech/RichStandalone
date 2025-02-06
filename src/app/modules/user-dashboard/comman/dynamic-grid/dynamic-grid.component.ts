@@ -34,6 +34,7 @@ export class DynamicGridComponent {
   @Input() type: any = "";
   @Input() driverInfoData: any = {};
   @Input() selectedTabObj: any = {};
+  @Input() kycForm: any;
   @Output() onEditInfo = new EventEmitter<any>();
 
   formName: string = '';
@@ -65,8 +66,10 @@ export class DynamicGridComponent {
   }
 
   ngOnInit() {
+    console.log("selectedTabObj >>>>>>>", this.selectedTabObj);
+
     if (this.type === 'my_vehicle') {
-      this.formName = 'VEHICLE UPLOAD';
+      this.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
       // this.onEdit(this.filteredData[2]); // need to do
     } else if (this.type === 'fleetOwner') {
       this.formName = 'COMPANY INFO';
@@ -116,7 +119,7 @@ export class DynamicGridComponent {
       "countryId": 230,
       "transactionId": 2,
       "formName": this.formName,//THis is name you have send form names
-      "menuId": 27
+      "menuId": this.kycForm?.menuId || 27
     }
 
     console.log("body >>>>", body);
@@ -192,10 +195,11 @@ export class DynamicGridComponent {
 
     if (this.type === 'fleetOwner') {
       const body = {
-        companyId: item.companyId,
+        userId: item.userId,
+        fleetCompanyId: item.fleetCompanyId,
       }
 
-      this.profileService.getCompanyKyc(body).subscribe(async (response: any) => {
+      this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
         console.log("getDriverDetails >>>>>>>>", response);
         if (response && response.userId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {

@@ -1,4 +1,54 @@
-<div class="flight-detail-sec cab-detail-sec">
+<div class="category-list">
+  <div *ngFor="let category of categories" class="category-card">
+    <div class="category-image">
+      <img [src]="category.logo" alt="{{ category.category_name }} Logo">
+    </div>
+    <div class="category-details">
+      <h2 class="main-title">{{ category.name }}</h2>
+      <div class="ratings">
+        <span class="rating">
+          {{ category.rating }}
+        </span>
+        <span class="review">{{ category.review }} Ratings</span>
+        <span class="tags">
+          <span *ngIf="category.isTrusted" class="tag trust">
+            <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/trust_2x.gif" alt="Trusted" />
+          </span>
+          <span *ngIf="category.isVerified" class="tag verified">
+            <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/verified_2x.gif" alt="verified" />
+          </span>
+        </span>
+        <span class="preference" *ngIf="category.preference">
+          <img [src]="category.preference.icon" alt="icon">
+          <!-- {{ category.preference.label }} -->
+        </span>
+      </div>
+      <p class="location">
+        <img src="assets/images/cab/icon/location-pin.svg" class="location-img" alt="seat-icon" />
+        {{ category.location }}
+      </p>
+      <div class="sub-categories">
+        <span *ngFor="let sub of category.sub_category" class="sub">{{ sub }}</span>
+      </div>
+      <div class="contact-options">
+        <a class="btn btn-theme " href="tel:{{ category.mobile_number }}">
+          <i class="feather icon-phone"></i> {{ category.mobile_number }}
+        </a>
+        <a class="btn btn-theme btn-green no-text-transorm" [href]="'https://wa.me/' + category.whatsapp_number"
+          target="_blank">
+          <img src="assets/images/icon/whatsapp.svg" class="location-img" alt="seat-icon" width="20px" />
+          WhatsApp
+        </a>
+        <a (click)="openEnquirieModal()" class="btn btn-solid color3 no-text-transorm">
+          Send Enquiry
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div class="flight-detail-sec cab-detail-sec">
   <div class="detail-bar">
     <div class="container-fluid detail-wrap wow fadeInUp">
       <div class="row">
@@ -44,4 +94,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

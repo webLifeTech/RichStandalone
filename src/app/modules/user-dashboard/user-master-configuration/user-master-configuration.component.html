@@ -1,0 +1,74 @@
+<div class="row my-kyc">
+  <div class="col-lg-3">
+    <div class="dashboard-sidebar mb-3">
+      <div class="profile-top">
+        <div class="profile-detail">
+          <h5>{{'Master Configuration' | translate}}</h5>
+        </div>
+      </div>
+      <div class="faq-tab">
+        <ul class="nav nav-tabs" id="top-tab" role="tablist">
+          @for(tab of sidebarTabs; track tab){
+          <li class="nav-item" [hidden]="tab.isHidden">
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
+              (click)="changeKycTab(tab)">
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-9">
+    <div class="dashboard-box">
+      <div class="position-relative">
+        <!-- VEHICLE OTHER DETAILS -->
+        <!-- <div *ngIf="activeKycTab === 14">
+          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+        </div>
+        <div *ngIf="activeKycTab === 15">
+          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+        </div> -->
+
+        <!--  Driver details -->
+        <div *ngIf="activeKycTab === 3">
+          <!-- (onDivInfoSubmit)="onDivInfoSubmit()" -->
+          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isFormEdit"
+            (changeKycTab)="changeKycTab($event)" (cancel)="handleCancel()"></app-driver-details-form>
+        </div>
+
+        <!-- Account info -->
+        <div *ngIf="activeKycTab === 4 || activeKycTab === 16">
+          <app-payment-option-list></app-payment-option-list>
+        </div>
+
+        <!-- Branch Info / Office Details -->
+        <div *ngIf="activeKycTab === 6">
+          <app-branch-list></app-branch-list>
+        </div>
+
+        <!-- My Vehicle -->
+        <div *ngIf="activeKycTab === 14 && !isVehicleInfoEdit">
+          <app-dynamic-grid [kycForm]="kycForm" [selectedTabObj]="selectedTabObj" [type]="'my_vehicle'"
+            [columns]="myVehicleColumns" [actions]="myVehicleActions"
+            (actionEvent)="handleAction($event, 'my_vehicle')"></app-dynamic-grid>
+        </div>
+
+        <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
+        <div *ngIf="isVehicleInfoEdit">
+          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
