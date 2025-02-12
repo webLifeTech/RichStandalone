@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
 import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
+import { TermsAndCModalComponent } from '../../../../shared/components/comman/modal/t-and-c-modal/t-and-c-modal.component';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
     OwlNativeDateTimeModule,
     MatMenuModule,
     MatButtonModule,
-    NgxMaskDirective
+    NgxMaskDirective,
   ],
   providers: [
     DatePipe,
@@ -75,6 +76,7 @@ export class DynamicFormComponent {
     '0': { pattern: new RegExp('[a-zA-Z0-9]') }  // Define the pattern for 0 (alphanumeric)
   };
 
+  isAgreeTerms: boolean = false;
 
   profileUrl: any = "";
 
@@ -125,6 +127,9 @@ export class DynamicFormComponent {
           if (this.formArray[i].fieldType == "ARRAY") {
             this.formArray[i].isMandatory = false;
           }
+          // if (this.formArray[i].fieldId == 222) {
+          //   this.formArray[i].selectUnique = true;
+          // }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
           this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
@@ -508,7 +513,7 @@ export class DynamicFormComponent {
         tableGridTemp.push(field.value);
         if (field.get('fieldType')?.value === "DATE" || field.get('fieldType')?.value === "date") { // Date MM/dd/yyyy
           for (let i in tempTableGridValueList) {
-            if (field.get('fieldId')?.value === 155) {
+            if (field.get('fieldId')?.value === 155 || field.get('fieldId')?.value === 226) {
               expiryDate = this.parseDate(tempTableGridValueList[i][field.get('modalValue')?.value]);
             }
             if (expiryDate) {
@@ -520,6 +525,23 @@ export class DynamicFormComponent {
             }
           }
         }
+
+        if (field.get('fieldType')?.value === "DROPDOWN") {
+          if (field.get('selectUnique')?.value) {
+            let dpdOptions = field.value.dropdownList;
+            console.log("dpdOptions >>>>>", dpdOptions);
+
+            for (let i in dpdOptions) {
+              for (let tgl in tempTableGridValueList) {
+                if (tempTableGridValueList[tgl].insuranceType === dpdOptions[i].Name) {
+                  dpdOptions[i].disabled = true;
+                }
+              }
+            }
+            field.get('dropdownList').setValue(dpdOptions);
+          }
+        }
+
         field.get('isVisible')?.setValue(false);
         // reset value
         field.get('value')?.setValue(null);
@@ -671,16 +693,7 @@ export class DynamicFormComponent {
             "model": "model",
             "modelYear": "modelYear",
             "seatingCapacity": "numberofSeats",
-            "fuelType": "fuelTypePrimary",
-            // "manufacturerName" : null,
-            // "trim" : null,
-            // "plantCountry" : null,
-            // "bodyClass" : null,
-            // "transmissionStyle" : null,
-            // "transmissionSpeeds" : null,
-            // "driveType" : null,
-            // "engineModel" : null,
-            // "antiLockBrakingSystemABS" : null,
+            "fuelType": "fuelTypePrimary"
           }
 
           this.sections.controls.forEach((sectionMain: any) => {
@@ -720,7 +733,7 @@ export class DynamicFormComponent {
     }
 
     if (fieldRow.value.fieldName === 'SSN') {
-      const rawValue = fieldRow.value.value.replace(/\D/g, ''); // Remove non-digits
+      const rawValue = fieldRow.value?.value?.replace(/\D/g, ''); // Remove non-digits
       if (rawValue.length == 9) {
         fieldRow.get('valueCd')?.setValue(rawValue);
         fieldRow.get('value')?.setValue(
@@ -730,7 +743,7 @@ export class DynamicFormComponent {
       }
     }
     if (fieldRow.value.fieldName === 'TAX ID') {
-      const rawValue = fieldRow.value.value.replace(/\D/g, ''); // Remove non-digits
+      const rawValue = fieldRow.value?.value?.replace(/\D/g, ''); // Remove non-digits
       console.log("rawValue.length >>>>>", rawValue.length);
 
       if (rawValue.length == 9) {
@@ -749,7 +762,7 @@ export class DynamicFormComponent {
   }
 
   addMaskLayer(fieldRow: any) { // will use later
-    const rawValue = fieldRow.value.value.replace(/\D/g, ''); // Remove non-digits
+    const rawValue = fieldRow.value?.value?.replace(/\D/g, ''); // Remove non-digits
 
     if (rawValue.length == 9) {
       fieldRow.get('valueCd')?.setValue(rawValue);
@@ -951,9 +964,17 @@ export class DynamicFormComponent {
       if (fieldTwo.get('fieldType')?.value === "DROPDOWN") {
         if (fieldTwo.get('selectUnique')?.value) {
           let dpdOptions = fieldTwo.value.dropdownList
+          let tempTableGridValueList = fieldTwo.value.tempTableGridValueList
           for (let i in dpdOptions) {
-            dpdOptions[i].disabled = false;
+            for (let tgl in tempTableGridValueList) {
+              if (tempTableGridValueList[tgl].insuranceType === dpdOptions[i].Name) {
+                dpdOptions[i].disabled = true;
+              }
+            }
           }
+          // for (let i in dpdOptions) {
+          //   dpdOptions[i].disabled = false;
+          // }
           fieldTwo.get('dropdownList').setValue(dpdOptions);
         }
       }
@@ -1194,9 +1215,11 @@ export class DynamicFormComponent {
       if (field.get('modalValue')?.value && fieldRow?.value.dependentFields.indexOf(field.get('fieldId')?.value) !== -1) {
         tableGridTemp.push(field.value);
         if (field.get('fieldType')?.value === "DATE" || field.get('fieldType')?.value === "date") { // Date MM/dd/yyyy
-          if (field.get('fieldId')?.value === 155) {
+          if (field.get('fieldId')?.value === 155 || field.get('fieldId')?.value === 226) {
             expiryDate = new Date(field.get('value')?.value);
           }
+          console.log("expiryDate >>>>>", expiryDate);
+          console.log("this.todayDate >>>>>", this.todayDate);
           if (expiryDate) {
             if (this.todayDate.toISOString() < expiryDate.toISOString()) {
               status = true;
@@ -1213,11 +1236,26 @@ export class DynamicFormComponent {
           sectionData["county"] = field.get('county')?.value || "";
         }
         if (field.get('fieldType')?.value === "DROPDOWN") {
+          console.log("field.get('selectUnique')?.value >>>>>", field);
+
           if (field.get('selectUnique')?.value) {
-            let dpdOptions = field.value.dropdownList
-            for (let i in dpdOptions) {
-              if (field.get('value')?.value === dpdOptions[i].Name) {
-                dpdOptions[i].disabled = true;
+            let dpdOptions = field.value.dropdownList;
+            console.log("tempTableGridValueList >>>>>", tempTableGridValueList);
+
+            if (!tempTableGridValueList.length) {
+              for (let i in dpdOptions) {
+                if (field.get('value')?.value === dpdOptions[i].Name) {
+                  dpdOptions[i].disabled = true;
+                }
+              }
+            } else {
+              for (let i in dpdOptions) {
+                dpdOptions[i].disabled = false;
+                for (let tgl in tempTableGridValueList) {
+                  if (tempTableGridValueList[tgl].insuranceType === dpdOptions[i].Name || field.get('value')?.value === dpdOptions[i].Name) {
+                    dpdOptions[i].disabled = true;
+                  }
+                }
               }
             }
             field.get('dropdownList').setValue(dpdOptions);
@@ -1344,16 +1382,22 @@ export class DynamicFormComponent {
     });
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        const loopArray: any = (section.get('loopArray') as FormArray).value;
+        let loopArray: any = (section.get('loopArray') as FormArray);
+        let tempTableGridValueList: any = (section.get('tableGridValueList') as FormArray);
         if (this.isEditInfo) {
-          loopArray[index].isActive = false;
+          loopArray.value[index].isActive = false;
         } else {
-          loopArray.splice(index, 1);
+          loopArray.value.splice(index, 1);
+        }
+        tempTableGridValueList.value.splice(index, 1);
+
+        if (!loopArray.value.length) {
+          section.get('loopArray').clear();
+        } else {
+          section.get('loopArray').patchValue(loopArray.value);
         }
 
-        const tempTableGridValueList = loopArray.filter((tRow: any) => tRow.isActive);
-        // section.get('loopArray').setValue(loopArray);
-        section.get('tableGridValueList').setValue(tempTableGridValueList);
+        section.get('tableGridValueList').patchValue(tempTableGridValueList.value);
         this.toast.successToastr("Deleted successfully");
       }
     }, () => {
@@ -1656,11 +1700,19 @@ export class DynamicFormComponent {
   // All From Handle Update
   async updateDetails(section: any) {
 
+    const exceptFields: any = [];
+    const checkAllFill = this.findInvalidControlsBySection(section, exceptFields);
+
+    console.log("checkAllFill >>>", checkAllFill)
+    if (!checkAllFill.valid) {
+      this.toast.errorToastr("Please fill all the details of " + section.value.sectionName);
+      return;
+    }
 
     let finalBody: any = {};
     let sectionData: any = {};
 
-    if (this.formType !== 'fleetOwner') {
+    if (this.formType !== 'fleetOwner' && section.value.sectionID != "25") {
       section.value.fields.forEach((field: any) => {
         if (field.modalValue && field.fieldType !== "BUTTON") {
           if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
@@ -1712,7 +1764,27 @@ export class DynamicFormComponent {
           }
         },
       }
+    }
 
+    if (section.value.sectionID === "25") {
+      finalBody = {
+        "vehicleOtherDetails": {
+          "location": {
+            "id": null,
+            "ownerId": this.singleDetailInfo.vehicleInfo.userId,
+            "riskId": this.singleDetailInfo.vehicleInfo.vehicleId,
+            "code": "LOC001",
+            "name": "Location One",
+            "riskType": "fire",
+            "isActive": true,
+          },
+          "userId": this.singleDetailInfo.vehicleInfo.userId,
+          "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+        },
+      }
+    }
+
+    if (this.formType === 'fleetOwner' || section.value.sectionID === "25") {
       section.value.fields.forEach(async (field: any) => {
         if (field.modalValue && field.fieldType !== "BUTTON") {
           const keys = field.modalObject.split(".");
@@ -2099,7 +2171,6 @@ export class DynamicFormComponent {
       ...finalBody
     }
     console.log("Body >>>>>", Body)
-    // return;
     this.profileService.updateVehicleInsuranceInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2116,11 +2187,7 @@ export class DynamicFormComponent {
 
   // updateVehicleOtherInfo
   async updateVehicleOtherInfo(finalBody: any) {
-    let Body = {
-      "userId": this.singleDetailInfo.vehicleInfo.userId,
-      "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
-      ...finalBody
-    }
+    let Body = finalBody['vehicleOtherDetails'];
     console.log("Body >>>>>", Body)
     // return;
     this.profileService.updateVehicleOtherInfo(Body).subscribe((res: any) => {
@@ -2267,6 +2334,21 @@ export class DynamicFormComponent {
 
     const types = validationType.split(',').map((type) => typeMapping[type] || '');
     return types.filter((t) => t).join(',');
+  }
+
+  viewTermsConditions() {
+    console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
+
+    const modalRef = this.modalService.open(TermsAndCModalComponent, {
+      size: 'xl',
+    });
+    modalRef.componentInstance.termCode = this.selectedTabObj.termCode;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        this.isAgreeTerms = true;
+      }
+    }, () => {
+    });
   }
 
 }

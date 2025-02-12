@@ -419,11 +419,25 @@
   </form>
 
 
-
   <!-- Buttons -->
   <div class="row my-4">
+    <div *ngIf="!isEditInfo" class="col-lg-12">
+      <div class="mb-4">
+        <div class="form-check">
+          <input [(ngModel)]="isAgreeTerms" [disabled]="!isAgreeTerms" class="form-check-input" type="checkbox">
+          <label class="mx-2 mb-0">
+            I agree to the <a (click)="viewTermsConditions()" class="text-primary ">terms & conditions</a> of TL Hub.
+            <span class="mandatory">*</span>
+          </label>
+
+        </div>
+        <div *ngIf="(isAgreeTerms && submitted)" class="text-danger mt-2">
+          This field is required.
+        </div>
+      </div>
+    </div>
     <div class="col-lg-12 text-end">
-      <button *ngIf="!isEditInfo" type="button" (click)="onSubmit()"
+      <button *ngIf="!isEditInfo" [disabled]="!isAgreeTerms" type="button" (click)="onSubmit()"
         class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
         Confirmed
       </button>

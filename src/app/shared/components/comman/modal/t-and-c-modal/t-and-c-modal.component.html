@@ -1,0 +1,19 @@
+<div class="modal-content form-modal enquiry-modal">
+  <div class="modal-header p-0 border-0">
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <app-html-text *ngIf="content" [content]="content"></app-html-text>
+      </div>
+    </div>
+    <div class="modal-btn my-4 text-end">
+      <a (click)="onConfirm()" class="btn btn-theme">
+        I Agree
+      </a>
+    </div>
+  </div>
+</div>

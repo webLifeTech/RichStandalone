@@ -1,12 +1,12 @@
-<div class="category-list">
+<div class="advertisement-list">
 
-  <div class="category-sect">
+  <div class="advertisement-sect">
     <h4 class="title">People Also Search For</h4>
-    <div *ngFor="let category of categories" class="category-card">
-      <div class="category-image">
+    <div *ngFor="let category of categories" class="advertisement-card">
+      <div class="advertisement-image">
         <img [src]="category.imageUrl" alt="{{ category.title }} Logo">
       </div>
-      <div class="category-details">
+      <div class="advertisement-details">
         <h2 class="main-title">{{ category.title }}</h2>
         <p class="location">
           {{ category.listings }}+ listings

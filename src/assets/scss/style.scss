@@ -2860,32 +2860,26 @@
 // START important notice dialog
 .important-notice-dialog {
 
-  /* Style for the dialog title */
   .dialogue-header {
     position: relative !important;
     font-weight: 600 !important;
     padding-right: 48px;
   }
 
-  /* Style for the close icon in the dialog header */
   .close-icon {
     position: absolute !important;
     right: 0;
     top: 0;
     margin: 8px;
     color: rgba(0, 0, 0, 0.54);
-    /* You can customize the color */
   }
 
-  /* Style for the dialog actions (bottom-right close button) */
   .dialog-actions {
     display: flex;
     justify-content: flex-end;
-    /* Align the button to the right */
     padding: 16px;
   }
 
-  /* Optional: Additional styling for the dialog content */
   mat-dialog-content {
     padding: 20px;
   }
@@ -2920,25 +2914,24 @@
     }
   }
 
-  .SM_6e9e6a44 {
-    display: flex;
-  }
+  // .SM_6e9e6a44 {
+  //   display: flex;
+  // }
 
-  .side-img {
-    font-size: 20px;
-    margin-right: 10px;
-  }
+  // .side-img {
+  //   font-size: 20px;
+  //   margin-right: 10px;
+  // }
 
-  .check-li {
-    display: block;
-    margin-bottom: 10px;
-  }
+  // .check-li {
+  //   display: block;
+  //   margin-bottom: 10px;
+  // }
 
-  .SM_f48a68a6 {
-    font-size: 14px;
-    font-weight: 800;
-
-  }
+  // .SM_f48a68a6 {
+  //   font-size: 14px;
+  //   font-weight: 800;
+  // }
 }
 
 // End important notice dialog

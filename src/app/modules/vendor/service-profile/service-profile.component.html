@@ -69,6 +69,30 @@
           <div class="col-lg-4">
             <div class="form-group">
               <label>
+                {{ 'Category' | translate }} <span class="mandatory">*</span>
+              </label>
+              <ng-select (change)="onChangeServices(driverInfoForm.service)" clearable="false" [items]="mainCatList"
+                bindLabel="name" placeholder="-- Select One --" bindValue="id" [(ngModel)]="driverInfoForm.service"
+                name="service">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>
+                {{ 'Sub Category' | translate }} <span class="mandatory">*</span>
+              </label>
+              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="name"
+                placeholder="-- Select One --" bindValue="value" [(ngModel)]="driverInfoForm.sub_category"
+                name="sub_category">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>
                 {{ 'Contact Number' | translate }}
                 <span class="mandatory">*</span>
               </label>
@@ -88,27 +112,9 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="form-group">
-              <label for="address_1">
-                {{ 'userDashboard.kyc.address.address_1' | translate }}
-              </label>
-              <textarea [(ngModel)]="driverInfoForm.address_1" name="address_1" type="text"
-                class="form-control open-select"></textarea>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="form-group">
-              <label for="address_2">
-                {{ 'userDashboard.kyc.address.address_2' | translate }}
-              </label>
-              <textarea [(ngModel)]="driverInfoForm.address_2" name="address_2" type="text"
-                class="form-control open-select"></textarea>
-            </div>
-          </div>
           <div class="col-lg-4">
             <div class="form-group">
-              <label for="zip_code">
+              <label>
                 {{ 'userDashboard.kyc.address.zip_code' | translate }}
               </label>
               <input [(ngModel)]="driverInfoForm.zip_code" name="zip_code" type="text"
@@ -117,45 +123,60 @@
           </div>
           <div class="col-lg-4">
             <div class="form-group">
-              <label for="city">
+              <label>
                 {{ 'userDashboard.kyc.address.city' | translate }}
               </label>
               <ng-select clearable="false" [items]="cityList" bindLabel="value" placeholder="-- Select One --"
-                bindValue="name" [(ngModel)]="driverInfoForm.city" name="city" name="city">
+                bindValue="name" [(ngModel)]="driverInfoForm.city" name="city">
               </ng-select>
             </div>
           </div>
           <div class="col-lg-4">
             <div class="form-group">
-              <label for="state">
+              <label>
                 {{ 'userDashboard.kyc.address.state' | translate }}
               </label>
               <ng-select clearable="false" [items]="stateList" bindLabel="value" placeholder="-- Select One --"
-                bindValue="name" [(ngModel)]="driverInfoForm.state" name="state" name="state">
+                bindValue="name" [(ngModel)]="driverInfoForm.state" name="state">
               </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>
+                {{ 'userDashboard.kyc.address.country' | translate }}
+              </label>
+              <ng-select clearable="false" [items]="countryList" bindLabel="value" placeholder="-- Select One --"
+                bindValue="name" [(ngModel)]="driverInfoForm.country" name="country">
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>
+                {{ 'Address' | translate }}
+              </label>
+              <textarea [(ngModel)]="driverInfoForm.address_1" name="address_1" type="text"
+                class="form-control open-select"></textarea>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>
+                {{ 'Short description' | translate }}
+              </label>
+              <textarea [(ngModel)]="driverInfoForm.short_description" name="short_description" type="text"
+                class="form-control open-select"></textarea>
             </div>
           </div>
 
           <div class="col-lg-4">
             <div class="form-group">
               <label>
-                {{ 'Services' | translate }} <span class="mandatory">*</span>
+                {{ 'Status' | translate }}
               </label>
-              <ng-select (change)="onChangeServices(driverInfoForm.service)" clearable="false" [items]="mainCatList"
-                bindLabel="name" placeholder="-- Select One --" bindValue="id" [(ngModel)]="driverInfoForm.service"
-                name="service" name="service">
-              </ng-select>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <div class="form-group">
-              <label>
-                {{ 'Sub Category' | translate }} <span class="mandatory">*</span>
-              </label>
-              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="name"
-                placeholder="-- Select One --" bindValue="value" [(ngModel)]="driverInfoForm.sub_category"
-                name="sub_category" name="sub_category">
+              <ng-select clearable="false" [items]="statusList" bindLabel="value" placeholder="-- Select One --"
+                bindValue="name" [(ngModel)]="driverInfoForm.status" name="status">
               </ng-select>
             </div>
           </div>

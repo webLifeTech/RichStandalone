@@ -66,7 +66,6 @@ export class DynamicGridComponent {
   }
 
   ngOnInit() {
-    console.log("selectedTabObj >>>>>>>", this.selectedTabObj);
 
     if (this.type === 'my_vehicle') {
       this.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
@@ -98,7 +97,6 @@ export class DynamicGridComponent {
         userId: this.gs.loggedInUserInfo.userId
       }
       this.profileService.getAllVehicles(body).subscribe(async (response: any) => {
-        console.log("getVehicleDetails >>>>>>>>", response);
         if (response && response.length) {
           this.filteredData = response;
           this.totalData = response.length;
@@ -121,8 +119,6 @@ export class DynamicGridComponent {
       "formName": this.formName,//THis is name you have send form names
       "menuId": this.kycForm?.menuId || 27
     }
-
-    console.log("body >>>>", body);
 
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
@@ -172,6 +168,7 @@ export class DynamicGridComponent {
 
   onView(item: any) {
     console.log("item >>>>>>", item);
+    console.log("this.type >>>>>>", this.type);
 
     if (this.type === 'driver' || this.type === 'individualCarOwner') {
       const body = {
@@ -185,6 +182,7 @@ export class DynamicGridComponent {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
+          modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
@@ -220,7 +218,6 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        console.log("getVehicleDetails >>>>>>>>", response);
         if (response && response.driveInCity) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
@@ -235,7 +232,6 @@ export class DynamicGridComponent {
   }
 
   onEdit(item: any) {
-    console.log("item >>>>>>", item);
     const singleDetail = item;
     this.actionEvent.emit({ singleDetail });
     window.scrollTo({ top: 0, behavior: 'smooth' });

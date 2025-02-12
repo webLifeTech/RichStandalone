@@ -79,8 +79,6 @@ export class DriverInfoDetailsComponent {
       "menuId": 27
     }
 
-    console.log("body >>>>", body);
-
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
       console.log("aaaaaaaaaaaa >>>>>>>>", this.formArray);

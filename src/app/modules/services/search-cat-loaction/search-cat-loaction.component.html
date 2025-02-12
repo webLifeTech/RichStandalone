@@ -1,26 +1,26 @@
 <div class="service-search-box">
-  <form class="example-form">
-    <mat-form-field class="example-form-field">
+  <form class="services-search">
+    <mat-form-field class="services-search-field">
       <mat-label>Location</mat-label>
       <input matInput aria-label="Location" [matAutocomplete]="autoOne" [(ngModel)]="location" name="location">
       <mat-autocomplete #autoOne="matAutocomplete">
         @for (location of filteredLocation | async; track location) {
         <mat-option [value]="location.name">
-          <img class="example-option-img" [src]="location.logo" height="25">
+          <img class="search-option-img" [src]="location.logo" height="25">
           <span>{{location.name}}</span>
         </mat-option>
         }
       </mat-autocomplete>
       <span class="location-input"></span>
     </mat-form-field>
-    <mat-form-field class="example-form-field">
+    <mat-form-field class="services-search-field">
       <mat-label>Category</mat-label>
       <input matInput aria-label="State" [matAutocomplete]="auto" [(ngModel)]="selectedCategory"
         name="selectedCategory">
       <mat-autocomplete #auto="matAutocomplete">
         @for (state of filteredStates | async; track state) {
         <mat-option [value]="state.name">
-          <img class="example-option-img" [src]="state.logo" height="25">
+          <img class="search-option-img" [src]="state.logo" height="25">
           <span>{{state.name}}</span>
         </mat-option>
         }
@@ -30,15 +30,4 @@
       <i class="fas fa-search"></i>
     </button>
   </form>
-  <!-- <div class="location-input">
-    <input matInput [(ngModel)]="location" placeholder="Enter location" autocomplete="off" />
-  </div>
-
-  <div class="location-input">
-    <input matInput [(ngModel)]="location" placeholder="Enter location" autocomplete="off" />
-  </div>
-
-  <button class="btn btn-theme" (click)="onSearch()">
-    <i class="fas fa-search"></i>
-  </button> -->
 </div>

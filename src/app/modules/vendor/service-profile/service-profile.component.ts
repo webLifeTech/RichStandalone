@@ -127,6 +127,10 @@ export class ServiceProfileComponent {
     { name: 'Yes', value: 'Yes' },
     { name: 'No', value: 'No' },
   ];
+  statusList: any = [
+    { name: 'Active', value: 'Active' },
+    { name: 'Inactive', value: 'Inactive' },
+  ];
   countryList: any = [
     { name: 'USA', value: 'USA' },
     { name: 'China', value: 'China' },

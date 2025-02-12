@@ -186,6 +186,13 @@ export class UserDashboardKycComponent {
     }
   ];
 
+  tandcCodes: any = {
+    "DRIVER INFO": "D_KYC_TC",
+    "CAR OWNER INFO": "D_KYC_TC",
+    "COMPANY INFO": "F_KYC_TC",
+    "VEHICLE UPLOAD": "V_KYC_TC",
+  }
+
   constructor(
     public gs: GlobalService,
     private fb: FormBuilder,
@@ -225,7 +232,10 @@ export class UserDashboardKycComponent {
     console.log("this.isFormEdit >>>>>", this.isFormEdit);
 
     const confirm = () => {
+      tab.termCode = this.tandcCodes[tab.formName];
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
+      console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
+
       this.activeKycTab = tab.formId;
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
@@ -255,9 +265,8 @@ export class UserDashboardKycComponent {
       this.kycForm.state = null;
     }
     this.sidebarTabs = [];
-    // this.filter(); // need to do uncomment
-    // this.kycForm.state = 42; // need to do for direct
-    // this.onSelectState() // // need to do for direct
+    this.kycForm.state = 42; // need to do for direct
+    this.onSelectState() // // need to do for direct
     if (this.kycForm.i_am != 2) {
       this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
     }
@@ -331,6 +340,7 @@ export class UserDashboardKycComponent {
   filter() {
     this.activeKycTab = "";
     setTimeout(() => {
+      this.sidebarTabs[0].termCode = this.tandcCodes[this.sidebarTabs[0].formName];
       this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
       this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
       for (let i in this.sidebarTabs) {
@@ -455,7 +465,6 @@ export class UserDashboardKycComponent {
 
   handleAction(event: any, type: any) {
     const singleDetail = event.singleDetail;
-    console.log("singleDetail >>>>", singleDetail);
 
     if (type === 'driver' || type === 'individualCarOwner') {
       const body = {
@@ -489,15 +498,12 @@ export class UserDashboardKycComponent {
     }
 
     if (type === 'my_vehicle') {
-      console.log("singleDetail >>>>>>", singleDetail);
-
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         vehicleId: singleDetail.vehicleId
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        console.log("getVehicleDetails >>>>>>>>", response);
         if (response && response.driveInCity) {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;

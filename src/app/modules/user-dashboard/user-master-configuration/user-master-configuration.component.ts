@@ -50,9 +50,9 @@ export class UserMasterConfigurationComponent {
   // Vehicle List Columns and Data
   myVehicleColumns = [
     { header: 'VIN Number', fieldObject: null, field: 'vinNumber' },
-    { header: 'PLATE NUMBER', fieldObject: null, field: 'vinNumber' },
-    { header: 'PRICE PER DAY', fieldObject: null, field: 'vinNumber' },
-    { header: 'VEHICLE STATUS', fieldObject: null, field: 'vinNumber' },
+    { header: 'PLATE NUMBER', fieldObject: null, field: 'plateNumber' },
+    { header: 'PRICE PER DAY', fieldObject: null, field: 'pricePerDay' },
+    { header: 'VEHICLE STATUS', fieldObject: null, field: 'vehicleStatus' },
   ];
 
   // Actions grids
@@ -68,12 +68,6 @@ export class UserMasterConfigurationComponent {
   ) {
     this.getConfigUIForms();
   }
-
-
-  // changeKycTab(tab: any) {
-  //   this.activeKycTab = tab;
-  //   window.scrollTo({ top: 300, behavior: 'smooth' });
-  // }
 
   getConfigUIForms() {
 
@@ -103,11 +97,7 @@ export class UserMasterConfigurationComponent {
     this.activeKycTab = "";
     setTimeout(() => {
       this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
-      console.log("this.selectedTabObj >>", this.selectedTabObj);
-      console.log("this.activeKycTab >>", this.activeKycTab);
-
       this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
-      console.log("this.activeKycTab >>", this.activeKycTab);
       for (let i in this.sidebarTabs) {
         this.sidebarTabs[i].isHidden = false;
       }
@@ -117,19 +107,13 @@ export class UserMasterConfigurationComponent {
 
   changeKycTab(tab: any) {
     this.selectedTabObj = JSON.parse(JSON.stringify(tab));
-    console.log("selectedTabObj >>>>>>>>", this.selectedTabObj);
-
     this.activeKycTab = tab.formId;
-    console.log("activeKycTab >>>>>>>>", this.activeKycTab);
-
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   onEditInfo() {
     this.isFormEdit = true;
     this.gs.isModificationOn = true;
-    // this.onChangeIam();
-    // this.onSelectState();
   }
 
   handleSubmit() {
@@ -147,18 +131,13 @@ export class UserMasterConfigurationComponent {
 
   handleAction(event: any, type: any) {
     const singleDetail = event.singleDetail;
-    console.log("singleDetail >>>>", singleDetail);
-
     if (type === 'my_vehicle') {
-      console.log("singleDetail >>>>>>", singleDetail);
-
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         vehicleId: singleDetail.vehicleId
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        console.log("getVehicleDetails >>>>>>>>", response);
         if (response && response.driveInCity) {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
