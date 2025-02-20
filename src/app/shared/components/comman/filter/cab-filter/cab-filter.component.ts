@@ -20,6 +20,7 @@ import { CabLocationComponent } from './cab-location/cab-location.component';
 import { CabPricePerDayComponent } from './cab-price-per-day/cab-price-per-day.component';
 import { CabSpecsComponent } from './cab-specs/cab-specs.component';
 import { CabElectricComponent } from './cab-electric/cab-electric.component';
+import { CabShiftComponent } from './cab-shift/cab-shift.component';
 
 @Component({
   selector: 'app-cab-filter',
@@ -37,6 +38,7 @@ import { CabElectricComponent } from './cab-electric/cab-electric.component';
     CabElectricComponent,
     CabOwnerComponent,
     CabSuppliersComponent,
+    CabShiftComponent,
 
     CommonModule,
     TranslateModule,

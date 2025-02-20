@@ -1,4 +1,33 @@
 <div class="row">
+
+  <ng-container *ngIf="kycForm.isAddSearchSection">
+    <div class="col-lg-12 mb-2">
+      <h5 class="title-5">{{ selectedTabObj.description | translate }}</h5>
+    </div>
+    <div class="col-lg-6">
+      <form class="form-inline align-self-end">
+        <div class="d-flex">
+          <input [(ngModel)]="searchText" name="sub_menu_name" type="text"
+            [placeholder]="'userDashboard.search_placeholder' | translate" class="form-control open-select" />
+          <button class="btn btn-theme no-text-transorm ms-2">
+            <i class="feather icon-search"></i> {{ 'userDashboard.search_btn' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6">
+      <div *ngIf="!isAdd" class="text-end">
+        <a (click)="onAdd()" class="btn btn-solid color2 no-text-transorm">
+          <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.branch_info.add_more' | translate }}
+        </a>
+      </div>
+    </div>
+    <div *ngIf="!filteredData.length" class="col-lg-12 mt-5">
+      <div class="text-center">
+        <p>Data Not Found!</p>
+      </div>
+    </div>
+  </ng-container>
   <div class="col-lg-12 mt-3">
     <div class="table-responsive dashboard-table mb-4">
       <table class="table">

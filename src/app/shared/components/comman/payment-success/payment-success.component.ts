@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { SubscriptionTemplateComponent } from '../email-template/subscription-te
   styleUrl: './payment-success.component.scss'
 })
 export class PaymentSuccessComponent {
+  @Output() onHandleBack = new EventEmitter<any>();
 
   public bg_image = 'assets/images/cab/breadcrumb.jpg';
   public title = 'booking success';
@@ -45,5 +46,9 @@ export class PaymentSuccessComponent {
 
   downloadInvoice() {
     this.isShowInvoice = true;
+  }
+
+  backToPackage() {
+    this.onHandleBack.emit(1)
   }
 }

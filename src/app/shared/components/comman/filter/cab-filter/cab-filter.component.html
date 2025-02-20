@@ -25,6 +25,10 @@
     <hr class="div-line" />
     <div class="collection-collapse-block-content" [class.row]="cabHorizontal"
       [ngClass]="{ 'd-block' : isOpenCab == true && !cabHorizontal, 'd-none' : isOpenCab == false && !cabHorizontal}">
+      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
+        <app-cab-shift></app-cab-shift>
+      </div>
+      <hr *ngIf="type === 'car'" class="div-line" />
       <div *ngIf="type === 'car' || type === 'driver'" class="filter-block" [class.col]="cabHorizontal">
         <app-cab-location></app-cab-location>
       </div>

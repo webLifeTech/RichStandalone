@@ -34,6 +34,7 @@ export class CabSearchComponent {
     pick_time: "",
     drop_time: "",
     type: "",
+    timeType: "",
     location_type: "option2",
   };
 
@@ -58,6 +59,7 @@ export class CabSearchComponent {
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       this.searchObj.type = params['type'] ? params['type'] : "car";
+      this.searchObj.timeType = params['timeType'] ? params['timeType'] : "";
 
       this.router.navigate([], {
         relativeTo: this.route,

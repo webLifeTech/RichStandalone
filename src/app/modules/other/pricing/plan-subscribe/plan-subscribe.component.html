@@ -1,8 +1,20 @@
-<section class="small-section pricing-plan-more">
+<section class="small-section pricing-plan-more pt-1">
   <div class="container">
 
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-12">
+        <div>
+          <a class="back_search" (click)="backToPackage()">
+            {{'Back to Package' | translate}}
+          </a>
+        </div>
+        <h5 class="deal">
+          {{'Package Subscription' | translate}}
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-7">
         <div class="booking-order mb-4">
           <div class="review-section">
             <div class="review_box p-2">
@@ -72,11 +84,22 @@
                 }
               </div>
 
-              <div class="payment-btn text-end mt-5">
+              <div class="my-4">
+                <div class="form-check">
+                  <input [(ngModel)]="isAgreeTerms" [disabled]="!isAgreeTerms" class="form-check-input" type="checkbox">
+                  <label class="mx-2 mb-0">
+                    I agree to the <a (click)="viewTermsConditions()" class="text-primary ">terms & conditions</a> of
+                    TL Hub.
+                    <span class="mandatory">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="payment-btn text-end mt-3">
                 <button (click)="bookCancel()" type="button" class="btn btn-solid color1 me-3">
                   {{'pricing_summary.cancel' | translate}}
                 </button>
-                <button (click)="payNow()" type="button" class="btn btn-theme">
+                <button (click)="payNow()" [disabled]="!isAgreeTerms" type="button" class="btn btn-theme">
                   {{'pricing_summary.pay_now' | translate}}
                 </button>
               </div>
@@ -84,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4 booking-order res-margin">
+      <div class="col-lg-5 booking-order res-margin">
         <div class="review-section">
           <div class="review_box">
             <div class="title-top">

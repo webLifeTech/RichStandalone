@@ -15,7 +15,8 @@
       <form>
         @for(details of cabPromoCode; track details){
         <div class="form-check">
-          <input class="form-check-input radio_animated" type="radio" name="exampleRadios2" id="{{ details.radioId }}"
+          <!-- radio_animated -->
+          <input class="form-check-input " type="radio" name="exampleRadios2" id="{{ details.radioId }}"
             value="{{ details.radioValue }}" [checked]="details.checked" (change)="selectCode()">
           <div>
             <label class="form-check-label title" for="{{ details.radioId }}">

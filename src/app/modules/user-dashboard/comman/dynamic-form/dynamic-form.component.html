@@ -431,7 +431,7 @@
           </label>
 
         </div>
-        <div *ngIf="(isAgreeTerms && submitted)" class="text-danger mt-2">
+        <div *ngIf="(!isAgreeTerms && submitted)" class="text-danger mt-2">
           This field is required.
         </div>
       </div>

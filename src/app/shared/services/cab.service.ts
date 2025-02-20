@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { cabClassic } from '../interface/cab-classic';
 import { cabMap } from '../interface/cab-map';
-import { cabDetails, cabs, cab, blog, testimonials, services } from '../interface/cab';
-import { driverDetails, drivers, driver } from '../interface/driver';
+import { cabDetails, cabs, cab, testimonials } from '../interface/cab';
+import { drivers } from '../interface/driver';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -16,6 +17,7 @@ export class CabService {
   public isOpenHorizontalFilter: boolean = false;
   public isOpenResponsiveHorizontal: boolean = false;
   public isOpenMapFilter: boolean = false;
+  baseUrl1 = environment.apiUrl1;
 
   // Get Currency
   public currencyItem = localStorage.getItem("currency");
@@ -96,6 +98,18 @@ export class CabService {
   // Testimonial
   testimonial(): Observable<testimonials> {
     return this.http.get<testimonials>('assets/json/testimonial.json')
+  }
+
+  // Master -> GetImportantNotice
+  public getImportantNotice(dataParams: any) {
+    const params = new HttpParams()
+      .set('code', dataParams.code)
+      .set('noticeType', dataParams.noticeType)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetImportantNotice', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 
 

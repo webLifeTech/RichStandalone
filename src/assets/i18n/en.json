@@ -126,7 +126,8 @@
       "supplier": "Fleet company",
       "mileage_kilometres": "Mileage/Kilometres",
       "car_electric": "Electric cars",
-      "car_specs": "Car specs"
+      "car_specs": "Car specs",
+      "shift": "Shift"
     },
     "car_type": {
       "mini": "Mini",
@@ -205,6 +206,10 @@
       "dollar": "Dollar",
       "hertz": "Hertz",
       "sixt": "Sixt"
+    },
+    "shift_option": {
+      "day": "Day Shift",
+      "night": "Night Shift"
     }
   },
   "booking_page": {

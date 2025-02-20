@@ -409,6 +409,9 @@ export class ProfileService {
   public getTermsAndConditions(dataParams: any) {
     const params = new HttpParams()
       .set('code', dataParams.code)
+      .set('city', dataParams.city)
+      .set('state', dataParams.state)
+      .set('country', dataParams.country)
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetTermsAndConditions', { params }).pipe(
       map((res: any) => {
         return res;

@@ -1,5 +1,18 @@
-<div class="section-b-space success-section">
+<section class="small-section section-b-space success-section pt-1">
   <div class="container">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div>
+          <a class="back_search" (click)="backToPackage()">
+            {{'Back to Package' | translate}}
+          </a>
+        </div>
+        <h5 class="deal">
+          {{'Package Subscription' | translate}}
+        </h5>
+      </div>
+    </div>
     <div class="row success-detail">
       <div class="col">
         <img src="assets/images/premium-icon.jpg" width="130px" class="img-fluid blur-up lazyload mb-0"
@@ -17,8 +30,7 @@
       </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="isShowInvoice" class="mb-5">
-  <app-subscription-template [type]="type"></app-subscription-template>
-</div>
+  <div *ngIf="isShowInvoice" class="mb-5">
+    <app-subscription-template [type]="type"></app-subscription-template>
+  </div>

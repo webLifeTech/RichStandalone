@@ -13,6 +13,8 @@ import { DeleteModalComponent } from '../../../../shared/components/comman/modal
 import { ProfileService } from '../../../../shared/services/profile.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { GlobalService } from '../../../../shared/services/global.service';
+import { BranchService } from '../../../../shared/services/branch.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dynamic-grid',
@@ -23,7 +25,8 @@ import { GlobalService } from '../../../../shared/services/global.service';
     NgbModule,
     NgxPaginationModule,
     MatMenuModule,
-    MatButtonModule
+    MatButtonModule,
+    FormsModule
   ],
   templateUrl: './dynamic-grid.component.html',
   styleUrl: './dynamic-grid.component.scss'
@@ -34,7 +37,7 @@ export class DynamicGridComponent {
   @Input() type: any = "";
   @Input() driverInfoData: any = {};
   @Input() selectedTabObj: any = {};
-  @Input() kycForm: any;
+  @Input() kycForm: any = {};
   @Output() onEditInfo = new EventEmitter<any>();
 
   formName: string = '';
@@ -49,6 +52,9 @@ export class DynamicGridComponent {
   filteredData: any[] = [];
   paginatedData: any[] = [];
 
+  isAdd: boolean = false;
+  searchText: any = '';
+
   @Output() actionEvent = new EventEmitter<any>();
 
 
@@ -61,32 +67,34 @@ export class DynamicGridComponent {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private toast: ToastService,
-    public gs: GlobalService
+    public gs: GlobalService,
+    private branchService: BranchService,
   ) {
   }
 
   ngOnInit() {
+    console.log("this.type >>>>>", this.type);
 
     if (this.type === 'my_vehicle') {
       this.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
-      // this.onEdit(this.filteredData[2]); // need to do
-    } else if (this.type === 'fleetOwner') {
-      this.formName = 'COMPANY INFO';
-      this.filteredData = this.data;
-      this.totalData = this.data.length;
-
-      // this.onEdit(this.filteredData[0]); // need to do
     } else {
+
       if (this.type === 'driver') {
         this.formName = 'DRIVER INFO';
       }
       if (this.type === 'individualCarOwner') {
         this.formName = 'CAR OWNER INFO';
       }
+      if (this.type === 'fleetOwner') {
+        this.formName = 'COMPANY INFO';
+      }
+      if (this.type === 'branch') {
+        this.formName = this.selectedTabObj.formName;
+      }
       this.filteredData = this.data;
-      this.totalData = this.data.length;
+      console.log("this.filteredData >>>>>", this.filteredData);
 
-      // this.onEdit(this.filteredData[0]); // need to do
+      this.totalData = this.data.length;
     }
     this.getConfigUIFields();
   }
@@ -148,8 +156,6 @@ export class DynamicGridComponent {
       });
 
       this.getSearchData();
-      console.log("this.groupedSectionsData >>>>>>>>>>", this.groupedSectionsData);
-
       this.gs.isSpinnerShow = false;
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
@@ -164,6 +170,11 @@ export class DynamicGridComponent {
       );
       return result;
     }, {});
+  }
+
+  onAdd() {
+    this.actionEvent.emit({ add: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onView(item: any) {
@@ -223,6 +234,24 @@ export class DynamicGridComponent {
             size: 'lg'
           });
           modalRef.componentInstance.viewInfoDetails = response;
+          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.result.then((res: any) => {
+          });
+        }
+      })
+    }
+
+    if (this.type === 'branch') {
+      const body = {
+        branchContactId: item.contactId
+      }
+
+      this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
+        if (response && response.contactId) {
+          const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+            size: 'lg'
+          });
+          modalRef.componentInstance.viewInfoDetails = { 'branch': response };
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
           });

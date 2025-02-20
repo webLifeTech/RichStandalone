@@ -289,6 +289,9 @@ export class CabListDetailsComponent {
   openImportantNoticeDialog(): void {
     this.dialog.open(ImportantNoticeDialogComponent, {
       width: '60%',
+      position: {
+        top: `24px`,
+      },
       data: {}
     });
   }

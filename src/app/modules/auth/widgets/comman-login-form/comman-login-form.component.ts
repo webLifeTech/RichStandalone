@@ -59,6 +59,7 @@ export class CommanLoginFormComponent {
       "username": "driver@gmail.com",
       "password": "123123",
       "role": "user",
+      "userRoleName": "Driver",
       "roleName": "53D8CF61-E99B-43A9-AA8F-4CE5B0E12872",
 
       // New york (Driver User)
@@ -79,6 +80,7 @@ export class CommanLoginFormComponent {
       "username": "individualcarowner@gmail.com",
       "password": "123123",
       "role": "user_2",
+      "userRoleName": "Individual car owner",
       "roleName": "E56F8C18-B4F6-4EE4-976D-A693AA6F98FF",
 
       // New york (Individualcarowner User)
@@ -100,15 +102,16 @@ export class CommanLoginFormComponent {
       "username": "fleetowner@gmail.com",
       "password": "123123",
       "role": "user_3",
+      "userRoleName": "Fleet owner",
       "roleName": "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
 
       // New york (Fleetowner User)
-      "userId": "2991e709-4966-4b64-beb4-4e9ff34f4a4f",
-      "contactId": 10066,
+      // "userId": "2991e709-4966-4b64-beb4-4e9ff34f4a4f",
+      // "contactId": 10066,
 
       // New york city (Fleetowner User)
-      // "userId": "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
-      // "contactId": 10081,
+      "userId": "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
+      "contactId": 10081,
 
       // Other (Fleetowner User)
       // "userId": "f7cce929-b2bf-422c-9383-35480e468ff0",
@@ -120,6 +123,7 @@ export class CommanLoginFormComponent {
       "username": "driverwithownedcar@gmail.com",
       "password": "123123",
       "role": "user_4",
+      "userRoleName": "Individual car owner",
       "roleName": "416D4E0F-32BB-4218-B2EA-499764D5F62E",
 
       // New york (Driverwithownedcar User 1)
@@ -177,6 +181,7 @@ export class CommanLoginFormComponent {
         this.loginForm.role = 'user';
         this.loginForm.name = 'Daniel Johshuva';
         this.loginForm.roleName = '53D8CF61-E99B-43A9-AA8F-4CE5B0E12872';
+        this.loginForm.userRoleName = 'Driver';
         this.loginForm.userId = "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5"
         this.loginForm.id = 101;
       }

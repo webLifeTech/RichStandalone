@@ -1,61 +1,36 @@
 <div class="pricing-page">
-  <section class="section pricing-section pt-5">
+  <section class="section pricing-section pt-5" [ngClass]="{'p-0': from === 'subscription'}">
     <div class="container">
       <div class="row">
-        <div class="col-12" data-aos="fade-down" data-aos-duration="1200" data-aos-delay="200">
+        <!-- <div *ngIf="from !== 'subscription'" class="col-12 mb-2" data-aos="fade-down" data-aos-duration="1200"
+          data-aos-delay="200">
           <div class="card pricing-title">
             Plans and Pricing
           </div>
+        </div> -->
+        <div class="col-lg-12 text-center mb-2">
+          <h5 class="deal">
+            {{'Package Subscription'}}
+          </h5>
         </div>
-        <div class="col-12" data-aos="fade-down" data-aos-duration="1200" data-aos-delay="200">
+        <div *ngIf="from !== 'subscription'" class="col-12" data-aos="fade-down" data-aos-duration="1200"
+          data-aos-delay="200">
           <div class="card top-toggel p-1 mb-5">
             <div class="d-grid gap-2 d-md-block">
-              <button type="button" (click)="changeType('driver')"
-                [ngClass]="{'selected btn-default' : activeTab === 'driver'}" class="btn no-text-transorm">
-                Driver Package
-              </button>
-              <button type="button" (click)="changeType('car_owner')"
-                [ngClass]="{'selected btn-default' : activeTab === 'car_owner'}" class="btn no-text-transorm">
-                Car Owner Package
-              </button>
-              <button type="button" (click)="changeType('fleet_owner')"
-                [ngClass]="{'selected btn-default' : activeTab === 'fleet_owner'}" class="btn no-text-transorm">
-                Fleet owner Package
-              </button>
+              <ng-container *ngFor="let item of filteredPackageList">
+                <button type="button" (click)="changeType(item)"
+                  [ngClass]="{'selected btn-default' : activeTab === item.Code}" class="btn no-text-transorm">
+                  {{item.Description}}
+                </button>
+              </ng-container>
             </div>
           </div>
         </div>
         <ng-container *ngFor="let item of pricingList">
-          <div class="col-sm-6 col-md px-2" data-aos="fade-down" data-aos-duration="1200" data-aos-delay="300">
-            <div class="price-card price-card-popular">
-              <div class="price-head">
-                <div [style.background-color]="item.color" class="price-level price-level-popular">
-                  <h6>{{item.plan_name}}</h6>
-                  <p>{{item.title}}</p>
-                </div>
-                <h4 *ngIf="item.price === 'Free'">{{item.price}}</h4>
-                <h4 *ngIf="item.price !== 'Free'">{{item.price | currencyPipe: gs.currency}}</h4>
-                <span>Per Month</span>
-              </div>
-              <div class="price-details">
-                <ul>
-                  <ng-container *ngFor="let row of item['benefits']">
-                    <li class="price-check">
-                      <span>
-                        <i class="feather icon-check-circle"></i>
-                      </span>
-                      {{row.name}} : <strong [style.color]="item.color">{{row.value}}</strong>
-                    </li>
-                  </ng-container>
-                </ul>
-                <div class="text-center mb-3">
-                  <a (click)="subscribe(item)" class="btn btn-theme  no-text-transorm"
-                    [style.background-color]="item.color">
-                    Subscribe
-                  </a>
-                </div>
-              </div>
-            </div>
+          <div class="col-sm-6 px-2 mb-3"
+            [ngClass]="{'col-md-4': from === 'subscription', 'col-md': from !== 'subscription'}" data-aos="fade-down"
+            data-aos-duration="1200" data-aos-delay="300">
+            <app-package-card [item]="item" (onSubscribe)="subscribe($event)"></app-package-card>
           </div>
         </ng-container>
       </div>

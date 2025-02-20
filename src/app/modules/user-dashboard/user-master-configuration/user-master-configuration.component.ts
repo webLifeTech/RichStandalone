@@ -12,6 +12,14 @@ import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.compon
 import { DriverDetailsFormComponent } from '../comman/driver-details-form/driver-details-form.component';
 import { PaymentOptionListComponent } from '../comman/account-info/payment-option-list/payment-option-list.component';
 import { BranchbranchListComponent } from '../comman/branch-info/branch-list/branch-list.component';
+import { PricingComponent } from '../../other/pricing/pricing.component';
+import { PlanSubscribeComponent } from '../../other/pricing/plan-subscribe/plan-subscribe.component';
+import { PackageCardComponent } from '../../other/pricing/package-card/package-card.component';
+import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
+import { PaymentSuccessComponent } from '../../../shared/components/comman/payment-success/payment-success.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { PackageSubscriptionComponent } from '../comman/package-subscription/package-subscription.component';
+import { BranchService } from '../../../shared/services/branch.service';
 
 @Component({
   selector: 'app-user-master-configuration',
@@ -22,14 +30,17 @@ import { BranchbranchListComponent } from '../comman/branch-info/branch-list/bra
     DriverDetailsFormComponent,
     PaymentOptionListComponent,
     BranchbranchListComponent,
+    PlanSubscribeComponent,
+    PackageCardComponent,
+    PaymentSuccessComponent,
+    PackageSubscriptionComponent,
 
     CommonModule,
     FormsModule,
-    RouterLink,
-    RouterLinkActive,
     NgbModule,
     TranslateModule,
-    RouterOutlet
+    CurrencySymbolPipe,
+    NgxPaginationModule,
   ],
   templateUrl: './user-master-configuration.component.html',
   styleUrl: './user-master-configuration.component.scss'
@@ -40,12 +51,17 @@ export class UserMasterConfigurationComponent {
     state: 42,
     menuId: 29
   }
+  selectedPackage: any = "";
   activeKycTab: any = "";
   sidebarTabs: any = []; // All Main Side bar Tabs
+  gridInfoData: any = [];
   singleDetailInfo: any = {};
   selectedTabObj: any = {};
   isFormEdit: boolean = false;
   isVehicleInfoEdit: boolean = false;
+  isUpgradePlan: boolean = false;
+  subscriptionStep: any = 1;
+  isAddEdit: boolean = false;
 
   // Vehicle List Columns and Data
   myVehicleColumns = [
@@ -59,13 +75,30 @@ export class UserMasterConfigurationComponent {
   driverActions = ['View', 'Edit'];
   myVehicleActions = ['View', 'Edit'];
 
+  // Vehicle List Columns and Data
+  branchInfoColumns = [
+    { header: 'DBA Name', fieldObject: null, field: 'dbaName' },
+    { header: 'Contact Number', fieldObject: null, field: 'phoneNumber' },
+    { header: 'Email ID', fieldObject: null, field: 'emailId' },
+    { header: 'City', fieldObject: null, field: 'city' },
+  ];
+
+  // Actions grids
+  branchInfoActions = ['View', 'Edit'];
+
+
+
   constructor(
     private route: ActivatedRoute,
     private toast: ToastService,
     public gs: GlobalService,
     private profileService: ProfileService,
-
+    private branchService: BranchService,
   ) {
+    this.route.queryParams.subscribe((params: any) => {
+      this.selectedPackage = params.packageId;
+    })
+
     this.getConfigUIForms();
   }
 
@@ -95,19 +128,63 @@ export class UserMasterConfigurationComponent {
 
   filter() {
     this.activeKycTab = "";
+    let activeInx = 0;
     setTimeout(() => {
-      this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
-      this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
+
+      if (this.selectedPackage) {
+        activeInx = this.sidebarTabs.findIndex((i: any) => i.formId == 18);
+      }
+
+      const sidebarTab = this.sidebarTabs[activeInx];
+      this.selectedTabObj = sidebarTab; // need to do 0
+      this.activeKycTab = sidebarTab.formId; // need to do 0
       for (let i in this.sidebarTabs) {
         this.sidebarTabs[i].isHidden = false;
+      }
+
+      if (sidebarTab.formId == 6) {
+        this.getAllCompanies();
       }
     }, 200);
     return;
   }
 
+  getAllCompanies() {
+    this.gs.isLicenseVerified = false;
+    this.profileService.getAllCompanies({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      if (response && response.length) {
+        console.log("response[0] >>>>>>>", response[0]);
+        this.kycForm.contactId = response[0].contactId;
+        this.gs.isLicenseVerified = true;
+        this.kycForm.isAddSearchSection = true;
+        this.getCompanyBranches();
+      }
+      console.log("getAllDrivers >>>>>", response);
+    })
+  }
+
+  getCompanyBranches() {
+    this.gs.isLicenseVerified = false;
+    this.gridInfoData = [];
+    this.branchService.GetAlLCompanyBranches({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      console.log("getAllDrivers >>>>>", response);
+      if (response && response.length) {
+        this.gridInfoData = response;
+      }
+    })
+  }
+
   changeKycTab(tab: any) {
+    this.kycForm.isAddSearchSection = false;
     this.selectedTabObj = JSON.parse(JSON.stringify(tab));
     this.activeKycTab = tab.formId;
+    if (this.selectedTabObj.formId == 6) {
+      this.getAllCompanies();
+    }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -118,18 +195,31 @@ export class UserMasterConfigurationComponent {
 
   handleSubmit() {
     // this.getDriverDetails();
+    this.isAddEdit = false;
+    if (this.selectedTabObj.formId == 6) {
+      this.getCompanyBranches();
+    }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleCancel() {
     this.isFormEdit = false;
+    this.isAddEdit = false;
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
-    // this.getDriverDetails();
+    if (this.selectedTabObj.formId == 6) {
+      this.getCompanyBranches();
+    }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleAction(event: any, type: any) {
+    console.log("event >>>>>>", event);
+
+    if (event.add) {
+      this.isAddEdit = true;
+      return;
+    }
     const singleDetail = event.singleDetail;
     if (type === 'my_vehicle') {
       const body = {
@@ -146,6 +236,41 @@ export class UserMasterConfigurationComponent {
         }
       })
     }
+
+    if (type === 'branch') {
+      const body = {
+        branchContactId: singleDetail.contactId
+      }
+
+      this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
+        if (response && response.contactId) {
+          this.isFormEdit = true;
+          this.isAddEdit = true;
+          this.singleDetailInfo = { 'branch': response };
+        }
+      })
+    }
   }
+
+  handleSubscribed() {
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+    this.subscriptionStep = 2;
+  }
+  handleConfirm() {
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+    this.subscriptionStep = 3;
+  }
+  handleBack(step: any) {
+    console.log("step >>>>>", step);
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+    this.subscriptionStep = step;
+  }
+
+  onUpgradePlan() {
+    this.isUpgradePlan = true;
+    window.scrollTo({ top: 800, behavior: 'smooth' });
+  }
+
+
 
 }

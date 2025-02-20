@@ -12,7 +12,7 @@
           <li class="nav-item" [hidden]="tab.isHidden">
             <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
               (click)="changeKycTab(tab)">
-              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
+              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
             </a>
           </li>
           }
@@ -25,17 +25,6 @@
   <div class="col-lg-9">
     <div class="dashboard-box">
       <div class="position-relative">
-        <!-- VEHICLE OTHER DETAILS -->
-        <!-- <div *ngIf="activeKycTab === 14">
-          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
-            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
-        </div>
-        <div *ngIf="activeKycTab === 15">
-          <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
-            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
-        </div> -->
 
         <!--  Driver details -->
         <div *ngIf="activeKycTab === 3">
@@ -51,7 +40,19 @@
 
         <!-- Branch Info / Office Details -->
         <div *ngIf="activeKycTab === 6">
-          <app-branch-list></app-branch-list>
+
+          <!-- <app-branch-list></app-branch-list> -->
+          <ng-container *ngIf="!isAddEdit && gridInfoData.length">
+            <app-dynamic-grid [type]="'branch'" [data]="gridInfoData" [kycForm]="kycForm"
+              [selectedTabObj]="selectedTabObj" [columns]="branchInfoColumns" [actions]="branchInfoActions"
+              (actionEvent)="handleAction($event, 'branch')"></app-dynamic-grid>
+          </ng-container>
+
+          <ng-container *ngIf="isAddEdit">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'branch'" [isEditInfo]="isFormEdit"
+              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+          </ng-container>
         </div>
 
         <!-- My Vehicle -->
@@ -66,6 +67,20 @@
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
             (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
             [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+        </div>
+
+        <div *ngIf="activeKycTab === 18">
+          <ng-container *ngIf="subscriptionStep == 1">
+            <app-package-subscription [isUpgradePlan]="isUpgradePlan" (onHandleSubscribed)="handleSubscribed()"
+              (onHandleUpgradePlan)="onUpgradePlan()"></app-package-subscription>
+          </ng-container>
+          <ng-container *ngIf="subscriptionStep == 2">
+            <app-plan-subscribe [from]="'subscription'" (onHandleSubmit)="handleConfirm()"
+              (onHandleBack)="handleBack($event)"></app-plan-subscribe>
+          </ng-container>
+          <ng-container *ngIf="subscriptionStep == 3">
+            <app-payment-success (onHandleBack)="handleBack($event)"></app-payment-success>
+          </ng-container>
         </div>
 
       </div>

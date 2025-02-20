@@ -12,7 +12,7 @@
           <li class="nav-item" [hidden]="tab.isHidden">
             <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
               (click)="changeKycTab(tab)">
-              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
+              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
             </a>
           </li>
           }

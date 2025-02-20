@@ -5,12 +5,16 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { CabService } from '../../../services/cab.service';
+import { GlobalService } from '../../../services/global.service';
+import { HtmlTextComponent } from '../../comman/html-text/html-text.component';
 
 
 @Component({
   selector: 'app-important-notice-dialog',
   standalone: true,
   imports: [
+    HtmlTextComponent,
     CommonModule,
     MatExpansionModule,
     MatDialogModule,
@@ -767,12 +771,38 @@ export class ImportantNoticeDialogComponent {
     // { title: 'Damage Excess', content: '$0.00 If the car’s bodywork was damaged during your rental, you would nt pay anything at all towards repairs.This cover is only valid if you stick to the terms of the rental agreement. It doesnt cover other parts of the car (e.g. windows, wheels, interior or undercarriage), or charges (e.g. for towing or off-road time), or anything in the car (e.g. child seats, GPS devices or personal belongings).' },
   ];
 
+  content: any = "";
+  termsAndConditionsObj: any = {};
+
   constructor(
     public dialogRef: MatDialogRef<ImportantNoticeDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public cabService: CabService,
+    public gs: GlobalService,
+  ) {
+    this.getImportantNotice();
+  }
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  getImportantNotice() {
+    let body = {
+      "code": "IMPINFO",
+      "noticeType": 0
+    }
+    this.gs.isSpinnerShow = true;
+    this.cabService.getImportantNotice(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>>", response);
+      if (response && response.noticeDescription) {
+        this.termsAndConditionsObj = response;
+        // console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
+        this.content = response.noticeDescription;
+      }
+    }, err => {
+      this.gs.isSpinnerShow = false;
+    })
   }
 }

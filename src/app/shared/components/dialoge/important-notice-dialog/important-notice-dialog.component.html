@@ -8,7 +8,8 @@
   </h1>
   <div mat-dialog-content class="custom-accordion">
     <br>
-    <mat-accordion>
+    <app-html-text *ngIf="content" [content]="content"></app-html-text>
+    <!-- <mat-accordion>
       <mat-expansion-panel *ngFor="let section of sections; let i = index">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -286,7 +287,6 @@
               based on your use of the rental, such as driving cross border and, if any, pick-up and
               drop-off grace periods.</div>
           </div>
-
         </ng-container>
         <p>{{ section.content }}</p>
 
@@ -306,8 +306,32 @@
             </ng-container>
           </mat-expansion-panel>
         </mat-accordion>
+        <div class="accordion accordion-flush" id="accordionExample">
+          <div *ngFor="let subRow of section['accordion']; let idx = index" class="accordion-item">
+            <h2 class="accordion-header">
+              <button style="font-size: 18px;font-weight: 700;" class="accordion-button" [ngClass]="{'collapsed': idx }"
+                type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse'+idx" aria-expanded="true"
+                [attr.aria-controls]="'collapse'+idx">
+                {{ subRow.title }}
+              </button>
+            </h2>
+            <div [id]="'collapse'+idx" class="accordion-collapse collapse" [ngClass]="{'show': !idx }"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p style="font-size: 15px;font-size: 16px;">{{ subRow.sections.heading }}</p>
+                <ng-container *ngFor="let secondRow of subRow['sections']['content']">
+                  <h5 style="font-weight: 700;">{{ secondRow.subheading }}</h5>
+                  <ng-container *ngFor="let thirdRow of secondRow['details']">
+                    <p style="color: #616161;font-size: 13px;">{{ thirdRow.text }}</p>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
       </mat-expansion-panel>
-    </mat-accordion>
+
+    </mat-accordion> -->
   </div>
 
 

@@ -422,4 +422,18 @@ export const carDepositeRequired = [
   },
 ]
 
+export const shiftOptions = [
+  {
+    id: 1,
+    title: "car_list_page.shift_option.day",
+    checkId: "day",
+    availability: 4,
+  },
+  {
+    id: 2,
+    title: "car_list_page.shift_option.night",
+    checkId: "night",
+    availability: 5,
+  },
+]
 

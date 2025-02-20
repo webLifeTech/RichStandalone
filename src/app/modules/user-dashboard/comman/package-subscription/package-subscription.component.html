@@ -1,0 +1,151 @@
+<div *ngIf="currentPlan && currentPlan?.package" class="card dash-box-card flex-fill mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12">
+        <h3 class="text-cyan bold">Current Plan</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-history current-plan">
+    <div class="row p-0">
+
+      <div class="col-md-6">
+        <div class="widget-box widget-box-border d-flex align-items-center">
+          <div class="price-card price-card-popular">
+            <div class="price-head">
+              <div class="price-level price-level-popular">
+                <h6>{{currentPlan.package.packageName}}</h6>
+                <p>{{currentPlan.package.packageDescription}}</p>
+              </div>
+              <h4 *ngIf="currentPlan.package.price === 'Free'">{{currentPlan.package.price}}</h4>
+              <h4 *ngIf="currentPlan.package.price !== 'Free'">{{currentPlan.package.price | currencyPipe: gs.currency}}
+              </h4>
+              <span>{{currentPlan.package.period}}</span>
+            </div>
+            <div class="price-details">
+              <ul>
+                <ng-container *ngFor="let row of currentPlan['packageDetails']">
+                  <li class="price-check">
+                    <span>
+                      <i class="feather icon-check-circle"></i>
+                    </span>
+                    {{row.name}} :
+                    <strong *ngIf="row.isUnlimited" [style.color]="currentPlan.color">
+                      Unlimited
+                    </strong>
+                    <strong *ngIf="!row.isUnlimited" [style.color]="currentPlan.color">
+                      {{row.description}}
+                    </strong>
+                  </li>
+                </ng-container>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="widget-box">
+          <div class="current-plan">
+            <!-- Start Date -->
+            <div class="flight_detail">
+              <div class="summery_box">
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td class="bold">{{'Start Date' | translate}}</td>
+                      <td class="bold">{{currentPlan?.packTransaction.startDate}}</td>
+                    </tr>
+                    <tr>
+                      <td class="bold">{{'Expiry date' | translate}}</td>
+                      <td class="bold">{{currentPlan?.packTransaction.endDate}}</td>
+                    </tr>
+                    <tr>
+                      <td class="bold">{{'Remaining Days' | translate}}</td>
+                      <td class="bold">{{currentPlan?.packTransaction.remainingDays}}</td>
+                    </tr>
+                    <tr>
+                      <td class="bold">{{'Package' | translate}}</td>
+                      <td class="bold">{{currentPlan.package.packageName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="grand_total">
+                  <a (click)="handleSubscribed()" class="btn btn-theme no-text-transorm">
+                    <i class="feather icon-refresh-cw me-2"></i> Renew
+                  </a>
+                </div>
+                <div class="grand_total  mt-3">
+                  <a (click)="onUpgradePlan()" class="btn btn-theme no-text-transorm"
+                    style="background-color: rgb(53, 166, 68);">
+                    <i class="feather icon-trending-up me-2"></i> Upgrade Plan
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="isUpgradePlan || !(currentPlan && currentPlan?.package)">
+  <app-pricing [from]="'subscription'" (onHandleSubmit)="handleSubscribed()"></app-pricing>
+</ng-container>
+
+<div class="row" *ngIf="tableData.length">
+  <div class="col-lg-12 d-flex">
+    <div class="card book-card flex-fill mb-0">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col-md-5">
+            <h4>Subscription History</h4>
+          </div>
+
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive dashboard-table  mb-4">
+          <table class="table datatable">
+            <thead class="thead-light">
+              <tr>
+                <th>#Sn</th>
+                <th>Package Name</th>
+                <th>Price</th>
+                <th>Start Date</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+                *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+                <tr>
+                  <td>{{idx+1}}</td>
+                  <td>
+                    <div class="table-avatar">
+                      <div class="table-head-name flex-grow-1">
+                        <a class="mb-0">{{item.packageName}}</a>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-success-light">
+                    {{item.packagePrice | currencyPipe: gs.currency}}
+                  </td>
+                  <td>{{item.startDate}}</td>
+                  <td>{{item.endDate}}</td>
+                  <td>
+                    <span
+                      [ngClass]="{ 'badge-light-success': item.status === 'Active','badge-light-danger':(item.status === 'Expired' || item.status === 'Canceled') }"
+                      class="badge">{{item.status}}</span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>

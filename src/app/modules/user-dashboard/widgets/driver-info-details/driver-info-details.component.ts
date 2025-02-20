@@ -107,9 +107,6 @@ export class DriverInfoDetailsComponent {
         this.groupedSectionsData.push(section);
       });
 
-      console.log("this.groupedSectionsData >>>>>>>>>>", this.groupedSectionsData);
-
-
       this.gs.isSpinnerShow = false;
     }, (err: any) => {
       this.gs.isSpinnerShow = false;

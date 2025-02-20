@@ -1,0 +1,40 @@
+<div class="price-card price-card-popular" [ngClass]="{'selected-price-card': params.packageId == item.packageId}">
+  <div class="price-head">
+    <div [style.background-color]="item.color" class="price-level price-level-popular">
+      <h6>{{item.packageName}}</h6>
+      <p>{{item.packageDescription}}</p>
+    </div>
+    <h4 *ngIf="item.price === 'Free'">{{item.price}}</h4>
+    <h4 *ngIf="item.price !== 'Free'">{{item.price | currencyPipe: gs.currency}}</h4>
+    <span>{{item.period}}</span>
+  </div>
+  <div class="price-details">
+    <ul>
+      <ng-container *ngFor="let row of item['packageDetails']">
+        <li class="price-check">
+          <span>
+            <i class="feather icon-check-circle"></i>
+          </span>
+          {{row.name}} :
+          <strong *ngIf="row.isUnlimited" [style.color]="item.color">
+            Unlimited
+          </strong>
+          <strong *ngIf="!row.isUnlimited" [style.color]="item.color">
+            {{row.description}}
+            <!-- {{row.value}}  -->
+          </strong>
+        </li>
+      </ng-container>
+    </ul>
+    <div class="text-center">
+      <a *ngIf="item.purchased" (click)="subscribe(item)" class="btn btn-theme  no-text-transorm"
+        [style.background-color]="item.color">
+        Purchased
+      </a>
+      <a *ngIf="!item.purchased" (click)="subscribe(item)" class="btn btn-theme  no-text-transorm"
+        [style.background-color]="item.color">
+        Subscribe
+      </a>
+    </div>
+  </div>
+</div>

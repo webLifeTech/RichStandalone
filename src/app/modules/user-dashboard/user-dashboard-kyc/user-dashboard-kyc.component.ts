@@ -265,8 +265,8 @@ export class UserDashboardKycComponent {
       this.kycForm.state = null;
     }
     this.sidebarTabs = [];
-    this.kycForm.state = 42; // need to do for direct
-    this.onSelectState() // // need to do for direct
+    // this.kycForm.state = 42; // need to do for direct
+    // this.onSelectState() // // need to do for direct
     if (this.kycForm.i_am != 2) {
       this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
     }

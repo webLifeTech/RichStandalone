@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
 import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 import { TermsAndCModalComponent } from '../../../../shared/components/comman/modal/t-and-c-modal/t-and-c-modal.component';
+import { BranchService } from '../../../../shared/services/branch.service';
 
 
 @Component({
@@ -76,7 +77,7 @@ export class DynamicFormComponent {
     '0': { pattern: new RegExp('[a-zA-Z0-9]') }  // Define the pattern for 0 (alphanumeric)
   };
 
-  isAgreeTerms: boolean = false;
+  isAgreeTerms: boolean = true; // need to do
 
   profileUrl: any = "";
 
@@ -87,6 +88,7 @@ export class DynamicFormComponent {
     private profileService: ProfileService,
     private datePipe: DatePipe,
     private modalService: NgbModal,
+    private branchService: BranchService,
   ) {
     this.dynamicForm = this.fb.group({
       sections: this.fb.array([])
@@ -1450,12 +1452,14 @@ export class DynamicFormComponent {
     console.log('this.kycForm.state >>>>', this.kycForm.state);
     console.log('findInvalidControls >>>>', getFormInfo);
     console.log('sections >>>>', this.dynamicForm.value.sections);
+
+    console.log("this.formType >>>>>", this.formType)
     // return
     this.submitted = true;
     if (getFormInfo.valid) { // need to do
       let finalBody: any = {};
 
-      if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload') {
+      if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch') {
         this.dynamicForm.value.sections.forEach((section: any) => {
           section.fields.forEach((field: any) => {
             let sectionData: any = {};
@@ -1496,8 +1500,6 @@ export class DynamicFormComponent {
         });
       }
 
-      console.log("this.formType >>>>>", this.formType)
-
       if (this.formType === 'driver' || this.formType === 'individualCarOwner') {
 
         console.log("finalBody >>>>>>", finalBody);
@@ -1518,6 +1520,62 @@ export class DynamicFormComponent {
         // return; // need to do
 
         this.profileService.insertAndUpdateDriverKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
+          console.log("res >>>>>", res);
+          this.gs.isSpinnerShow = false;
+          if (res && res.statusCode == "200") {
+            this.toast.successToastr(res.message);
+            this.onHandleSubmit.emit(null)
+          } else {
+            this.toast.errorToastr(res.message);
+          }
+        }, (err: any) => {
+          this.toast.errorToastr("Something went wrong");
+          this.gs.isSpinnerShow = false;
+        })
+      }
+
+      if (this.formType === 'branch') {
+
+        finalBody.branch["companyContactId"] = this.kycForm.contactId;
+        finalBody.branch["contactId"] = null;
+        finalBody.branch["phoneTypeId"] = null;
+        finalBody.branch["emailTypeId"] = null;
+        finalBody.branch["mapLocation"] = null;
+        finalBody.branch["addressTypeId"] = null;
+        finalBody.branch["addressId"] = null;
+        finalBody.branch["currentInd"] = true;
+        finalBody.branch["isPrimaryAddress"] = true;
+
+        console.log("finalBody >>>>>>", finalBody.branch);
+
+        const dd = {
+          "dbaName": null,
+          "phoneNumber": null,
+          "emailId": null,
+          "addr1": null,
+          "addr2": null,
+          "postalCode": null,
+          "city": null,
+          "country": null,
+          "countryCd": null,
+          "state": null,
+          "stateCd": null,
+          "companyContactId": null,
+          "contactId": null,
+          "phoneTypeId": null,
+          "emailTypeId": null,
+          "mapLocation": null,
+          "addressTypeId": null,
+          "addressId": null,
+          "currentInd": true,
+          "isPrimaryAddress": true,
+        }
+        // return; // need to do
+
+        this.branchService.InsertAndUpdateCompanyBranch(finalBody.branch, {
+          companyContactId: this.kycForm.contactId,
+          userId: this.gs.loggedInUserInfo.userId,
+        }).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
@@ -1773,9 +1831,7 @@ export class DynamicFormComponent {
             "id": null,
             "ownerId": this.singleDetailInfo.vehicleInfo.userId,
             "riskId": this.singleDetailInfo.vehicleInfo.vehicleId,
-            "code": "LOC001",
-            "name": "Location One",
-            "riskType": "fire",
+            "riskType": "Vehicle",
             "isActive": true,
           },
           "userId": this.singleDetailInfo.vehicleInfo.userId,
@@ -1886,7 +1942,9 @@ export class DynamicFormComponent {
     if (section.value.sectionID === "12") {
       this.updateFleetOwnerInfo(finalBody);
     }
-
+    if (section.value.sectionID === "13") {
+      this.updateCompanyBranch(finalBody);
+    }
     if (section.value.sectionID === "14") {
       this.updateVehicleInfo(finalBody);
     }
@@ -2204,6 +2262,41 @@ export class DynamicFormComponent {
     })
   }
 
+  // updateVehicleInfo
+  async updateCompanyBranch(finalBody: any) {
+    let Body = {
+      "companyContactId": this.singleDetailInfo.branch.companyContactId,
+      "contactId": this.singleDetailInfo.branch.contactId,
+      "phoneTypeId": this.singleDetailInfo.branch.phoneTypeId,
+      "emailTypeId": this.singleDetailInfo.branch.emailTypeId,
+      "mapLocation": this.singleDetailInfo.branch.mapLocation,
+      "addressTypeId": this.singleDetailInfo.branch.addressTypeId,
+      "addressId": this.singleDetailInfo.branch.addressId,
+      "currentInd": this.singleDetailInfo.branch.currentInd,
+      "isPrimaryAddress": this.singleDetailInfo.branch.isPrimaryAddress,
+      // "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
+      ...finalBody
+    }
+    console.log("Body >>>>>", Body)
+    // return; // need to do
+
+    this.branchService.InsertAndUpdateCompanyBranch(Body, {
+      companyContactId: this.kycForm.contactId,
+      userId: this.gs.loggedInUserInfo.userId,
+    }).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
   // From Cancel
   handleCancel() {
     this.cancel.emit(null);
@@ -2340,7 +2433,8 @@ export class DynamicFormComponent {
     console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
 
     const modalRef = this.modalService.open(TermsAndCModalComponent, {
-      size: 'xl',
+      size: 'lg',
+      scrollable: true,
     });
     modalRef.componentInstance.termCode = this.selectedTabObj.termCode;
     modalRef.result.then((res: any) => {

@@ -6,6 +6,11 @@ import { CommonModule } from '@angular/common';
 import { HtmlTextComponent } from '../../html-text/html-text.component';
 import { ProfileService } from '../../../../services/profile.service';
 import { GlobalService } from '../../../../services/global.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-t-and-c-modal',
@@ -14,7 +19,13 @@ import { GlobalService } from '../../../../services/global.service';
     HtmlTextComponent,
     CommonModule,
     NgSelectModule,
-    FormsModule
+    FormsModule,
+
+    MatExpansionModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule
   ],
   templateUrl: './t-and-c-modal.component.html',
   styleUrl: './t-and-c-modal.component.scss'
@@ -41,11 +52,16 @@ export class TermsAndCModalComponent {
   getTermsAndConditions() {
     let body = {
       "code": this.termCode,
+      "city": null,
+      "state": null,
+      "country": null,
     }
     this.profileService.getTermsAndConditions(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.id) {
+      if (response && response.description) {
         this.termsAndConditionsObj = response;
+        console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
+
         this.content = response.description;
       }
     }, err => {

@@ -71,7 +71,7 @@
         <owl-date-time #drop></owl-date-time>
       </div>
     </div>
-    <div id="type" class="col">
+    <div *ngIf="!searchObj.type" class="col">
       <div class="form-group">
         <label class="font-xs-white">{{ 'global.type' | translate }}</label>
         <select [(ngModel)]="searchObj.type" name="type" id="type" class="form-control open-select"
@@ -79,6 +79,18 @@
           <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' | translate }}</option>
           <option value="car">Car</option>
           <option value="driver">Driver</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="searchObj.type" class="col">
+      <div class="form-group">
+        <label class="font-xs-white">{{ 'global.type' | translate }}</label>
+        <!-- (change)="applyFilter($event)" -->
+        <select [(ngModel)]="searchObj.timeType" name="type" id="type" class="form-control open-select">
+          <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' | translate }}</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
         </select>
       </div>
     </div>
