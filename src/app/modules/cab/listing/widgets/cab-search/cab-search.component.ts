@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CabService } from '../../../../../shared/services/cab.service';
 
 @Component({
   selector: 'app-cab-search',
@@ -16,6 +18,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     TranslateModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgSelectModule,
   ],
   templateUrl: './cab-search.component.html',
   styleUrl: './cab-search.component.scss'
@@ -24,7 +27,7 @@ export class CabSearchComponent {
 
   @Input() searchFrom: any;
 
-  public isSearchVisible: boolean = false;
+  public isSearchVisible: boolean = true; // need to do
   public isShow: boolean = false;
   searchInfo: any = {}
   public searchObj: any = {
@@ -42,12 +45,13 @@ export class CabSearchComponent {
   windowHeight: number;
   // public selectedValue: string = 'option2';
   public params: Params;
-
+  locationArray: any = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public gs: GlobalService
+    public gs: GlobalService,
+    public cabService: CabService,
   ) {
     this.searchInfo = this.gs.getLastSearch();
     if (this.searchInfo.location_type) {
@@ -108,5 +112,37 @@ export class CabSearchComponent {
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation
     });
+  }
+
+  onSearchLocation() {
+    console.log("this.searchObj.pick_up_location >>>>>", this.searchObj.same_location.length);
+
+    if (this.searchObj.same_location.length < 2) {
+      this.locationArray = [];
+      return;
+    }
+    let body = {
+      "location": this.searchObj.same_location,
+      "risktype": 'vehicle'
+    }
+    this.gs.isSpinnerShow = true;
+    this.cabService.GetLocations(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>>", response);
+      if (response && response.getLocations && response.getLocations.length) {
+        this.locationArray = response.getLocations;
+        console.log("this.locationArray >>>>>", this.locationArray);
+
+        // console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
+      }
+    }, err => {
+      this.gs.isSpinnerShow = false;
+    })
+    // this.searchObj.location_type = (event.target as HTMLInputElement).value;
+  }
+
+  selectLocation(location: string) {
+    this.searchObj.same_location = location;
+    this.locationArray = []; // Hide dropdown after selection
   }
 }

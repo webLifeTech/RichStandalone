@@ -112,5 +112,16 @@ export class CabService {
     );
   }
 
+  // KYC -> GetLocations
+  public GetLocations(dataParams: any) {
+    const params = new HttpParams()
+      .set('location', dataParams.location)
+      .set('risktype', dataParams.risktype)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetLocations', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
 }

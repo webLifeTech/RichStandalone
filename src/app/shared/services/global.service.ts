@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PdfViewerModalComponent } from '../components/comman/modal/pdf-viewer-modal/pdf-viewer-modal.component';
 import { ToastService } from './toast.service';
+import * as XLSX from 'xlsx';
+
 // import { DatePipe } from '@angular/common';
 
 @Injectable({
@@ -160,5 +162,27 @@ export class GlobalService {
         return res;
       })
     );
+  }
+
+  readExcel(file: File): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        // Assuming the first sheet contains the data
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convert sheet to JSON
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+        resolve(jsonData);
+      };
+
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
   }
 }

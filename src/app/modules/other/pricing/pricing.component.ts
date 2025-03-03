@@ -91,12 +91,25 @@ export class PricingComponent {
     }, err => {
       this.gs.isSpinnerShow = false;
     })
-    // this.pricingS.getPricing().subscribe((apiRes: any) => {
-    //   this.obj = apiRes;
-    //   this.pricingList = apiRes['driver_package'];
-    //   this.changeType(this.filteredPackageList[0].role);
-    // });
   }
+
+  // getCurrentPackageDetails() {
+  //   let body = {
+  //     "packageId": this.params.packageId || null,
+  //     "packageCode": null,
+  //     "userId": this.gs.loggedInUserInfo.userId || null,
+  //   }
+  //   this.gs.isSpinnerShow = true;
+  //   this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
+  //     this.gs.isSpinnerShow = false;
+  //     console.log("getCurrentPackageDetails >>>>>", response);
+  //     if (response && response.package) {
+  //       this.currentPlan = response;
+  //     }
+  //   }, err => {
+  //     this.gs.isSpinnerShow = false;
+  //   })
+  // }
 
   changeType(item: any) {
     this.activeTab = item.Code;

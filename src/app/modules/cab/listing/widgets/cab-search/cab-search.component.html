@@ -43,13 +43,19 @@
     </div>
     <div class="col"
       [ngClass]="{ 'd-none': searchObj.location_type == 'option1', 'd-block': searchObj.location_type == 'option2' }">
-      <div class="form-group">
+      <div class="form-group position-relative">
         <label class="font-xs-white">
           {{ 'global.location' | translate }}
         </label>
-        <input [(ngModel)]="searchObj.same_location" name="same_location" type="text" value="Toulouse"
+        <input [(ngModel)]="searchObj.same_location" (keyup)="onSearchLocation()" name="same_location" type="text"
           class="form-control open-select" placeholder="drop off">
         <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+
+        <ul class="location-dropdown" *ngIf="locationArray.length > 0">
+          <li *ngFor="let location of locationArray" (click)="selectLocation(location.address)">
+            {{ location.address }}
+          </li>
+        </ul>
       </div>
     </div>
     <div class="col">

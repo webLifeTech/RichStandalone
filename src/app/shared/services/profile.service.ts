@@ -331,13 +331,25 @@ export class ProfileService {
   }
 
 
-  // MVR -> Get MVR Details
+  // MVR -> Get MVR Details By GetVindecode
   public getVindecode(dataParams: any) {
     // GET TLHUB/VIN/GetVindecode ? vinNumber = { vinNumber } & userId={ userId }
     const params = new HttpParams()
       .set('vinNumber', dataParams.vinNumber)
       .set('userId', dataParams.userId);
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VIN/GetVindecode', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // MVR -> Get MVR Details by GetVinQuery
+  public getVinQuery(dataParams: any) {
+    // GET TLHUB/VIN/GetVindecode ? vinNumber = { vinNumber } & userId={ userId }
+    const params = new HttpParams()
+      .set('vinNumber', dataParams.vinNumber)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VIN/GetVinQuery', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -413,6 +425,35 @@ export class ProfileService {
       .set('state', dataParams.state)
       .set('country', dataParams.country)
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetTermsAndConditions', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> bulkVehicleUpload
+  public bulkVehicleUpload(data: any, dataParams: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/bulkVehicleUpload?userId=${dataParams.userId}`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> GetKYCDraftByUserId
+  public GetKYCDraftByUserId(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetKYCDraftByUserId', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> KYCInsertDraft
+  public KYCInsertDraft(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/KYCInsertDraft`, data).pipe(
       map((res: any) => {
         return res;
       })

@@ -134,9 +134,13 @@
             </div>
 
             <ng-container *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
+              <!-- <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
+                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="handleCancel()"
+                [selectedTabObj]="selectedTabObj" ></app-dynamic-form> -->
+
               <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
                 (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="handleCancel()"
-                [selectedTabObj]="selectedTabObj"></app-dynamic-form>
+                [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
             </ng-container>
 
             <ng-container *ngIf="vehicleUploadType === 'bulk' && !isStartGetKyc">
@@ -145,19 +149,19 @@
                   <div class="form-group">
                     <label>
                       {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
-                      <span class="mandatory">*</span>
                     </label>
-                    <input [(ngModel)]="vin_document_upload" (change)="uploadFile($event)" name="vin_document_upload"
-                      type="file" class="form-control open-select" />
+                    <input [(ngModel)]="vin_document_upload" [disabled]="allPendingKycVehicleList.length"
+                      (change)="uploadFile($event)" name="vin_document_upload" type="file"
+                      class="form-control open-select" />
                   </div>
                 </div>
-                <div class="col-lg-4">
+                <!-- <div class="col-lg-4">
                   <div class="form-group">
                     <a class="btn btn-theme no-text-transorm">
                       {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
                     </a>
                   </div>
-                </div>
+                </div> -->
 
                 <div class="col-lg-12">
                   <div class="table-responsive dashboard-table">
@@ -184,10 +188,10 @@
                       <tbody>
                         <tr *ngFor="let item of allPendingKycVehicleList; let idx = index">
                           <td class="text-center">{{idx+1}}</td>
-                          <td class="text-center">{{item.vin_number}}</td>
-                          <td class="text-center">{{item.plate_number}}</td>
-                          <td class="text-center">{{item.car_category}}</td>
-                          <td class="text-center">{{item.fuel_type}}</td>
+                          <td class="text-center">{{item?.vehicleInfo?.vinNumber}}</td>
+                          <td class="text-center">{{item?.vehicleInfo?.plateNumber}}</td>
+                          <td class="text-center">{{item?.vehicleInfo?.carCategory}}</td>
+                          <td class="text-center">{{item?.vehicleInfo?.fuelType}}</td>
                           <td class="text-center">
                             <span *ngIf="item.kyc" class="badge badge-success">
                               Active
@@ -198,11 +202,8 @@
                             </button>
                           </td>
                           <td class="text-center">
-                            <span *ngIf="item.status === 'Pending'" class="bold text-danger">
-                              {{item.status}}
-                            </span>
-                            <span *ngIf="item.status !== 'Pending'" class="bold text-warning">
-                              {{item.status}}
+                            <span class="bold text-danger">
+                              Pending <!-- {{item.status}} -->
                             </span>
                           </td>
                           <td class="text-center">
@@ -215,11 +216,11 @@
                                 <i class="feather icon-edit"></i>
                                 <span>Edit</span>
                               </button>
-                              <button type="button" (click)="deleteFormBulk(allPendingKycVehicleList, idx)"
+                              <!-- <button type="button" (click)="deleteFormBulk(allPendingKycVehicleList, idx)"
                                 mat-menu-item>
                                 <i class="feather icon-trash"></i>
                                 <span>Delete</span>
-                              </button>
+                              </button> -->
                             </mat-menu>
                           </td>
                         </tr>

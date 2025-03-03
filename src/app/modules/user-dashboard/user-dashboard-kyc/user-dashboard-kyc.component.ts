@@ -79,6 +79,7 @@ export class UserDashboardKycComponent {
   sidebarTabs: any = []; // All Main Side bar Tabs
   allPendingKycVehicleList: any = [];
   allComplateKycVehicleList: any = [];
+  draftVehiclesResponse: any = [];
 
   // Driver List Columns and Data
   driverColumns = [
@@ -202,7 +203,7 @@ export class UserDashboardKycComponent {
     private profileService: ProfileService,
   ) {
     this.gs.isModificationOn = false;
-    this.allPendingKycVehicleList = this.allVehicleList;
+    // this.allPendingKycVehicleList = this.allVehicleList;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     for (let i in this.iAmArray) {
@@ -235,7 +236,9 @@ export class UserDashboardKycComponent {
       tab.termCode = this.tandcCodes[tab.formName];
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
       console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
-
+      this.isStartGetKyc = false;
+      this.isFormEdit = false;
+      this.vehicleUploadType = null;
       this.activeKycTab = tab.formId;
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
@@ -408,16 +411,34 @@ export class UserDashboardKycComponent {
   }
 
   uploadFile(event: any) {
-    const file = event.target.files[0];
 
-    let dataParams = {
-      "UserId": this.gs.loggedInUserInfo.userId,
-      "DocumentType": "VIN_DOC",
+    const file = event.target.files[0];
+    if (file) {
+      this.gs.isSpinnerShow = true;
+      this.gs.readExcel(file).then((data) => {
+        this.profileService.bulkVehicleUpload(data, {
+          "userId": this.gs.loggedInUserInfo.userId,
+        }).subscribe((response: any) => {
+          this.gs.isSpinnerShow = false;
+          if (response && response.statusCode == "200") {
+            this.toast.successToastr("VIN uploaded successfully");
+            this.getKYCDraftList();
+          }
+        })
+      });
     }
-    let fileFormData: any = new FormData();
-    fileFormData.append('Doc', file, file.name);
-    this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
-      console.log("VIN_DOC >>>>>", res);
+  }
+
+  getKYCDraftList() {
+    this.profileService.GetKYCDraftByUserId({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      console.log("GetKYCDraftByUserId >>>>>>>", response);
+      if (response && response.userID) {
+        this.draftVehiclesResponse = response;
+        this.allPendingKycVehicleList = JSON.parse(response.draftData);
+        console.log("this.allPendingKycVehicleList >>>>>", this.allPendingKycVehicleList);
+      }
     })
   }
 
@@ -438,6 +459,10 @@ export class UserDashboardKycComponent {
 
 
   getKyc(item: any) {
+    this.singleDetailInfo = item;
+    console.log("this.singleDetailInfo >>>>>>", this.singleDetailInfo);
+    // this.allPendingKycVehicleList = JSON.parse(this.draftVehiclesResponse.draftData);
+    this.kycForm.draftVehicles = this.draftVehiclesResponse;
     this.isStartGetKyc = true;
   }
 
@@ -447,7 +472,11 @@ export class UserDashboardKycComponent {
   onChangeUpload() {
     this.isStartGetKyc = false;
     this.isFormEdit = false;
-
+    if (this.vehicleUploadType == 'bulk') {
+      this.draftVehiclesResponse = [];
+      this.allPendingKycVehicleList = [];
+      this.getKYCDraftList();
+    }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 

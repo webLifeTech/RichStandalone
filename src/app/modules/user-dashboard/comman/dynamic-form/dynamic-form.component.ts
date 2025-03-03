@@ -50,7 +50,7 @@ export class DynamicFormComponent {
   @Input() selectedTabObj: any = {};
   @Input() singleDetailInfo: any = {};
   @Input() isEditInfo: any;
-  @Input() kycForm: any;
+  @Input() kycForm: any = {};
   @Input() formType: any = "";
   @Input() formArray: any[] = []; // Input data from API
   @Output() onHandleSubmit = new EventEmitter<any>();
@@ -479,9 +479,19 @@ export class DynamicFormComponent {
           if (fieldTwo.value.fieldType === 'TEXTMASK' && fieldTwo.value.action === 'MASK') {
             this.addMaskLayer(fieldTwo);
           }
+
           // if (fieldTwo.value.fieldName === 'SSN') {
           //   this.addMaskLayer(fieldTwo);
           // }
+        }
+        if (!this.isEditInfo && this.singleDetailInfo.vehicleInfo) {
+          if (fieldTwo.value.fieldId === 79) {
+
+            const event = { target: { value: this.singleDetailInfo.vehicleInfo.vinNumber } };
+            this.onChangeInput(event, fieldTwo, section)
+            // this.addMaskLayer(fieldTwo);
+          }
+
         }
 
         if (fieldTwo.value.action === "SAVE") {
@@ -685,7 +695,7 @@ export class DynamicFormComponent {
         "userId": this.gs.loggedInUserInfo.userId,
         "vinNumber": event.target.value, // "KMUMADTB9NU073089"
       }
-      this.profileService.getVindecode(dataParams).subscribe((res: any) => {
+      this.profileService.getVinQuery(dataParams).subscribe((res: any) => {
         if (res && res.responseDtos && res.responseDtos.statusCode == "200") {
           let resObj = res.vinMasterResponseDtos;
 
@@ -1453,8 +1463,12 @@ export class DynamicFormComponent {
     console.log('findInvalidControls >>>>', getFormInfo);
     console.log('sections >>>>', this.dynamicForm.value.sections);
 
-    console.log("this.formType >>>>>", this.formType)
-    // return
+    console.log("this.formType >>>>>", this.formType);
+
+    console.log("draftVehicles >>>>>", this.kycForm.draftVehicles);
+
+
+    // return;
     this.submitted = true;
     if (getFormInfo.valid) { // need to do
       let finalBody: any = {};
@@ -1599,14 +1613,29 @@ export class DynamicFormComponent {
         console.log("finalBody >>>>>>", finalBody);
 
         // return // need to do
-
+        this.gs.isSpinnerShow = true;
         this.profileService.insertAndUpdateVehicleKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
-            this.toast.successToastr(res.message);
-            this.onVehicleUploadSubmit.emit({ type: "vehicle_upload" });
+            if (this.kycForm.draftVehicles && this.kycForm.draftVehicles.draftData) {
+              let draftData = JSON.parse(this.kycForm.draftVehicles.draftData);
+              draftData = draftData.filter((drow: any) => drow.vehicleInfo.vinNumber != this.singleDetailInfo.vehicleInfo.vinNumber);
+              console.log("draftData >>>>>>", draftData)
+
+              this.kycForm.draftVehicles.draftData = JSON.stringify(draftData);
+              this.kycForm.draftVehicles.isActive = true;
+
+              this.profileService.KYCInsertDraft(this.kycForm.draftVehicles).subscribe((draftRes: any) => {
+                this.toast.successToastr(res.message);
+                this.onVehicleUploadSubmit.emit({ type: "vehicle_upload" });
+              }, (err: any) => {
+                this.toast.errorToastr("Something went wrong");
+                this.gs.isSpinnerShow = false;
+              })
+            }
           } else {
+            this.gs.isSpinnerShow = false;
             this.toast.errorToastr(res.message);
           }
         }, (err: any) => {
@@ -2274,7 +2303,6 @@ export class DynamicFormComponent {
       "addressId": this.singleDetailInfo.branch.addressId,
       "currentInd": this.singleDetailInfo.branch.currentInd,
       "isPrimaryAddress": this.singleDetailInfo.branch.isPrimaryAddress,
-      // "vehicleId": this.singleDetailInfo.vehicleInfo.vehicleId,
       ...finalBody
     }
     console.log("Body >>>>>", Body)
