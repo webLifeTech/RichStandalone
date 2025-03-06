@@ -30,7 +30,8 @@
           <div class="col-sm-6 px-2 mb-3"
             [ngClass]="{'col-md-4': from === 'subscription', 'col-md': from !== 'subscription'}" data-aos="fade-down"
             data-aos-duration="1200" data-aos-delay="300">
-            <app-package-card [item]="item" (onSubscribe)="subscribe($event)"></app-package-card>
+            <app-package-card [item]="item" [currentPlan]="currentPlan"
+              (onSubscribe)="subscribe($event)"></app-package-card>
           </div>
         </ng-container>
       </div>

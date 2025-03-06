@@ -40,15 +40,12 @@
 
         <!-- Branch Info / Office Details -->
         <div *ngIf="activeKycTab === 6">
-
-          <!-- <app-branch-list></app-branch-list> -->
-          <ng-container *ngIf="!isAddEdit && gridInfoData.length">
+          <ng-container *ngIf="!isAddEditBranch && isLoadBranch">
             <app-dynamic-grid [type]="'branch'" [data]="gridInfoData" [kycForm]="kycForm"
               [selectedTabObj]="selectedTabObj" [columns]="branchInfoColumns" [actions]="branchInfoActions"
               (actionEvent)="handleAction($event, 'branch')"></app-dynamic-grid>
           </ng-container>
-
-          <ng-container *ngIf="isAddEdit">
+          <ng-container *ngIf="isAddEditBranch">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'branch'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>

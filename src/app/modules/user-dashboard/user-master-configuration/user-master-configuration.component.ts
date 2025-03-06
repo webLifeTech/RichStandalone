@@ -61,7 +61,8 @@ export class UserMasterConfigurationComponent {
   isVehicleInfoEdit: boolean = false;
   isUpgradePlan: boolean = false;
   subscriptionStep: any = 1;
-  isAddEdit: boolean = false;
+  isAddEditBranch: boolean = false;
+  isLoadBranch: boolean = false;
 
   // Vehicle List Columns and Data
   myVehicleColumns = [
@@ -167,14 +168,16 @@ export class UserMasterConfigurationComponent {
 
   getCompanyBranches() {
     this.gs.isLicenseVerified = false;
+    this.isLoadBranch = false;
     this.gridInfoData = [];
-    this.branchService.GetAlLCompanyBranches({
+    this.branchService.GetAllCompanyBranches({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       console.log("getAllDrivers >>>>>", response);
       if (response && response.length) {
         this.gridInfoData = response;
       }
+      this.isLoadBranch = true;
     })
   }
 
@@ -195,7 +198,7 @@ export class UserMasterConfigurationComponent {
 
   handleSubmit() {
     // this.getDriverDetails();
-    this.isAddEdit = false;
+    this.isAddEditBranch = false;
     if (this.selectedTabObj.formId == 6) {
       this.getCompanyBranches();
     }
@@ -204,7 +207,7 @@ export class UserMasterConfigurationComponent {
 
   handleCancel() {
     this.isFormEdit = false;
-    this.isAddEdit = false;
+    this.isAddEditBranch = false;
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
     if (this.selectedTabObj.formId == 6) {
@@ -217,7 +220,7 @@ export class UserMasterConfigurationComponent {
     console.log("event >>>>>>", event);
 
     if (event.add) {
-      this.isAddEdit = true;
+      this.isAddEditBranch = true;
       return;
     }
     const singleDetail = event.singleDetail;
@@ -228,7 +231,7 @@ export class UserMasterConfigurationComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.driveInCity) {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
           this.singleDetailInfo = response;
@@ -245,7 +248,7 @@ export class UserMasterConfigurationComponent {
       this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
         if (response && response.contactId) {
           this.isFormEdit = true;
-          this.isAddEdit = true;
+          this.isAddEditBranch = true;
           this.singleDetailInfo = { 'branch': response };
         }
       })

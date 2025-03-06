@@ -421,12 +421,13 @@
 
   <!-- Buttons -->
   <div class="row my-4">
-    <div *ngIf="!isEditInfo" class="col-lg-12">
+    <div *ngIf="!isEditInfo && isRequiredTermsAgree" class="col-lg-12">
       <div class="mb-4">
         <div class="form-check">
           <input [(ngModel)]="isAgreeTerms" [disabled]="!isAgreeTerms" class="form-check-input" type="checkbox">
           <label class="mx-2 mb-0">
-            I agree to the <a (click)="viewTermsConditions()" class="text-primary ">terms & conditions</a> of TL Hub.
+            <a (click)="viewTermsConditions()" class="text-primary ">Please read and accept the terms and conditions
+              before proceeding. (Read and Agree)</a>
             <span class="mandatory">*</span>
           </label>
 
@@ -437,13 +438,13 @@
       </div>
     </div>
     <div class="col-lg-12 text-end">
-      <button *ngIf="!isEditInfo" [disabled]="!isAgreeTerms" type="button" (click)="onSubmit()"
-        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
-        Confirmed
-      </button>
-      <button *ngIf="isEditInfo" (click)="handleCancel()" type="button"
+      <button *ngIf="isEditInfo || formType === 'branch'" (click)="handleCancel()" type="button"
         class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
         Cancel
+      </button>
+      <button *ngIf="!isEditInfo" [disabled]="!isAgreeTerms && isRequiredTermsAgree" type="button" (click)="onSubmit()"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Confirmed
       </button>
     </div>
   </div>

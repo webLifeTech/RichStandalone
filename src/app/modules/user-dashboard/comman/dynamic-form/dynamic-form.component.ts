@@ -77,8 +77,8 @@ export class DynamicFormComponent {
     '0': { pattern: new RegExp('[a-zA-Z0-9]') }  // Define the pattern for 0 (alphanumeric)
   };
 
-  isAgreeTerms: boolean = true; // need to do
-
+  isAgreeTerms: boolean = false;
+  isRequiredTermsAgree: boolean = true;
   profileUrl: any = "";
 
   constructor(
@@ -96,9 +96,12 @@ export class DynamicFormComponent {
   }
 
   ngOnInit() {
-    this.getConfigUIFields();
     console.log("singleDetailInfo >>>>>>", this.singleDetailInfo);
+    this.getConfigUIFields();
     this.gs.isModificationOn = true;
+    if (this.formType === 'branch') {
+      this.isRequiredTermsAgree = false;
+    }
   }
 
   // Get Config UI Fields
@@ -1562,32 +1565,9 @@ export class DynamicFormComponent {
 
         console.log("finalBody >>>>>>", finalBody.branch);
 
-        const dd = {
-          "dbaName": null,
-          "phoneNumber": null,
-          "emailId": null,
-          "addr1": null,
-          "addr2": null,
-          "postalCode": null,
-          "city": null,
-          "country": null,
-          "countryCd": null,
-          "state": null,
-          "stateCd": null,
-          "companyContactId": null,
-          "contactId": null,
-          "phoneTypeId": null,
-          "emailTypeId": null,
-          "mapLocation": null,
-          "addressTypeId": null,
-          "addressId": null,
-          "currentInd": true,
-          "isPrimaryAddress": true,
-        }
-        // return; // need to do
+        // return;
 
         this.branchService.InsertAndUpdateCompanyBranch(finalBody.branch, {
-          companyContactId: this.kycForm.contactId,
           userId: this.gs.loggedInUserInfo.userId,
         }).subscribe((res: any) => {
           console.log("res >>>>>", res);
@@ -1633,6 +1613,9 @@ export class DynamicFormComponent {
                 this.toast.errorToastr("Something went wrong");
                 this.gs.isSpinnerShow = false;
               })
+            } else {
+              this.toast.successToastr(res.message);
+              this.onVehicleUploadSubmit.emit({ type: "vehicle_upload" });
             }
           } else {
             this.gs.isSpinnerShow = false;
@@ -1752,7 +1735,9 @@ export class DynamicFormComponent {
 
         // return; // need to do
 
-        this.profileService.insertAndUpdateCompanyKyc(finalBody).subscribe((res: any) => {
+        this.profileService.insertAndUpdateCompanyKyc(finalBody, {
+          userId: this.gs.loggedInUserInfo.userId
+        }).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
@@ -2306,10 +2291,9 @@ export class DynamicFormComponent {
       ...finalBody
     }
     console.log("Body >>>>>", Body)
-    // return; // need to do
+    // return;
 
     this.branchService.InsertAndUpdateCompanyBranch(Body, {
-      companyContactId: this.kycForm.contactId,
       userId: this.gs.loggedInUserInfo.userId,
     }).subscribe((res: any) => {
       console.log("res >>>>>", res);
@@ -2458,6 +2442,7 @@ export class DynamicFormComponent {
   }
 
   viewTermsConditions() {
+    this.isAgreeTerms = false;
     console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
 
     const modalRef = this.modalService.open(TermsAndCModalComponent, {

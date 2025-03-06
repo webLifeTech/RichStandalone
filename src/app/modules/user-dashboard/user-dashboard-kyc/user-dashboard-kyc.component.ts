@@ -80,6 +80,7 @@ export class UserDashboardKycComponent {
   allPendingKycVehicleList: any = [];
   allComplateKycVehicleList: any = [];
   draftVehiclesResponse: any = [];
+  vinUploadResponse: any = {};
 
   // Driver List Columns and Data
   driverColumns = [
@@ -240,6 +241,10 @@ export class UserDashboardKycComponent {
       this.isFormEdit = false;
       this.vehicleUploadType = null;
       this.activeKycTab = tab.formId;
+
+      if (this.gs.loggedInUserInfo.roleName !== 'B5107AB1-19BF-430B-9553-76F39DB1CDCD') {
+        this.vehicleUploadType = 'single';
+      }
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 
@@ -415,15 +420,27 @@ export class UserDashboardKycComponent {
     const file = event.target.files[0];
     if (file) {
       this.gs.isSpinnerShow = true;
-      this.gs.readExcel(file).then((data) => {
-        this.profileService.bulkVehicleUpload(data, {
+      this.gs.readExcel(file).then((vinData) => {
+        this.profileService.bulkVehicleUpload(vinData, {
           "userId": this.gs.loggedInUserInfo.userId,
         }).subscribe((response: any) => {
           this.gs.isSpinnerShow = false;
+          this.vinUploadResponse = response;
+          this.vinUploadResponse.allVinList = vinData;
+
+          console.log("this.vinUploadResponse >>>>>", this.vinUploadResponse);
+
           if (response && response.statusCode == "200") {
             this.toast.successToastr("VIN uploaded successfully");
             this.getKYCDraftList();
           }
+          if (response && response.successVin.length == vinData.length) {
+            this.toast.successToastr("All VIN uploaded successfully");
+            // this.getKYCDraftList();
+          }
+          // if (response && response.successVin.length == vinData.length) {
+          //   this.toast.successToastr("All VIN uploaded successfully");
+          // }
         })
       });
     }
@@ -533,7 +550,7 @@ export class UserDashboardKycComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.driveInCity) {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
           this.singleDetailInfo = response;

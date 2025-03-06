@@ -357,8 +357,8 @@ export class ProfileService {
   }
 
   // Company KYC -> insertAndUpdateCompanyKyc
-  public insertAndUpdateCompanyKyc(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/insertAndUpdateCompanyKyc`, data).pipe(
+  public insertAndUpdateCompanyKyc(data: any, dataParams: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/insertAndUpdateCompanyKyc?userId=${dataParams.userId}`, data).pipe(
       map((res: any) => {
         return res;
       })

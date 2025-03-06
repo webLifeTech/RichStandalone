@@ -27,6 +27,7 @@ import { PricingService } from '../../../../shared/services/pricing.service';
 })
 export class PackageCardComponent {
   @Input() item: any = {};
+  @Input() currentPlan: any = {};
   @Output() onSubscribe = new EventEmitter<any>();
   params: any = {};
 

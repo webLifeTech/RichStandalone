@@ -23,6 +23,7 @@ import { PackageCardComponent } from './package-card/package-card.component';
 })
 export class PricingComponent {
   @Input() from: string;
+  currentPlan: any = {};
   @Output() onHandleSubmit = new EventEmitter<any>();
 
   pricingList: any = [];
@@ -40,7 +41,7 @@ export class PricingComponent {
     private modalService: NgbModal,
     private toast: ToastService,
   ) {
-    this.getMasterPackageType();
+    this.getCurrentPackageDetails();
   }
 
   getMasterPackageType() {
@@ -83,6 +84,11 @@ export class PricingComponent {
         } else {
           this.pricingList = response[0].packages;
         }
+        for (let i in this.pricingList) {
+          if (this.pricingList[i].packageCode == this.currentPlan.packageCode) {
+            this.pricingList[i].purchased = true;
+          }
+        }
         console.log("this.pricingList >>>>>", this.pricingList);
 
       } else {
@@ -93,23 +99,23 @@ export class PricingComponent {
     })
   }
 
-  // getCurrentPackageDetails() {
-  //   let body = {
-  //     "packageId": this.params.packageId || null,
-  //     "packageCode": null,
-  //     "userId": this.gs.loggedInUserInfo.userId || null,
-  //   }
-  //   this.gs.isSpinnerShow = true;
-  //   this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
-  //     this.gs.isSpinnerShow = false;
-  //     console.log("getCurrentPackageDetails >>>>>", response);
-  //     if (response && response.package) {
-  //       this.currentPlan = response;
-  //     }
-  //   }, err => {
-  //     this.gs.isSpinnerShow = false;
-  //   })
-  // }
+  getCurrentPackageDetails() {
+    let body = {
+      "userId": this.gs.loggedInUserInfo.userId || null,
+    }
+    this.gs.isSpinnerShow = true;
+    this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.package) {
+        this.currentPlan = response.package;
+        console.log("currentPlan ----->>>>>", this.currentPlan);
+      }
+      this.getMasterPackageType();
+    }, err => {
+      this.getMasterPackageType();
+      this.gs.isSpinnerShow = false;
+    })
+  }
 
   changeType(item: any) {
     this.activeTab = item.Code;

@@ -229,7 +229,7 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.driveInCity) {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });

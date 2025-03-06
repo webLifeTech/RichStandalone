@@ -155,15 +155,31 @@
                       class="form-control open-select" />
                   </div>
                 </div>
-                <!-- <div class="col-lg-4">
-                  <div class="form-group">
-                    <a class="btn btn-theme no-text-transorm">
-                      {{ 'userDashboard.kyc.driverInfo.submit' | translate }}
-                    </a>
-                  </div>
-                </div> -->
 
-                <div class="col-lg-12">
+                <div *ngIf="vinUploadResponse?.successVin?.length" class="alert alert-success fade show" role="alert">
+                  <b>
+                    {{vinUploadResponse?.successVin?.length}} out of {{vinUploadResponse?.allVinList?.length}} vehicles
+                    uploaded successful.
+                  </b>
+                </div>
+
+                <ng-container *ngIf="vinUploadResponse?.errorList?.length">
+                  <div class="alert alert-danger fade show" role="alert">
+                    {{vinUploadResponse?.errorList?.length}} out of {{vinUploadResponse?.allVinList?.length}} vehicles
+                    failed to upload.
+                  </div>
+
+                  <table class="table">
+                    <tbody>
+                      <tr *ngFor="let item of vinUploadResponse?.errorList; let i = index">
+                        <th scope="row">{{i+1}}.</th>
+                        <td>{{item}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-container>
+
+                <div *ngIf="allPendingKycVehicleList.length" class="col-lg-12">
                   <div class="table-responsive dashboard-table">
                     <table class="table">
                       <thead class="thead-light">
