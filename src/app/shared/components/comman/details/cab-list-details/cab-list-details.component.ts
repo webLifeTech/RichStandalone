@@ -29,6 +29,7 @@ import { InformationModalComponent } from '../../modal/information-modal/informa
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../../services/toast.service';
 import { NftService } from '../../../../services/nft.service';
+import { FavoriteService } from '../../../../services/favorite.service';
 // import { provideStore } from '@ngxs/store';
 
 @Component({
@@ -37,8 +38,6 @@ import { NftService } from '../../../../services/nft.service';
   imports: [
     NoDataComponent,
     PaginationComponent,
-    ImportantNoticeDialogComponent,
-    EmailQuoteDialogComponent,
     CommonModule,
     TranslateModule,
     CurrencySymbolPipe,
@@ -55,6 +54,9 @@ export class CabListDetailsComponent {
   @Input() marginClass: boolean;
   @Input() responsiveLatestFilter: boolean;
   @Input() noSidebar: boolean;
+  @Input() pageSize: number;
+  @Input() searachResult: any = {};
+  @Input() carTypes: any = {};
 
   public type: string = "";
   public getCarLocationParams: string[] = [];
@@ -97,7 +99,7 @@ export class CabListDetailsComponent {
   @Select(cabState.cab) cab$: Observable<cab[]>;
   @Select(driverState.driver) driver$: Observable<driver[]>;
 
-  public carTypes = carTypes;
+  // public carTypes = carTypes;
   public selectedCarType: string[] = [];
   searchInfo: any = {}
 
@@ -113,11 +115,10 @@ export class CabListDetailsComponent {
     private modalService: NgbModal,
     private toast: ToastService,
     private nftService: NftService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private favoriteService: FavoriteService,
   ) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    this.searchInfo = this.gs.getLastSearch();
+    // window.scrollTo({ top: 350, behavior: 'smooth' });
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
@@ -125,6 +126,7 @@ export class CabListDetailsComponent {
       this.pageNo = params['page'] ? params['page'] : this.pageNo;
       this.getCarLocationParams = params['car_location'] ? params['car_location'].split(',') : [];
       this.getCarTypeParams = params['car_type'] ? params['car_type'].split(',') : [];
+      this.getCarTypeParams = params['VEHICLETYPE'] ? params['VEHICLETYPE'].split(',') : [];
       this.getOwnerTypeParams = params['owner_type'] ? params['owner_type'].split(',') : [];
       this.getCarSupplierParams = params['car_sup'] ? params['car_sup'].split(',') : [];
       this.getCarCapacityParams = params['capacity'] ? params['capacity'].split(',') : [];
@@ -140,19 +142,19 @@ export class CabListDetailsComponent {
       this.selectedCarType = this.getCarTypeParams;
 
       if (this.type === 'car') {
-        if (!Object.keys(params).length) {
-          this.paramsTag = [];
-          this.store.dispatch(new getCab(this.paramsTag, this.priceData));
-        }
+        // if (!Object.keys(params).length) {
+        //   this.paramsTag = [];
+        //   this.store.dispatch(new getCab(this.paramsTag, this.priceData));
+        // }
 
-        this.paramsTag = [...this.getCarLocationParams, ...this.getCarTypeParams, ...this.getOwnerTypeParams, ...this.getCarSupplierParams, ...this.getCarCapacityParams, ...this.getRatingParams, ...this.getCarOptionParams];
-        this.cab$.subscribe((res) => {
-          this.totalCabAvailable = res.length;
-          this.cabDetails = res || [];
-          this.paginate = this.paginationService.getPager(this.cabDetails?.length, +this.pageNo, 10);
-          this.cabDetails = this.cabDetails?.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-        }, err => {
-        })
+        // this.paramsTag = [...this.getCarLocationParams, ...this.getCarTypeParams, ...this.getOwnerTypeParams, ...this.getCarSupplierParams, ...this.getCarCapacityParams, ...this.getRatingParams, ...this.getCarOptionParams];
+        // this.cab$.subscribe((res) => {
+        //   this.totalCabAvailable = res.length;
+        //   this.cabDetails = res || [];
+        //   this.paginate = this.paginationService.getPager(this.cabDetails?.length, +this.pageNo, 10);
+        //   this.cabDetails = this.cabDetails?.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
+        // }, err => {
+        // })
       }
       if (this.type === 'driver') {
 
@@ -170,8 +172,14 @@ export class CabListDetailsComponent {
           this.driverDetails = this.driverDetails?.slice(this.d_pagination.startIndex, this.d_pagination.endIndex + 1);
         })
       }
-
     })
+  }
+
+  ngOnInit() {
+    console.log('<<----------->>', this.searachResult)
+    this.paginate = this.paginationService.getPager(this.searachResult.viewModel?.totalCount, +this.pageNo, this.pageSize);
+    this.searchInfo = this.gs.getLastSearch();
+    this.checkFav();
   }
 
   ngOnChanges() {
@@ -190,30 +198,6 @@ export class CabListDetailsComponent {
       queryParams: { page: page },
       queryParamsHandling: "merge"
     });
-  }
-
-  removeTag(value: string) {
-    this.getCarLocationParams = this.getCarLocationParams.filter((car_location: string) => car_location != value);
-    this.getCarTypeParams = this.getCarTypeParams.filter((car_type: string) => car_type != value);
-    this.getCarCapacityParams = this.getCarCapacityParams.filter((capacity: string) => capacity != value);
-    this.getRatingParams = this.getRatingParams.filter((rating: string) => rating != value);
-    this.getCarOptionParams = this.getCarOptionParams.filter((car_option: string) => car_option != value);
-
-
-    let params = {
-      car_location: this.getCarLocationParams.length ? this.getCarLocationParams.join(',') : null,
-      car_type: this.getCarTypeParams.length ? this.getCarTypeParams.join(',') : null,
-      capacity: this.getCarCapacityParams.length ? this.getCarCapacityParams.join(',') : null,
-      rating: this.getRatingParams.length ? this.getRatingParams.join(',') : null,
-      car_option: this.getCarOptionParams.length ? this.getCarOptionParams.join(',') : null
-    }
-
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: "merge"
-    });
-
   }
 
   openResponsiveFilter() {
@@ -262,6 +246,40 @@ export class CabListDetailsComponent {
 
   addRemoveWishlist(item: any): void {
     if (this.auth.isLoggedIn) {
+
+      console.log("item >>>>>>>>>", item);
+
+
+      let Body = {
+        "favId": 1,
+        "userId": this.gs.loggedInUserInfo.userId,
+        "riskId": item.vehicleId,
+        "risktype": 'vehicle',
+        "isActive": !item.isAddWishlist
+      }
+      console.log("Body >>>>>", Body)
+      // return;
+
+      this.favoriteService.insertUpdateFavourite(Body).subscribe((res: any) => {
+        console.log("res >>>>>", res);
+        this.gs.isSpinnerShow = false;
+
+        // if (res && res.statusCode == "200") {
+        // } else {
+        //   this.toast.errorToastr(res.message);
+        // }
+        if (Body.isActive) {
+          this.toast.successToastr("Added to your Favourite");
+        } else {
+          this.toast.successToastr("Removed from your Favourite");
+        }
+        item.isAddWishlist = !item.isAddWishlist;
+      }, (err: any) => {
+        this.toast.errorToastr("Something went wrong");
+        this.gs.isSpinnerShow = false;
+      })
+
+      return;
       item.isAddWishlist = !item.isAddWishlist;
       let myWishlist = this.gs.getMyWishlistData();
       if (item.isAddWishlist) {
@@ -284,6 +302,22 @@ export class CabListDetailsComponent {
         }
       }, () => { });
     }
+  }
+
+  checkFav() {
+    this.favoriteService.getAllFavourite({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        for (let i in this.searachResult.vehicleMatches) {
+          for (let j in response.favoriteList) {
+            if (this.searachResult.vehicleMatches[i].vehicleId == response.favoriteList[j].vehicleId) {
+              this.searachResult.vehicleMatches[i].isAddWishlist = true;
+            }
+          }
+        }
+      }
+    })
   }
 
   openImportantNoticeDialog(): void {
@@ -314,7 +348,7 @@ export class CabListDetailsComponent {
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { car_type: this.selectedCarType.length ? this.selectedCarType.join(",") : null },
+      queryParams: { ['VEHICLETYPE']: this.selectedCarType.length ? this.selectedCarType.join(",") : null },
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation
     });

@@ -6,6 +6,7 @@ import { interval } from 'rxjs';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -142,8 +143,10 @@ export class CommanLoginFormComponent {
   ]
 
   constructor(
-    private router: Router, private authService: AuthService,
+    private router: Router,
+    private authService: AuthService,
     private route: ActivatedRoute,
+    private toast: ToastService
   ) {
     this.route.queryParams.subscribe((pera: any) => {
       this.params = pera;
@@ -174,17 +177,48 @@ export class CommanLoginFormComponent {
       this.loginForm.name = 'Admin';
       this.loginForm.id = 100;
     } else {
-      const findUser = this.users.find((i: any) => i.username === this.loginForm.username);
-      if (findUser && findUser.id) {
-        this.loginForm = findUser;
-      } else {
-        this.loginForm.role = 'user';
-        this.loginForm.name = 'Daniel Johshuva';
-        this.loginForm.roleName = '53D8CF61-E99B-43A9-AA8F-4CE5B0E12872';
-        this.loginForm.userRoleName = 'Driver';
-        this.loginForm.userId = "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5"
-        this.loginForm.id = 101;
-      }
+      this.authService.userLogin(this.loginForm).subscribe((res: any) => {
+        console.log("res >>>>>>>", res);
+        let roles: any = {
+          ["Driver"]: "user",
+          ["Individual car owner"]: "user_2",
+          ["Fleet owner"]: "user_3",
+          ["Driver with owned car"]: "user_4",
+        }
+
+        this.loginForm = {
+          "name": res.fullName,
+          "username": this.loginForm.username,
+          "password": this.loginForm.password,
+          "role": roles[res.roleName],
+          "userRoleName": res.roleName, // "Fleet owner",
+          "roleName": res.userType, // "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
+          "userId": res.userID, // "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
+          "contactId": res.personNum,
+        };
+
+        if (type == 'login') {
+          this.authService.login(this.loginForm);
+        }
+        this.toast.successToastr("Logged in successfully");
+
+      }, err => {
+        console.log("Username or password not correct!");
+        this.toast.errorToastr("Username or password not correct!");
+
+      })
+      // return;
+      // const findUser = this.users.find((i: any) => i.username === this.loginForm.username);
+      // if (findUser && findUser.id) {
+      //   this.loginForm = findUser;
+      // } else {
+      //   this.loginForm.role = 'user';
+      //   this.loginForm.name = 'Daniel Johshuva';
+      //   this.loginForm.roleName = '53D8CF61-E99B-43A9-AA8F-4CE5B0E12872';
+      //   this.loginForm.userRoleName = 'Driver';
+      //   this.loginForm.userId = "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5"
+      //   this.loginForm.id = 101;
+      // }
     }
 
     // return;
@@ -192,10 +226,7 @@ export class CommanLoginFormComponent {
       this.router.navigateByUrl('/vendor/dashboard');
       return;
     }
-    if (type == 'login') {
-      this.authService.login(this.loginForm)
-    }
-    else {
+    if (type != 'login') {
       this.authService.register(this.loginForm)
     }
   }

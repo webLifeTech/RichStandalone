@@ -25,6 +25,9 @@ export class PaginationComponent {
 
   constructor() { }
 
+  ngOnInit() {
+  }
+
   pageSet(page: number) {
     this.setPage.emit(page); // Set Page Number
   }

@@ -9,10 +9,8 @@ import { PdfViewerModalComponent } from '../components/comman/modal/pdf-viewer-m
 import { ToastService } from './toast.service';
 import * as XLSX from 'xlsx';
 
-// import { DatePipe } from '@angular/common';
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalService {
 
@@ -37,7 +35,6 @@ export class GlobalService {
     private dialog: MatDialog,
     private modalService: NgbModal,
     private toast: ToastService,
-    // private datePipe: DatePipe
   ) {
     this.isLicenseVerified = localStorage.getItem('isLicenseVerified') === 'true' || false;
     this.isFleetOwnerLicenseVerified = localStorage.getItem('isFleetOwnerLicenseVerified') === 'true' || false;
@@ -184,5 +181,14 @@ export class GlobalService {
       reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(file);
     });
+  }
+
+  groupByMasterDropdown(array: any[], key: string) {
+    return array.reduce((result, currentValue) => {
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      return result;
+    }, {});
   }
 }

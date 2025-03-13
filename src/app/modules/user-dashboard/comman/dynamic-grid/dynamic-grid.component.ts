@@ -243,15 +243,16 @@ export class DynamicGridComponent {
 
     if (this.type === 'branch') {
       const body = {
-        branchContactId: item.contactId
+        userId: this.gs.loggedInUserInfo.userId,
+        branchPersonNum: item.branchPersonNum
       }
 
       this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
-        if (response && response.contactId) {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
-          modalRef.componentInstance.viewInfoDetails = { 'branch': response };
+          modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
           modalRef.result.then((res: any) => {
           });

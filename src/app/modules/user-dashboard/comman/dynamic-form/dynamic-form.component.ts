@@ -1553,7 +1553,11 @@ export class DynamicFormComponent {
 
       if (this.formType === 'branch') {
 
-        finalBody.branch["companyContactId"] = this.kycForm.contactId;
+        finalBody.branch["branchContactId"] = null,
+          finalBody.branch["branchPersonNum"] = 0,
+          finalBody.branch["companyPersonNum"] = 0,
+
+          finalBody.branch["companyContactId"] = this.kycForm.contactId;
         finalBody.branch["contactId"] = null;
         finalBody.branch["phoneTypeId"] = null;
         finalBody.branch["emailTypeId"] = null;
@@ -1563,11 +1567,11 @@ export class DynamicFormComponent {
         finalBody.branch["currentInd"] = true;
         finalBody.branch["isPrimaryAddress"] = true;
 
-        console.log("finalBody >>>>>>", finalBody.branch);
+        console.log("finalBody >>>>>>", finalBody);
 
         // return;
 
-        this.branchService.InsertAndUpdateCompanyBranch(finalBody.branch, {
+        this.branchService.InsertAndUpdateCompanyBranch(finalBody, {
           userId: this.gs.loggedInUserInfo.userId,
         }).subscribe((res: any) => {
           console.log("res >>>>>", res);
@@ -2278,19 +2282,58 @@ export class DynamicFormComponent {
 
   // updateVehicleInfo
   async updateCompanyBranch(finalBody: any) {
+    console.log("singleDetailInfo >>>>>>", this.singleDetailInfo);
+
     let Body = {
-      "companyContactId": this.singleDetailInfo.branch.companyContactId,
-      "contactId": this.singleDetailInfo.branch.contactId,
-      "phoneTypeId": this.singleDetailInfo.branch.phoneTypeId,
-      "emailTypeId": this.singleDetailInfo.branch.emailTypeId,
-      "mapLocation": this.singleDetailInfo.branch.mapLocation,
-      "addressTypeId": this.singleDetailInfo.branch.addressTypeId,
-      "addressId": this.singleDetailInfo.branch.addressId,
-      "currentInd": this.singleDetailInfo.branch.currentInd,
-      "isPrimaryAddress": this.singleDetailInfo.branch.isPrimaryAddress,
-      ...finalBody
+      "branch": {
+        //   "branchContactId": null,
+        // "branchPersonNum": 0,
+        // "companyContactId": null,
+        // "companyPersonNum": 0,
+        "companyContactId": this.singleDetailInfo.branch.companyContactId,
+        "contactId": this.singleDetailInfo.branch.contactId,
+        "phoneTypeId": this.singleDetailInfo.branch.phoneTypeId,
+        "emailTypeId": this.singleDetailInfo.branch.emailTypeId,
+        "mapLocation": this.singleDetailInfo.branch.mapLocation,
+        "addressTypeId": this.singleDetailInfo.branch.addressTypeId,
+        "addressId": this.singleDetailInfo.branch.addressId,
+        "currentInd": this.singleDetailInfo.branch.currentInd,
+        "isPrimaryAddress": this.singleDetailInfo.branch.isPrimaryAddress,
+        ...finalBody
+      },
     }
     console.log("Body >>>>>", Body)
+
+    const dd = {
+      "dbaName": "ROK",
+      "phoneNumber": "9367865276",
+      "emailId": "rok@gmail.com",
+      "addr1": "10000",
+      "addr2": "Surat",
+      "postalCode": "11001",
+      "city": "FLORAL PARK",
+      "county": "NASSAU",
+      "country": "UNITED STATES",
+      "countryCd": 230,
+      "state": "NEW YORK",
+      "stateCd": 42,
+      "companyContactId": "C7E3278B-D22E-4398-87E2-F42B2D2DA558",
+      "contactId": null,
+      "phoneTypeId": null,
+      "emailTypeId": null,
+      "mapLocation": null,
+      "addressTypeId": null,
+      "addressId": null,
+      "currentInd": true,
+      "isPrimaryAddress": true,
+
+      // "branchContactId": null,
+      // "branchPersonNum": 0,
+      // "companyContactId": null,
+      // "companyPersonNum": 0,
+
+
+    }
     // return;
 
     this.branchService.InsertAndUpdateCompanyBranch(Body, {

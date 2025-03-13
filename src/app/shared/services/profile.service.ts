@@ -18,10 +18,10 @@ export class ProfileService {
   // Master -> getMasterPolicyCodes
   public getMasterPolicyCodes(dataParams: any) {
     const params = new HttpParams()
-      .set('StateCode', dataParams.stateCode)
-      .set('TypeCode', dataParams.typeCode)
-      .set('EffectiveDate', dataParams.effectiveDate);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterPolicyCodes', { params }).pipe(
+      .set('stateCode', dataParams.stateCode)
+      .set('typeCode', dataParams.typeCode)
+      .set('effectiveDate', dataParams.effectiveDate);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterPolicyCodes', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -31,10 +31,10 @@ export class ProfileService {
   // Master -> Vehicle / getMasterVehicleCodes
   public getMasterVehicleCodes(dataParams: any) {
     const params = new HttpParams()
-      .set('StateCode', dataParams.stateCode)
-      .set('TypeCode', dataParams.typeCode)
-      .set('EffectiveDate', dataParams.effectiveDate);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterVehicleCodes', { params }).pipe(
+      .set('stateCode', dataParams.stateCode)
+      .set('typeCode', dataParams.typeCode)
+      .set('effectiveDate', dataParams.effectiveDate);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterVehicleCodes', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -44,9 +44,9 @@ export class ProfileService {
   // Master -> Vehicle / getVehicleModelByID
   public getVehicleModelByID(dataParams: any) {
     const params = new HttpParams()
-      .set('MakeId', dataParams.MakeId)
+      .set('makeId', dataParams.MakeId)
       .set('description', dataParams.description)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getVehicleModelByID', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetVehicleModelByID', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -56,7 +56,7 @@ export class ProfileService {
   // Master -> getMasterPostalCodes
   public getMasterPostalCodes(dataParams: any) {
     const params = new HttpParams().set('postalCode', dataParams.postalCode);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterPostalCodes', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterPostalCodes', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -65,8 +65,8 @@ export class ProfileService {
 
   // Master -> getMasterCountriesList
   public getMasterCountriesList(dataParams: any) {
-    const params = new HttpParams().set('Code', dataParams.Code);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterCountriesList', { params }).pipe(
+    const params = new HttpParams().set('code', dataParams.Code);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterCountriesList', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -76,9 +76,9 @@ export class ProfileService {
   // Master -> getMasterStatesList
   public getMasterStatesList(dataParams: any) {
     const params = new HttpParams()
-      .set('CountryCode', dataParams.CountryCode)
-      .set('Code', dataParams.Code);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterStatesList', { params }).pipe(
+      .set('countryCode', dataParams.CountryCode)
+      .set('code', dataParams.Code);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterStatesList', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -109,12 +109,12 @@ export class ProfileService {
     );
   }
 
-  // KYC -> Single getDriverDetails
+  // DriverKYC -> Single getDriverDetails
   public getDriverDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('driverId', dataParams.driverId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getDriverDetailsByDriverId', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -125,7 +125,7 @@ export class ProfileService {
   public getAllDrivers(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllDrivers', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/DriverKYC/GetAllDrivers', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -141,10 +141,10 @@ export class ProfileService {
     );
   }
 
-  // Master -> getMasterCountriesList
+  // Master -> GetConfigMasterDropDown
   public getConfigMasterDropDown() {
     return new Promise((resolve, reject) => {
-      this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getConfigMasterDropDown').subscribe((result) => {
+      this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetConfigMasterDropDown').subscribe((result) => {
         resolve(result)
       }, (err) => {
         reject(err)
@@ -178,18 +178,19 @@ export class ProfileService {
     );
   }
 
+
   // Driver KYC -> InsertAndUpdateDriverKYC
   public insertAndUpdateDriverKYC(data: any, userId: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/InsertAndUpdateDriverKYC?userID=${userId}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/InsertAndUpdateDriverKYC?userID=${userId}`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Vehicle KYC -> insertAndUpdateVehicleKYC
+  // Vehicle KYC -> InsertAndUpdateVehicleKYC
   public insertAndUpdateVehicleKYC(data: any, userId: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/insertAndUpdateVehicleKYC?userID=${userId}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/InsertAndUpdateVehicleKYC?userID=${userId}`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -198,34 +199,34 @@ export class ProfileService {
 
   // Driver KYC -> updateDriverInfo
   public updateDriverInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateDriverInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Driver KYC -> updateDriverTlcInfo
+  // Driver KYC -> UpdateDriverTlcInfo
   public updateDriverTlcInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverTlcInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateDriverTlcInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Driver KYC -> updateForeignDriverInfo
+  // Driver KYC -> UpdateForeignDriverInfo
   public updateForeignDriverInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateForeignDriverInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateForeignDriverInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Driver KYC -> updatePersonalInfo
+  // Driver KYC -> UpdatePersonalInfo
   public updatePersonalInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updatePersonalInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdatePersonalInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -234,25 +235,25 @@ export class ProfileService {
 
   // Driver KYC -> updateDriverKycAddress
   public updateDriverKycAddress(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverKycAddress`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateDriverKycAddress`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Driver KYC -> updateDriverKycOtherInfo
+  // Driver KYC -> UpdateDriverKycOtherInfo
   public updateDriverKycOtherInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateDriverKycOtherInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateDriverKycOtherInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Driver KYC -> updateVehicleOtherInfo
+  // Driver KYC -> UpdateVehicleOtherInfo
   public updateVehicleOtherInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateVehicleOtherInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/UpdateVehicleOtherInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -260,23 +261,23 @@ export class ProfileService {
   }
   // Driver KYC -> UpdateVehicleInspection
   public updateVehicleInspection(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/UpdateVehicleInspectionInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/UpdateVehicleInspectionInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
-  // Driver KYC -> updateVehicleInsuranceInfo
+  // Driver KYC -> UpdateVehicleInsuranceInfo
   public updateVehicleInsuranceInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateVehicleInsuranceInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/UpdateVehicleInsuranceInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
-  // Driver KYC -> updateVehicleInfo
+  // Driver KYC -> UpdateVehicleInfo
   public updateVehicleInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateVehicleInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/UpdateVehicleInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -288,7 +289,7 @@ export class ProfileService {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('vehicleId', dataParams.vehicleId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getVehicleDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VehicleKYC/GetVehicleDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -298,7 +299,7 @@ export class ProfileService {
   // Vehicle KYC -> All getAllVehicles
   public getAllVehicles(dataParams: any) {
     const params = new HttpParams().set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllVehicles', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VehicleKYC/GetAllVehicles', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -307,7 +308,7 @@ export class ProfileService {
 
   // Document -> UploadedDocument
   public uploadedDocument(data: any, dataParams: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Document/UploadedDocument?UserId=${dataParams.UserId}&DocumentType=${dataParams.DocumentType}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Document/UploadedDocument?userId=${dataParams.UserId}&documentType=${dataParams.DocumentType}`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -317,12 +318,12 @@ export class ProfileService {
   // Master -> getMasterTypeIds
   public getMasterTypeIds(dataParams: any) {
     const params = new HttpParams()
-      .set('StateCode', dataParams.stateCode)
-      .set('TypeCode', dataParams.typeCode)
-      .set('EffectiveDate', dataParams.effectiveDate);
+      .set('stateCode', dataParams.stateCode)
+      .set('typeCode', dataParams.typeCode)
+      .set('effectiveDate', dataParams.effectiveDate);
 
     return new Promise((resolve, reject) => {
-      this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/getMasterPolicyCodes', { params }).subscribe((result) => {
+      this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterPolicyCodes', { params }).subscribe((result) => {
         resolve(result)
       }, (err) => {
         reject(err)
@@ -333,7 +334,6 @@ export class ProfileService {
 
   // MVR -> Get MVR Details By GetVindecode
   public getVindecode(dataParams: any) {
-    // GET TLHUB/VIN/GetVindecode ? vinNumber = { vinNumber } & userId={ userId }
     const params = new HttpParams()
       .set('vinNumber', dataParams.vinNumber)
       .set('userId', dataParams.userId);
@@ -346,7 +346,6 @@ export class ProfileService {
 
   // MVR -> Get MVR Details by GetVinQuery
   public getVinQuery(dataParams: any) {
-    // GET TLHUB/VIN/GetVindecode ? vinNumber = { vinNumber } & userId={ userId }
     const params = new HttpParams()
       .set('vinNumber', dataParams.vinNumber)
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VIN/GetVinQuery', { params }).pipe(
@@ -356,50 +355,50 @@ export class ProfileService {
     );
   }
 
-  // Company KYC -> insertAndUpdateCompanyKyc
+  // CompanyKYC -> InsertAndUpdateCompanyKyc
   public insertAndUpdateCompanyKyc(data: any, dataParams: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/insertAndUpdateCompanyKyc?userId=${dataParams.userId}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/CompanyKYC/InsertAndUpdateCompanyKyc?userId=${dataParams.userId}`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // KYC -> getCompanyDetailsByCompanyId
+  // CompanyKYC -> GetCompanyDetailsByCompanyId
   public getCompanyDetailsByCompanyId(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('fleetCompanyId', dataParams.fleetCompanyId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getCompanyDetailsByCompanyId', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // KYC -> getAllCompanies
+  // CompanyKYC -> getAllCompanies
   public getAllCompanies(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/getAllCompanies', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/CompanyKYC/GetAllCompanies', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Company KYC -> updateCompanyInfo
+  // CompanyKYC -> UpdateCompanyInfo
   public updateCompanyInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateCompanyInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/CompanyKYC/UpdateCompanyInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Company KYC -> updateFleetOwnerInfo
+  // CompanyKYC -> UpdateFleetOwnerInfo
   public updateFleetOwnerInfo(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/updateFleetOwnerInfo`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/CompanyKYC/UpdateFleetOwnerInfo`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -410,7 +409,7 @@ export class ProfileService {
   public getTermsAndConditionTypes(dataParams: any) {
     const params = new HttpParams()
       .set('code', dataParams.code)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetTermsAndConditionTypes', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/TermsAndCondition/GetTermsAndConditionTypes', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -424,16 +423,16 @@ export class ProfileService {
       .set('city', dataParams.city)
       .set('state', dataParams.state)
       .set('country', dataParams.country)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetTermsAndConditions', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/TermsAndCondition/GetTermsAndConditions', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // KYC -> bulkVehicleUpload
+  // KYC -> BulkVehicleUpload
   public bulkVehicleUpload(data: any, dataParams: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/bulkVehicleUpload?userId=${dataParams.userId}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/BulkVehicleUpload?userId=${dataParams.userId}`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -444,7 +443,7 @@ export class ProfileService {
   public GetKYCDraftByUserId(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetKYCDraftByUserId', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/VehicleKYC/GetKYCDraftByUserId', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -453,7 +452,7 @@ export class ProfileService {
 
   // KYC -> KYCInsertDraft
   public KYCInsertDraft(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/KYC/KYCInsertDraft`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleKYC/KYCInsertDraft`, data).pipe(
       map((res: any) => {
         return res;
       })

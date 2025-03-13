@@ -19,6 +19,7 @@ import { CabCardViewComponent } from '../../../shared/components/comman/booking/
 import { GlobalService } from '../../../shared/services/global.service';
 import { CheckAvailabilityModalComponent } from '../../../shared/components/comman/modal/wishlist-modals/check-availability-modal/check-availability-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { FavoriteService } from '../../../shared/services/favorite.service';
 
 @Component({
   selector: 'app-user-wishlist',
@@ -75,6 +76,7 @@ export class UserWishlistComponent {
     public cabService: CabService,
     private gs: GlobalService,
     private modalService: NgbModal,
+    private favoriteService: FavoriteService,
 
   ) {
     if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3') {
@@ -86,8 +88,15 @@ export class UserWishlistComponent {
   }
 
   getTableData() {
-    this.myWishlist = this.gs.getMyWishlistData();
-    console.log("this.myWishlist >>>>>>", this.myWishlist);
+    // this.myWishlist = this.gs.getMyWishlistData();
+    this.gs.isLicenseVerified = false;
+    this.favoriteService.getAllFavourite({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.myWishlist = response.favoriteList;
+      }
+    })
   }
 
   public searchData(value: string): void {

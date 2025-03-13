@@ -34,6 +34,7 @@
   "global": {
     "location": "location",
     "search": "search",
+    "reset": "Reset",
     "different": "different",
     "same": "same",
     "pick_up": "pick up",

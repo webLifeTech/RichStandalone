@@ -94,21 +94,29 @@
         <!-- (change)="applyFilter($event)" -->
         <select [(ngModel)]="searchObj.timeType" name="type" id="type" class="form-control open-select">
           <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' | translate }}</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
+          <ng-container *ngFor="let item of rentTypeList['RENT_TYPE']">
+            <option [value]="item.Code">{{item.Description}}</option>
+          </ng-container>
+          <!-- <option value="Daily">Daily</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="All">All</option> -->
         </select>
       </div>
     </div>
     <div class="col">
       <div class="search-btn">
-        <a class="btn btn-theme" (click)="serachCarDetails()">{{ 'global.search' |
-          translate }}</a>
+        <a class="btn btn-theme" (click)="serachCarDetails()">
+          {{ 'global.search' | translate }}
+        </a>
+        <a class="btn btn-solid color3 ms-2" (click)="resetFilter()">
+          {{ 'global.reset' | translate }}
+        </a>
       </div>
     </div>
-    <div (click)="closeSearchBox()" class="close-search">
+    <!-- <div (click)="closeSearchBox()" class="close-search">
       <i class="far fa-times-circle"></i>
-    </div>
+    </div> -->
     <div class="responsive-close" (click)="closeSearchBox()">
       <i class="far fa-times-circle"></i>
     </div>

@@ -1,0 +1,35 @@
+<div class="collection-collapse-block" [class.open]="isOpenOption">
+  <h6 class="collapse-block-title" (click)="openOption()">{{filterOBj.title | translate}}</h6>
+  <div class="collection-collapse-block-content" [ngStyle]="{ 'display' : isOpenOption == true ? 'block' : 'none'}">
+    <div class="collection-brand-filter">
+      <ng-container *ngFor="let option of filterOBj.filterlist; let idx = index">
+        <div class="form-check collection-filter-checkbox">
+          <input type="checkbox" class="form-check-input" id="{{ option.value }}" [value]="option.value"
+            [checked]="checked(option.value)" (change)="applyFilter($event, filterOBj.key)" [disabled]="!option.count">
+
+
+          <label *ngIf="filterOBj.key == 'VEHICLERATING'" class="form-check-label rating" for="{{ option.value }}">
+            <ngb-rating [rate]="option.value" [max]="5" [disabled]="true"></ngb-rating>
+            <span class="ms-1">({{ option.name }})</span>
+          </label>
+          <label *ngIf="filterOBj.key != 'VEHICLERATING'" class="form-check-label" for="{{ option.value }}">{{
+            option.name | translate }}</label>
+          <label class="form-check-count" for="{{ option.value }}">{{ option.count || 0 }}</label>
+        </div>
+      </ng-container>
+      <!-- @for(option of filterOBj.value.FilterList; track option){
+      } -->
+    </div>
+  </div>
+</div>
+
+<!-- <div class="collection-brand-filter mb-3 mt-4">
+  @for(own of carOwner; track own){
+  <div class="form-check collection-filter-checkbox">
+    <input type="checkbox" class="form-check-input" id="{{ own.checkId }}" [value]="own.checkId"
+      [checked]="checked(own.checkId)" (change)="applyFilter($event)" [disabled]="!own.availability">
+    <label class="form-check-label" for="{{ own.checkId }}">{{ own.title | translate }}</label>
+    <label class="form-check-count" for="{{ own.checkId }}">{{ own.availability || 0 }}</label>
+  </div>
+  }
+</div> -->

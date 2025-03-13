@@ -4,17 +4,15 @@
   <img src="assets/images/icon/adjust.png" class="img-fluid blur-up lazyload" alt="filter-icon">
 </a>
 }
-
-<!-- Tags  -->
 <br>
-<span class="car-available">{{totalCabAvailable}} {{type}}s available</span>
+<span class="car-available">{{searachResult.viewModel?.pageHeading}}</span>
 <br>
-<div *ngIf="type === 'car'" class="car-categories">
+<div *ngIf="type === 'car' && carTypes.length" class="car-categories">
   <ng-container *ngFor="let cartype of carTypes">
-    <div class="category" id="{{ cartype.checkId }}" [ngClass]="{ 'checked-category' : checked(cartype.checkId)}"
-      (click)="applyFilter(cartype.checkId)">
-      <img class="car-image" [src]="cartype.icon">
-      <span>{{cartype.title | translate}}</span>
+    <div class="category" id="{{ cartype.value }}" [ngClass]="{ 'checked-category' : checked(cartype.value)}"
+      (click)="applyFilter(cartype.value)">
+      <img class="car-image" [src]="cartype.image">
+      <span>{{cartype.name | translate}}</span>
     </div>
   </ng-container>
 </div>
@@ -25,11 +23,11 @@
     <div class="flight-detail-sec cab-detail-sec"
       [ngClass]="{ 'product-wrapper-grid special-section grid-box' : marginClass}">
       <div class="detail-bar">
-        @for(details of cabDetails; track details){
+        @for(details of searachResult.vehicleMatches; track details){
         <div class="container-fluid detail-wrap wow fadeInUp">
-          <a [ngClass]="{'btn-available': details.status === 'car_list_page.status.available', 'btn-booked' :details.status === 'car_list_page.status.booked'}"
+          <a [ngClass]="{'btn-available': details.availability === 'Available', 'btn-booked' :details.availability !== 'Available'}"
             class="btn">
-            {{details.status | translate}}
+            {{details.availability | translate}}
           </a>
           <div class="row">
             <div class="col-md-3 align-self-center">
@@ -40,16 +38,16 @@
             </div>
             <div class="col-md-4">
               <div class="title-sec">
-                <div class="car-title">{{ details.carName | translate }}</div>
-                <small>({{ details.carType | translate }})</small>
+                <div class="car-title">{{ details.make | translate }}</div>
+                <small *ngIf="details.carType">({{ details.carType | translate }})</small>
               </div>
               <div class="car-details">
                 <ul>
                   <li>
                     <img src="assets/images/cab/icon/seat.png" class="img-fluid blur-up lazyload" alt="seat-icon">
-                    {{details.passenger }} {{'car_list_page.seater' | translate}}
+                    {{details.seating }} {{'car_list_page.seater' | translate}}
                   </li>
-                  <li>
+                  <li *ngIf="details?.luggage">
                     <img src="assets/images/cab/icon/luggage.png" class="img-fluid blur-up lazyload" alt="luggage-icon">
                     {{ details.luggage }} {{'car_list_page.luggage' | translate}}
                   </li>
@@ -58,13 +56,18 @@
                       alt="snowflake-icon">
                     {{'car_list_page.mileage' | translate}}
                   </li>
+                  <li *ngIf="details?.transmission">
+                    <img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload"
+                      alt="setting-icon" />
+                    {{ details.transmission | translate}}
+                  </li>
                 </ul>
                 <ul>
-                  <li><img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
-                      alt="snowflake-icon"> {{'car_list_page.AC' | translate}}</li>
-                  <li><img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload"
-                      alt="setting-icon">
-                    {{ details.gearbox | translate}}</li>
+                  <li>
+                    <img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
+                      alt="snowflake-icon" /> {{'car_list_page.AC' | translate}}
+                  </li>
+
                 </ul>
               </div>
               <div *ngIf="details.offer_discount" class="offer-box">
@@ -82,13 +85,39 @@
             </div>
             <div class="col-md-5 text-end align-self-end price-top">
               <div class="price">
-                <h6>Price per day:</h6>
-                <h4 class="my-2">{{ details.price | currencyPipe: cabService.currency }}</h4>
+                <ng-container *ngIf="searchInfo.timeType != 'ALL'">
+                  <h6 *ngIf="searchInfo.timeType == 'Daily'">Price per Day:</h6>
+                  <h4 *ngIf="searchInfo.timeType == 'Daily'" class="my-2">
+                    {{ details.perDayPrice | currencyPipe: cabService.currency }}
+                  </h4>
+                  <h6 *ngIf="searchInfo.timeType == 'Weekly'">Price per Week:</h6>
+                  <h4 *ngIf="searchInfo.timeType == 'Weekly'" class="my-2">
+                    {{ details.perWeekRentPrice | currencyPipe: cabService.currency }}
+                  </h4>
+                  <h6 *ngIf="searchInfo.timeType == 'Monthly'">Price per Month:</h6>
+                  <h4 *ngIf="searchInfo.timeType == 'Monthly'" class="my-2">
+                    {{ details.perMonthRentPrice | currencyPipe: cabService.currency }}
+                  </h4>
+                </ng-container>
+                <table *ngIf="searchInfo.timeType == 'ALL'" class="table table-borderless">
+                  <tbody class="price-table">
+                    <tr>
+                      <td class="price-title">Price per Day:</td>
+                      <td class="price-value">{{ details.perDayPrice | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                    <tr>
+                      <td class="price-title">Price per Week:</td>
+                      <td class="price-value">{{ details.perWeekRentPrice | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                    <tr>
+                      <td class="price-title">Price per Month:</td>
+                      <td class="price-value">{{ details.perMonthRentPrice | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                  </tbody>
+                </table>
                 <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
               </div>
               <div class="book-flight">
-                <!-- <a  class="btn btn-solid color1 margin-5"
-                    [routerLink]="['/cab/single-details']">{{'car_list_page.view_deal' | translate}}</a> -->
                 <a class="btn btn-theme margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}</a>
               </div>
@@ -102,14 +131,14 @@
           <div class="row">
             <div class="col-md-5 d-flex brand-sec">
               <div class="brandLogo">
-                <img [src]="details.brandLogo" class="img-fluid blur-up lazyload" alt="seat-icon">
+                <img [src]="details.vehicleLogo" class="img-fluid blur-up lazyload" alt="BrandLogo">
               </div>
               <div class="rating">
-                {{details.rating}}
+                {{details.ratingAverage || 0}}
               </div>
               <div class="">
-                <h6 class="brand_name">{{details.carBrand | translate}}</h6>
-                <p class="mb-0 reviews">{{details.review}} reviews</p>
+                <h6 class="brand_name">{{details.make | translate}}</h6>
+                <p class="mb-0 reviews">{{details.vehicleRating || 0}} reviews</p>
               </div>
             </div>
             <div class="col-md-7 end">
@@ -137,8 +166,8 @@
       </div>
     </div>
 
-    <app-pagination *ngIf="cabDetails.length" [cabDetails]="cabDetails" [paginate]="paginate"
-      (setPage)="setPage($event)"></app-pagination>
+    <app-pagination *ngIf="searachResult.vehicleMatches.length" [cabDetails]="searachResult.vehicleMatches"
+      [paginate]="paginate" (setPage)="setPage($event)"></app-pagination>
   </ng-container>
 
   <!-- Driver -->

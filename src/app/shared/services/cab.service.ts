@@ -105,19 +105,29 @@ export class CabService {
     const params = new HttpParams()
       .set('code', dataParams.code)
       .set('noticeType', dataParams.noticeType)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetImportantNotice', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/ImportantNotice/GetImportantNotice', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // KYC -> GetLocations
+  // Location -> GetLocations
   public GetLocations(dataParams: any) {
     const params = new HttpParams()
       .set('location', dataParams.location)
       .set('risktype', dataParams.risktype)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetLocations', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Location/GetLocations', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // VehicleSearch -> VehicleSearachResult
+  public VehicleSearachResult(data: any) {
+    // http://209.10.88.76:2022/TLHUB_API//TLHUB/VehicleSearch/VehicleSearchResult
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/VehicleSearchResult`, data).pipe(
       map((res: any) => {
         return res;
       })

@@ -242,14 +242,15 @@ export class UserMasterConfigurationComponent {
 
     if (type === 'branch') {
       const body = {
-        branchContactId: singleDetail.contactId
+        userId: this.gs.loggedInUserInfo.userId,
+        branchPersonNum: singleDetail.branchPersonNum
       }
 
       this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
-        if (response && response.contactId) {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
           this.isFormEdit = true;
           this.isAddEditBranch = true;
-          this.singleDetailInfo = { 'branch': response };
+          this.singleDetailInfo = response;
         }
       })
     }

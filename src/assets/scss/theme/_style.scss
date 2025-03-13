@@ -2134,7 +2134,7 @@ section {
 
 .home_section {
   position: relative;
-  overflow: hidden;
+  // overflow: hidden;
 
   .home {
     // background-image: url(../../images/hotel1-bg.jpg);
@@ -2145,7 +2145,7 @@ section {
     background-position: center;
     background-size: cover;
     height: 100vh;
-    overflow: hidden;
+    // overflow: hidden;
 
     &.black-layer {
       &:before {
@@ -16478,6 +16478,24 @@ section {
           font-size: calc(10px + (12 - 10) * ((100vw - 320px) / (1920 - 320)));
           color: grey;
           text-transform: capitalize;
+        }
+      }
+
+      .price-table {
+
+        .price-value {
+          margin-bottom: -4px;
+          font-weight: 700;
+          font-size: calc(13px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
+          max-width: 34px;
+          padding: 2px;
+        }
+
+        .price-title {
+          // font-size: calc(10px + (12 - 10) * ((100vw - 320px) / (1920 - 320)));
+          color: grey;
+          text-transform: capitalize;
+          padding: 4px;
         }
       }
 

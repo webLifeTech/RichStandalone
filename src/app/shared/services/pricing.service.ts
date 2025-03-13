@@ -38,23 +38,22 @@ export class PricingService {
     );
   }
 
-
-  // Master -> GetMasterPackageType
+  // Package -> GetMasterPackageType
   public getMasterPackageType(dataParams: any) {
     const params = new HttpParams()
       .set('code', dataParams.code)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterPackageType', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetMasterPackageType', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Master -> GetPackageDetails
+  // Package -> GetPackageDetails
   public getPackageDetails(dataParams: any) {
     const params = new HttpParams()
       .set('roleName', dataParams.roleName)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetPackageDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetPackageDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -64,7 +63,7 @@ export class PricingService {
   public getCurrentPackageDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetCurrentPackageDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetCurrentPackageDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -75,16 +74,16 @@ export class PricingService {
   public getSubcriptionHistory(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/KYC/GetSubcriptionHistory', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetSubcriptionHistory', { params }).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Master -> InsertAndUpdatePackage
+  // Package -> InsertAndUpdatePackage
   public InsertAndUpdatePackage(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Master/InsertAndUpdatePackage`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/InsertAndUpdatePackage`, data).pipe(
       map((res: any) => {
         return res;
       })

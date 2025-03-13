@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CabService } from '../../../../../shared/services/cab.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
@@ -21,6 +21,7 @@ import { CabPricePerDayComponent } from './cab-price-per-day/cab-price-per-day.c
 import { CabSpecsComponent } from './cab-specs/cab-specs.component';
 import { CabElectricComponent } from './cab-electric/cab-electric.component';
 import { CabShiftComponent } from './cab-shift/cab-shift.component';
+import { DynamicFilterComponent } from './dynamic-filter/dynamic-filter.component';
 
 @Component({
   selector: 'app-cab-filter',
@@ -39,6 +40,7 @@ import { CabShiftComponent } from './cab-shift/cab-shift.component';
     CabOwnerComponent,
     CabSuppliersComponent,
     CabShiftComponent,
+    DynamicFilterComponent,
 
     CommonModule,
     TranslateModule,
@@ -48,8 +50,10 @@ import { CabShiftComponent } from './cab-shift/cab-shift.component';
 })
 export class CabFilterComponent {
 
-  @Input() cabHorizontal: boolean;
-  @Input() shadowClass: boolean;
+  @Input() aggregateFilters: any = {};
+  @Input() cabHorizontal: boolean = false;
+  @Input() shadowClass: boolean = false;
+  @Output() searchEvent = new EventEmitter<any>();
 
   public isOpenCab: boolean = true;
 
@@ -128,7 +132,15 @@ export class CabFilterComponent {
         car_deposite: null,
         car_sup: null,
         minPrice: null,
-        maxPrice: null
+        CAROWNERS: null,
+        LOCATION: null,
+        FLEETCOMPANY: null,
+        TRANSMISSION: null,
+        FUELTYPE: null,
+        SEATINGCAPACITY: null,
+        SHIFTINFO: null,
+        VEHICLERATING: null,
+        VEHICLETYPE: null,
       },
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation

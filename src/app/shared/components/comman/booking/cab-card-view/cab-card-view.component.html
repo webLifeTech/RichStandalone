@@ -11,16 +11,16 @@
             </div>
             <div class="col-md-5">
               <div class="title-sec">
-                <div class="car-title">{{ details.carName | translate }}</div>
-                <small>({{ details.carType | translate }})</small>
+                <div class="car-title">{{ details.make | translate }}</div>
+                <small *ngIf="details.carType">({{ details.carType | translate }})</small>
               </div>
               <div class="car-details">
                 <ul>
                   <li>
                     <img src="assets/images/cab/icon/seat.png" class="img-fluid blur-up lazyload" alt="seat-icon">
-                    {{details.passenger }} {{'car_list_page.seater' | translate}}
+                    {{details.seating }} {{'car_list_page.seater' | translate}}
                   </li>
-                  <li>
+                  <li *ngIf="details?.luggage">
                     <img src="assets/images/cab/icon/luggage.png" class="img-fluid blur-up lazyload" alt="luggage-icon">
                     {{ details.luggage }} {{'car_list_page.luggage' | translate}}
                   </li>
@@ -29,13 +29,17 @@
                       alt="snowflake-icon">
                     {{'car_list_page.mileage' | translate}}
                   </li>
+                  <li *ngIf="details?.transmission">
+                    <img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload"
+                      alt="setting-icon" />
+                    {{ details.transmission | translate}}
+                  </li>
                 </ul>
                 <ul>
-                  <li><img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
-                      alt="snowflake-icon"> {{'car_list_page.AC' | translate}}</li>
-                  <li><img src="assets/images/cab/icon/settings.png" class="img-fluid blur-up lazyload"
-                      alt="setting-icon">
-                    {{ details.gearbox | translate}}</li>
+                  <li>
+                    <img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload"
+                      alt="snowflake-icon" /> {{'car_list_page.AC' | translate}}
+                  </li>
                 </ul>
               </div>
               <div *ngIf="details.offer_discount" class="offer-box">
@@ -57,7 +61,7 @@
               <div class="price">
                 <div>
                   <h6>Price per day:</h6>
-                  <h4 class="my-2">{{ details.price | currencyPipe: gs.currency }}</h4>
+                  <h4 class="my-2">{{ details.perDayPrice | currencyPipe: gs.currency }}</h4>
                   <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
                 </div>
               </div>
@@ -75,11 +79,11 @@
                 <img [src]="details.brandLogo" class="img-fluid blur-up lazyload" alt="seat-icon">
               </div>
               <div class="rating">
-                {{details.rating}}
+                {{details.rating || 0}}
               </div>
               <div class="">
                 <h6 class="brand_name">{{details.carBrand | translate}}</h6>
-                <p class="mb-0 reviews">{{details.review}} reviews</p>
+                <p class="mb-0 reviews">{{details.review || 0}} reviews</p>
               </div>
             </div>
             <div class="col-md-6 end">
