@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CabService } from '../../../../../shared/services/cab.service';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './cab-information.component.scss'
 })
 export class CabInformationComponent {
-
+  @Input() singleItem: any = {}
   constructor(public cabService: CabService) { }
 
 }

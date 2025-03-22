@@ -126,8 +126,25 @@ export class CabService {
 
   // VehicleSearch -> VehicleSearachResult
   public VehicleSearachResult(data: any) {
-    // http://209.10.88.76:2022/TLHUB_API//TLHUB/VehicleSearch/VehicleSearchResult
     return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/VehicleSearchResult`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // VehicleSearch -> GetVehicleBookingSummaryDetails
+  public getVehicleBookingSummaryDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/GetVehicleBookingSummaryDetails`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // VehicleSearch -> GetBookingVehicleDetails
+  public getBookingVehicleDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/GetBookingVehicleDetails`, data).pipe(
       map((res: any) => {
         return res;
       })

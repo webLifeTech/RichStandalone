@@ -39,7 +39,7 @@
             <div class="col-md-4">
               <div class="title-sec">
                 <div class="car-title">{{ details.make | translate }}</div>
-                <small *ngIf="details.carType">({{ details.carType | translate }})</small>
+                <small *ngIf="details.model" class="fw-bold">({{ details.model | translate }})</small>
               </div>
               <div class="car-details">
                 <ul>
@@ -101,17 +101,21 @@
                 </ng-container>
                 <table *ngIf="searchInfo.timeType == 'ALL'" class="table table-borderless">
                   <tbody class="price-table">
-                    <tr>
+                    <tr *ngIf="details.perDayPrice">
                       <td class="price-title">Price per Day:</td>
                       <td class="price-value">{{ details.perDayPrice | currencyPipe: cabService.currency }}</td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="details.perWeekRentPrice">
                       <td class="price-title">Price per Week:</td>
                       <td class="price-value">{{ details.perWeekRentPrice | currencyPipe: cabService.currency }}</td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="details.perMonthRentPrice">
                       <td class="price-title">Price per Month:</td>
                       <td class="price-value">{{ details.perMonthRentPrice | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                    <tr *ngIf="details.perYearRentPrice">
+                      <td class="price-title">Price per Year:</td>
+                      <td class="price-value">{{ details.perYearRentPrice | currencyPipe: cabService.currency }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -119,11 +123,8 @@
               </div>
               <div class="book-flight">
                 <a class="btn btn-theme margin-5" (click)="bookNow(details)">
-                  {{'car_list_page.book' | translate}}</a>
-              </div>
-              <br>
-              <div class="book-flight">
-
+                  {{'car_list_page.book' | translate}}
+                </a>
               </div>
             </div>
           </div>
@@ -133,12 +134,18 @@
               <div class="brandLogo">
                 <img [src]="details.vehicleLogo" class="img-fluid blur-up lazyload" alt="BrandLogo">
               </div>
-              <div class="rating">
+              <!-- <div class="rating">
                 {{details.ratingAverage || 0}}
+              </div> -->
+              <div class="">
+                <div class="rating-star">
+                  <ngb-rating [rate]="details.ratingAverage" [max]="5" [disabled]="true"></ngb-rating>
+                </div>
+                <!-- <p class="mb-0 reviews">{{details.vehicleRating || 0}} reviews</p> -->
               </div>
               <div class="">
-                <h6 class="brand_name">{{details.make | translate}}</h6>
-                <p class="mb-0 reviews">{{details.vehicleRating || 0}} reviews</p>
+                <h6 class="brand_name">{{details.fleetCompanyName ? details.fleetCompanyName : details.contactName |
+                  translate}}</h6>
               </div>
             </div>
             <div class="col-md-7 end">

@@ -22,6 +22,14 @@ export class ReviewService {
     );
   }
 
+  public getUserActivities() {
+    return this.http.get<apiResultFormat>('assets/json/pages/user-activities.json').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
 
 
 

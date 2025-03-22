@@ -81,6 +81,7 @@ export class PricingService {
     );
   }
 
+
   // Package -> InsertAndUpdatePackage
   public InsertAndUpdatePackage(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/InsertAndUpdatePackage`, data).pipe(
@@ -90,4 +91,30 @@ export class PricingService {
     );
   }
 
+  // Package -> GetPackageSubscriptionDetails
+  public getPackageSubscriptionDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/GetPackageSubscriptionDetails`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Package -> GetPackageSummaryDetails
+  public getPackageSummaryDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/GetPackageSummaryDetails`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Package -> payPackagePaymentDummyTest
+  public payPackagePaymentDummyTest(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/PayPackagePaymentDummyTest`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

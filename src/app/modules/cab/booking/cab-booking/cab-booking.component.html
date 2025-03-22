@@ -1,11 +1,11 @@
 <section class="small-section">
   <div class="container">
-    <div class="flight-search">
+    <!-- <div class="flight-search">
       <app-cab-search></app-cab-search>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col-lg-12">
-        <div class="mt-3">
+        <div>
           <a class="back_search" (click)="backtoResult()">
             {{'booking_page.back_results' | translate}}
           </a>
@@ -14,15 +14,15 @@
           {{'booking_page.deal_title' | translate}}
         </h5>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="tab-divider checked-divider"></div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="tab-divider"></div>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-7">
         <div class="cancellation-box mb-3">
           <img src="assets/images/cab/icon/check-circle.svg" width="24px" class="img-fluid me-3 blur-up lazyload"
             alt="seat-icon">
@@ -30,26 +30,33 @@
             {{'booking_page.free_cancellation_up' | translate}}
           </span>
         </div>
-        <div class="review-section">
-          <app-cab-card-view></app-cab-card-view>
+        <div *ngIf="bookingDetails.vehicleDetails" class="review-section">
+          <app-cab-card-view [singleItem]="bookingDetails.vehicleDetails"></app-cab-card-view>
           <div class="review_box">
-            <app-cab-information></app-cab-information>
-          </div>
-
-          <div class="book-flight">
-            <a (click)="continueToBook()" class="btn btn-theme margin-5">
-              {{'booking_page.continue_to_book' | translate}}</a>
+            <app-cab-information [singleItem]="bookingDetails.vehicleDetails"></app-cab-information>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 booking-order res-margin">
+      <div class="col-lg-5 booking-order res-margin">
+        <app-pick-drop-instructions [searchDetails]="searchObj"
+          [bookingDetails]="bookingDetails"></app-pick-drop-instructions>
+
+
         <div class="review-section">
           <div class="review_box">
-            <app-cab-booking-summary></app-cab-booking-summary>
+            <app-cab-booking-summary *ngIf="bookingDetails.vehicleDetails" [singleItem]="bookingDetails.vehicleDetails"
+              (onChange)="onDateChange($event)"></app-cab-booking-summary>
           </div>
-          <div class="review_box">
+          <div class="book-flight text-center">
+            <a (click)="continueToBook()" class="btn btn-theme margin-5">
+              {{'booking_page.continue_to_book' | translate}}</a>
+            <button (click)="backtoResult()" type="button" class="btn btn-solid color1 ms-3">
+              {{'booking_payment_page.cancel' | translate}}
+            </button>
+          </div>
+          <!-- <div class="review_box">
             <app-cab-promo-code></app-cab-promo-code>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

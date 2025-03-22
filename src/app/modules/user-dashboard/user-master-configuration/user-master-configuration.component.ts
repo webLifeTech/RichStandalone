@@ -98,6 +98,9 @@ export class UserMasterConfigurationComponent {
   ) {
     this.route.queryParams.subscribe((params: any) => {
       this.selectedPackage = params.packageId;
+      if (this.selectedPackage) {
+        this.subscriptionStep = 2;
+      }
     })
 
     this.getConfigUIForms();
@@ -267,6 +270,7 @@ export class UserMasterConfigurationComponent {
   handleBack(step: any) {
     console.log("step >>>>>", step);
     window.scrollTo({ top: 300, behavior: 'smooth' });
+    this.isUpgradePlan = false;
     this.subscriptionStep = step;
   }
 

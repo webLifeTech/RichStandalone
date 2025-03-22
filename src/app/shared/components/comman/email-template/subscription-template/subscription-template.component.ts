@@ -19,6 +19,7 @@ import { GlobalService } from '../../../../services/global.service';
 export class SubscriptionTemplateComponent {
 
   @Input() type: any = "";
+  @Input() currentPlan: any = {};
 
   details: any = {
     "id": 1,

@@ -1,0 +1,65 @@
+{
+  "data": [
+    {
+      "id": 1001,
+      "updated_date": "2025-03-29T07:56:53.235Z",
+      "activity": "Company Logo changed"
+    },
+    {
+      "id": 1002,
+      "updated_date": "2025-03-22T07:56:53.235Z",
+      "activity": "Vehicle Weekly price changed 10$ to 12$"
+    },
+    {
+      "id": 1003,
+      "updated_date": "2025-03-20T14:30:10.512Z",
+      "activity": "Driver profile picture updated"
+    },
+    {
+      "id": 1004,
+      "updated_date": "2025-03-18T10:15:43.789Z",
+      "activity": "Individual car owner added a new vehicle"
+    },
+    {
+      "id": 1005,
+      "updated_date": "2025-03-15T08:45:23.654Z",
+      "activity": "Fleet owner updated company contact details"
+    },
+    {
+      "id": 1006,
+      "updated_date": "2025-03-10T16:20:37.421Z",
+      "activity": "Individual car owner deleted a vehicle from the fleet"
+    },
+    {
+      "id": 1007,
+      "updated_date": "2025-03-07T11:50:58.982Z",
+      "activity": "Driver license details updated"
+    },
+    {
+      "id": 1008,
+      "updated_date": "2025-03-05T09:40:30.215Z",
+      "activity": "Fleet owner added 5 new vehicles"
+    },
+    {
+      "id": 1009,
+      "updated_date": "2025-03-02T07:25:14.639Z",
+      "activity": "Individual car owner changed insurance details"
+    },
+    {
+      "id": 1010,
+      "updated_date": "2025-02-28T13:10:05.311Z",
+      "activity": "Driver accepted a new ride request"
+    },
+    {
+      "id": 1011,
+      "updated_date": "2025-02-25T12:05:45.874Z",
+      "activity": "Fleet owner removed a driver from the company"
+    },
+    {
+      "id": 1012,
+      "updated_date": "2025-02-22T15:55:32.765Z",
+      "activity": "Individual car owner updated vehicle registration details"
+    }
+  ],
+  "totalData": 12
+}

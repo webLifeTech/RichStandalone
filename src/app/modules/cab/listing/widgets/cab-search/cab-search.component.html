@@ -1,26 +1,3 @@
-<div class="desktop-book-details" *ngIf="!isSearchVisible">
-  <div class="desktop-info d-flax">
-    <div class="desktop-destination">
-      <span *ngIf="!searchInfo.same_location" class="desktop-title">{{searchInfo.pick_up_location}}</span>
-      <span *ngIf="searchInfo.same_location" class="desktop-title">{{searchInfo.same_location}}</span>
-      &nbsp; &nbsp;
-      <br />
-      <span>{{searchInfo.pick_time | date:'medium' }}</span> &nbsp; &nbsp;
-    </div>
-    <div class="dr"></div>
-    <div class="desktop-destination">
-      <span *ngIf="!searchInfo.same_location" class="desktop-title">{{searchInfo.drop_location}}</span>
-      <span *ngIf="searchInfo.same_location" class="desktop-title">{{searchInfo.same_location}}</span>
-      &nbsp; &nbsp;<br />
-      <span>{{searchInfo.drop_time | date:'medium' }}</span>
-    </div>
-  </div>
-  <div *ngIf="searchFrom !== 'checkout'" class="modify-search">
-    <a class="btn btn-theme no-text-transorm" (click)="openSearchBox()">Edit</a>
-  </div>
-
-</div>
-
 <div *ngIf="isSearchVisible" class="flight-search-detail position-relative" [class.show]="isShow">
   <form class="row m-0">
     <div class="col"
@@ -67,7 +44,6 @@
         <owl-date-time #pickup></owl-date-time>
       </div>
     </div>
-    <!-- [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }" -->
     <div class="col">
       <div class="form-group">
         <label>{{ 'global.drop_off_time' | translate }}</label>
@@ -88,22 +64,6 @@
         </select>
       </div>
     </div>
-    <div *ngIf="searchObj.type" class="col">
-      <div class="form-group">
-        <label class="font-xs-white">{{ 'global.type' | translate }}</label>
-        <!-- (change)="applyFilter($event)" -->
-        <select [(ngModel)]="searchObj.timeType" name="type" id="type" class="form-control open-select">
-          <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' | translate }}</option>
-          <ng-container *ngFor="let item of rentTypeList['RENT_TYPE']">
-            <option [value]="item.Code">{{item.Description}}</option>
-          </ng-container>
-          <!-- <option value="Daily">Daily</option>
-          <option value="Weekly">Weekly</option>
-          <option value="Monthly">Monthly</option>
-          <option value="All">All</option> -->
-        </select>
-      </div>
-    </div>
     <div class="col">
       <div class="search-btn">
         <a class="btn btn-theme" (click)="serachCarDetails()">
@@ -114,9 +74,6 @@
         </a>
       </div>
     </div>
-    <!-- <div (click)="closeSearchBox()" class="close-search">
-      <i class="far fa-times-circle"></i>
-    </div> -->
     <div class="responsive-close" (click)="closeSearchBox()">
       <i class="far fa-times-circle"></i>
     </div>

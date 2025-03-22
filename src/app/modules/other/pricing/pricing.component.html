@@ -2,15 +2,9 @@
   <section class="section pricing-section pt-5" [ngClass]="{'p-0': from === 'subscription'}">
     <div class="container">
       <div class="row">
-        <!-- <div *ngIf="from !== 'subscription'" class="col-12 mb-2" data-aos="fade-down" data-aos-duration="1200"
-          data-aos-delay="200">
-          <div class="card pricing-title">
-            Plans and Pricing
-          </div>
-        </div> -->
         <div class="col-lg-12 text-center mb-2">
           <h5 class="deal">
-            {{'Package Subscription'}}
+            {{(from === 'subscription' && currentPlan.packageCode) ? 'Upgrade Package' : 'Package Subscription'}}
           </h5>
         </div>
         <div *ngIf="from !== 'subscription'" class="col-12" data-aos="fade-down" data-aos-duration="1200"
@@ -27,8 +21,8 @@
           </div>
         </div>
         <ng-container *ngFor="let item of pricingList">
-          <div class="col-sm-6 px-2 mb-3"
-            [ngClass]="{'col-md-4': from === 'subscription', 'col-md': from !== 'subscription'}" data-aos="fade-down"
+          <div class="col-sm-6 px-1 mb-3"
+            [ngClass]="{'col-md-3': from === 'subscription', 'col-md': from !== 'subscription'}" data-aos="fade-down"
             data-aos-duration="1200" data-aos-delay="300">
             <app-package-card [item]="item" [currentPlan]="currentPlan"
               (onSubscribe)="subscribe($event)"></app-package-card>

@@ -19,19 +19,25 @@
           <div class="review-section">
             <div class="review_box p-2">
               <div class="price-level price-level-popular">
-                <h6>{{packageObj.plan_name}}</h6>
-                <p>{{packageObj.title}}</p>
+                <h6>{{packageObj.package.packageName}}</h6>
+                <p>{{packageObj.package.packageDescription}}</p>
               </div>
               <div class="flight_detail">
                 <div class="summery_box">
                   <div class="price-details">
                     <ul>
-                      <ng-container *ngFor="let row of packageObj['benefits']">
+                      <ng-container *ngFor="let row of packageObj.package?.packageDetails">
                         <li class="price-check">
                           <span>
                             <i class="feather icon-check-circle"></i>
                           </span>
-                          {{row.name}} : <strong [style.color]="packageObj.color">{{row.value}}</strong>
+                          {{row.name}} :
+                          <strong *ngIf="row.isUnlimited" [style.color]="packageObj.package.color">
+                            Unlimited
+                          </strong>
+                          <strong *ngIf="!row.isUnlimited" [style.color]="packageObj.package.color">
+                            {{row.description}}
+                          </strong>
                         </li>
                       </ng-container>
                     </ul>
@@ -96,11 +102,11 @@
               </div>
 
               <div class="payment-btn text-end mt-3">
-                <button (click)="bookCancel()" type="button" class="btn btn-solid color1 me-3">
-                  {{'pricing_summary.cancel' | translate}}
-                </button>
-                <button (click)="payNow()" [disabled]="!isAgreeTerms" type="button" class="btn btn-theme">
+                <button (click)="payNow()" [disabled]="!isAgreeTerms" type="button" class="btn btn-theme color1 me-3">
                   {{'pricing_summary.pay_now' | translate}}
+                </button>
+                <button (click)="bookCancel()" type="button" class="btn btn-solid ">
+                  {{'pricing_summary.cancel' | translate}}
                 </button>
               </div>
             </div>
@@ -113,21 +119,77 @@
             <div class="title-top">
               <h5>{{'pricing_summary.title' | translate}}</h5>
             </div>
-            <div class="flight_detail">
+            <div class="flight_detail  p-2">
               <div class="summery_box">
                 <table class="table table-borderless">
                   <tbody>
                     <tr>
-                      <td>{{'pricing_summary.package_name' | translate}}</td>
-                      <td>{{ "Basic" }}</td>
+                      <td>{{'Package Type' | translate}}</td>
+                      <td>{{ packageObj.package.packageName }}</td>
+                    </tr>
+                    <tr>
+                      <td>{{ 'Type' | translate }}</td>
+                      <td>
+                        <ng-select [items]="packageTypeList['Package_Type']" (change)="onChange()"
+                          bindLabel="Description" bindValue="Code"
+                          placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+                          [(ngModel)]="summaryObj.timeType" name="timeType" clearable="false">
+                        </ng-select>
+                      </td>
+                    </tr>
+                    <tr *ngIf="summaryObj.timeType">
+                      <td>{{ labels[summaryObj.timeType] }}</td>
+                      <td>
+                        <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange()"
+                          placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
+                          [(ngModel)]="summaryObj.timeDuration" name="timeDuration" clearable="false">
+                        </ng-select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'Start Date' | translate}}</td>
+                      <td>
+                        <input [(ngModel)]="summaryObj.start_time" name="start_time" (change)="onChange()"
+                          class="form-control datetimepicker-input digits"
+                          placeholder="{{ 'Choose Pickup Date' | translate }}" type="text"
+                          [owlDateTimeTrigger]="start_time" [owlDateTime]="start_time" [min]="today">
+                        <owl-date-time [pickerType]="'calendar'" #start_time></owl-date-time>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'End Date' | translate}}</td>
+                      <td>
+                        <input [(ngModel)]="summaryObj.end_time" name="end_time"
+                          class="form-control datetimepicker-input digits" [disabled]="true"
+                          placeholder="{{ 'Choose Peturn Date' | translate }}" type="text"
+                          [owlDateTimeTrigger]="end_time" [owlDateTime]="end_time">
+                        <owl-date-time [pickerType]="'calendar'" #end_time></owl-date-time>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'Price Per Month' | translate}}</td>
+                      <td>{{ packageSummaryObj.packagePrice | currencyPipe: cabService.currency }}</td>
                     </tr>
                     <tr>
                       <td>{{'pricing_summary.discount' | translate}}</td>
-                      <td>- {{ 100 | currencyPipe: cabService.currency }}</td>
+                      <td>- {{ packageSummaryObj.discount | currencyPipe: cabService.currency }}</td>
                     </tr>
+                  </tbody>
+                </table>
+                <div class="promo-section">
+                  <div class="input-group">
+                    <input [(ngModel)]="summaryObj.couponCode" type="text" class="form-control"
+                      [placeholder]="'have_coupon.input_plchold' | translate">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">{{'have_coupon.apply' | translate}}</span>
+                    </div>
+                  </div>
+                </div>
+                <table class="table table-borderless">
+                  <tbody>
                     <tr>
-                      <td>{{'pricing_summary.tax' | translate}}</td>
-                      <td>{{ 10 | currencyPipe: cabService.currency }}</td>
+                      <td>{{'booking_summary.tax' | translate}}</td>
+                      <td>{{ packageSummaryObj.tax | currencyPipe: cabService.currency }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -135,15 +197,12 @@
                   <h5>
                     {{'pricing_summary.total' | translate}}
                     <span>
-                      {{ 1100 | currencyPipe: cabService.currency}}
+                      {{ packageSummaryObj.totalAmount | currencyPipe: cabService.currency}}
                     </span>
                   </h5>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="review_box">
-            <app-cab-promo-code></app-cab-promo-code>
           </div>
         </div>
       </div>

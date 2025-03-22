@@ -29,7 +29,7 @@
     margin-top: 12px;
     font-size: 12px;
     margin-right: 0;
-    margin-top: 147px;
+    // margin-top: 147px;
   }
 }
 
@@ -2356,6 +2356,7 @@
 
   .brand-sec {
     height: 32px;
+    align-items: center;
   }
 
   .brandLogo {
@@ -2381,6 +2382,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .rating-star {
+    margin: 0 6px;
+
+    span {
+      font-size: 18px;
+      color: #ffcc33;
+      font-weight: bold;
+    }
   }
 
   .brand_name {
@@ -3053,6 +3064,42 @@
   //   font-size: 14px;
   //   font-weight: 800;
   // }
+}
+
+.instruction-dialog {
+
+  .dialogue-header {
+    position: relative !important;
+    font-weight: 600 !important;
+    padding-right: 48px;
+  }
+
+  .close-icon {
+    position: absolute !important;
+    right: 0;
+    top: 0;
+    margin: 8px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+  }
+
+  mat-dialog-content {
+    padding: 20px;
+  }
+
+  p {
+    color: black;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 800;
+  }
 }
 
 // End important notice dialog

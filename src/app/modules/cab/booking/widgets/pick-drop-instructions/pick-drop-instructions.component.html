@@ -1,0 +1,27 @@
+<div class="instructions">
+  <div class="card p-3">
+    <h5 class="fw-bold">Pick-up and drop-off</h5>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-icon"></div>
+        <div class="timeline-content">
+          <p class="mb-1 text-muted">{{searchDetails.pick_time | date : 'MMM d, y, h:mm a'}}</p>
+          <p class="fw-bold timeline-location">{{searchDetails.same_location}}</p>
+          <a (click)="instructionDialog('pick_up')" class="text-primary">
+            View pick-up instructions
+          </a>
+        </div>
+      </div>
+      <div class="timeline-item2">
+        <div class="timeline-icon"></div>
+        <div class="timeline-content">
+          <p class="mb-1 text-muted">{{searchDetails.drop_time | date : 'MMM d, y, h:mm a'}}</p>
+          <p class="fw-bold timeline-location">{{searchDetails.same_location}}</p>
+          <a (click)="instructionDialog('prop_off')" class="text-primary">
+            View drop-off instructions
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

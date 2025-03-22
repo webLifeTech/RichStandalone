@@ -3071,3 +3071,104 @@ header {
     margin: 1rem 0;
   }
 }
+
+.instructions {
+  margin-bottom: 24px;
+
+  .timeline {
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .timeline-item {
+    display: flex;
+    align-items: start;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 15px;
+  }
+
+  .timeline-item2 {
+    display: flex;
+    align-items: start;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 15px;
+  }
+
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 17px;
+    width: 2px;
+    height: 100%;
+    background: #ccc;
+  }
+
+  .timeline-icon {
+    width: 12px;
+    height: 12px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+
+  .timeline-content {
+    margin-left: 20px;
+
+    .timeline-location {
+      color: #000;
+    }
+
+    .text-primary {
+      font-weight: 700;
+      font-size: 16px;
+    }
+  }
+
+  .card {
+    border-radius: 8px;
+    border: 1px solid #e7e7e7;
+  }
+
+}
+
+.instruction-dialog {
+
+  .supplier-details {
+    align-items: center;
+    margin-bottom: 12px;
+
+    img {
+      height: 18px;
+    }
+
+    .supplier-details-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: #000;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 300;
+    color: #1a1a1a;
+    line-height: 20px;
+  }
+
+  .map-instruction {
+    background-image: url(https://cdn2.rcstatic.com/images/map/background.png);
+    height: 140px;
+    border: 1px solid #0076ff;
+    border-radius: 6px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -15,8 +15,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   standalone: true,
   imports: [
     CabSearchComponent,
-    FilterComponent,
-    DetailsComponent,
     CabListDetailsComponent,
     CabFilterComponent,
 
@@ -30,14 +28,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 })
 export class CabListLeftSidebarComponent {
 
-  public bg_image = 'assets/images/cab/breadcrumb.jpg';
-  public title = 'cab_list.cab_search';
-  public parent = 'menu.home';
-  public child = 'cab_list.cab_search';
-
-  public selectedTabValue: string;
   pageSize: number = 5;
-
   aggregateFilters: any = [];
   vehicleSearachResult: any = {
     vehicleMatches: [],
@@ -79,7 +70,6 @@ export class CabListLeftSidebarComponent {
 
   async searachVehicleResult(obj: any, type: any) {
 
-    console.log("obj >>>>>>", obj);
     let searchObj: any = {};
     if (!(obj && obj.searchObj)) {
       searchObj = obj;
@@ -92,14 +82,11 @@ export class CabListLeftSidebarComponent {
         "PickUpLocation": searchObj.same_location,
         "PickUpTime": searchObj.pick_time ? this.datePipe.transform(searchObj.pick_time, 'MM/dd/yyyy') : null,
         "DropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
-        "RentType": searchObj.timeType || "Monthly",
+        "RentType": searchObj.timeType || "ALL",
         "PageNumber": this.params['page'] || 1,
         "Pagesize": this.pageSize
       },
-
-
       "FilterCriteria": {
-
         "carOwners": this.params['CAROWNERS'] ? JSON.stringify(this.params['CAROWNERS'].split(',')) : null,
         "location": this.params['LOCATION'] ? JSON.stringify(this.params['LOCATION'].split(',')) : null,
         "fleetCompany": this.params['FLEETCOMPANY'] ? JSON.stringify(this.params['FLEETCOMPANY'].split(',')) : null,
@@ -112,18 +99,12 @@ export class CabListLeftSidebarComponent {
       }
     }
 
-    console.log("Body >>>>>", Body)
-    // return;
     this.reLoadDetails = false;
     this.gs.isSpinnerShow = true;
     this.cabService.VehicleSearachResult(Body).subscribe((res: any) => {
-      console.log("VehicleSearachResult >>>>>", res);
-      console.log("vehicleMatches >>>>>", res.vehicleMatches);
-
       this.gs.isSpinnerShow = false;
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         if (!this.aggregateFilters.length || type == 'main-search') {
-          console.log("yesssssssssssssss");
           const aggFilters = JSON.parse(res.aggregateFilters);
           this.aggregateFilters = Object.entries(aggFilters).map(([key, value]: any) => ({ ...value, key })).sort((a, b) => a.position - b.position);
 
@@ -134,8 +115,6 @@ export class CabListLeftSidebarComponent {
           }
 
           this.vehicleType = aggFilters['VEHICLETYPE'] ? aggFilters['VEHICLETYPE'].filterlist : [];
-          console.log("this.aggregateFilters >>>>>", this.aggregateFilters);
-
           this.router.navigate([], {
             relativeTo: this.route,
             queryParams: {

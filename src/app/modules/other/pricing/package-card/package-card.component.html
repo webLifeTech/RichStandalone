@@ -32,9 +32,13 @@
         [style.background-color]="item.color">
         Purchased
       </button>
-      <a *ngIf="!item.purchased" (click)="subscribe(item)" class="btn btn-theme  no-text-transorm"
-        [style.background-color]="item.color">
+      <a *ngIf="!item.purchased && !currentPlan.packageCode" (click)="subscribe(item, 'Subscribe')"
+        class="btn btn-theme  no-text-transorm" [style.background-color]="item.color">
         Subscribe
+      </a>
+      <a *ngIf="!item.purchased && currentPlan.packageCode" (click)="subscribe(item, 'Upgrade')"
+        class="btn btn-theme  no-text-transorm" [style.background-color]="item.color">
+        Upgrade
       </a>
     </div>
   </div>

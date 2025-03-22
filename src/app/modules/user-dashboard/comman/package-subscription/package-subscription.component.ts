@@ -27,7 +27,7 @@ import { PricingComponent } from '../../../other/pricing/pricing.component';
 })
 export class PackageSubscriptionComponent {
   @Input() item: any = {};
-  @Input() isUpgradePlan: any = {};
+  @Input() isUpgradePlan: boolean = false;
   @Output() onSubscribe = new EventEmitter<any>();
   @Output() onHandleSubscribed = new EventEmitter<any>();
   @Output() onHandleUpgradePlan = new EventEmitter<any>();
@@ -50,93 +50,12 @@ export class PackageSubscriptionComponent {
   public totalPages = 0;
 
   currentPlan: any = {}
-  // {
-  //   "packageId": 1,
-  //   "packageTypeId": 1,
-  //   "packageCode": "BASIC",
-  //   "packageName": "BASIC/FREE PLAN",
-  //   "packageDescription": "Basic",
-  //   "price": 0,
-  //   "period": "Per Month",
-  //   "color": "#fd6193",
-  //   "packageOrder": 1,
-  //   "isActive": true,
-  //   "effectiveDate": "02/04/2025",
-  //   "expirationDate": "02/04/2055",
-  //   "packageDetails": [
-  //     {
-  //       "packageDetailsId": 1,
-  //       "code": "Risk",
-  //       "name": "No.of Vehicle Add",
-  //       "type": "MAX",
-  //       "value": 1,
-  //       "description": "No.of Vehicle Add",
-  //       "isUnlimited": false,
-  //       "detailsOrder": 1,
-  //       "isActive": true,
-  //       "effectiveDate": "02/04/2025",
-  //       "expirationDate": "02/04/2055"
-  //     },
-  //     {
-  //       "packageDetailsId": 2,
-  //       "code": "SearchPostion",
-  //       "name": "Searchable/Visibility",
-  //       "type": "POSITION",
-  //       "value": 0,
-  //       "description": "Searchable/Visibility",
-  //       "isUnlimited": false,
-  //       "detailsOrder": 2,
-  //       "isActive": true,
-  //       "effectiveDate": "02/04/2025",
-  //       "expirationDate": "02/04/2055"
-  //     },
-  //     {
-  //       "packageDetailsId": 3,
-  //       "code": "Position",
-  //       "name": "Number of Days",
-  //       "type": "MAX",
-  //       "value": 30,
-  //       "description": "Number of Days",
-  //       "isUnlimited": false,
-  //       "detailsOrder": 3,
-  //       "isActive": true,
-  //       "effectiveDate": "02/04/2025",
-  //       "expirationDate": "02/04/2055"
-  //     },
-  //     {
-  //       "packageDetailsId": 4,
-  //       "code": "Limit",
-  //       "name": "Number Of Orders",
-  //       "type": "MAX",
-  //       "value": 10,
-  //       "description": "Number Of Orders",
-  //       "isUnlimited": false,
-  //       "detailsOrder": 4,
-  //       "isActive": true,
-  //       "effectiveDate": "02/07/2025",
-  //       "expirationDate": "02/04/2055"
-  //     },
-  //     {
-  //       "packageDetailsId": 5,
-  //       "code": "Fee",
-  //       "name": "Transaction Fees",
-  //       "type": "MAX",
-  //       "value": 25,
-  //       "description": "Transaction Fees",
-  //       "isUnlimited": false,
-  //       "detailsOrder": 5,
-  //       "isActive": true,
-  //       "effectiveDate": "02/07/2025",
-  //       "expirationDate": "02/04/2055"
-  //     }
-  //   ],
-  //   "purchased": true
-  // }
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     public cabService: CabService,
     public gs: GlobalService,
-    private route: ActivatedRoute,
     private pricingS: PricingService,
   ) {
     this.route.queryParams.subscribe((params) => {
@@ -151,8 +70,6 @@ export class PackageSubscriptionComponent {
 
   getCurrentPackageDetails() {
     let body = {
-      "packageId": this.params.packageId || null,
-      "packageCode": null,
       "userId": this.gs.loggedInUserInfo.userId || null,
     }
     this.gs.isSpinnerShow = true;
@@ -193,6 +110,14 @@ export class PackageSubscriptionComponent {
   }
 
   handleSubscribed() {
+    this.onHandleSubscribed.emit(null);
+  }
+
+  handleRenew() {
+    this.router.navigate(['/user/master-configuration', 'Renew'], {
+      queryParams: { packageId: this.currentPlan?.package?.packageId },
+      queryParamsHandling: "merge"
+    });
     this.onHandleSubscribed.emit(null);
   }
 

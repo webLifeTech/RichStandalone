@@ -37,6 +37,8 @@ import { ServicesComponent } from './modules/services/services.component';
 import { EnquiriesComponent } from './modules/vendor/enquiries/enquiries.component';
 import { ServiceProfileComponent } from './modules/vendor/service-profile/service-profile.component';
 import { UserMasterConfigurationComponent } from './modules/user-dashboard/user-master-configuration/user-master-configuration.component';
+import { UserRecentActivityComponent } from './modules/user-dashboard/user-recent-activity/user-recent-activity.component';
+import { NotificationViewComponent } from './shared/components/header/widgets/notification-view/notification-view.component';
 
 export const routes: Routes = [
   {
@@ -49,6 +51,11 @@ export const routes: Routes = [
       { path: '', component: PricingComponent },
       { path: 'package-subscribe/:packageFor/:packageId', component: PlanSubscribeComponent },
       { path: 'payment-success', component: PaymentSuccessComponent },
+    ]
+  },
+  {
+    path: 'all-notification', component: LayoutHeadFootComponent, children: [
+      { path: '', component: NotificationViewComponent },
     ]
   },
   {
@@ -78,11 +85,11 @@ export const routes: Routes = [
         path: 'booking',
         children: [
           {
-            path: 'booking/:id', // cab or driver both id
+            path: 'booking/:vehicleId/:summaryId', // cab or driver both id
             component: CabBookingComponent
           },
           {
-            path: 'booking-payment/:id', // cab or driver both id
+            path: 'booking-payment/:vehicleId/:summaryId', // cab or driver both id
             component: CabBookingPaymentComponent
           },
           {
@@ -142,6 +149,10 @@ export const routes: Routes = [
         component: MyCarsComponent
       },
       {
+        path: 'recent-activity',
+        component: UserRecentActivityComponent
+      },
+      {
         path: 'settings',
         component: UserSettingsComponent, children: [
           {
@@ -159,7 +170,7 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'master-configuration',
+        path: 'master-configuration/:payckageStatus',
         component: UserMasterConfigurationComponent, children: [
           {
             path: 'security',
@@ -241,9 +252,6 @@ export const routes: Routes = [
         path: 'my-cars',
         component: MyCarsComponent
       },
-      // SecurityComponent
-      // PreferencesComponent
-      // NotificationsComponent
       {
         path: 'settings',
         component: UserSettingsComponent, children: [

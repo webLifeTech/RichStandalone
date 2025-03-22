@@ -45,7 +45,8 @@ export class PackageCardComponent {
 
   }
 
-  subscribe(item: any) {
-    this.onSubscribe.emit(item)
+  subscribe(item: any, payckageStatus: any) {
+    this.onSubscribe.emit({ item: item, payckageStatus: payckageStatus })
+
   }
 }

@@ -55,7 +55,7 @@
       "type": "Fleet Booking Confirmed",
       "notifications": "Fleet Company Elite Rentals confirmed your booking for 29 Nov 2024, 9:00 AM.",
       "dateTime": "2024-11-27T08:40:00.000Z",
-      "shortTime": "1 hour ago",
+      "shortTime": null,
       "image": "fleet.png"
     }
   ],

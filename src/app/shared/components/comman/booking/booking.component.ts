@@ -12,7 +12,8 @@ import { PaymentService } from '../../../services/payment.service';
 import { BookingCryptoComponent } from './booking-crypto/booking-crypto.component';
 import { ToastService } from '../../../services/toast.service';
 import { GlobalService } from '../../../services/global.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { PricingService } from '../../../services/pricing.service';
 
 @Component({
   selector: 'app-booking',
@@ -28,6 +29,7 @@ import { CommonModule } from '@angular/common';
     NgbModule,
     CommonModule
   ],
+  providers: [DatePipe],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss']
 })
@@ -52,6 +54,8 @@ export class BookingComponent {
     private toast: ToastService,
     private gs: GlobalService,
     // private route: ActivatedRoute,
+    private datePipe: DatePipe,
+    private pricingS: PricingService,
   ) {
     this.getCrypto();
     this.cabService.getCabById().subscribe(response => {
@@ -79,7 +83,39 @@ export class BookingComponent {
     if (this.type === "crypto") {
       this.makePayment();
     } else {
+
       this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+
+      // const body = {
+      //   "packageId": this.params.packageId,
+      //   "userId": this.gs.loggedInUserInfo.userId || null,
+      //   "paymentId": "pay-123",
+      //   "startDate": "2025-03-21",
+      //   "endDate": "2025-09-21",
+      //   "noOfMonths": 6,
+      //   "remarks": "Package subscription for 6 months",
+      //   "payckageStatus": "Subscribe"
+      // }
+      // // {
+      // //   "userId": this.gs.loggedInUserInfo.userId || null,
+      // //   "packageId": this.params.packageId,
+      // //   "startDate": this.transformDate(this.summaryObj.start_time, 'MM/dd/yy'),
+      // //   "endDate": this.transformDate(this.summaryObj.end_time, 'MM/dd/yy'),
+      // //   "noOfMonths": this.summaryObj.timeType == "Monthly" ? parseInt(this.summaryObj.timeDuration) : parseInt(this.summaryObj.timeDuration) * 12,
+      // //   "statusCode": "SubScription"
+      // // }
+      // console.log("body >>>", body);
+
+      // this.gs.isSpinnerShow = true;
+      // this.pricingS.payPackagePaymentDummyTest(body).subscribe((response: any) => {
+      //   this.gs.isSpinnerShow = false;
+      //   if (response && response.statusCode == "200") {
+      //     this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+      //     this.toast.successToastr(response.message);
+      //     // this.packageSummaryObj = response.packageSummary;
+      //     // console.log("packageSummaryObj <<<", response);
+      //   }
+      // });
     }
   }
 
@@ -126,5 +162,9 @@ export class BookingComponent {
       queryParams: this.params,
       queryParamsHandling: "merge"
     });
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
   }
 }

@@ -235,6 +235,7 @@
     "car_type": "car type",
     "driver_name": "Driver Name",
     "insurance_fee": "Insurance fee",
+    "other_fees": "Other Fees",
     "discount": "Discount",
     "tax": "Tax",
     "total_fare": "total fare"
@@ -251,7 +252,7 @@
   "have_coupon": {
     "title": "Have a coupon code?",
     "input_plchold": "Promo Code",
-    "apply": "apply"
+    "apply": "Apply"
   },
   "great_choice": {
     "title": "Great Choice!",
@@ -368,7 +369,8 @@
         "all_user": "All User",
         "all_vehicles": "All Vehicles",
         "booking_overview": "Booking Overview",
-        "master_configuration": "Master Configuration"
+        "master_configuration": "Master Configuration",
+        "recent_activity": "Recent Activity"
       },
       "driverInfo": {
         "title": "Driver info",

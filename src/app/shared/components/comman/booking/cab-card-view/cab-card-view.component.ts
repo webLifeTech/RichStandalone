@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { GlobalService } from '../../../../services/global.service';
 import { ToastService } from '../../../../services/toast.service';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cab-card-view',
@@ -17,7 +17,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     CommonModule,
     TranslateModule,
-    CurrencySymbolPipe
+    CurrencySymbolPipe,
+    NgbModule
   ],
   templateUrl: './cab-card-view.component.html',
   styleUrl: './cab-card-view.component.scss'
@@ -122,16 +123,18 @@ export class CabCardViewComponent {
   }
 
   ngOnInit() {
-    if (this.from === 'wishlist') {
-      if (this.type === 'car') {
-        this.details = this.singleItem;
-      } else {
-        this.driverDetails = this.singleItem;
-        console.log("this.driverDetails >>>>>", this.driverDetails);
-        console.log("this.from >>>>>", this.from);
+    this.details = this.singleItem;
+    console.log("this.details >>>>", this.details);
 
-      }
-    }
+    // if (this.from === 'wishlist') {
+    //   if (this.type === 'car') {
+    //   } else {
+    //     this.driverDetails = this.singleItem;
+    //     console.log("this.driverDetails >>>>>", this.driverDetails);
+    //     console.log("this.from >>>>>", this.from);
+
+    //   }
+    // }
   }
 
   addRemoveWishlist(item: any): void {

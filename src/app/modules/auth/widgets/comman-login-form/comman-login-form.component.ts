@@ -7,6 +7,7 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { GlobalService } from '../../../../shared/services/global.service';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -145,6 +146,7 @@ export class CommanLoginFormComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private gs: GlobalService,
     private route: ActivatedRoute,
     private toast: ToastService
   ) {
@@ -177,8 +179,10 @@ export class CommanLoginFormComponent {
       this.loginForm.name = 'Admin';
       this.loginForm.id = 100;
     } else {
+      this.gs.isSpinnerShow = true;
       this.authService.userLogin(this.loginForm).subscribe((res: any) => {
         console.log("res >>>>>>>", res);
+        this.gs.isSpinnerShow = false;
         let roles: any = {
           ["Driver"]: "user",
           ["Individual car owner"]: "user_2",

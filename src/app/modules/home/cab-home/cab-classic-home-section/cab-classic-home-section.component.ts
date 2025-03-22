@@ -32,7 +32,7 @@ export class CabClassicHomeSectionComponent {
     pick_time: "",
     drop_time: "",
     type: "",
-    timeType: "Daily",
+    timeType: "ALL",
     location_type: "option2",
   };
 

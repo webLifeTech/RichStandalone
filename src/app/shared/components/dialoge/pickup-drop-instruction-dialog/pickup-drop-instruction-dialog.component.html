@@ -1,0 +1,45 @@
+<div class="instruction-dialog">
+  <h1 mat-dialog-title class="dialogue-header no-text-transorm">
+    {{data.type == 'pick_up' ? 'Pick-up instructions' : 'Drop-off instructions'}}
+    <button mat-icon-button class="close-icon" (click)="onClose()">
+      <i class="fas fa-times"></i>
+    </button>
+  </h1>
+
+  <div mat-dialog-content>
+    <!-- <div class="supplier-details d-flex">
+      <img src="https://cdn2.rcstatic.com/sp/images/suppliers/137_logo_200.png" alt="Hertz">
+      <div class="supplier-details-text">
+        Supplied by
+        <strong>Hertz</strong>
+      </div>
+    </div> -->
+    <p>
+      {{data.type == 'pick_up' ? data.bookingLocationDetails.pickUpInstruction :
+      data.bookingLocationDetails.dropInstruction}}
+    </p>
+    <h3 class="mt-4">
+      Pick-up location
+    </h3>
+    <p>
+      {{searchObj.same_location}}
+    </p>
+    <h3 class="mt-4">
+      Opening hours
+    </h3>
+    <p>
+      Mon - Sun 00:00 - 24:00
+    </p>
+
+    <!-- <div class="map-instruction">
+      <div>
+        <div>
+          <i class="feather icon-map-pin"></i>
+        </div>
+        <button type="button" class="btn btn-theme">
+          Show on map
+        </button>
+      </div>
+    </div> -->
+  </div>
+</div>

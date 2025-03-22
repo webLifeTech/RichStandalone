@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationsService } from '../../../../services/notifications.service';
 import { GlobalService } from '../../../../services/global.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss']

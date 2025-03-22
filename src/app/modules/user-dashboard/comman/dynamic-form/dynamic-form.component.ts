@@ -2286,10 +2286,9 @@ export class DynamicFormComponent {
 
     let Body = {
       "branch": {
-        //   "branchContactId": null,
-        // "branchPersonNum": 0,
-        // "companyContactId": null,
-        // "companyPersonNum": 0,
+        "branchContactId": this.singleDetailInfo.branch.branchContactId,
+        "branchPersonNum": this.singleDetailInfo.branch.branchPersonNum,
+        "companyPersonNum": this.singleDetailInfo.branch.companyPersonNum,
         "companyContactId": this.singleDetailInfo.branch.companyContactId,
         "contactId": this.singleDetailInfo.branch.contactId,
         "phoneTypeId": this.singleDetailInfo.branch.phoneTypeId,
@@ -2305,33 +2304,30 @@ export class DynamicFormComponent {
     console.log("Body >>>>>", Body)
 
     const dd = {
-      "dbaName": "ROK",
-      "phoneNumber": "9367865276",
-      "emailId": "rok@gmail.com",
-      "addr1": "10000",
-      "addr2": "Surat",
+      "companyContactId": "F3049A1D-EEB7-4EFB-9B84-59BAABF7CA1C",
+      "phoneTypeId": "1833AD39-398B-4F91-98E7-90FFEAFBBCB9",
+      "emailTypeId": "83F4239C-99D8-4117-93C7-50801935D070",
+      "mapLocation": null,
+      "addressTypeId": "7D826BEB-91B0-429F-8598-6FFC4388A219",
+      "addressId": "C102F086-6EAD-4201-8DD4-A90DAFCDD5FA",
+      "currentInd": "true",
+      "isPrimaryAddress": true,
+      "dbaName": "SEK1222",
+      "phoneNumber": "9999900022",
+      "emailId": "paras@gmail.com",
+      "addr1": "fffffffffffff",
+      "addr2": "surat",
       "postalCode": "11001",
       "city": "FLORAL PARK",
       "county": "NASSAU",
       "country": "UNITED STATES",
-      "countryCd": 230,
+      "countryCd": "230",
       "state": "NEW YORK",
-      "stateCd": 42,
-      "companyContactId": "C7E3278B-D22E-4398-87E2-F42B2D2DA558",
-      "contactId": null,
-      "phoneTypeId": null,
-      "emailTypeId": null,
-      "mapLocation": null,
-      "addressTypeId": null,
-      "addressId": null,
-      "currentInd": true,
-      "isPrimaryAddress": true,
+      "stateCd": "42",
 
-      // "branchContactId": null,
-      // "branchPersonNum": 0,
-      // "companyContactId": null,
-      // "companyPersonNum": 0,
-
+      "branchContactId": "sample string 1",
+      "branchPersonNum": 2,
+      "companyPersonNum": 4,
 
     }
     // return;
@@ -2343,6 +2339,7 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
+        this.handleCancel();
       } else {
         this.toast.errorToastr(res.message);
       }

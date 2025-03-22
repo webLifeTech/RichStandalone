@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../../pipe/currency.pipe';
 import { NoDataComponent } from '../../../ui/no-data/no-data.component';
 import { PaginationComponent } from '../../../ui/pagination/pagination.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InformationModalComponent } from '../../modal/information-modal/information-modal.component';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../../services/toast.service';
@@ -44,6 +44,7 @@ import { FavoriteService } from '../../../../services/favorite.service';
     NgxsModule,
     NgxsReduxDevtoolsPluginModule,
     NgxsStoragePluginModule,
+    NgbModule
   ],
   // providers: [provideStore()],
   templateUrl: './cab-list-details.component.html',
@@ -206,7 +207,8 @@ export class CabListDetailsComponent {
 
   async bookNow(details: any) {
     if (this.auth.isLoggedIn) {
-      if (this.gs.isLicenseVerified) { // need to do
+      this.gs.isLicenseVerified = true // need to do
+      if (!this.gs.isLicenseVerified) {
         const modalRef = this.modalService.open(ConfirmationModalComponent, {
           centered: true,
         });
@@ -226,7 +228,9 @@ export class CabListDetailsComponent {
         rating: this.getRatingParams.length ? this.getRatingParams.join(',') : null,
         car_option: this.getCarOptionParams.length ? this.getCarOptionParams.join(',') : null
       }
-      this.router.navigate(['/cab/booking/booking', details.id], {
+      console.log("details >>>>>>", details);
+
+      this.router.navigate(['/cab/booking/booking', details.vehicleId, details.summaryId], {
         queryParams: params,
         queryParamsHandling: "merge"
       });

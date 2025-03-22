@@ -29,25 +29,24 @@ export class CabSearchComponent {
 
   @Input() searchFrom: any;
   @Output() searchEvent = new EventEmitter<any>();
+  public params: Params;
 
   public isSearchVisible: boolean = true; // need to do
   public isShow: boolean = false;
   searchInfo: any = {}
-  public searchObj: any = {
+  searchObj: any = {
     pick_up_location: "",
     drop_location: "",
     same_location: "",
     pick_time: "",
     drop_time: "",
     type: "",
-    timeType: "Daily",
+    timeType: "ALL",
     location_type: "option2",
   };
 
   windowWidth: number;
   windowHeight: number;
-  // public selectedValue: string = 'option2';
-  public params: Params;
   locationArray: any = [];
   rentTypeList: any = [];
 
@@ -119,11 +118,10 @@ export class CabSearchComponent {
       pick_time: "",
       drop_time: "",
       type: this.params['type'] ? this.params['type'] : "car",
-      timeType: "",
+      timeType: "ALL",
       location_type: "option2",
     };
     this.serachCarDetails();
-    // localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
   }
 
   applyFilter(event: Event) {
@@ -175,7 +173,6 @@ export class CabSearchComponent {
     this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
       if (res && res.length) {
         this.rentTypeList = this.gs.groupByMasterDropdown(res, 'TypeCode');
-        console.log("rentTypeList >>>>", this.rentTypeList);
       } else {
         this.gs.isSpinnerShow = false;
       }

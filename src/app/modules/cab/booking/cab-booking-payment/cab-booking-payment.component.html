@@ -1,8 +1,8 @@
 <section class="small-section">
   <div class="container">
-    <div class="flight-search">
+    <!-- <div class="flight-search">
       <app-cab-search [searchFrom]="searchFrom"></app-cab-search>
-    </div>
+    </div> -->
     <div class="row mb-3">
       <div class="col-lg-12">
         <div class="mt-3">
@@ -24,16 +24,21 @@
     <div class="row">
       <div class="col-lg-8">
         <div class="review-section">
-          <app-cab-card-view></app-cab-card-view>
+          <app-cab-card-view *ngIf="bookingDetails.vehicleDetails"
+            [singleItem]="bookingDetails.vehicleDetails"></app-cab-card-view>
         </div>
-        <div *ngIf="itemId" class="product_img_scroll" data-sticky_column>
-          <app-booking [itemId]="itemId" [params]="params" [title]="true"></app-booking>
+        <div *ngIf="vehicleId" class="product_img_scroll" data-sticky_column>
+          <app-booking [itemId]="vehicleId" [params]="params" [title]="true"></app-booking>
         </div>
       </div>
       <div class="col-lg-4 booking-order res-margin">
+        <app-pick-drop-instructions [searchDetails]="searchObj"
+          [bookingDetails]="bookingDetails"></app-pick-drop-instructions>
+
         <div class="review-section">
           <div class="review_box">
-            <app-cab-booking-summary></app-cab-booking-summary>
+            <app-cab-booking-summary *ngIf="bookingDetails.vehicleDetails"
+              [singleItem]="bookingDetails.vehicleDetails"></app-cab-booking-summary>
           </div>
           <div class="review_box">
             <app-cab-promo-code></app-cab-promo-code>

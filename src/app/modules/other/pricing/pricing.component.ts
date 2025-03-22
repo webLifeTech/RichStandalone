@@ -79,15 +79,17 @@ export class PricingComponent {
       console.log("response >>>>>", response);
       if (response && response.length) {
         // response[0].packages[0].purchased = true;
-        if (this.from === 'subscription') {
-          this.pricingList = response[0].packages.filter((item: any) => !item.purchased);
-        } else {
-          this.pricingList = response[0].packages;
-        }
+        this.pricingList = response[0].packages;
         for (let i in this.pricingList) {
           if (this.pricingList[i].packageCode == this.currentPlan.packageCode) {
             this.pricingList[i].purchased = true;
           }
+        }
+
+        if (this.from === 'subscription') {
+          this.pricingList = response[0].packages.filter((item: any) => !item.purchased);
+        } else {
+          this.pricingList = response[0].packages;
         }
         console.log("this.pricingList >>>>>", this.pricingList);
 
@@ -122,8 +124,9 @@ export class PricingComponent {
     this.getPricing(item.Name);
   }
 
-  subscribe(item: any) {
-    console.log("item >>>>>>", item);
+  subscribe(event: any) {
+    console.log("event >>>>>>", event);
+    let { item, payckageStatus } = event;
 
     if (!this.auth.isLoggedIn) {
       const modalRef = this.modalService.open(InformationModalComponent, {
@@ -137,18 +140,17 @@ export class PricingComponent {
       });
       return;
     }
-    if (this.from !== 'subscription') {
-      this.router.navigate(['/user/master-configuration'], {
-        // relativeTo: this.route,
+    if (this.from == 'subscription') {
+      this.router.navigate(['/user/master-configuration', payckageStatus], {
         queryParams: { packageId: item.packageId },
         queryParamsHandling: "merge"
       });
-      // this.router.navigate(['/user/master-configuration', item.packageCode, item.packageId]);
+      this.onHandleSubmit.emit(null)
     } else {
-      this.onHandleSubmit.emit({
-        packageCode: item.packageCode,
-        packageId: item.packageId
-      })
+      this.router.navigate(['/user/master-configuration', payckageStatus], {
+        queryParams: { packageId: item.packageId },
+        queryParamsHandling: "merge"
+      });
     }
   }
 
