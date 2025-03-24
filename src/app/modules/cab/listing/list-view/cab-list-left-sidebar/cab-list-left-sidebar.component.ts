@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { DatePipe, CommonModule } from '@angular/common';
 import { CabSearchComponent } from '../../widgets/cab-search/cab-search.component';
-import { FilterComponent } from '../../../../../shared/components/comman/filter/filter.component';
-import { DetailsComponent } from '../../../../../shared/components/comman/details/details.component';
 import { CabFilterComponent } from '../../../../../shared/components/comman/filter/cab-filter/cab-filter.component';
 import { CabListDetailsComponent } from '../../../../../shared/components/comman/details/cab-list-details/cab-list-details.component';
 import { CabService } from '../../../../../shared/services/cab.service';
@@ -17,7 +15,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
     CabSearchComponent,
     CabListDetailsComponent,
     CabFilterComponent,
-
     CommonModule
   ],
   providers: [

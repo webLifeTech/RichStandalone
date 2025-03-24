@@ -67,4 +67,7 @@ export class PaymentService {
       })
     );
   }
+
+  // TLHUB/Wallet/AddToWallet
+  // TLHUB/Wallet/GetWalletDetails?userId={userId}
 }

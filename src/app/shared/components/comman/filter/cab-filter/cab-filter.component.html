@@ -1,17 +1,15 @@
-<div class="left-sidebar" [class.shadow-cls]="shadowClass" [class.filter-bottom-content]="cabHorizontal"
-  [class.d-block]="cabService.isOpenHorizontalFilter == true && cabHorizontal"
+<div class="left-sidebar pt-3"
   [ngStyle]="{ 'left' : cabService.isOpenResponsiveFilter == true || cabService.isOpenHorizontalFilter == true  ? '-1px' : '' }">
-  @if(!cabHorizontal){
-  <div class="back-btn" (click)="closeResponsiveFilter()">
-    {{'car_list_page.back' |translate}}
+  <div class="back-btn mt-5 pb-2 text-end" (click)="closeResponsiveFilter()">
+    <a class="back_search">
+      {{'car_list_page.close_filter' |translate}}
+    </a>
   </div>
   <div class="search-bar">
     <input type="text" placeholder="{{'car_list_page.search_here' | translate}}">
     <i class="fas fa-search"></i>
   </div>
-  }
   <div class="middle-part collection-collapse-block" [class.open]="isOpenCab">
-    @if(!cabHorizontal){
     <a href="javascript:void(0)" class="section-title collapse-block-title" (click)="openCab()">
       <h5>{{'car_list_page.filter.latest_filter'| translate}}</h5>
       <img src="assets/images/icon/adjust.png" class="img-fluid blur-up lazyload" alt="filter-icon">
@@ -21,78 +19,20 @@
         {{'car_list_page.filter.clear_filter' | translate}}
       </a>
     </div>
-    }
     <hr class="div-line" />
-    <div class="collection-collapse-block-content" [class.row]="cabHorizontal"
-      [ngClass]="{ 'd-block' : isOpenCab == true && !cabHorizontal, 'd-none' : isOpenCab == false && !cabHorizontal}">
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
+    <div class="collection-collapse-block-content"
+      [ngClass]="{ 'd-block' : isOpenCab == true, 'd-none' : isOpenCab == false}">
+      <div *ngIf="type === 'car'" class="filter-block">
         <ng-container *ngFor="let item of aggregateFilters">
           <app-dynamic-filter [filterOBj]="item"></app-dynamic-filter>
         </ng-container>
       </div>
-      <!-- <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-shift></app-cab-shift>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car' || type === 'driver'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-location></app-cab-location>
-      </div>
-      <hr class="div-line" />
-      <div *ngIf="type === 'car' || type === 'driver'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-price-per-day></app-cab-price-per-day>
-      </div>
-      <hr class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-specs></app-cab-specs>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-electric></app-cab-electric>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-option></app-cab-option>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car' || type === 'driver'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-rating></app-cab-rating>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-car-type></app-cab-car-type>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-owner></app-cab-owner>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-suppliers></app-cab-suppliers>
-      </div>
-      <hr *ngIf="type === 'car'" class="div-line" />
-      <div *ngIf="type === 'car'" class="filter-block" [class.col]="cabHorizontal">
-        <app-cab-capacity></app-cab-capacity>
-      </div>
-      <hr *ngIf="type === 'driver'" class="div-line" />
-      <div *ngIf="type === 'driver'" class="filter-block" [class.col]="cabHorizontal">
-        <app-driver-experience></app-driver-experience>
-      </div> -->
-
-      @if(cabHorizontal){
-      <div class="text-end button_bottom">
-        <a href="javascript:void(0)" class="btn btn-solid color1 me-2">{{'car_list_page.apply' |translate}}</a>
-        <a href="javascript:void(0)" class="btn btn-solid color1 close-filter-bottom"
-          (click)="closeResponsiveHorizontalFilter()">{{'car_list_page.close_filter' |translate}}</a>
-      </div>
-      }
     </div>
   </div>
-  @if(!cabHorizontal){
   <div class="bottom-info">
     <h5><span>i</span> {{'car_list_page.need_help'| translate}}</h5>
     <h4>856 - 215 - 211</h4>
     <h6>{{'car_list_page.monday-to-friday'| translate}} 9.00{{'global.am'| translate}} - 7.30{{'global.pm'| translate}}
     </h6>
   </div>
-  }
 </div>
