@@ -11,8 +11,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <app-search-cat-loaction [categories]="mainCatList"
-            (onHandleSubmit)="onHandleSubmit($event)"></app-search-cat-loaction>
+          <app-search-cat-loaction (onHandleSubmit)="onHandleSubmit($event)"></app-search-cat-loaction>
         </div>
       </div>
 
@@ -22,32 +21,27 @@
       <div class="container">
         <div class="content-header pb-3 pt-3">
           <div class="row">
-            <div class="col-lg-4">
-              <h4>Popular {{activeTabName}}</h4>
+            <div class="col-lg-12">
+              <h4>{{this.aggregateFilters.Header}}</h4>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-lg-12">
+          <div
+            *ngIf="this.aggregateFilters && this.aggregateFilters.filterlist && this.aggregateFilters.filterlist.length"
+            class="col-lg-12">
             <div class="sorting-info">
               <div class="row align-items-center">
                 <div class="col-md-12 col-12">
                   <div class="booking-lists nav-scroller">
                     <ul class="nav">
                       <!-- <li>
-                        <select class="form-select">
-                          <option selected>Sort by</option>
-                          <option value="1">This Month</option>
-                          <option value="2">Last 30 Days</option>
-                          <option value="3">Custom</option>
-                        </select>
-                      </li> -->
-                      <li>
                         <a>Top Rated</a>
-                      </li>
-                      <li *ngFor="let item of filteredSubCategories">
-                        <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.name}}</a>
+                      </li> -->
+                      <li *ngFor="let item of this.aggregateFilters.filterlist">
+                        <a [class.active]="selectedSubCats.includes(item.value)"
+                          (click)="changeBookTab(item)">{{item.name}}</a>
                       </li>
                     </ul>
                   </div>
@@ -57,9 +51,12 @@
           </div>
 
           <div class="col-md-8">
-            <div class="car-driv-view-detail">
-              <app-service-list [activeTabName]="activeTabName"
-                [filteredSubCategories]="filteredSubCategories"></app-service-list>
+            <div *ngIf="reLoadDetails" class="car-driv-view-detail">
+              <app-service-list [servicSearchResult]="servicSearchResult"
+                [searchDetails]="searchObj"></app-service-list>
+            </div>
+            <div class="text-center" *ngIf="!servicSearchResult.length">
+              Not Data
             </div>
           </div>
           <div class="col-md-4">

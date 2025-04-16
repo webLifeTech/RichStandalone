@@ -9,6 +9,7 @@ import { GlobalService } from '../../../../../shared/services/global.service';
 import { ProfileService } from '../../../../../shared/services/profile.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @Component({
@@ -20,7 +21,8 @@ import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule,
   ],
   providers: [DatePipe],
   templateUrl: './cab-booking-summary.component.html',
@@ -41,6 +43,7 @@ export class CabBookingSummaryComponent {
     "Yearly": "Numbers of Years",
   };
   bookingSummaryDetails: any = {};
+  todayDate = new Date();
 
   constructor(
     public cabService: CabService,
@@ -56,13 +59,20 @@ export class CabBookingSummaryComponent {
       this.params = params;
       this.type = this.params['type'];
       this.searchObj.timeType = "Monthly";
-      // this.searchObj.pick_time = null;
-      // this.searchObj.drop_time = null;
+      console.log("this.type >>>>>>", this.type);
+
       this.searchObj.timeDuration = 1;
-      this.getVehicleBookingSummaryDetails();
+      if (this.type === 'car') {
+        this.getVehicleBookingSummaryDetails();
+      }
+      if (this.type === 'driver') {
+        this.getDriverBookingSummary();
+      }
     })
     this.getRentType();
-    this.duration = new Array(30);
+    for (let step = 0; step < 12; step++) {
+      this.duration.push({ value: step + 1 })
+    }
   }
 
   // Get All Dropdwon List
@@ -120,6 +130,33 @@ export class CabBookingSummaryComponent {
     })
   }
 
+  // Get Booking getDriverBookingSummary
+  getDriverBookingSummary() {
+    let body = {
+      "rentType": this.searchObj.timeType,
+      "duration": parseInt(this.searchObj.timeDuration),
+      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yy'),
+      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yy'),
+      "driverId": this.searchObj.vehicleId,
+      "summaryId": this.searchObj.summaryId,
+      "couponCode": this.searchObj.couponCode,
+      "userId": this.gs.loggedInUserInfo.userId
+    }
+
+    this.cabService.getDriverBookingSummary(body).subscribe((res: any) => {
+      console.log("getDriverBookingSummary >>>>", res);
+      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+        this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
+        console.log("this.bookingSummaryDetails >>>>>>", this.bookingSummaryDetails);
+
+      } else {
+        this.gs.isSpinnerShow = false;
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
   }
@@ -144,6 +181,14 @@ export class CabBookingSummaryComponent {
         break;
     }
 
-    this.getVehicleBookingSummaryDetails();
+    this.gs.lastSearch = this.searchObj;
+
+    if (this.type === 'car') {
+      this.getVehicleBookingSummaryDetails();
+    }
+    if (this.type === 'driver') {
+      this.getDriverBookingSummary();
+    }
+    // this.getVehicleBookingSummaryDetails();
   }
 }

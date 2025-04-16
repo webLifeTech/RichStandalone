@@ -89,7 +89,6 @@ export class NftService {
 
   checkNFTPurchased(tableData: any) {
     const nftUsers = localStorage.getItem('purchasedNFTUser') ? JSON.parse(localStorage.getItem('purchasedNFTUser') || '[]') : [];
-    console.log("checkNFTPurchased >>>>>>>", nftUsers);
     for (let i in tableData) {
       if (nftUsers.indexOf(tableData[i].kyc_id) != -1) {
         tableData[i].isPurchased = true

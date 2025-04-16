@@ -22,12 +22,12 @@
         </a>
       </div>
     </div>
-    <div *ngIf="!filteredData.length" class="col-lg-12 mt-5">
-      <div class="text-center">
-        <p>Data Not Found!</p>
-      </div>
-    </div>
   </ng-container>
+  <div *ngIf="!filteredData.length" class="col-lg-12 mt-5">
+    <div class="text-center">
+      <p>Data Not Found!</p>
+    </div>
+  </div>
   <div *ngIf="filteredData.length" class="col-lg-12 mt-3">
     <div class="table-responsive dashboard-table mb-4">
       <table class="table">
@@ -39,7 +39,8 @@
                 ({{ sortDirection === 'asc' ? '↑' : '↓' }})
               </span>
             </th>
-            <th class="text-center">{{'userDashboard.kyc.upload_bulk_vehicle.kyc' | translate}}
+            <th *ngIf="this.type !== 'vendor-profile'" class="text-center">{{'userDashboard.kyc.upload_bulk_vehicle.kyc'
+              | translate}}
             <th *ngIf="actions.length">Actions</th>
           </tr>
         </thead>
@@ -47,6 +48,10 @@
           <tr
             *ngFor="let row of filteredData | paginate: { itemsPerPage: 5, currentPage: currentPage, totalItems: totalData }; let idx = index;">
             <td *ngFor="let column of columns">
+              <span
+                *ngIf="column.fieldObject && (row[column.field]?.includes('.jpg') || row[column.field]?.includes('.jpeg') || row[column.field]?.includes('.png'))">
+                <img [src]="row[column.field]" alt="image" width="70px">
+              </span>
               <span *ngIf="!column.fieldObject">
                 {{ row[column.field] }}
               </span>
@@ -54,7 +59,7 @@
                 {{ row[column.fieldObject][column.field] }}
               </span>
             </td>
-            <td class="text-center">
+            <td *ngIf="this.type !== 'vendor-profile'" class="text-center">
               <span class="badge badge-success">
                 Success
               </span>

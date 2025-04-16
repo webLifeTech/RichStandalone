@@ -10,23 +10,6 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-12">
-        <div class="sorting-info">
-          <div class="row align-items-center justify-content-end">
-            <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <select class="form-select">
-                <option selected>This Week</option>
-                <option value="1">This Month</option>
-                <option value="2">Last 30 Days</option>
-                <option value="3">Custom</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
 
       <div class="col-lg-12 d-flex">
         <div class="card book-card flex-fill mb-0">
@@ -35,10 +18,23 @@
               <div class="col-md-5">
                 <h4>{{'All Activities'}} <span>{{totalData}}</span></h4>
               </div>
-              <div class="col-md-7 text-md-end">
-                <div class="table-search">
-                  <div id="tablefilter">
 
+              <div class="col-md-2">
+                <div *ngIf="filterObj.sortFilter == 'Custom'">
+                  <input placeholder="Date Time Range:" class="form-control datetimepicker-input digits"
+                    [(ngModel)]="filterObj.dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
+                    [owlDateTime]="dtRange1" />
+                  <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <ng-select [items]="sortFilter" bindLabel="value" bindValue="value" (change)="onChange()"
+                  placeholder="Select" [(ngModel)]="filterObj.sortFilter" name="sortFilter" clearable="false">
+                </ng-select>
+              </div>
+              <div class="col-md-3 text-end">
+                <div class="table-search">
+                  <div id="tablefilter" class="m-0">
                     <div class="dataTables_filter">
                       <label>
                         <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
@@ -48,18 +44,6 @@
                     </div>
                   </div>
                 </div>
-                <!-- <label class="example-input-wrapper">
-                  Date Time:
-                  <input
-                    placeholder="Date Time Range:"
-                    [style.width]="'350px'"
-                    [(ngModel)]="dateTimeRange"
-                    [selectMode]="'range'"
-                    [owlDateTimeTrigger]="dtRange1"
-                    [owlDateTime]="dtRange1"
-                  />
-                  <owl-date-time #dtRange1></owl-date-time>
-                </label> -->
               </div>
             </div>
           </div>

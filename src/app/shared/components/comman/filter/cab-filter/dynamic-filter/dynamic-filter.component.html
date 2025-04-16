@@ -8,11 +8,13 @@
             [checked]="checked(option.value)" (change)="applyFilter($event, filterOBj.key)" [disabled]="!option.count">
 
 
-          <label *ngIf="filterOBj.key == 'VEHICLERATING'" class="form-check-label rating" for="{{ option.value }}">
+          <label *ngIf="filterOBj.key == 'VEHICLERATING' || filterOBj.key == 'DRIVERRATING'"
+            class="form-check-label rating" for="{{ option.value }}">
             <ngb-rating [rate]="option.value" [max]="5" [disabled]="true"></ngb-rating>
             <span class="ms-1">({{ option.name }})</span>
           </label>
-          <label *ngIf="filterOBj.key != 'VEHICLERATING'" class="form-check-label" for="{{ option.value }}">{{
+          <label *ngIf="filterOBj.key != 'VEHICLERATING' && filterOBj.key != 'DRIVERRATING'" class="form-check-label"
+            for="{{ option.value }}">{{
             option.name | translate }}</label>
           <label class="form-check-count" for="{{ option.value }}">{{ option.count || 0 }}</label>
         </div>

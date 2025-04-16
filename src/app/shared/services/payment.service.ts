@@ -36,14 +36,16 @@ export class PaymentService {
   }
 
   public getSupportedCoins() {
-    return this.http.get(this.baseUrl + 'getSupportedCoins').pipe(
+    // this.baseUrl + 'getSupportedCoins'
+    return this.http.get('https://crypto-taxibooking-20030426091.asia-south1.run.app/api/getSupportedCoins').pipe(
       map((res: any) => {
         return res;
       })
     );
   }
   public createTransaction(data: any) {
-    return this.http.post(this.baseUrl + 'createTransaction', data).pipe(
+    // this.baseUrl + 'createTransaction'
+    return this.http.post('https://crypto-taxibooking-20030426091.asia-south1.run.app/api/createTransaction', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -67,7 +69,4 @@ export class PaymentService {
       })
     );
   }
-
-  // TLHUB/Wallet/AddToWallet
-  // TLHUB/Wallet/GetWalletDetails?userId={userId}
 }

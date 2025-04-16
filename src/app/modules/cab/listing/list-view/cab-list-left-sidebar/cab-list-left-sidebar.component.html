@@ -1,7 +1,7 @@
 <div class="bg-inner small-section pb-0">
   <div class="container">
     <div class="flight-search">
-      <app-cab-search (searchEvent)="searachVehicleResult($event,'main-search')"></app-cab-search>
+      <app-cab-search (searchEvent)="searchVehicleResult($event,'main-search')"></app-cab-search>
     </div>
   </div>
 </div>
@@ -11,10 +11,10 @@
     <div class="row">
       <div class="col-lg-3">
         <app-cab-filter [aggregateFilters]="aggregateFilters"
-          (searchEvent)="searachVehicleResult($event,'filter-search')"></app-cab-filter>
+          (searchEvent)="searchVehicleResult($event,'filter-search')"></app-cab-filter>
       </div>
       <div *ngIf="reLoadDetails" class="col-lg-9">
-        <app-cab-list-details [searachResult]="vehicleSearachResult" [carTypes]="vehicleType" [pageSize]="pageSize"
+        <app-cab-list-details [searchResult]="vehicleSearchResult" [carTypes]="vehicleType" [pageSize]="pageSize"
           [marginClass]="false" [responsiveLatestFilter]="true" [noSidebar]="false"></app-cab-list-details>
       </div>
     </div>

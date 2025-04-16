@@ -22,6 +22,11 @@ export class GlobalService {
   isDivComeOwnedCarLicenseVerified: boolean = false;
   lastSearch: any = {};
   loggedInUserInfo: any = {};
+  paymentDetails: any = {
+    creditCard: {},
+    ach: {},
+    crypto: {},
+  };
 
   // Get Currency
   public currencyItem = localStorage.getItem("currency");
@@ -190,5 +195,38 @@ export class GlobalService {
       );
       return result;
     }, {});
+  }
+
+  // Convert 12-hour (12:00 AM/PM) format to 24-hour (00:00) format
+  convertTo24Hour(time: string): string {
+    const match = time.match(/^(\d{1,2}):(\d{2}) (AM|PM)$/);
+    if (!match) return time;
+
+    let [_, hours, minutes, period] = match;
+    let hourNum = parseInt(hours, 10);
+
+    if (period === 'PM' && hourNum !== 12) {
+      hourNum += 12;
+    } else if (period === 'AM' && hourNum === 12) {
+      hourNum = 0;
+    }
+
+    return `${hourNum.toString().padStart(2, '0')}:${minutes}`;
+  }
+
+  // Convert 24-hour format (00:00) back to 12-hour format (12:00 AM/PM)
+  convertTo12Hour(time: string): string {
+    const [hourStr, minuteStr] = time.split(':');
+    let hours = parseInt(hourStr, 10);
+    const minutes = minuteStr;
+    const period = hours >= 12 ? 'PM' : 'AM';
+
+    if (hours > 12) {
+      hours -= 12;
+    } else if (hours === 0) {
+      hours = 12;
+    }
+
+    return `${hours}:${minutes} ${period}`;
   }
 }

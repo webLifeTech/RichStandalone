@@ -8,6 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { DynamicFormComponent } from '../../user-dashboard/comman/dynamic-form/dynamic-form.component';
+import { ProfileService } from '../../../shared/services/profile.service';
+import { VendorServService } from '../../../shared/services/vendor-service.service';
+import { DynamicGridComponent } from '../../user-dashboard/comman/dynamic-grid/dynamic-grid.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-profile',
@@ -17,21 +22,24 @@ import { ConfirmationModalComponent } from '../../../shared/components/comman/mo
     NgSelectModule,
     MatExpansionModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    DynamicFormComponent,
+    DynamicGridComponent,
   ],
   templateUrl: './service-profile.component.html',
   styleUrl: './service-profile.component.scss'
 })
 
 export class ServiceProfileComponent {
-  @Input() activeKycTab: any;
-  @Input() kycForm: any;
-  @Input() fleetOwnerForm: any;
-  @Input() isEditInfo: any;
-  @Input() upload_type: any;
-  @Input() isVehicleInfoEdit: any;
-
-  // @Input() isHaveForeignLicense: any;
+  activeKycTab: any;
+  kycForm: any = {
+    state: 42,
+    menuId: 30
+  };
+  isFormEdit: boolean = false;
+  isAddEditVendor: boolean = false;
+  selectedTabObj: any = {};
+  singleDetailInfo: any = {};
 
   @Output() onDivInfoSubmit = new EventEmitter<any>();
   @Output() vfVehicleKycUpdate = new EventEmitter<any>();
@@ -40,125 +48,93 @@ export class ServiceProfileComponent {
 
   profileUrl: any = "";
   isEdit: boolean = false;
-  driverInfoForm: any = {
-    workingHours: [
-      { no: 1, name: 'Monday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 2, name: 'Tuesday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 3, name: 'Wednesday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 4, name: 'Thursday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 5, name: 'Friday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 6, name: 'Saturday', from_time: "10:00", to_time: "10:00", status: 'ON' },
-      { no: 7, name: 'Sunday', from_time: "10:00", to_time: "10:00", status: 'OFF' },
-    ]
-  };
-  mainCatList = [
-    {
-      name: 'Attorney',
-      id: "1",
-      logo: 'https://content.jdmagicbox.com/comp/vadodara/62/0265p265std160662/catalogue/kalpeshkumar-j-parekh-makarpura-vadodara-lawyers-0p6urwx8zi.jpg',
+  sidebarTabs: any = [];
+  gridInfoData: any = [];
+  isLoadVendorDetail: boolean = false; // need to do
 
-    },
-    {
-      name: 'Mortgage brokers',
-      id: "2",
-      logo: 'https://assets.bizclikmedia.net/668/033068c58c737acd3de0c69df92e5828:017186ccbc78d5d6b9ad8cb45995b45e/fannae-mae-1.jpg',
-    },
-    {
-      name: 'Insurance Agent',
-      id: "3",
-      logo: 'https://cdn-icons-png.freepik.com/512/4599/4599163.png',
-    },
-    {
-      name: 'Vehicle Inspections',
-      id: "4",
-      logo: 'https://static.thenounproject.com/png/1076534-200.png',
-    },
-  ]
-
-  filteredSubCategories: any = [];
-  subCategories = [
-    { parentId: "1", name: "Bankruptcy", value: "Bankruptcy" },
-    { parentId: "1", name: "Contracts", value: "Contracts" },
-    { parentId: "1", name: "Criminal defense", value: "Criminal defense" },
-    { parentId: "1", name: "Family and estate", value: "Family and estate" },
-    { parentId: "1", name: "General litigation", value: "General litigation" },
-    { parentId: "1", name: "Government", value: "Government" },
-    { parentId: "1", name: "Health, injury and disability", value: "Health, injury and disability" },
-    { parentId: "1", name: "Real estate", value: "Real estate" },
-    { parentId: "1", name: "Vehicular", value: "Vehicular" },
-
-    { parentId: "2", name: "Auto", value: "Auto" },
-    { parentId: "2", name: "Business", value: "Business" },
-    { parentId: "2", name: "Credit card", value: "Credit card" },
-    { parentId: "2", name: "Mortgage", value: "Mortgage" },
-    { parentId: "2", name: "Personal", value: "Personal" },
-    { parentId: "2", name: "Student", value: "Student" },
-    { parentId: "2", name: "Title", value: "Title" },
-
-
-    { parentId: "3", name: "Business", value: "Business" },
-    { parentId: "3", name: "Health", value: "Health" },
-    { parentId: "3", name: "Identity protection", value: "Identity protection" },
-    { parentId: "3", name: "Jewelry", value: "Jewelry" },
-    { parentId: "3", name: "Life", value: "Life" },
-    { parentId: "3", name: "Overseas", value: "Overseas" },
-    { parentId: "3", name: "Pet", value: "Pet" },
-    { parentId: "3", name: "Property", value: "Property" },
-    { parentId: "3", name: "Travel", value: "Travel" },
-    { parentId: "3", name: "Umbrella", value: "Umbrella" },
-    { parentId: "3", name: "Vehicle", value: "Vehicle" },
-
-    { parentId: "4", name: "Car Inspectors", value: "Car Inspectors" },
-    { parentId: "4", name: "Oil Change Stations", value: "Oil Change Stations" },
-    { parentId: "4", name: "Auto Repair", value: "Auto Repair" },
-    { parentId: "4", name: "Transmission Repair", value: "Transmission Repair" },
-    { parentId: "4", name: "Smog Check Stations", value: "Smog Check Stations" },
-    { parentId: "4", name: "Tires", value: "Tires" },
-  ]
-
-  usaStatesArray: any = [];
-
-  businessTypeList: any = [
-    { name: 'Individual', value: 'Individual' },
-    { name: 'Company', value: 'Company' },
+  //   vender photo
+  // phone number
+  // last name
+  // Vehicle List Columns and Data
+  vendorInfoColumns = [
+    { header: 'Profile', fieldObject: "contactInfo", field: 'providerProfilePath' },
+    { header: 'BUSINESS NAME', fieldObject: "contactInfo", field: 'dbaName' },
+    { header: 'FIRST NAME', fieldObject: "contactInfo", field: 'firstName' },
+    { header: 'LAST NAME', fieldObject: "contactInfo", field: 'lastName' },
+    { header: 'PHONE NUMBER', fieldObject: null, field: 'phoneNumber' },
+    { header: 'CATEGORY', fieldObject: null, field: 'category' },
   ];
 
-  yesNoList: any = [
-    { name: 'Yes', value: 'Yes' },
-    { name: 'No', value: 'No' },
-  ];
-  statusList: any = [
-    { name: 'Active', value: 'Active' },
-    { name: 'Inactive', value: 'Inactive' },
-  ];
-  countryList: any = [
-    { name: 'USA', value: 'USA' },
-    { name: 'China', value: 'China' },
-  ];
-  stateList: any = [
-    { name: 'New York', value: 'New York', country: "USA" },
-    { name: 'New York City', value: 'New York City', country: "USA" },
-    { name: 'North Carolina', value: 'North Carolina', country: "USA" },
-    { name: 'Hebei', value: 'Hebei', country: "China" },
-    { name: 'Shanxi', value: 'Shanxi', country: "China" },
-  ];
-  cityList: any = [
-    { name: 'Albany', value: 'Albany', country: "USA" },
-    { name: 'Raleigh', value: 'Raleigh', country: "USA" },
-    { name: 'Shijiazhuang', value: 'Shijiazhuang', country: "China" },
-    { name: 'Taiyuan', value: 'Taiyuan', country: "China" },
-  ];
+  // Actions grids
+  vendorInfoActions = ['View', 'Edit'];
 
   constructor(
     public gs: GlobalService,
     private modalService: NgbModal,
+    private profileService: ProfileService,
+    private vendorService: VendorServService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
-    this.gs.usStates().subscribe(response => {
-      this.usaStatesArray = response;
+    this.route.queryParams.subscribe((params: any) => {
+      if (this.gs.loggedInUserInfo.role == 'Vendor') {
+        return;
+      }
+      if (params && params.type) {
+        this.router.navigate(['/auth/log-in'], {
+          queryParams: params,
+        });
+      }
     })
   }
 
   ngOnInit() {
+    this.kycForm.state = 42;
+    this.getConfigUIForms()
+    this.getProviderDetails()
+  }
+
+  getConfigUIForms() {
+    let body = {
+      "stateCode": "42",
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName || null,
+      "countryId": 230,
+      "transactionId": 1,
+      "menuId": 30
+    }
+    this.profileService.getConfigUIForms(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>", response);
+      if (response && response.length) {
+        this.sidebarTabs = response
+        this.selectedTabObj = JSON.parse(JSON.stringify(this.sidebarTabs[0]));
+        this.activeKycTab = 1;
+      } else {
+        // this.toast.errorToastr("Something went wrong");
+      }
+    }, err => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  getProviderDetails() {
+    this.isLoadVendorDetail = false;
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+    }
+    this.vendorService.GetProviderDetails(body).subscribe(async (response: any) => {
+      console.log("getProviderDetails response >>>>>>", response);
+      this.singleDetailInfo = { providerRequest: response };
+      if (response && !response.providerProfilePath) { // !response.businessType need to do
+        this.isFormEdit = true;
+        this.isAddEditVendor = true;
+      } else {
+        this.isLoadVendorDetail = true;
+        response.phoneNumber = response.contactInfo.phoneNumbers[0].phoneNumber;
+        this.gridInfoData = [response];
+      }
+    })
   }
 
   handleUpload(event: any) {
@@ -171,13 +147,6 @@ export class ServiceProfileComponent {
   }
 
   documentUpload(type: any) {
-  }
-
-  onChangeServices(value: any) {
-    console.log("value >>>>", value);
-
-    const selected: any = this.mainCatList.find((item: any) => item.id === value);
-    this.filteredSubCategories = this.subCategories.filter((item: any) => item.parentId === selected.id);
   }
 
   async changeStatus(item: any) {
@@ -197,13 +166,22 @@ export class ServiceProfileComponent {
   onChangeTime(event: any) {
   }
 
-  onSubmit() {
-
+  handleAction(event: any, type: any) {
+    if (type === 'vendor-profile') {
+      this.isFormEdit = true;
+      this.isAddEditVendor = true;
+    }
   }
-  onUpdate() {
 
+  handleSubmit() {
+    // this.getDriverDetails();
+    window.scrollTo({ top: 300, behavior: 'smooth' });
   }
-  onCancel() {
 
+  handleCancel() {
+    this.isFormEdit = false;
+    this.isAddEditVendor = false;
+    this.gs.isModificationOn = false;
+    this.getProviderDetails();
   }
 }

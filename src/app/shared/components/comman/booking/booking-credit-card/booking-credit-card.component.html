@@ -1,14 +1,39 @@
-<form>
+<form [formGroup]="form">
   <div class="row m-0 align-items-end">
     <div class="col-lg-12">
-      <div *ngFor="let item of paymentOptions; let indx = index" class="form-group">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="upload_type" id="{{'payment_credit_card'+indx}}"
-            [value]="item.card_type" [(ngModel)]="selectedMethod">
-          <label class="form-check-label mx-2" for="{{'payment_credit_card'+indx}}">
-            {{ item.card_name | translate }} ending in {{ item.last4 | translate}}
-          </label>
-          <app-card-types [card_type]="item.card_type"></app-card-types>
+      <div class="row">
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label for="c-name">Credit Card Number</label>
+            <div class="input-group">
+              <input class="form-control" id="cc-number" formControlName="cardNumber" name="cardNumber" type="tel"
+                autocomplete="cc-number" ccNumber #ccNumber="ccNumber" placeholder="•••• •••• •••• ••••"
+                (keyup)="onEnterCreditCard(ccNumber)">
+              <img *ngIf="!this.cardType || this.cardType == 'unknown'" src="assets/images/icon/credit-card.png" alt="">
+              <img *ngIf="this.cardType" [src]="creditCards[this.cardType]" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="c-name">Expiry Date (MM/YY)</label>
+            <input class="form-control" id="cc-exp-date" formControlName="expirationDate" name="expirationDate"
+              type="tel" autocomplete="cc-exp" ccExp placeholder="•• / ••">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="c-name">CVV</label>
+            <input class="form-control" id="cc-cvc" formControlName="cvc" name="cvc" type="tel" autocomplete="off" ccCVC
+              placeholder="•••">
+          </div>
+        </div>
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label for="c-name">Name</label>
+            <input class="form-control" id="holder_name" formControlName="holderName" name="holderName" type="text"
+              placeholder="Holder Name">
+          </div>
         </div>
       </div>
     </div>

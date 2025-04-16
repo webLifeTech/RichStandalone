@@ -96,16 +96,8 @@ export class BookingComponent {
       //   "remarks": "Package subscription for 6 months",
       //   "payckageStatus": "Subscribe"
       // }
-      // // {
-      // //   "userId": this.gs.loggedInUserInfo.userId || null,
-      // //   "packageId": this.params.packageId,
-      // //   "startDate": this.transformDate(this.summaryObj.start_time, 'MM/dd/yy'),
-      // //   "endDate": this.transformDate(this.summaryObj.end_time, 'MM/dd/yy'),
-      // //   "noOfMonths": this.summaryObj.timeType == "Monthly" ? parseInt(this.summaryObj.timeDuration) : parseInt(this.summaryObj.timeDuration) * 12,
-      // //   "statusCode": "SubScription"
-      // // }
-      // console.log("body >>>", body);
 
+      // console.log("body >>>", body);
       // this.gs.isSpinnerShow = true;
       // this.pricingS.payPackagePaymentDummyTest(body).subscribe((response: any) => {
       //   this.gs.isSpinnerShow = false;

@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { PickupDropInstructionDialogComponent } from '../../../../../shared/components/dialoge/pickup-drop-instruction-dialog/pickup-drop-instruction-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GlobalService } from '../../../../../shared/services/global.service';
 
 @Component({
   selector: 'app-pick-drop-instructions',
@@ -19,6 +20,7 @@ export class PickDropInstructionsComponent {
   @Input() searchDetails: any = {}
   @Input() bookingDetails: any = {}
   constructor(
+    public gs: GlobalService,
     private dialog: MatDialog,
   ) { }
 

@@ -22,7 +22,8 @@
     <hr class="div-line" />
     <div class="collection-collapse-block-content"
       [ngClass]="{ 'd-block' : isOpenCab == true, 'd-none' : isOpenCab == false}">
-      <div *ngIf="type === 'car'" class="filter-block">
+      <!-- *ngIf="type === 'car'" -->
+      <div class="filter-block">
         <ng-container *ngFor="let item of aggregateFilters">
           <app-dynamic-filter [filterOBj]="item"></app-dynamic-filter>
         </ng-container>

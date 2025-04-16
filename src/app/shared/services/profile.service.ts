@@ -458,4 +458,29 @@ export class ProfileService {
       })
     );
   }
+
+  // Hello Paras Gogdani 
+  // TLHUB/DriverKYC/GetDriverWorkingHours?userId={userId}&driverId={driverId}please work on!
+  // TLHUB/DriverKYC/UpdateDriverWorkingHours
+
+  // KYC -> GetDriverWorkingHours
+  public GetDriverWorkingHours(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+      .set('driverId', dataParams.driverId)
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/DriverKYC/GetDriverWorkingHours', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // KYC -> UpdateDriverWorkingHours
+  public UpdateDriverWorkingHours(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverKYC/UpdateDriverWorkingHours`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

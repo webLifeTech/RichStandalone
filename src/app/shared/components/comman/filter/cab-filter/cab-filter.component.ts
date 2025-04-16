@@ -80,6 +80,8 @@ export class CabFilterComponent {
         SHIFTINFO: null,
         VEHICLERATING: null,
         VEHICLETYPE: null,
+        DRIVERRATING: null,
+        EXPERIENCE: null,
       },
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation

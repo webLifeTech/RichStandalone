@@ -8,8 +8,9 @@ import { CurrencySymbolPipe } from '../../../../pipe/currency.pipe';
 import { CommonModule } from '@angular/common';
 import { GlobalService } from '../../../../services/global.service';
 import { ToastService } from '../../../../services/toast.service';
-import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
+import { FavoriteService } from '../../../../services/favorite.service';
 
 @Component({
   selector: 'app-cab-card-view',
@@ -28,6 +29,7 @@ export class CabCardViewComponent {
   @Input() type: string = "";
   @Input() from: string = "";
   @Input() singleItem: any = {};
+  @Input() couponDetails: any = {};
   @Output() onCheckAvailability = new EventEmitter<any>();
 
   public params: Params;
@@ -104,51 +106,49 @@ export class CabCardViewComponent {
   }
 
   constructor(
-    public cabService: CabService,
     private router: Router,
     private route: ActivatedRoute,
+    public cabService: CabService,
     public gs: GlobalService,
     private toast: ToastService,
     private dialog: MatDialog,
     private modalService: NgbModal,
+    private favoriteService: FavoriteService,
   ) {
-
     this.route.queryParams.subscribe((params) => {
       if (params['type']) {
         this.params = params;
         this.type = params['type'] || null;
       }
     })
-
   }
 
   ngOnInit() {
     this.details = this.singleItem;
-    console.log("this.details >>>>", this.details);
-
-    // if (this.from === 'wishlist') {
-    //   if (this.type === 'car') {
-    //   } else {
-    //     this.driverDetails = this.singleItem;
-    //     console.log("this.driverDetails >>>>>", this.driverDetails);
-    //     console.log("this.from >>>>>", this.from);
-
-    //   }
-    // }
   }
 
+  // User for Car/Driver
   addRemoveWishlist(item: any): void {
-    item.isAddWishlist = !item.isAddWishlist;
-    let myWishlist = this.gs.getMyWishlistData();
-    if (item.isAddWishlist) {
-      myWishlist.push(item);
-      this.toast.successToastr("Added to your Favourite");
-    } else {
-      let index = myWishlist.findIndex((i: any) => i.id === item.id);
-      myWishlist.splice(index, 1);
-      this.toast.successToastr("Removed from your Favourite");
+    let Body = {
+      "favId": 1,
+      "userId": this.gs.loggedInUserInfo.userId,
+      "riskId": this.type === 'car' ? item.vehicleId : item.driverId,
+      "risktype": this.type === 'car' ? 'Vehicle' : 'Driver',
+      "isActive": !item.favorite
     }
-    localStorage.setItem('MyWishlistStore', JSON.stringify(myWishlist));
+
+    this.favoriteService.insertUpdateFavourite(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (Body.isActive) {
+        this.toast.successToastr("Added to your Favourite");
+      } else {
+        this.toast.successToastr("Removed from your Favourite");
+      }
+      item.favorite = !item.favorite;
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   openImportantNoticeDialog(): void {
@@ -157,6 +157,7 @@ export class CabCardViewComponent {
       data: {}
     });
   }
+
 
   onBook() {
     if (!this.gs.isLicenseVerified) {

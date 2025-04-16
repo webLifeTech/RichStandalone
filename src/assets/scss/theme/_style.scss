@@ -11053,9 +11053,9 @@ section {
 }
 
 .enquiry-modal {
-  .form-control {
-    margin-bottom: 16px !important;
-  }
+  // .form-control {
+  //   margin-bottom: 16px !important;
+  // }
 
   .modal-header {
     .modal-title {
@@ -16487,7 +16487,7 @@ section {
           margin-bottom: -4px;
           font-weight: 700;
           font-size: calc(13px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
-          max-width: 34px;
+          max-width: 60px; // 34px
           padding: 2px;
         }
 
@@ -17417,6 +17417,7 @@ section {
               position: absolute;
               right: 10px;
               bottom: 8px;
+              z-index: 10;
             }
           }
 

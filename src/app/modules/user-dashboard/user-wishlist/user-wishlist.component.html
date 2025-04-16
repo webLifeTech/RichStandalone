@@ -3,17 +3,35 @@
     <div class="content-header">
       <h4>Favourite</h4>
     </div>
-    <div class="row">
-      <div *ngFor="let item of myWishlist" class="col-md-12">
-        <app-cab-card-view [from]="'wishlist'" [type]="type" [singleItem]="item"
-          (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
-      </div>
-      <div *ngIf="!myWishlist.length" class="col-md-12">
-        <p class="text-center">
-          <b>No Favourite</b>
-        </p>
-      </div>
-    </div>
 
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="row d-flex align-items-center">
+            <div class="col-lg-6 col-sm-12 col-12">
+              <div class="booking-lists">
+                <ul class="nav">
+                  <li *ngFor="let item of tabs">
+                    <a [class.active]="activeTab == item.value" (click)="onChangeTab(item)">{{item.title}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoader" class="row">
+        <div *ngFor="let item of myWishlist" class="col-md-12">
+          <app-cab-card-view [from]="'wishlist'" [type]="activeTab" [singleItem]="item"
+            (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
+        </div>
+        <div *ngIf="!myWishlist.length" class="col-md-12">
+          <p class="text-center">
+            <b>No Favourite</b>
+          </p>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>

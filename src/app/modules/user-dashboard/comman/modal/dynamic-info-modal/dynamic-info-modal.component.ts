@@ -24,6 +24,7 @@ export class DynamicInfoModalComponent {
   @Input() viewInfoDetails: any = {};
   @Input() groupedSectionsData: any = {};
   masterDropdwonList: any = [];
+  workingHours: any = [];
 
   constructor(
     private modalService: NgbModal,
@@ -43,6 +44,12 @@ export class DynamicInfoModalComponent {
     }
     if (this.formType === 'my_vehicle') {
       this.getMasterVehicleCodes();
+    }
+    if (this.formType === 'driver_details') {
+      this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours;
+    }
+    if (this.formType === 'vendor-profile') {
+      this.workingHours = this.viewInfoDetails.providerRequest.workingHours;
     }
     // this.createForm();
   }
@@ -120,6 +127,11 @@ export class DynamicInfoModalComponent {
           const endKey = formArray[i].fieldType === 'TEXTMASK' ? formArray[i].modalValueCode : formArray[i].modalValue;
           const defaultValue = this.getFieldValue(this.viewInfoDetails, formArray[i].modalObject, endKey);
           formArray[i].defaultValue = defaultValue;
+          if (formArray[i].fieldType === 'MULTIDROPDOWN') {
+            const valueAry = formArray[i].modalObject.split('.').reduce((acc: any, curr: any) => acc && acc[curr], this.viewInfoDetails);
+            let att = valueAry.map((item: any) => item[formArray[i].modalValue]);
+            formArray[i].defaultValue = att;
+          }
         }
 
       }

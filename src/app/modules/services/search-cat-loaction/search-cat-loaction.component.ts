@@ -8,32 +8,19 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
+import { VendorServService } from '../../../shared/services/vendor-service.service';
+import { CabService } from '../../../shared/services/cab.service';
+import { GlobalService } from '../../../shared/services/global.service';
 
-export interface State {
-  name: string;
+export interface Category {
+  Name: string;
   logo: string;
   id: string;
 }
-export interface Location {
-  name: string;
-  logo: string;
-}
 
-export interface Category {
-  category_name: string; // Attorney / Mortgage brokers / Insurance Agent / Vehicle Inspections
+export interface Location {
+  address: string;
   logo: string;
-  rating: string;
-  review: string;
-  location: string;
-  sub_category: [];
-  mobile_number: string;
-  whatsapp_number: string;
-  isTrusted: boolean;
-  isVerified: boolean;
-  preference: {
-    icon: string,
-    label: string // top search / trending / responsive
-  };
 }
 
 
@@ -58,66 +45,91 @@ export interface Category {
   styleUrl: './search-cat-loaction.component.scss'
 })
 export class SearchCatLoactionComponent {
-  // categories = [
-  //   { id: 1, name: 'Restaurants' },
-  //   { id: 2, name: 'Delivery' },
-  //   { id: 3, name: 'Takeout' },
-  //   { id: 4, name: 'Accountants' },
-  //   { id: 5, name: 'Plumbers' },
-  //   { id: 6, name: 'Auto Repair' },
-  // ];
 
-  selectedCategory: any = 'Attorney';
-  location: string = '';
+  location: string = ''; //  // need to do
+  selectedCategory: any = ''; // Vehicle Inspections // need to do
 
-  @Input() categories: State[]
+  @Input() providerCategories: any = [];
   @Output() onHandleSubmit = new EventEmitter<any>();
 
   stateCtrl = new FormControl('');
   locationCtrl = new FormControl('');
-  filteredStates: Observable<State[]>;
+  filteredStates: Observable<Category[]>;
   filteredLocation: Observable<Location[]>;
-
-  // states: State[] = [];
 
   locations: Location[] = [
     {
-      name: 'Your Location',
+      address: 'Your Location',
       logo: 'assets/images/cab/icon/location-pin.svg',
     },
   ];
 
-  constructor() {
-    this.filteredStates = this.stateCtrl.valueChanges.pipe(
-      startWith(''),
-      map(state => (state ? this._filterStates(state) : this.categories.slice())),
-    );
+  constructor(
+    private vendorService: VendorServService,
+    public gs: GlobalService,
+    public cabService: CabService,
+  ) {
+    this.getVendorTypes();
     this.filteredLocation = this.locationCtrl.valueChanges.pipe(
       startWith(''),
       map(state => (state ? this._filterLocation(state) : this.locations.slice())),
     );
   }
 
-  private _filterStates(value: any): State[] {
+  private _filterStates(value: any): Category[] {
     const filterValue = value.toLowerCase();
-    return this.categories.filter(state => state);
+    return this.providerCategories.filter((state: any) => state);
   }
   private _filterLocation(value: any): Location[] {
     const filterValue = value.toLowerCase();
     return this.locations.filter(i => i);
   }
 
+  getVendorTypes() {
+    this.vendorService.getMasterProviderCategories().subscribe((res: any) => {
+      this.providerCategories = res;
+      this.filteredStates = this.stateCtrl.valueChanges.pipe(
+        startWith(''),
+        map(state => (state ? this._filterStates(state) : this.providerCategories.slice())),
+      );
+
+    })
+  }
+
   clearLocation() {
     this.location = '';
   }
 
-  onSearch() {
-    console.log('locationCtrl:', this.locationCtrl);
-    console.log('Searching for:', this.selectedCategory, this.location);
 
+  onSearchLocation() {
+    if (this.location.length < 2) {
+      return;
+    }
+    let body = {
+      "location": this.location,
+      "risktype": 'Vendor'
+    }
+    this.gs.isSpinnerShow = true;
+    this.cabService.GetLocations(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.getLocations && response.getLocations.length) {
+        this.locations = response.getLocations;
+        this.filteredLocation = this.locationCtrl.valueChanges.pipe(
+          startWith(''),
+          map(state => (state ? this._filterLocation(state) : this.locations.slice())),
+        );
+      }
+    }, err => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  onSearch() {
+    const categoryInfo = this.providerCategories.find((cat: any) => cat.Name === this.selectedCategory);
     this.onHandleSubmit.emit({
       selectedCategory: this.selectedCategory,
-      location: this.location
+      location: this.location,
+      categoryInfo: categoryInfo,
     })
   }
 }

@@ -820,7 +820,7 @@ header {
     .form-group {
       margin-bottom: 30px !important;
 
-      .ng-select.ng-select-single .ng-select-container {
+      .ng-select .ng-select-container {
         height: 43px;
 
         .ng-input>input {
@@ -1531,8 +1531,8 @@ header {
       }
 
       .active {
-        background: rgba(var(--theme-color), 1);
-        color: #ffffff;
+        background: rgba(var(--theme-color), 1) !important;
+        color: #ffffff !important;
       }
     }
 

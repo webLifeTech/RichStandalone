@@ -67,6 +67,7 @@ export interface cabBooking {
   id: number;
   title: string;
   value: string;
+  type: string;
   panel: string;
   checkId: string;
   checked: boolean;

@@ -66,6 +66,7 @@
     "signup": "sign up",
     "form": {
       "vendor_type": "Vendor Type",
+      "sub_categories": "Sub Category",
       "type": "Type",
       "full_name": "Full name",
       "username": "Mobile Number or Email address",
@@ -264,15 +265,15 @@
     "free_cancellation": "Free Cancellation"
   },
   "payment_success": {
-    "car_title": "Payment Successful ! get ready to ride",
+    "car_title": "Booking Successful",
     "car_massage1": "Thank you for your payment. we have received your payment successfully.",
     "car_massage2": "Your Transaction ID is",
     "car_massage3": "you will get an email invoice soon!",
-    "driver_title": "Payment Successful ! Driver get ready to ride",
+    "driver_title": "Booking Successful",
     "driver_massage1": "Thank you for your payment. we have received your payment successfully.",
     "driver_massage2": "Your Transaction ID is",
     "driver_massage3": "you will get an email invoice soon!",
-    "download_invoice": "download invoice"
+    "download_invoice": "download document"
   },
   "invoice_summary": {
     "car_title": "Payment Successful ! Car get ready to ride",

@@ -151,10 +151,18 @@ export class UserDashboardTopTabBarComponent {
       route: "/user/recent-activity",
       icon: "assets/images/icon/dashboard/booking-icon.svg"
     },
+    {
+      id: 15,
+      visible: false,
+      title: "userDashboard.kyc.toptabs.my_profile",
+      value: "My Profile",
+      route: "/admin/my-profile",
+      icon: "assets/images/icon/dashboard/kyc.svg"
+    },
   ];
 
   accessList: any = {
-    "admin": [101, 6, 8, 10, 11, 12], //
+    "admin": [101, 6, 15, 8, 10, 11, 12], //
     "user": [1, 2, 3, 4, 5, 6, 7, 8, 13, 14], // Driver
     "user_2": [1, 102, 3, 4, 5, 6, 7, 8, 9, 13], //
     "user_3": [1, 102, 3, 4, 5, 6, 7, 8, 9, 13], // Fleetowner

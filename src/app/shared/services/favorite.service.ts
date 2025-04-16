@@ -15,7 +15,9 @@ export class FavoriteService {
 
   // Favorite -> getAllFavourite
   public getAllFavourite(dataParams: any) {
-    const params = new HttpParams().set('userId', dataParams.userId)
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+      .set('riskType', dataParams.riskType)
     return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Favorite/GetAllFavourite', { params }).pipe(
       map((res: any) => {
         return res;

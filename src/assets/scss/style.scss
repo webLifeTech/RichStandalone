@@ -2344,14 +2344,24 @@
   }
 
   .offer-box {
-    background-color: #0080001a;
-    border: 1px solid #008000;
-    padding: 16px;
+    background-color: rgba(0, 128, 0, 0.1019607843);
+    border: 1px dashed #008000;
+    padding: 8px 24px;
     border-radius: 10px;
     margin-top: 16px;
     color: #008000;
     font-weight: 900;
-    font-size: 23px;
+    font-size: 14px;
+    margin-right: 6px;
+
+    // background-color: #0080001a;
+    // border: 1px solid #008000;
+    // padding: 16px;
+    // border-radius: 10px;
+    // margin-top: 16px;
+    // color: #008000;
+    // font-weight: 900;
+    // font-size: 23px;
   }
 
   .brand-sec {
@@ -2388,7 +2398,7 @@
     margin: 0 6px;
 
     span {
-      font-size: 18px;
+      font-size: 20px;
       color: #ffcc33;
       font-weight: bold;
     }

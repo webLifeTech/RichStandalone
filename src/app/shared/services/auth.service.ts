@@ -31,7 +31,9 @@ export class AuthService {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('loggedInUser', JSON.stringify(data));
       if (this.loggedInUserInfo.role === 'admin') {
-        this.router.navigateByUrl('/admin/dashboard');
+        this.router.navigateByUrl('/admin/my-profile');
+      } else if (this.loggedInUserInfo.role === 'Vendor') {
+        this.router.navigateByUrl('/vendor/service-profile');
       } else {
         this.router.navigateByUrl('/cab/listing/list-view');
       }

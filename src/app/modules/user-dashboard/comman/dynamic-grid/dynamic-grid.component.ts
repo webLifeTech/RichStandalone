@@ -74,6 +74,7 @@ export class DynamicGridComponent {
 
   ngOnInit() {
     console.log("this.type >>>>>", this.type);
+    console.log("selectedTabObj >>>>>", this.selectedTabObj);
 
     if (this.type === 'my_vehicle') {
       this.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
@@ -88,7 +89,7 @@ export class DynamicGridComponent {
       if (this.type === 'fleetOwner') {
         this.formName = 'COMPANY INFO';
       }
-      if (this.type === 'branch') {
+      if (this.type === 'branch' || this.type === 'driver_details' || this.type === 'vendor-profile') {
         this.formName = this.selectedTabObj.formName;
       }
       this.filteredData = this.data;
@@ -259,6 +260,32 @@ export class DynamicGridComponent {
           });
         }
       })
+    }
+
+    if (this.type === 'driver_details') {
+      const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+        size: 'lg'
+      });
+      console.log("this.groupedSectionsData >>>>", this.groupedSectionsData);
+
+      modalRef.componentInstance.formType = this.type;
+      modalRef.componentInstance.viewInfoDetails = { [this.groupedSectionsData[0].modalObject]: item };
+      modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+      modalRef.result.then((res: any) => {
+      });
+    }
+
+    if (this.type === 'vendor-profile') {
+      const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+        size: 'lg'
+      });
+      console.log("this.groupedSectionsData >>>>", this.groupedSectionsData);
+
+      modalRef.componentInstance.formType = this.type;
+      modalRef.componentInstance.viewInfoDetails = { "providerRequest": item };
+      modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+      modalRef.result.then((res: any) => {
+      });
     }
   }
 

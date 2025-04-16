@@ -17,6 +17,8 @@ import { DeleteModalComponent } from '../../../../shared/components/comman/modal
 import { NgxMaskDirective, provideNgxMask, NgxMaskPipe } from 'ngx-mask';
 import { TermsAndCModalComponent } from '../../../../shared/components/comman/modal/t-and-c-modal/t-and-c-modal.component';
 import { BranchService } from '../../../../shared/services/branch.service';
+import { ConfirmationModalComponent } from '../../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { VendorServService } from '../../../../shared/services/vendor-service.service';
 
 
 @Component({
@@ -80,6 +82,7 @@ export class DynamicFormComponent {
   isAgreeTerms: boolean = false;
   isRequiredTermsAgree: boolean = true;
   profileUrl: any = "";
+  workingHours: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -89,6 +92,7 @@ export class DynamicFormComponent {
     private datePipe: DatePipe,
     private modalService: NgbModal,
     private branchService: BranchService,
+    private vendorServ: VendorServService,
   ) {
     this.dynamicForm = this.fb.group({
       sections: this.fb.array([])
@@ -97,11 +101,30 @@ export class DynamicFormComponent {
 
   ngOnInit() {
     console.log("singleDetailInfo >>>>>>", this.singleDetailInfo);
+    console.log("this.formType >>>>>>", this.formType);
     this.getConfigUIFields();
     this.gs.isModificationOn = true;
-    if (this.formType === 'branch') {
+    if (this.formType === 'branch' || this.formType === 'vendor-profile') {
       this.isRequiredTermsAgree = false;
     }
+    if (this.formType === 'driver_details') {
+      this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours
+    }
+    if (this.formType === 'vendor-profile') {
+      this.workingHours = this.singleDetailInfo.providerRequest.workingHours
+    }
+  }
+
+
+  editWorkingHours(item: any) {
+    item.isEdit = true;
+    item.fromTime = this.gs.convertTo24Hour(item.fromTime);
+    item.toTime = this.gs.convertTo24Hour(item.toTime);
+  }
+  saveWorkingHours(item: any) {
+    item.isEdit = false;
+    item.fromTime = this.gs.convertTo12Hour(item.fromTime);
+    item.toTime = this.gs.convertTo12Hour(item.toTime);
   }
 
   // Get Config UI Fields
@@ -159,8 +182,6 @@ export class DynamicFormComponent {
             }
           }
         }
-        console.log("this.formArray >>>", this.formArray);
-        console.log("this.formType >>>", this.formType);
         if (this.formType !== 'vehicleUpload') {
           this.getMasterPolicyCodes();
         }
@@ -218,6 +239,8 @@ export class DynamicFormComponent {
     this.profileService.getMasterPolicyCodes(body).subscribe((res: any) => {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
+        console.log("masterDropdwonList >>>>", this.masterDropdwonList);
+
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -291,9 +314,11 @@ export class DynamicFormComponent {
       "effectiveDate": effectiveDate,
     });
 
+    const phoneTYP = this.formType === 'vendor-profile' ? "Cell" : "Home"
+
     let addressTypeIds = addressTypes.find((sItem: any) => sItem.Name == "Home") || {};
     let emailTypeIds = emailTypes.find((sItem: any) => sItem.Name == "Personal") || {};
-    let phoneTypeIds = phoneTypes.find((sItem: any) => sItem.Name == "Home") || {};
+    let phoneTypeIds = phoneTypes.find((sItem: any) => sItem.Name == phoneTYP) || {}; // Cell
 
 
     this.sections.controls.forEach((section: any) => {
@@ -362,6 +387,26 @@ export class DynamicFormComponent {
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err || "Something went wrong");
+    })
+  }
+
+  // Get Countries
+  fetchMasterCategoriesList() {
+    this.vendorServ.getMasterProviderCategories().subscribe((res: any) => {
+      if (res && res.length) {
+        this.sections.controls.forEach((section: any) => {
+          const fieldsArray = section.get('fields') as FormArray;
+          fieldsArray.controls.forEach((field: any) => {
+            if (field.get('fieldName').value === 'CATEGORY') {
+              field.get('dropdownList').setValue(res);
+            }
+          });
+        });
+      } else {
+        this.toast.errorToastr("Something went wrong");
+      }
+    }, (err: any) => {
       this.toast.errorToastr(err || "Something went wrong");
     })
   }
@@ -467,7 +512,20 @@ export class DynamicFormComponent {
               } else {
                 fieldTwo.addControl("valueCd", new FormControl(dataOptions.ID));
               }
+            } else if (fieldTwo.value.fieldId === 323) {
+              this.onChangeDrop({
+                ID: fieldTwo.value.valueCd,
+                Code: fieldTwo.value.value,
+                isValue: true
+              }, fieldTwo, section)
+
             }
+          }
+          if (fieldTwo.value.fieldType === "MULTIDROPDOWN") {
+            const valueAry = fieldTwo.value.modalObject.split('.').reduce((acc: any, curr: any) => acc && acc[curr], this.singleDetailInfo);
+            let att = valueAry.map((item: any) => item[fieldTwo.value.modalValue]);
+            console.log("att >>>>", att);
+            fieldTwo.get('value')?.setValue(att);
           }
           if (fieldTwo.value.fieldType === "RADIO") {
             this.onChangeRadio(fieldTwo.value.value, fieldTwo, section)
@@ -509,6 +567,7 @@ export class DynamicFormComponent {
     this.fetchMasterCountriesList();
     this.drivLicnStateDropdownList();
     this.getAndSetMasterTypeIds();
+    this.fetchMasterCategoriesList();
   }
 
   bindTable(fieldRow: any, section: any) {
@@ -895,6 +954,11 @@ export class DynamicFormComponent {
                   } else {
                     fieldRow.get('value')?.setValue(this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]);
                   }
+
+                  if (fieldRow.value.fieldType === "DROPDOWN") {
+                    let dpObj = fieldRow.value.dropdownList.find((sItem: any) => sItem.Name == this.mvrDriverDetailsRes[autoFillObj[fieldRow.value.fieldId]]) || {};
+                    fieldRow.get('valueCd')?.setValue(dpObj.ID);
+                  }
                 }
 
                 const checkCountryIncl = [157, 190];
@@ -954,6 +1018,9 @@ export class DynamicFormComponent {
 
   // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
+
+    console.log("field.value.fieldName >>>>>", field.value.fieldName);
+
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
@@ -1051,6 +1118,21 @@ export class DynamicFormComponent {
         loopArray.clear();
       }
       console.log("section >>>>>>", section);
+    }
+
+    if (field.value.fieldName === 'CATEGORY') {
+      this.vendorServ.getMasterProviderSubCategories({
+        categoryId: event.ID
+      }).subscribe((res: any) => {
+        const statesArray = res;
+        const stateIndex = this.findControlIndexByCode(fieldsFmArray, 'FLD_VEN_SUB_CATEGORY');
+        if (stateIndex !== -1) {
+          fieldsFmArray.at(stateIndex).get('dropdownList')?.setValue(statesArray);
+          if (!event.isValue) { // not clear if value on edit
+            fieldsFmArray.at(stateIndex).get("value")?.patchValue([])
+          }
+        }
+      })
     }
 
     if (this.submitted) {
@@ -1465,11 +1547,8 @@ export class DynamicFormComponent {
     console.log('this.kycForm.state >>>>', this.kycForm.state);
     console.log('findInvalidControls >>>>', getFormInfo);
     console.log('sections >>>>', this.dynamicForm.value.sections);
-
     console.log("this.formType >>>>>", this.formType);
-
     console.log("draftVehicles >>>>>", this.kycForm.draftVehicles);
-
 
     // return;
     this.submitted = true;
@@ -1534,8 +1613,6 @@ export class DynamicFormComponent {
 
         console.log("finalBody >>>>>>", finalBody);
 
-        // return; // need to do
-
         this.profileService.insertAndUpdateDriverKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
@@ -1553,11 +1630,10 @@ export class DynamicFormComponent {
 
       if (this.formType === 'branch') {
 
-        finalBody.branch["branchContactId"] = null,
-          finalBody.branch["branchPersonNum"] = 0,
-          finalBody.branch["companyPersonNum"] = 0,
-
-          finalBody.branch["companyContactId"] = this.kycForm.contactId;
+        finalBody.branch["branchContactId"] = null;
+        finalBody.branch["branchPersonNum"] = 0;
+        finalBody.branch["companyPersonNum"] = 0;
+        finalBody.branch["companyContactId"] = this.kycForm.contactId;
         finalBody.branch["contactId"] = null;
         finalBody.branch["phoneTypeId"] = null;
         finalBody.branch["emailTypeId"] = null;
@@ -1596,7 +1672,6 @@ export class DynamicFormComponent {
 
         console.log("finalBody >>>>>>", finalBody);
 
-        // return // need to do
         this.gs.isSpinnerShow = true;
         this.profileService.insertAndUpdateVehicleKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
           console.log("res >>>>>", res);
@@ -1698,7 +1773,7 @@ export class DynamicFormComponent {
 
                 if (keys[2] == 'addresses') {
                   createObj.addressId = null;
-                  createObj.addressTypeId = field.MasterTypeIds.ID;
+                  createObj.addressTypeId = field?.MasterTypeIds?.ID;
                   createObj.isPrimaryAddress = true;
                   createObj.currentInd = true;
                 }
@@ -1736,8 +1811,6 @@ export class DynamicFormComponent {
         finalBody.driveInCity = this.kycForm.state;
         finalBody.userId = this.gs.loggedInUserInfo.userId;
         console.log("finalBody >>>>>>", finalBody);
-
-        // return; // need to do
 
         this.profileService.insertAndUpdateCompanyKyc(finalBody, {
           userId: this.gs.loggedInUserInfo.userId
@@ -1779,8 +1852,10 @@ export class DynamicFormComponent {
     const exceptFields: any = [];
     const checkAllFill = this.findInvalidControlsBySection(section, exceptFields);
 
-    console.log("checkAllFill >>>", checkAllFill)
-    if (!checkAllFill.valid) {
+    console.log("checkAllFill >>>", checkAllFill);
+    console.log("section >>>", section);
+    this.submitted = true;
+    if (!checkAllFill.valid) { // nned to do
       this.toast.errorToastr("Please fill all the details of " + section.value.sectionName);
       return;
     }
@@ -1788,7 +1863,7 @@ export class DynamicFormComponent {
     let finalBody: any = {};
     let sectionData: any = {};
 
-    if (this.formType !== 'fleetOwner' && section.value.sectionID != "25") {
+    if (this.formType !== 'fleetOwner' && section.value.sectionID != "25" && section.value.sectionID != "27") {
       section.value.fields.forEach((field: any) => {
         if (field.modalValue && field.fieldType !== "BUTTON") {
           if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
@@ -1858,7 +1933,22 @@ export class DynamicFormComponent {
       }
     }
 
-    if (this.formType === 'fleetOwner' || section.value.sectionID === "25") {
+    if (section.value.sectionID === '27') {
+      finalBody = {
+        "providerRequest": {
+          // "userId": this.singleDetailInfo.providerRequest.userId,
+          "workingHours": this.singleDetailInfo.providerRequest.workingHours,
+          "contactInfo": {
+            "userId": this.singleDetailInfo.providerRequest.contactInfo.userId,
+            "contactId": this.singleDetailInfo.providerRequest.contactInfo.contactId || null,
+            "entityTypeId": this.singleDetailInfo.providerRequest.contactInfo.entityTypeId || null,
+            "personNumber": this.singleDetailInfo.providerRequest.contactInfo.personNumber || null,
+          },
+        },
+      }
+    }
+
+    if (this.formType === 'fleetOwner' || section.value.sectionID === "25" || section.value.sectionID === "27") {
       section.value.fields.forEach(async (field: any) => {
         if (field.modalValue && field.fieldType !== "BUTTON") {
           const keys = field.modalObject.split(".");
@@ -1866,6 +1956,20 @@ export class DynamicFormComponent {
 
           if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
             sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy') || null;
+          } else if (field.fieldType === "MULTIDROPDOWN" && field.modalValue) { // Array set with Cd
+            sectionData = [];
+            field.value.forEach(async (multiField: any) => {
+              // if (!sectionData["providerSubCategories"]) {
+              // }
+              let subCatOptions = field.dropdownList.find((subCatItem: any) => subCatItem.Name == multiField) || {};
+              if (subCatOptions.ID) {
+                sectionData.push({
+                  [field.modalValue]: subCatOptions.Name,
+                  [field.valueCode]: subCatOptions.ID
+                });
+
+              }
+            })
           } else {
             if (field.modalValue) {
               sectionData[field.modalValue] = field.value;
@@ -1879,6 +1983,7 @@ export class DynamicFormComponent {
           if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
             sectionData[field.valueCode] = field.valueCd;
           }
+
           if (field.fieldType === "TEXTMASK") {
             sectionData[field.modalValue] = field.valueCd;
             sectionData[field.valueCode] = field.value;
@@ -1887,7 +1992,11 @@ export class DynamicFormComponent {
             finalBody[keys[0]] = { ...finalBody[keys[0]], ...sectionData }
           }
           if (keys.length == 2) {
-            finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
+            if (Array.isArray(sectionData)) {
+              finalBody[keys[0]][keys[1]] = sectionData;
+            } else {
+              finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
+            }
           }
           if (keys.length == 3) {
             if (!(finalBody[keys[0]][keys[1]][keys[2]] && finalBody[keys[0]][keys[1]][keys[2]]?.length)) {
@@ -1897,21 +2006,21 @@ export class DynamicFormComponent {
 
               if (keys[2] == 'addresses') {
                 createObj.addressId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressId");
-                createObj.addressTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressTypeId");
+                createObj.addressTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressTypeId") || field?.MasterTypeIds?.ID;
                 createObj.isPrimaryAddress = this.getFieldValue(this.singleDetailInfo, field.modalObject, "isPrimaryAddress");
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
               }
 
               if (keys[2] == 'emails') {
                 createObj.personEmailId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "personEmailId");
-                createObj.emailTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "emailTypeId");
+                createObj.emailTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "emailTypeId") || field?.MasterTypeIds?.ID;
                 createObj.primaryEmailFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryEmailFlag");
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
               }
 
               if (keys[2] == 'phoneNumbers') {
                 createObj.phoneId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneId");
-                createObj.phoneTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneTypeId");
+                createObj.phoneTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneTypeId") || field?.MasterTypeIds?.ID;
                 createObj.extension = this.getFieldValue(this.singleDetailInfo, field.modalObject, "extension");
                 createObj.primaryPhoneFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryPhoneFlag");
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
@@ -1974,6 +2083,12 @@ export class DynamicFormComponent {
     }
     if (section.value.sectionID === "17" || section.value.sectionID === "25") {
       this.updateVehicleOtherInfo(finalBody);
+    }
+    if (section.value.sectionID == "9") {
+      this.updateDriverWorkingHours(finalBody);
+    }
+    if (section.value.sectionID == "27") {
+      this.updateProviderDetails(finalBody);
     }
 
   }
@@ -2301,36 +2416,6 @@ export class DynamicFormComponent {
         ...finalBody
       },
     }
-    console.log("Body >>>>>", Body)
-
-    const dd = {
-      "companyContactId": "F3049A1D-EEB7-4EFB-9B84-59BAABF7CA1C",
-      "phoneTypeId": "1833AD39-398B-4F91-98E7-90FFEAFBBCB9",
-      "emailTypeId": "83F4239C-99D8-4117-93C7-50801935D070",
-      "mapLocation": null,
-      "addressTypeId": "7D826BEB-91B0-429F-8598-6FFC4388A219",
-      "addressId": "C102F086-6EAD-4201-8DD4-A90DAFCDD5FA",
-      "currentInd": "true",
-      "isPrimaryAddress": true,
-      "dbaName": "SEK1222",
-      "phoneNumber": "9999900022",
-      "emailId": "paras@gmail.com",
-      "addr1": "fffffffffffff",
-      "addr2": "surat",
-      "postalCode": "11001",
-      "city": "FLORAL PARK",
-      "county": "NASSAU",
-      "country": "UNITED STATES",
-      "countryCd": "230",
-      "state": "NEW YORK",
-      "stateCd": "42",
-
-      "branchContactId": "sample string 1",
-      "branchPersonNum": 2,
-      "companyPersonNum": 4,
-
-    }
-    // return;
 
     this.branchService.InsertAndUpdateCompanyBranch(Body, {
       userId: this.gs.loggedInUserInfo.userId,
@@ -2340,6 +2425,47 @@ export class DynamicFormComponent {
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
         this.handleCancel();
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateDriverWorkingHours
+  async updateDriverWorkingHours(finalBody: any) {
+    let Body = {
+      "userId": this.singleDetailInfo.driverDetailsRequest.userId,
+      "driverWorkingHours": this.singleDetailInfo.driverDetailsRequest.driverWorkingHours,
+      ...finalBody
+    };
+
+    this.profileService.UpdateDriverWorkingHours(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateProviderDetails
+  async updateProviderDetails(finalBody: any) {
+    let Body = finalBody['providerRequest'];
+
+    console.log("updateProviderDetails Body >>>>>", Body)
+    // return;
+    this.vendorServ.UpdateProviderDetails(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
       } else {
         this.toast.errorToastr(res.message);
       }
@@ -2496,6 +2622,22 @@ export class DynamicFormComponent {
       }
     }, () => {
     });
+  }
+
+  async changeStatus(item: any) {
+    console.log("singleDetailInfo.driverWorkingHours >>>>", this.singleDetailInfo.driverWorkingHours);
+
+    let newStatus = item.status === 'ON' ? 'OFF' : 'ON';
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = 'Are sure you want to change status to ' + newStatus;
+    modalRef.componentInstance.confirmButton = "Yes";
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        item.status = !item.status;
+      }
+    }, () => { });
   }
 
 }

@@ -13,6 +13,8 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { ReviewService } from '../../../shared/services/review.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { SortDirective } from '../../../shared/directives/sort.directive';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-recent-activity',
@@ -24,7 +26,10 @@ import { SortDirective } from '../../../shared/directives/sort.directive';
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
-    SortDirective
+    SortDirective,
+    NgSelectModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   templateUrl: './user-recent-activity.component.html',
   styleUrl: './user-recent-activity.component.scss'
@@ -46,6 +51,13 @@ export class UserRecentActivityComponent {
   public pageNumberArray: Array<number> = [];
   public pageSelection = [];
   public totalPages = 0;
+  filterObj: any = {};
+  sortFilter: any = [
+    { value: "This Week" },
+    { value: "This Month" },
+    { value: "Last 30 Days" },
+    { value: "Custom" },
+  ]
 
   constructor(
     private route: ActivatedRoute,
@@ -91,5 +103,8 @@ export class UserRecentActivityComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+  }
+
+  onChange() {
   }
 }

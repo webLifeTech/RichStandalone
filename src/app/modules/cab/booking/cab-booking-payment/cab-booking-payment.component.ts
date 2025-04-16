@@ -51,8 +51,8 @@ export class CabBookingPaymentComponent {
   ) {
     this.vehicleId = route.snapshot.params['vehicleId'];
     this.summaryId = route.snapshot.params['summaryId'];
-
     this.searchObj = this.gs.getLastSearch();
+    this.gs.lastSearch = this.searchObj;
     this.searchObj.vehicleId = route.snapshot.params['vehicleId'];
     this.searchObj.summaryId = route.snapshot.params['summaryId'];
     this.route.queryParams.subscribe((params) => {

@@ -72,6 +72,61 @@
             </div>
           </div>
         </div>
+
+        <div class="booking-wrapper"
+          *ngIf="(viewInfoDetails?.driverDetailsRequest?.isAvailableForPrivateBooking === 'Yes' || formType === 'vendor-profile')">
+          <div class="booking-title mb-3">
+            <h6>{{ 'userDashboard.kyc.other_info.working_hours' | translate}}</h6>
+          </div>
+          <div class="row px-3 pb-3">
+            <div class="col-md-12">
+              <div class="table-responsive dashboard-table">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                      </th>
+                      <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
+                      <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
+                      <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
+                      <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of workingHours; let idx = index">
+                      <td class="text-center">{{idx+1}}</td>
+                      <td>
+                        <div class="table-avatar">
+                          <div class="table-head-name flex-grow-1">
+                            {{item.dayOfWeek}}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span>{{item.fromTime}}</span>
+                      </td>
+                      <td class="text-success-light">
+                        <span>{{item.toTime}}</span>
+                      </td>
+                      <td class="text-center">
+                        <a *ngIf="item.status">
+                          <span class="badge badge-success">
+                            ON
+                          </span>
+                        </a>
+                        <a *ngIf="!item.status">
+                          <span class="badge badge-danger">
+                            OFF
+                          </span>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

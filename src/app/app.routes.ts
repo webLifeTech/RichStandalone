@@ -39,6 +39,7 @@ import { ServiceProfileComponent } from './modules/vendor/service-profile/servic
 import { UserMasterConfigurationComponent } from './modules/user-dashboard/user-master-configuration/user-master-configuration.component';
 import { UserRecentActivityComponent } from './modules/user-dashboard/user-recent-activity/user-recent-activity.component';
 import { NotificationViewComponent } from './shared/components/header/widgets/notification-view/notification-view.component';
+import { AdminMyProfileComponent } from './modules/admin-dashboard/admin-my-profile/admin-my-profile.component';
 
 export const routes: Routes = [
   {
@@ -246,7 +247,7 @@ export const routes: Routes = [
       },
       {
         path: 'my-profile',
-        component: UserDashboardKycComponent
+        component: AdminMyProfileComponent,
       },
       {
         path: 'my-cars',

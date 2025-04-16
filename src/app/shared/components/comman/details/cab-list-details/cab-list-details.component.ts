@@ -1,23 +1,16 @@
 import { Component, Input } from '@angular/core';
-import { cab, pagination, priceFilter } from '../../../../../shared/interface/cab';
-import { driver, d_pagination, d_priceFilter } from '../../../../../shared/interface/driver';
+import { pagination } from '../../../../../shared/interface/cab';
+import { driver, d_pagination } from '../../../../../shared/interface/driver';
 import { PaginationService } from '../../../../../shared/services/pagination.service';
 import { CabService } from '../../../../../shared/services/cab.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgxsModule, Select, Store } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { cabState } from '../../../../../shared/store/state/cab.state';
-import { driverState } from '../../../../../shared/store/state/driver.state';
-import { Observable } from 'rxjs';
-import { getCab } from '../../../../store/action/cab.action';
-import { getDriver } from '../../../../store/action/driver.action';
 import { AuthService } from '../../../../services/auth.service';
-import { AlertService } from '../../../../services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImportantNoticeDialogComponent } from '../../../dialoge/important-notice-dialog/important-notice-dialog.component';
 import { EmailQuoteDialogComponent } from '../../../dialoge/email-quote-dialog/email-quote-dialog.component';
-import { carTypes } from '../../../data/data/filter/cab';
 import { GlobalService } from '../../../../services/global.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -30,7 +23,7 @@ import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confi
 import { ToastService } from '../../../../services/toast.service';
 import { NftService } from '../../../../services/nft.service';
 import { FavoriteService } from '../../../../services/favorite.service';
-// import { provideStore } from '@ngxs/store';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-cab-list-details',
@@ -44,9 +37,9 @@ import { FavoriteService } from '../../../../services/favorite.service';
     NgxsModule,
     NgxsReduxDevtoolsPluginModule,
     NgxsStoragePluginModule,
-    NgbModule
+    NgbModule,
+    NgxPaginationModule,
   ],
-  // providers: [provideStore()],
   templateUrl: './cab-list-details.component.html',
   styleUrl: './cab-list-details.component.scss'
 })
@@ -56,27 +49,13 @@ export class CabListDetailsComponent {
   @Input() responsiveLatestFilter: boolean;
   @Input() noSidebar: boolean;
   @Input() pageSize: number;
-  @Input() searachResult: any = {};
+  @Input() searchResult: any = {};
   @Input() carTypes: any = {};
 
   public type: string = "";
-  public getCarLocationParams: string[] = [];
   public getCarTypeParams: string[] = [];
-  public getOwnerTypeParams: string[] = [];
-  public getCarSupplierParams: string[] = [];
-  public getCarCapacityParams: string[] = [];
-  public getRatingParams: string[] = [];
-  public getCarOptionParams: string[] = [];
-  public minPrice: number;
-  public maxPrice: number;
-  public priceData: priceFilter;
-  public paramsTag: string[];
   public params: Params;
-
-  public cabDetails: cab[] = [];
   public driverDetails: driver[];
-
-  public totalCabAvailable: number = 0;
 
   public paginate: pagination;
   public d_pagination: d_pagination;
@@ -96,11 +75,6 @@ export class CabListDetailsComponent {
   priceToPurchase: string = '';
   uniqIdToView: string = '';
   nftDetails: any = null;
-
-  @Select(cabState.cab) cab$: Observable<cab[]>;
-  @Select(driverState.driver) driver$: Observable<driver[]>;
-
-  // public carTypes = carTypes;
   public selectedCarType: string[] = [];
   searchInfo: any = {}
 
@@ -112,88 +86,30 @@ export class CabListDetailsComponent {
     private store: Store,
     private auth: AuthService,
     private gs: GlobalService,
-    private alert: AlertService,
     private modalService: NgbModal,
     private toast: ToastService,
     private nftService: NftService,
     private dialog: MatDialog,
     private favoriteService: FavoriteService,
   ) {
-    // window.scrollTo({ top: 350, behavior: 'smooth' });
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       this.type = params['type'] ? params['type'] : "car";
-      this.pageNo = params['page'] ? params['page'] : this.pageNo;
-      this.getCarLocationParams = params['car_location'] ? params['car_location'].split(',') : [];
-      this.getCarTypeParams = params['car_type'] ? params['car_type'].split(',') : [];
       this.getCarTypeParams = params['VEHICLETYPE'] ? params['VEHICLETYPE'].split(',') : [];
-      this.getOwnerTypeParams = params['owner_type'] ? params['owner_type'].split(',') : [];
-      this.getCarSupplierParams = params['car_sup'] ? params['car_sup'].split(',') : [];
-      this.getCarCapacityParams = params['capacity'] ? params['capacity'].split(',') : [];
-      this.getRatingParams = params['rating'] ? params['rating'].split(',') : [];
-      this.getCarOptionParams = params['car_option'] ? params['car_option'].split(',') : [];
-      this.minPrice = params['minPrice'] ? params['minPrice'] : [];
-      this.maxPrice = params['maxPrice'] ? params['maxPrice'] : [];
-      this.priceData = {
-        minPrice: this.minPrice,
-        maxPrice: this.maxPrice
-      }
-
+      this.pageNo = params['page'] ? params['page'] : 0;
       this.selectedCarType = this.getCarTypeParams;
-
-      if (this.type === 'car') {
-        // if (!Object.keys(params).length) {
-        //   this.paramsTag = [];
-        //   this.store.dispatch(new getCab(this.paramsTag, this.priceData));
-        // }
-
-        // this.paramsTag = [...this.getCarLocationParams, ...this.getCarTypeParams, ...this.getOwnerTypeParams, ...this.getCarSupplierParams, ...this.getCarCapacityParams, ...this.getRatingParams, ...this.getCarOptionParams];
-        // this.cab$.subscribe((res) => {
-        //   this.totalCabAvailable = res.length;
-        //   this.cabDetails = res || [];
-        //   this.paginate = this.paginationService.getPager(this.cabDetails?.length, +this.pageNo, 10);
-        //   this.cabDetails = this.cabDetails?.slice(this.paginate.startIndex, this.paginate.endIndex + 1);
-        // }, err => {
-        // })
-      }
-      if (this.type === 'driver') {
-
-        if (!Object.keys(params).length) {
-          this.paramsTag = [];
-          this.store.dispatch(new getDriver(this.paramsTag, this.priceData));
-        }
-
-        this.paramsTag = [...this.getCarLocationParams, ...this.getRatingParams];
-        this.driver$.subscribe((res) => {
-          this.totalCabAvailable = res.length;
-          this.driverDetails = this.nftService.checkNFTPurchased(res);
-          console.log("this.driverDetails >>>>>", this.driverDetails);
-          this.d_pagination = this.paginationService.getPager(this.driverDetails?.length, +this.pageNo, 10);
-          this.driverDetails = this.driverDetails?.slice(this.d_pagination.startIndex, this.d_pagination.endIndex + 1);
-        })
-      }
     })
   }
 
   ngOnInit() {
-    console.log('<<----------->>', this.searachResult)
-    this.paginate = this.paginationService.getPager(this.searachResult.viewModel?.totalCount, +this.pageNo, this.pageSize);
+    this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
     this.searchInfo = this.gs.getLastSearch();
     this.checkFav();
   }
 
-  ngOnChanges() {
-    // If No Sidebar
-    if (this.noSidebar) {
-      if (!Object.keys(this.params).length) {
-        this.paramsTag = [];
-        this.store.dispatch(new getCab(this.paramsTag, this.priceData));
-      }
-    }
-  }
-
   setPage(page: number) {
+    this.pageNo = page;
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: page },
@@ -222,15 +138,9 @@ export class CabListDetailsComponent {
       }
 
       let params = {
-        car_location: this.getCarLocationParams.length ? this.getCarLocationParams.join(',') : null,
         car_type: this.getCarTypeParams.length ? this.getCarTypeParams.join(',') : null,
-        capacity: this.getCarCapacityParams.length ? this.getCarCapacityParams.join(',') : null,
-        rating: this.getRatingParams.length ? this.getRatingParams.join(',') : null,
-        car_option: this.getCarOptionParams.length ? this.getCarOptionParams.join(',') : null
       }
-      console.log("details >>>>>>", details);
-
-      this.router.navigate(['/cab/booking/booking', details.vehicleId, details.summaryId], {
+      this.router.navigate(['/cab/booking/booking', this.type === 'car' ? details.vehicleId : details.driverId, details.summaryId], {
         queryParams: params,
         queryParamsHandling: "merge"
       });
@@ -248,30 +158,19 @@ export class CabListDetailsComponent {
     }
   }
 
+  // User for Car/Driver
   addRemoveWishlist(item: any): void {
     if (this.auth.isLoggedIn) {
-
-      console.log("item >>>>>>>>>", item);
-
-
       let Body = {
         "favId": 1,
         "userId": this.gs.loggedInUserInfo.userId,
-        "riskId": item.vehicleId,
-        "risktype": 'vehicle',
+        "riskId": this.type === 'car' ? item.vehicleId : item.driverId,
+        "risktype": this.type === 'car' ? 'Vehicle' : 'Driver',
         "isActive": !item.isAddWishlist
       }
-      console.log("Body >>>>>", Body)
-      // return;
 
       this.favoriteService.insertUpdateFavourite(Body).subscribe((res: any) => {
-        console.log("res >>>>>", res);
         this.gs.isSpinnerShow = false;
-
-        // if (res && res.statusCode == "200") {
-        // } else {
-        //   this.toast.errorToastr(res.message);
-        // }
         if (Body.isActive) {
           this.toast.successToastr("Added to your Favourite");
         } else {
@@ -282,19 +181,6 @@ export class CabListDetailsComponent {
         this.toast.errorToastr("Something went wrong");
         this.gs.isSpinnerShow = false;
       })
-
-      return;
-      item.isAddWishlist = !item.isAddWishlist;
-      let myWishlist = this.gs.getMyWishlistData();
-      if (item.isAddWishlist) {
-        myWishlist.push(item);
-        this.toast.successToastr("Added to your Favourite");
-      } else {
-        let index = myWishlist.findIndex((i: any) => i.id === item.id);
-        myWishlist.splice(index, 1);
-        this.toast.successToastr("Removed from your Favourite");
-      }
-      localStorage.setItem('MyWishlistStore', JSON.stringify(myWishlist));
     } else {
       const modalRef = this.modalService.open(InformationModalComponent, {
         centered: true,
@@ -311,12 +197,16 @@ export class CabListDetailsComponent {
   checkFav() {
     this.favoriteService.getAllFavourite({
       "userId": this.gs.loggedInUserInfo.userId,
+      "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
     }).subscribe((response: any) => {
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        for (let i in this.searachResult.vehicleMatches) {
+        for (let i in this.searchResult.vehicleMatches) {
           for (let j in response.favoriteList) {
-            if (this.searachResult.vehicleMatches[i].vehicleId == response.favoriteList[j].vehicleId) {
-              this.searachResult.vehicleMatches[i].isAddWishlist = true;
+            if (this.type === 'car' && this.searchResult.vehicleMatches[i].vehicleId == response.favoriteList[j].vehicleId) {
+              this.searchResult.vehicleMatches[i].isAddWishlist = true;
+            }
+            if (this.type === 'driver' && this.searchResult.vehicleMatches[i].driverId == response.favoriteList[j].driverId) {
+              this.searchResult.vehicleMatches[i].isAddWishlist = true;
             }
           }
         }
@@ -353,8 +243,8 @@ export class CabListDetailsComponent {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { ['VEHICLETYPE']: this.selectedCarType.length ? this.selectedCarType.join(",") : null },
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
+      queryParamsHandling: 'merge',
+      skipLocationChange: false
     });
   }
 
@@ -371,7 +261,6 @@ export class CabListDetailsComponent {
         this.walletAddress = await this.nftService.connectWallet();
       }
       await this.nftService.purchaseNFT(uniqId);
-      // this.tableData = this.nftService.checkNFTPurchased(this.tableData);
     } catch (error) {
       console.error(error);
     }

@@ -1,14 +1,31 @@
-<form class="wallet-section">
-  <h6>select banks</h6>
+<form [formGroup]="form" class="wallet-section">
   <div class="row m-0 align-items-end">
     <div class="col-lg-12">
-      <div *ngFor="let item of paymentOptions; let indx = index" class="form-group">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="upload_type" id="{{'payment_credit_card'+indx}}"
-            [value]="item.card_type" [(ngModel)]="selectedMethod">
-          <label class="form-check-label mx-2" for="{{'payment_credit_card'+indx}}">
-            {{ item.bank_name | translate }} Ac ending in {{ item.last4 | translate}}
-          </label>
+      <div class="row" [ngClass]="{'m-0' : from === 'wallet'}">
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label>Routing Number</label>
+            <input type="text" class="form-control" formControlName="rountingNo" name="rountingNo" maxlength="9"
+              numbersOnly />
+          </div>
+        </div>
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label>Account number</label>
+            <input type="text" class="form-control" formControlName="accountNo" name="accountNo" maxlength="16" />
+          </div>
+        </div>
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label>Bank Name</label>
+            <input type="text" class="form-control" formControlName="bank" name="bank" />
+          </div>
+        </div>
+        <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
+          <div class="form-group">
+            <label>Account Holder Name</label>
+            <input type="text" class="form-control" formControlName="accountName" name="accountName" />
+          </div>
         </div>
       </div>
     </div>

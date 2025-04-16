@@ -28,9 +28,16 @@
 
         <!--  Driver details -->
         <div *ngIf="activeKycTab === 3">
-          <!-- (onDivInfoSubmit)="onDivInfoSubmit()" -->
-          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isFormEdit"
-            (changeKycTab)="changeKycTab($event)" (cancel)="handleCancel()"></app-driver-details-form>
+          <ng-container *ngIf="!isAddEditDriverDetail && isLoadDriverDetail">
+            <app-dynamic-grid [type]="'driver_details'" [data]="gridInfoData" [kycForm]="kycForm"
+              [selectedTabObj]="selectedTabObj" [columns]="driverDetailsColumns" [actions]="driverDetailsActions"
+              (actionEvent)="handleAction($event, 'driver_details')"></app-dynamic-grid>
+          </ng-container>
+          <ng-container *ngIf="isAddEditDriverDetail">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'driver_details'" [isEditInfo]="isFormEdit"
+              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+          </ng-container>
         </div>
 
         <!-- Account info -->

@@ -1,97 +1,58 @@
 <div class="service-list">
-  <div *ngFor="let category of categories" class="service-card">
+  <div
+    *ngFor="let provider of servicSearchResult | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: searchDetails.totalDataCount }"
+    class="service-card">
     <div class="service-image">
-      <img [src]="category.logo" alt="{{ category.category_name }} Logo">
+      <img [src]="provider.providerProfilePath" alt="{{ provider.categoryName }} Logo">
     </div>
     <div class="service-details">
-      <h2 class="main-title">{{ category.name }}</h2>
-      <div class="ratings">
+      <h2 class="main-title">{{ provider.providerName }} ({{ provider.categoryName }})</h2>
+      <!-- <div class="ratings">
         <span class="rating">
-          {{ category.rating }}
+          {{ provider.rating }}
         </span>
-        <span class="review">{{ category.review }} Ratings</span>
+        <span class="review">{{ provider.review }} Ratings</span>
         <span class="tags">
-          <span *ngIf="category.isTrusted" class="tag trust">
+          <span *ngIf="provider.isTrusted" class="tag trust">
             <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/trust_2x.gif" alt="Trusted" />
           </span>
-          <span *ngIf="category.isVerified" class="tag verified">
+          <span *ngIf="provider.isVerified" class="tag verified">
             <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/verified_2x.gif" alt="verified" />
           </span>
         </span>
-        <span class="preference" *ngIf="category.preference">
-          <img [src]="category.preference.icon" alt="icon">
-          <!-- {{ category.preference.label }} -->
+        <span class="preference" *ngIf="provider.preference">
+          <img [src]="provider.preference.icon" alt="icon">
         </span>
-      </div>
+      </div> -->
       <p class="location">
         <img src="assets/images/cab/icon/location-pin.svg" class="location-img" alt="seat-icon" />
-        {{ category.location }}
+        {{ provider.location }}
       </p>
       <div class="sub-categories">
-        <span *ngFor="let sub of category.sub_category" class="sub">{{ sub }}</span>
+        <span *ngFor="let sub of provider.subCategories" class="sub">{{ sub.subCategoryName }}</span>
       </div>
       <div class="contact-options">
-        <a class="btn btn-theme " href="tel:{{ category.mobile_number }}">
-          <i class="feather icon-phone"></i> {{ category.mobile_number }}
+        <a class="btn btn-theme " href="tel:{{ provider.phoneNumber }}">
+          <i class="feather icon-phone"></i> {{ provider.phoneNumber }}
         </a>
-        <a class="btn btn-theme btn-green no-text-transorm" [href]="'https://wa.me/' + category.whatsapp_number"
+        <a class="btn btn-theme btn-green no-text-transorm" [href]="'https://wa.me/' + provider.phoneNumber"
           target="_blank">
           <img src="assets/images/icon/whatsapp.svg" class="location-img" alt="seat-icon" width="20px" />
           WhatsApp
         </a>
-        <a (click)="openEnquirieModal()" class="btn btn-solid color3 no-text-transorm">
+        <a (click)="openEnquirieModal(provider)" class="btn btn-solid color3 no-text-transorm">
           Send Enquiry
         </a>
       </div>
     </div>
   </div>
-</div>
 
-
-<!-- <div class="flight-detail-sec cab-detail-sec">
-  <div class="detail-bar">
-    <div class="container-fluid detail-wrap wow fadeInUp">
-      <div class="row">
-        <div class="col-md-3 align-self-center">
-          <div class="logo-sec">
-            <img *ngIf="driverDetails.driverImage" [src]="driverDetails.driverImage" class="img-fluid blur-up lazyload"
-              alt="cab-image">
-            <img *ngIf="!driverDetails.driverImage" src="assets/images/driver/Male.jpg"
-              class="img-fluid blur-up lazyload" alt="cab-image">
-
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="title-sec">
-            <div class="car-title">{{ driverDetails.driverName }}</div>
-          </div>
-          <div class="car-details">
-            <ul>
-              <li>
-                <img src="assets/images/cab/icon/star.svg" class="img-fluid blur-up lazyload" alt="seat-icon">
-                {{driverDetails.rating }} {{'car_list_page.d_rating' | translate}}
-              </li>
-              <li>
-                <img src="assets/images/cab/icon/location-pin.svg" class="img-fluid blur-up lazyload" alt="seat-icon">
-                {{driverDetails.location }} {{'car_list_page.d_location' | translate}}
-              </li>
-              <li>
-                <img src="assets/images/cab/icon/snowflake.png" class="img-fluid blur-up lazyload" alt="seat-icon">
-                {{ driverDetails.experience }} {{'car_list_page.d_experience' | translate}}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-5 text-end align-self-end price-top">
-          <div class="price">
-            <div>
-              <h6>Price per day:</h6>
-              <h4 class="my-2">{{ driverDetails.price }}</h4>
-              <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
-            </div>
-          </div>
-        </div>
-      </div>
+  <ng-container *ngIf="servicSearchResult?.length">
+    <div class="text-center">
+      <pagination-controls (pageChange)="setPage($event)"></pagination-controls>
     </div>
-  </div>
-</div> -->
+  </ng-container>
+
+  <!-- <app-pagination *ngIf="searchResult.vehicleMatches.length" [cabDetails]="searchResult.vehicleMatches"
+      [paginate]="paginate" (setPage)="setPage($event)"></app-pagination> -->
+</div>

@@ -64,7 +64,7 @@ export class NavService {
       type: 'link',
       active: false,
       level: 1,
-      path: '/vendor/dashboard',
+      path: '/vendor/service-profile',
       queryParams: { type: 'vendor' }
     },
     {

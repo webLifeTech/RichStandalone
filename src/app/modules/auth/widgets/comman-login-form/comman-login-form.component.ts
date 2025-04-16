@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { GlobalService } from '../../../../shared/services/global.service';
+import { VendorServService } from '../../../../shared/services/vendor-service.service';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -31,7 +32,10 @@ export class CommanLoginFormComponent {
     password: ""
   };
   registerForm: any = {
-    vendor_type: null,
+    category: null,
+    categoryCd: null,
+    subCategory: null,
+    subCategoryCd: null,
     type: null,
   };
 
@@ -40,13 +44,8 @@ export class CommanLoginFormComponent {
   sentotp: boolean = false;
   timer: number = 0;
 
-  vendorTypes: any = [
-    { id: 1, name: "Attorney", value: "Attorney" },
-    { id: 2, name: "Mortgage brokers", value: "Mortgage brokers" },
-    { id: 3, name: "Insurance Agent", value: "Insurance Agent" },
-    { id: 4, name: "Vehicle Inspections", value: "Vehicle Inspections" },
-    { id: 5, name: "Others", value: "Others" },
-  ];
+  vendorTypes: any = [];
+  subCategories: any = [];
 
   iAmArray: any = [
     { id: 1, name: "Driver", value: "Driver" },
@@ -148,12 +147,14 @@ export class CommanLoginFormComponent {
     private authService: AuthService,
     private gs: GlobalService,
     private route: ActivatedRoute,
-    private toast: ToastService
+    private toast: ToastService,
+    private vendorServ: VendorServService,
   ) {
     this.route.queryParams.subscribe((pera: any) => {
       this.params = pera;
       if (pera && pera.type === "vendor") {
         this.isVendor = true;
+        this.getVendorTypes();
       }
     })
   }
@@ -174,66 +175,75 @@ export class CommanLoginFormComponent {
   }
 
   authUser(frm: any, type: string) {
-    if (this.loginForm.username === 'admin@gmail.com') {
-      this.loginForm.role = 'admin';
-      this.loginForm.name = 'Admin';
-      this.loginForm.id = 100;
-    } else {
-      this.gs.isSpinnerShow = true;
-      this.authService.userLogin(this.loginForm).subscribe((res: any) => {
-        console.log("res >>>>>>>", res);
-        this.gs.isSpinnerShow = false;
-        let roles: any = {
-          ["Driver"]: "user",
-          ["Individual car owner"]: "user_2",
-          ["Fleet owner"]: "user_3",
-          ["Driver with owned car"]: "user_4",
-        }
+    if (type == 'login') {
+      if (this.loginForm.username === 'admin@gmail.com') {
+        this.loginForm.role = 'admin';
+        this.loginForm.name = 'Admin';
+        this.loginForm.id = 100;
+      } else {
+        this.gs.isSpinnerShow = true;
+        this.authService.userLogin(this.loginForm).subscribe((res: any) => {
+          console.log("res >>>>>>>", res);
+          this.gs.isSpinnerShow = false;
+          let roles: any = {
+            ["Driver"]: "user",
+            ["Individual car owner"]: "user_2",
+            ["Fleet owner"]: "user_3",
+            ["Driver with owned car"]: "user_4",
+            ["Administrator"]: "admin",
+            ["Vendor"]: "Vendor",
+          }
 
-        this.loginForm = {
-          "name": res.fullName,
-          "username": this.loginForm.username,
-          "password": this.loginForm.password,
-          "role": roles[res.roleName],
-          "userRoleName": res.roleName, // "Fleet owner",
-          "roleName": res.userType, // "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
-          "userId": res.userID, // "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
-          "contactId": res.personNum,
-        };
+          this.loginForm = {
+            "name": res.fullName,
+            "username": this.loginForm.username,
+            "password": this.loginForm.password,
+            "role": roles[res.roleName],
+            "userRoleName": res.roleName, // "Fleet owner",
+            "roleName": res.userType, // "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
+            "userId": res.userID, // "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
+            "contactId": res.personNum,
+          };
 
-        if (type == 'login') {
           this.authService.login(this.loginForm);
-        }
-        this.toast.successToastr("Logged in successfully");
+          this.toast.successToastr("Logged in successfully");
 
-      }, err => {
-        console.log("Username or password not correct!");
-        this.toast.errorToastr("Username or password not correct!");
+        }, err => {
+          this.gs.isSpinnerShow = false;
+          console.log("Username or password not correct!");
+          this.toast.errorToastr("Username or password not correct!");
 
-      })
-      // return;
-      // const findUser = this.users.find((i: any) => i.username === this.loginForm.username);
-      // if (findUser && findUser.id) {
-      //   this.loginForm = findUser;
-      // } else {
-      //   this.loginForm.role = 'user';
-      //   this.loginForm.name = 'Daniel Johshuva';
-      //   this.loginForm.roleName = '53D8CF61-E99B-43A9-AA8F-4CE5B0E12872';
-      //   this.loginForm.userRoleName = 'Driver';
-      //   this.loginForm.userId = "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5"
-      //   this.loginForm.id = 101;
-      // }
+        })
+      }
     }
 
     // return;
-    if (this.isVendor) {
-      this.router.navigateByUrl('/vendor/dashboard');
-      return;
-    }
-    if (type != 'login') {
-      this.authService.register(this.loginForm)
+    if (type == 'register') {
+
+      if (this.isVendor) {
+        let body = {
+          "email": this.loginForm.username,
+          "passWord": this.loginForm.password,
+          "firstName": this.registerForm.full_name,
+          "category": this.registerForm.category,
+          "categoryCd": this.registerForm.categoryCd
+        }
+        console.log("body >>>>>", body);
+        this.vendorServ.registerVendor(body).subscribe((res: any) => {
+          console.log("registerVendor --->", res);
+          if (res && res.statusCode == "200") {
+            this.toast.successToastr(res.message);
+            this.router.navigateByUrl('/vendor/dashboard');
+          } else {
+            this.toast.errorToastr(res.message);
+          }
+        })
+      } else {
+        this.authService.register(this.loginForm)
+      }
     }
   }
+
   sendOtp() {
     this.enterOTP = true;
     this.sentotp = true;
@@ -247,6 +257,26 @@ export class CommanLoginFormComponent {
         this.sentotp = false; // Optionally, hide the OTP input if the timer runs out
       }
     }, 1000);
+  }
+
+  getVendorTypes() {
+    this.vendorServ.getMasterProviderCategories().subscribe((res: any) => {
+      this.vendorTypes = res;
+    })
+  }
+
+  selectCategory(vendor: any) {
+    console.log("vendor >>>>>>", vendor);
+    this.registerForm.categoryCd = vendor.ID;
+    this.vendorServ.getMasterProviderSubCategories({
+      categoryId: vendor.ID
+    }).subscribe((res: any) => {
+      this.subCategories = res;
+    })
+  }
+
+  changeSubCat(subCat: any) {
+
   }
 
 }

@@ -13,7 +13,7 @@
               <div class="balance-grid">
                 <div class="balance-content">
                   <h6>Available Balance</h6>
-                  <h4>{{4544 | currencyPipe: gs.currency}}</h4>
+                  <h4>{{(walletDetails.availableBalance || 0) | currencyPipe: gs.currency}}</h4>
                 </div>
                 <div class="refersh-icon">
                   <a>
@@ -21,7 +21,7 @@
                   </a>
                 </div>
               </div>
-              <div class="balance-list">
+              <!-- <div class="balance-list">
                 <div class="row">
                   <div class="col-lg-4 col-md-6 d-flex">
                     <div class="balance-inner credit-info">
@@ -42,15 +42,18 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
-            <div class="form-group wallet-form-group">
+            <!-- <div class="form-group wallet-form-group">
               <label>Add Wallet Credits ($)</label>
               <input type="text" class="form-control" placeholder="1000">
-            </div>
+            </div> -->
             <div class="wallet-btn">
-              <a class="btn" (click)="addPayment()">
+              <a class="btn" (click)="paymentAction('add')">
                 Add Payment
+              </a>
+              <a class="btn ms-3" (click)="paymentAction('withdrawal')">
+                Withdrawal Payment
               </a>
             </div>
           </div>
@@ -145,7 +148,7 @@
                   <tr>
                     <th>#Sn</th>
                     <th>Ref Id</th>
-                    <th>Transaction For</th>
+                    <th>Transaction Type</th>
                     <th>Date</th>
                     <th>Total</th>
                     <th>Status</th>
@@ -156,21 +159,20 @@
                     *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
                     <tr>
                       <td>{{idx+1}}</td>
-                      <td><a> {{item.refId}}</a></td>
-                      <td>
-                        <div class="table-avatar">
-                          <div class="table-head-name flex-grow-1">
-                            <a class="mb-0">{{item.transactionFor}}</a>
-                          </div>
-                        </div>
+                      <td><a> {{item.tarnsactionId}}</a></td>
+                      <td
+                        [ngClass]="{ 'text-danger': item.transactionType === 2, 'text-success-light': item.transactionType === 1}">
+                        Amount - {{item.transactionType === 1 ? 'Added' : 'Withdrawal'}}
                       </td>
-                      <td>{{item.date}}</td>
-                      <td [ngClass]="{ 'text-danger': item.type === '-' }" class="text-success-light">
-                        <span>{{item.type}}</span>{{item.total | currencyPipe: gs.currency}}
+                      <td>{{item.transactionDate}}</td>
+                      <td
+                        [ngClass]="{ 'text-danger': item.transactionType === 2, 'text-success-light': item.transactionType === 1}">
+                        <span>{{item.transactionType === 1 ? '+' : '-'}}</span>{{item.transactionAmount | currencyPipe:
+                        gs.currency}}
                       </td>
                       <td>
                         <span
-                          [ngClass]="{ 'badge-light-success': item.status === 'Completed','badge-light-warning': item.status === 'Pending','badge-light-danger':item.status === 'Failed' }"
+                          [ngClass]="{ 'badge-light-success': item.status === 'SUCCESS','badge-light-warning': item.status === 'Pending','badge-light-danger':item.status === 'Failed' }"
                           class="badge">{{item.status}}</span>
                       </td>
                     </tr>

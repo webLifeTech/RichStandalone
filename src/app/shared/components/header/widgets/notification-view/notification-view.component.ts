@@ -20,22 +20,23 @@ import { WriteReviewModalComponent } from '../../../../../shared/components/comm
 import { RolePermissionService } from '../../../../../shared/services/rolepermission.service';
 import { NotificationsService } from '../../../../services/notifications.service';
 import { SortDirective } from '../../../../directives/sort.directive';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-notification-view',
   standalone: true,
   imports: [
-    DeleteModalComponent,
-    BookingDetailsModalComponent,
-
     CommonModule,
     FormsModule,
     NgbModule,
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
-    BarRating,
-    SortDirective
+    SortDirective,
+    NgSelectModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   templateUrl: './notification-view.component.html',
   styleUrl: './notification-view.component.scss'
@@ -58,28 +59,24 @@ export class NotificationViewComponent {
   public pageSelection = [];
   public totalPages = 0;
 
-  roles: any = {
-    "user": "Drivers",
-    "user_2": "CarOwner",
-    "user_3": "FleetCompany",
-    "user_4": "DriverOwnedCar",
-    "admin": "Admin",
-  }
+  filterObj: any = {};
+  sortFilter: any = [
+    { value: "This Week" },
+    { value: "This Month" },
+    { value: "Last 30 Days" },
+    { value: "Custom" },
+  ]
 
   constructor(
     private route: ActivatedRoute,
-    private toast: ToastService,
     public getPer: RolePermissionService,
     public cabService: CabService,
     public gs: GlobalService,
-    private dialog: MatDialog,
-    private modalService: NgbModal,
     private notifService: NotificationsService,
 
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
-      // this.getTableData();
     })
 
     this.getPer.actionPermissions = {
@@ -90,9 +87,15 @@ export class NotificationViewComponent {
   getTableData() {
 
     this.notifService.getAllNotifications().subscribe((apiRes: any) => {
-      // this.notificationList = apiRes[this.roles[this.gs.loggedInUserInfo.role]]
-      this.totalData = apiRes[this.roles[this.gs.loggedInUserInfo.role]].length;
-      this.tableData = apiRes[this.roles[this.gs.loggedInUserInfo.role]];
+      const roles: any = {
+        "user": "Drivers",
+        "user_2": "CarOwner",
+        "user_3": "FleetCompany",
+        "user_4": "DriverOwnedCar",
+        "admin": "Admin",
+      }
+      this.totalData = apiRes[roles[this.gs.loggedInUserInfo.role]].length;
+      this.tableData = apiRes[roles[this.gs.loggedInUserInfo.role]];
     });
   }
 
@@ -118,38 +121,6 @@ export class NotificationViewComponent {
     this.currentPage = event;
   }
 
-  openImportantNoticeDialog(): void {
-    this.dialog.open(DeleteModalComponent, {
-      width: '100%',
-      data: {}
-    });
+  onChange() {
   }
-
-  onEdit(item: any) {
-    const modalRef = this.modalService.open(WriteReviewModalComponent, {
-      // size: 'lg'
-    });
-    modalRef.componentInstance.singleDetails = item;
-    modalRef.componentInstance.isEdit = true;
-    modalRef.result.then((res: any) => {
-
-      item.review = res.form.review;
-      item.rating = res.form.rating;
-    }, () => {
-    });
-  }
-
-  async onDelete(index: any) {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
-      centered: true,
-    });
-    modalRef.result.then((res: any) => {
-      if (res.confirmed) {
-        this.tableData.splice(index, 1);
-        this.toast.successToastr("Deleted successfully");
-      }
-    }, () => {
-    });
-  }
-
 }

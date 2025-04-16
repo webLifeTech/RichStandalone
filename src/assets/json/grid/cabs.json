@@ -1290,6 +1290,7 @@
       "id": 2,
       "title": "credit card",
       "value": "credit",
+      "type": "CreditCard",
       "panel": "First",
       "checkId": "r_two",
       "checked": true
@@ -1298,6 +1299,7 @@
       "id": 3,
       "title": "ACH",
       "value": "net_banking",
+      "type": "ACH",
       "panel": "Second",
       "checkId": "r_three",
       "checked": false
@@ -1306,6 +1308,7 @@
       "id": 4,
       "title": "my wallet",
       "value": "wallet",
+      "type": "Wallet",
       "panel": "Third",
       "checkId": "r_four",
       "checked": false
@@ -1314,6 +1317,7 @@
       "id": 5,
       "title": "crypto",
       "value": "crypto",
+      "type": "Crypto",
       "panel": "Four",
       "checkId": "r_five",
       "checked": false

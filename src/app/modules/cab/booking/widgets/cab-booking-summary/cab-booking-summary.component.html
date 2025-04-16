@@ -12,29 +12,19 @@
         <tr>
           <td>{{ 'global.type' | translate }}</td>
           <td>
-            <select [(ngModel)]="searchObj.timeType" (ngModelChange)="onChange()" name="type" id="type"
-              class="form-control open-select">
-              <option value="" disabled selected>
-                {{ 'global.select' | translate }} {{ 'global.type' | translate }}
-              </option>
-              <ng-container *ngFor="let item of rentTypeList['RENT_TYPE']">
-                <option [value]="item.Code">{{item.Description}}</option>
-              </ng-container>
-            </select>
+            <ng-select [items]="rentTypeList['RENT_TYPE']" (change)="onChange()" bindLabel="Description"
+              bindValue="Code" placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+              [(ngModel)]="searchObj.timeType" name="timeType" clearable="false">
+            </ng-select>
           </td>
         </tr>
         <tr *ngIf="searchObj.timeType">
           <td>{{ labels[searchObj.timeType] }}</td>
           <td>
-            <select [(ngModel)]="searchObj.timeDuration" (ngModelChange)="onChange()" name="type" id="type"
-              class="form-control open-select">
-              <option value="" disabled selected>
-                {{ 'global.select' | translate }} {{ 'Duration' | translate }}
-              </option>
-              <ng-container *ngFor='let in of duration ;let i = index'>
-                <option [value]="i+1">{{i+1}}</option>
-              </ng-container>
-            </select>
+            <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange()"
+              placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
+              [(ngModel)]="searchObj.timeDuration" name="timeDuration" clearable="false">
+            </ng-select>
           </td>
         </tr>
         <tr>
@@ -42,7 +32,8 @@
           <td>
             <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange()" name="pick_time"
               class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
-              value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up">
+              value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
+              [min]="todayDate">
             <owl-date-time #pick_up></owl-date-time>
           </td>
         </tr>
@@ -51,7 +42,7 @@
           <td>
             <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
               placeholder="{{ 'Choose Peturn Date' | translate }}" value="02:05 12/13/2019" type="text"
-              [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+              [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time">
             <owl-date-time #drop></owl-date-time>
           </td>
         </tr>
@@ -61,14 +52,14 @@
         </tr>
         <tr *ngIf="type === 'driver'">
           <td>{{'booking_summary.driver_name' | translate}}</td>
-          <td>John Doe</td>
+          <td>{{singleItem.contactName}}</td>
         </tr>
         <tr>
           <td>{{bookingSummaryDetails.priceRangeDesc}}</td>
           <td>{{ bookingSummaryDetails.priceRange | currencyPipe: cabService.currency || "-" }}</td>
         </tr>
         <tr>
-          <td>{{'booking_summary.insurance_fee' | translate}}</td>
+          <td>{{'Insurance Premium' | translate}}</td>
           <td>{{ bookingSummaryDetails.insuranceFee | currencyPipe: cabService.currency }}</td>
         </tr>
         <tr>

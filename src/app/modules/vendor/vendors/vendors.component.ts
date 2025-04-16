@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { GlobalService } from '../../../shared/services/global.service';
 
 @Component({
   selector: 'app-vendors',
@@ -15,14 +16,8 @@ export class VendorsComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private gs: GlobalService,
   ) {
-    this.route.queryParams.subscribe((params: any) => {
-      if (params && params.type) {
-        this.router.navigate(['/auth/log-in'], {
-          queryParams: params,
-        });
-      }
-    })
-    // this.router.navigateByUrl('/auth/log-in');
+
   }
 }

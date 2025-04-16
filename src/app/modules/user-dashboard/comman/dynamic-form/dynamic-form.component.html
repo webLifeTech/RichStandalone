@@ -199,6 +199,27 @@
                         </div>
                       </div>
 
+                      <!-- MULTIDROPDOWN -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'MULTIDROPDOWN'">
+                        <div class="form-group">
+                          <label for="isHaveForeignLicense">
+                            {{ field.get('description')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <ng-select (change)="onChangeDrop($event, field, section)" [clearSearchOnAdd]="true"
+                            [closeOnSelect]="false" [multiple]="true" clearable="false"
+                            [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
+                            bindLabel="Name" placeholder="-- Select One --" bindValue="Name"
+                            [formControlName]="'value'">
+                          </ng-select>
+                          <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
+                            class="text-danger mt-2">
+                            This field is required.
+                          </div>
+                        </div>
+                      </div>
+
                       <!-- CHECKBOX -->
                       <div [ngClass]="field.get('fieldClass')?.value" class="mb-4"
                         *ngIf="field.get('fieldType')?.value === 'CHECKBOX'">
@@ -411,6 +432,74 @@
                   </button>
                 </div>
               </div>
+
+              <div
+                *ngIf="(singleDetailInfo.driverDetailsRequest && singleDetailInfo.driverDetailsRequest.isAvailableForPrivateBooking == 'Yes') || this.formType === 'vendor-profile'"
+                class="col-lg-12">
+                <h4 class="mb-3">
+                  <b>{{'userDashboard.kyc.other_info.working_hours' | translate}}</b>
+                </h4>
+                <div class="table-responsive dashboard-table">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                        </th>
+                        <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
+                        <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
+                        <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
+                        <th class="text-center">{{'userDashboard.kyc.other_info.action' | translate}}</th>
+                        <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of workingHours; let inx = index">
+                        <td class="text-center">{{inx+1}}</td>
+                        <td>
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{item.dayOfWeek}}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span *ngIf="!item.isEdit">{{item.fromTime}}</span>
+                          <input *ngIf="item.isEdit" type="time" [(ngModel)]="item.fromTime"
+                            [ngModelOptions]="{standalone: true}" name="fromTime">
+                        </td>
+                        <td class="text-success-light">
+                          <span *ngIf="!item.isEdit">{{item.toTime}}</span>
+                          <!-- <input placeholder="Time:" [(ngModel)]="item.toTime" [ngModelOptions]="{standalone: true}"
+                            name="toTime" [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
+                          <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time> -->
+                          <input *ngIf="item.isEdit" type="time" [(ngModel)]="item.toTime"
+                            [ngModelOptions]="{standalone: true}" name="toTime">
+                        </td>
+                        <td class="text-center">
+                          <a *ngIf="!item.isEdit" (click)="editWorkingHours(item)">
+                            <i class="fas fa-pen me-2 pointer"></i> Edit
+                          </a>
+                          <a *ngIf="item.isEdit" (click)="saveWorkingHours(item)">
+                            <i class="fas fa-save me-2 pointer"></i> Save
+                          </a>
+                        </td>
+                        <td class="text-center">
+                          <a *ngIf="item.status" (click)="changeStatus(item)">
+                            <span class="badge badge-success">
+                              ON
+                            </span>
+                          </a>
+                          <a *ngIf="!item.status" (click)="changeStatus(item)">
+                            <span class="badge badge-danger">
+                              OFF
+                            </span>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </mat-expansion-panel>
         </ng-container>
@@ -438,13 +527,24 @@
       </div>
     </div>
     <div class="col-lg-12 text-end">
-      <button *ngIf="isEditInfo || formType === 'branch'" (click)="handleCancel()" type="button"
-        class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+      <button *ngIf="isEditInfo || formType === 'branch' || formType === 'driver_details'" (click)="handleCancel()"
+        type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
         Cancel
       </button>
-      <button *ngIf="!isEditInfo" [disabled]="!isAgreeTerms && isRequiredTermsAgree" type="button" (click)="onSubmit()"
+      <button *ngIf="!isEditInfo && formType !== 'driver_details' && formType !== 'vendor-profile'"
+        [disabled]="!isAgreeTerms && isRequiredTermsAgree" type="button" (click)="onSubmit()"
         class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
         Confirmed
+      </button>
+
+      <button *ngIf="formType == 'driver_details' || formType == 'vendor-profile'"
+        (click)="updateDetails(sections.controls[0])" type="button" class="btn btn-theme no-text-transorm mx-2 mb-2">
+        <span *ngIf="!isEditInfo">
+          Save
+        </span>
+        <span *ngIf="isEditInfo">
+          Update
+        </span>
       </button>
     </div>
   </div>

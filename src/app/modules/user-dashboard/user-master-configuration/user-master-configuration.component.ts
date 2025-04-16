@@ -63,6 +63,8 @@ export class UserMasterConfigurationComponent {
   subscriptionStep: any = 1;
   isAddEditBranch: boolean = false;
   isLoadBranch: boolean = false;
+  isLoadDriverDetail: boolean = false;
+  isAddEditDriverDetail: boolean = false;
 
   // Vehicle List Columns and Data
   myVehicleColumns = [
@@ -86,6 +88,17 @@ export class UserMasterConfigurationComponent {
 
   // Actions grids
   branchInfoActions = ['View', 'Edit'];
+
+  driverDetailsColumns = [
+    { header: 'Is Active/Inactive', fieldObject: null, field: 'isActiveOrInActive' },
+    { header: 'Is Available for Private Booking?', fieldObject: null, field: 'isAvailableForPrivateBooking' },
+    { header: 'Price per Day', fieldObject: null, field: 'pricePerDay' },
+    { header: 'Price Per Week', fieldObject: null, field: 'pricePerWeek' },
+    { header: 'Price Per Month', fieldObject: null, field: 'pricePerMonth' },
+  ];
+
+  // Actions grids
+  driverDetailsActions = ['View', 'Edit'];
 
 
 
@@ -149,6 +162,9 @@ export class UserMasterConfigurationComponent {
       if (sidebarTab.formId == 6) {
         this.getAllCompanies();
       }
+      if (sidebarTab.formId == 3) {
+        this.getDriverWorkingHours();
+      }
     }, 200);
     return;
   }
@@ -184,6 +200,25 @@ export class UserMasterConfigurationComponent {
     })
   }
 
+  getDriverWorkingHours() {
+    this.isLoadDriverDetail = false;
+    this.gridInfoData = [];
+    this.profileService.GetDriverWorkingHours({
+      "userId": this.gs.loggedInUserInfo.userId,
+      "driverId": 0,
+    }).subscribe((response: any) => {
+      console.log("GetDriverWorkingHours >>>>>", response);
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.gridInfoData = [response];
+        this.singleDetailInfo = { driverDetailsRequest: response };
+        if (!response.isActiveOrInActive) {
+          this.isAddEditDriverDetail = true; // need to do
+        }
+        this.isLoadDriverDetail = true; // need to do
+      }
+    })
+  }
+
   changeKycTab(tab: any) {
     this.kycForm.isAddSearchSection = false;
     this.selectedTabObj = JSON.parse(JSON.stringify(tab));
@@ -211,10 +246,14 @@ export class UserMasterConfigurationComponent {
   handleCancel() {
     this.isFormEdit = false;
     this.isAddEditBranch = false;
+    this.isAddEditDriverDetail = false;
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
     if (this.selectedTabObj.formId == 6) {
       this.getCompanyBranches();
+    }
+    if (this.selectedTabObj.formId == 3) {
+      this.getDriverWorkingHours();
     }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
@@ -256,6 +295,12 @@ export class UserMasterConfigurationComponent {
           this.singleDetailInfo = response;
         }
       })
+    }
+
+    if (type === 'driver_details') {
+      this.isFormEdit = true;
+      this.isAddEditDriverDetail = true;
+      this.singleDetailInfo = this.singleDetailInfo;
     }
   }
 

@@ -13,19 +13,11 @@
       <div class="col-lg-12">
         <div class="sorting-info custom-filter">
           <div class="row d-flex align-items-center justify-content-end">
-            <!-- <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_3'" class="filter-group">
-                <select class="form-select" [(ngModel)]="searchFilter.branch" (change)="selectBranch()">
-                  <ng-container *ngFor="let item of branchList">
-                    <option [value]="item.value">{{item.name}}</option>
-                  </ng-container>
-                </select>
-              </div>
-            </div> -->
             <div class="col-lg-3 col-sm-12 col-12 text-end">
               <mat-form-field class="custom-date-rang">
                 <mat-label>Select Date Rang</mat-label>
-                <mat-date-range-input [rangePicker]="picker">
+                <mat-date-range-input [rangePicker]="picker" [(ngModel)]="searchFilter.dateRang"
+                  (change)="onChangeFilter()">
                   <input matStartDate placeholder="Start date">
                   <input matEndDate placeholder="End date">
                 </mat-date-range-input>
@@ -35,35 +27,17 @@
               </mat-form-field>
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
-              <!-- <select class="form-select">
-                <option selected>Category</option>
-                <option value="1">Sub Category</option>
-                <option value="2">Last 30 Days</option>
-                <option value="3">Custom</option>
-              </select> -->
-
               <ng-select (change)="onChangeServices(searchFilter.category)" clearable="false" [items]="mainCatList"
-                bindLabel="name" placeholder="-- Filter Category --" bindValue="id" [(ngModel)]="searchFilter.category"
-                name="service">
+                bindLabel="Name" placeholder="-- Filter Category --" bindValue="ID" [(ngModel)]="searchFilter.category"
+                name="service" (change)="onChangeFilter()">
               </ng-select>
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
-              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="name"
-                placeholder="-- Filter Sub Category --" bindValue="value" [(ngModel)]="searchFilter.sub_category"
-                name="sub_category">
+              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="Name" bindValue="ID"
+                placeholder="-- Filter Sub Category --" [(ngModel)]="searchFilter.subCategory" name="subCategory"
+                (change)="onChangeFilter()">
               </ng-select>
             </div>
-
-            <!-- <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <div class="filter-group">
-                <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
-                  <ng-container *ngFor="let item of vehicleStatusList">
-                    <option [value]="item.value">{{item.name}}</option>
-                  </ng-container>
-                </select>
-              </div>
-            </div> -->
-
           </div>
         </div>
       </div>
@@ -84,9 +58,8 @@
 
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
-                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
-                          placeholder="Search" />
+                        <input [(ngModel)]="searchFilter.searchTerm" (keyup)="onChangeFilter()" type="search"
+                          class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
@@ -119,25 +92,25 @@
                       <span>{{idx+1}}</span>
                     </td> -->
                     <td>
-                      <a>{{data.leadid}}</a>
+                      <a>{{data.id}}</a>
                     </td>
                     <td>
-                      <a>{{data.contact_person}}</a>
+                      <a>{{data.name || '-'}}</a>
                     </td>
                     <td>
-                      <a>{{data.mobile}}</a>
+                      <a>{{data.phoneNumber || '-'}}</a>
                     </td>
                     <td>
-                      <a>{{data.email}}</a>
+                      <a>{{data.emailId || '-'}}</a>
                     </td>
                     <td>
-                      <a>{{data.category}}</a>
+                      <a>{{data.category || '-'}}</a>
                     </td>
                     <td>
-                      <a>{{data.subcategory}}</a>
+                      <a>{{data.subCategory || '-'}}</a>
                     </td>
                     <td>
-                      <a>{{data.date}}</a>
+                      <a>{{data.enquiryDate}}</a>
                     </td>
                     <!-- <td class="text-center">
                       <button mat-icon-button (click)="onView(data)" aria-label="Example icon-button with a menu">
@@ -155,10 +128,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #delete_modal let-c="close" let-d="dismiss">
-  <app-delete-modal></app-delete-modal>
-</ng-template>
-<ng-template #booking_details let-c="close" let-d="dismiss">
-  <app-booking-details-modal [bookingDetails]="editInfo"></app-booking-details-modal>
-</ng-template>

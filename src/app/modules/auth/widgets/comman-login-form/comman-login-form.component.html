@@ -2,10 +2,16 @@
   @if(type == 'register'){
   <div *ngIf="isVendor" class="form-group">
     <label for="name">{{'auth.form.vendor_type' | translate}}</label>
-    <ng-select clearable="false" [items]="vendorTypes" bindLabel="name" placeholder="-- Select --" bindValue="id"
-      [(ngModel)]="registerForm.vendor_type" name="vendor_type">
+    <ng-select clearable="false" [items]="vendorTypes" bindLabel="Description" placeholder="-- Select --"
+      bindValue="Description" [(ngModel)]="registerForm.category" name="category" (change)="selectCategory($event)">
     </ng-select>
   </div>
+  <!-- <div *ngIf="isVendor" class="form-group">
+    <label for="name">{{'auth.form.sub_categories' | translate}}</label>
+    <ng-select clearable="false" [items]="subCategories" bindLabel="Description" placeholder="-- Select --"
+      bindValue="id" [(ngModel)]="registerForm.sub_categories" name="sub_categories" (change)="selectCategory($event)">
+    </ng-select>
+  </div> -->
   <div *ngIf="!isVendor" class="form-group">
     <label for="name">{{'auth.form.type' | translate}}</label>
     <ng-select clearable="false" [items]="iAmArray" bindLabel="name" placeholder="-- Select One --" bindValue="id"
@@ -14,7 +20,7 @@
   </div>
   <div class="form-group">
     <label for="name">{{'auth.form.full_name' | translate}}</label>
-    <input type="text" class="form-control" id="name"
+    <input type="text" class="form-control" id="name" [(ngModel)]="registerForm.full_name" name="full_name"
       placeholder="{{'global.enter' | translate}} {{'auth.form.full_name' | translate}}" autocomplete="off">
   </div>
   }

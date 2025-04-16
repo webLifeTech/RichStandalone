@@ -1,0 +1,36 @@
+<div class="row my-kyc">
+  <div class="col-lg-3">
+    <div class="dashboard-sidebar mb-3">
+      <div class="profile-top">
+        <div class="profile-detail">
+          <h5>{{'My Profile' | translate}}</h5>
+        </div>
+      </div>
+      <div class="faq-tab">
+        <ul class="nav nav-tabs" id="top-tab" role="tablist">
+          @for(tab of sidebarTabs; track tab){
+          <li class="nav-item" [hidden]="tab.isHidden">
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
+              (click)="changeKycTab(tab)">
+              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-9">
+    <div class="dashboard-box">
+      <div class="position-relative">
+        <!-- Account info -->
+        <div *ngIf="activeKycTab === 13">
+          <app-nfts-info></app-nfts-info>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,33 +9,55 @@
       <div class="col-6 side-line">
         <div class="mb-4">
           <h3 class="text-theme font-b">Get the List of Top</h3>
-          <h3 class="text-cyan font-b">{{title}}</h3>
         </div>
-        <form>
+        <form [formGroup]="enquiryForm">
           <div class="modal-form-group">
             <label>Name <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="name" name="name" />
+            <span class="text-danger"
+              *ngIf="(enquiryFormControl.name?.touched || submitted) && enquiryFormControl.name?.errors?.required">
+              Name is required
+            </span>
           </div>
           <div class="modal-form-group">
             <label>Mobile Number <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="phoneNumber" name="phoneNumber" numbersOnly />
+            <span class="text-danger"
+              *ngIf="(enquiryFormControl.phoneNumber?.touched || submitted) && enquiryFormControl.phoneNumber?.errors?.required">
+              Mobile Number is required
+            </span>
           </div>
           <div class="modal-form-group">
             <label>Email Address <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="emailId" name="emailId" />
+            <span class="text-danger"
+              *ngIf="(enquiryFormControl.emailId?.touched || submitted) && enquiryFormControl.emailId?.errors?.required">
+              Email Address is required
+            </span>
+            <span class="text-danger"
+              *ngIf="enquiryFormControl.emailId?.touched  && enquiryFormControl.emailId.errors?.email">
+              Enter a valid email address
+            </span>
           </div>
           <div class="modal-form-group">
             <label>Sub Category <span class="text-danger">*</span></label>
-            <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="name" placeholder="-- Select One --"
-              bindValue="value" name="sub_category" name="sub_category">
+            <ng-select clearable="false" [items]="providerDetails.subCategories" formControlName="subCategoryCd"
+              name="subCategoryCd" bindLabel="subCategoryName" placeholder="-- Select One --" bindValue="subCategoryId"
+              (change)="changeSubCategory($event)">
             </ng-select>
+            <span class="text-danger"
+              *ngIf="(enquiryFormControl.subCategoryCd?.touched || submitted) && enquiryFormControl.subCategoryCd?.errors?.required">
+              Sub Category is required
+            </span>
           </div>
-          <!-- <div class="modal-form-group">
-            <p>
-              <i class="feather icon-alert-circle"></i> New Email Address Only
-              Updated Once You Verified
-            </p>
-          </div> -->
+          <div class="modal-form-group">
+            <label>Remark <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="remarks" name="remarks" />
+            <span class="text-danger"
+              *ngIf="(enquiryFormControl.remarks?.touched || submitted) && enquiryFormControl.remarks?.errors?.required">
+              Remark is required
+            </span>
+          </div>
           <div class="modal-btn">
             <div class="row">
               <div class="col-8">
@@ -43,11 +65,6 @@
                   Send Enquiry
                 </a>
               </div>
-              <!-- <div class="col-6">
-                <a (click)="closeModal()" class="btn btn-primary w-100">
-                  Cancel
-                </a>
-              </div> -->
             </div>
           </div>
         </form>

@@ -20,6 +20,7 @@ import { InvoiceModalComponent } from '../../../shared/components/comman/modal/p
 import { AddPaymentModalComponent } from '../../../shared/components/comman/modal/payment-modals/add-payment-modal/add-payment-modal.component';
 import { AddCardModalComponent } from '../../../shared/components/comman/modal/payment-modals/add-card-modal/add-card-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
+import { WalletService } from '../../../shared/services/wallet.service';
 
 @Component({
   selector: 'app-user-wallet',
@@ -42,30 +43,48 @@ export class UserWalletComponent {
   dataSource!: MatTableDataSource<userBookings>;
   public showFilter = false;
   public searchDataValue = '';
-  public lastIndex = 0;
   public pageSize = 10;
-  public totalRecord = 0;
   public skip = 0;
   public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
+  public totalRecord = 0;
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
 
-  total_booking_amount: any = 1200;
-  total_refunded_amount: any = 200;
-  total_net_profit: any = 1000;
-  editInfo: any = {};
+  walletDetails: any = {};
 
-  cardLists: any = [];
+  cardLists: any = [
+    {
+      "image": "assets/icons/payment/wallet-01.svg",
+      "card_number": "3210 7836 4432 3412",
+      "balance": 3000,
+      "status": "Active",
+      "name_on_card": "Jone Doe",
+      "cvv": "337",
+      "expiry_date": "12/29",
+      "rememberme": true,
+    },
+    {
+      "image": "assets/icons/payment/wallet-02.svg",
+      "card_number": "7847 8563 3211 3478",
+      "balance": 2300,
+      "status": "Active",
+      "name_on_card": "Jone Doe",
+      "cvv": "553",
+      "expiry_date": "02/41",
+      "rememberme": true,
+    },
+    {
+      "image": "assets/icons/payment/wallet-03.svg",
+      "card_number": "4710 8563 3211 3464",
+      "balance": 1800,
+      "status": "Active",
+      "name_on_card": "Jone Doe",
+      "cvv": "764",
+      "expiry_date": "02/41",
+      "rememberme": true,
+    },
+  ];
 
   constructor(
-    // private data: DataService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private pagination: PaginationService,
     private toast: ToastService,
     private alert: AlertService,
     private paymentService: PaymentService,
@@ -73,57 +92,42 @@ export class UserWalletComponent {
     private dialog: MatDialog,
     private modalService: NgbModal,
     public gs: GlobalService,
+    public walletService: WalletService,
 
   ) {
-    this.route.queryParams.subscribe((params) => {
-      this.getTableData();
-    })
+    this.getTableData();
+    this.getWalletDetails();
     this.getCards();
   }
 
+
+
   async getCards() {
-    this.cardLists = [
-      {
-        "image": "assets/icons/payment/wallet-01.svg",
-        "card_number": "3210 7836 4432 3412",
-        "balance": 3000,
-        "status": "Active",
-        "name_on_card": "Jone Doe",
-        "cvv": "337",
-        "expiry_date": "12/29",
-        "rememberme": true,
-      },
-      {
-        "image": "assets/icons/payment/wallet-02.svg",
-        "card_number": "7847 8563 3211 3478",
-        "balance": 2300,
-        "status": "Active",
-        "name_on_card": "Jone Doe",
-        "cvv": "553",
-        "expiry_date": "02/41",
-        "rememberme": true,
-      },
-      {
-        "image": "assets/icons/payment/wallet-03.svg",
-        "card_number": "4710 8563 3211 3464",
-        "balance": 1800,
-        "status": "Active",
-        "name_on_card": "Jone Doe",
-        "cvv": "764",
-        "expiry_date": "02/41",
-        "rememberme": true,
-      },
-    ];
     for (let i in this.cardLists) {
       this.cardLists[i].hiddenNumber = await this.getMaskedCardNumber(this.cardLists[i].card_number);
     }
   }
 
+  getWalletDetails() {
+    this.gs.isSpinnerShow = true;
+    this.walletService.getWalletDetails({
+      "userId": this.gs.loggedInUserInfo.userId
+    }).subscribe((response: any) => {
+      console.log("response >>>>", response);
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.walletDetails = response.walletDetails;
+        this.tableData = response.walletTransactionDetails;
+        this.totalRecord = response.walletTransactionDetails.length;
+      }
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
   getTableData() {
-    this.paymentService.getuserWallet().subscribe((apiRes: apiResultFormat) => {
-      this.totalRecord = apiRes.totalData;
-      this.tableData = apiRes.data;
-    });
+    // this.paymentService.getuserWallet().subscribe((apiRes: apiResultFormat) => {
+    //   this.totalRecord = apiRes.totalData;
+    //   this.tableData = apiRes.data;
+    // });
   }
 
   public searchData(value: string): void {
@@ -162,12 +166,17 @@ export class UserWalletComponent {
     return maskedDigits + last4Digits;
   }
 
-  addPayment() {
+  paymentAction(type: any) {
     const modalRef = this.modalService.open(AddPaymentModalComponent, {
       size: 'md'
     });
+    modalRef.componentInstance.paymentType = type;
+    modalRef.componentInstance.walletId = this.walletDetails.walletId;
     modalRef.result.then((res: any) => {
-
+      console.log("res >>>>", res);
+      if (res.confirmed) {
+        this.getWalletDetails();
+      }
     }, () => {
     });
   }
@@ -195,17 +204,6 @@ export class UserWalletComponent {
 
     }, () => {
     });
-  }
-
-  onView(item: any) {
-    const modalRef = this.modalService.open(InvoiceModalComponent, {
-      size: 'xl'
-    });
-    modalRef.result.then((res: any) => {
-
-    }, () => {
-    });
-    this.editInfo = item;
   }
   //
   async onDelete(index: any) {

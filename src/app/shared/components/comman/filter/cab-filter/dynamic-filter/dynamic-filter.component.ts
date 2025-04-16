@@ -47,7 +47,7 @@ export class DynamicFilterComponent {
       console.log("key >>>>>>>>>", key);
       console.log("index >>>>>>>>>", index);
 
-      if (key == 'SEATINGCAPACITY') {
+      if (key == 'SEATINGCAPACITY' || key == 'EXPERIENCE') {
         const items = value ? value.split(',') : [];
 
         console.log("items <<<<", items);
