@@ -83,6 +83,7 @@ export class DynamicFormComponent {
   isRequiredTermsAgree: boolean = true;
   profileUrl: any = "";
   workingHours: any = [];
+  isPrivateBooking: boolean = false; //
 
   constructor(
     private fb: FormBuilder,
@@ -1019,9 +1020,6 @@ export class DynamicFormComponent {
   // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
 
-    console.log("field.value.fieldName >>>>>", field.value.fieldName);
-
-
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
     } else {
@@ -1133,6 +1131,15 @@ export class DynamicFormComponent {
           }
         }
       })
+    }
+
+    if (field.value.fieldId === 56) { //fieldId 56 is "IS AVAILABLE FOR PRIVATE BOOKING?"
+      if (field.value.value == "Yes") {
+        this.isPrivateBooking = true;
+      } else {
+        this.isPrivateBooking = false;
+      }
+      console.log("section >>>>>>", section);
     }
 
     if (this.submitted) {
@@ -1560,25 +1567,32 @@ export class DynamicFormComponent {
           section.fields.forEach((field: any) => {
             let sectionData: any = {};
             if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-              sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
-            } else {
-              // console.log("field.fieldName >>>>>", field.fieldName);
-
-              if (field.modalValue) {
-                sectionData[field.modalValue] = field.value;
-              } else {
-                sectionData[field.valueCode] = field.valueCd;
+              if (field.value) {
+                sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');
               }
+            } else {
+              if (field.value || field.value == false || field.value == 0) {
+                sectionData[field.modalValue] = field.value;
+              }
+              // if (field.modalValue) {
+              // }
+              // else {
+              //   if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
+              //     sectionData[field.valueCode] = field.valueCd;
+              //   }
+              // }
             }
 
             if (field.county) { // set county
               sectionData["county"] = field.county;
             }
             if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
-              sectionData[field.valueCode] = field.valueCd;
+              if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
+                sectionData[field.valueCode] = field.valueCd;
+              }
             }
 
-            if (field.fieldType === "TEXTMASK") {
+            if (field.fieldType === "TEXTMASK" && field.valueCd && field.value) {
               sectionData[field.modalValue] = field.valueCd;
               sectionData[field.valueCode] = field.value;
             }
@@ -1606,13 +1620,27 @@ export class DynamicFormComponent {
 
         finalBody.driverInfo["maskDriverLicenseNumber"] = "XXXXX0001"
         finalBody.driverInfo["maskDateOfBirth"] = "XX/XX/1972"
-        finalBody.driverInfo["encryptedDriverLicenseNumber"] = "";
-        finalBody.driverInfo["encryptedDateOfBirth"] = "";
-        finalBody.personalInfo["encryptedSSN"] = "";
 
+        for (const key in finalBody) {
+          console.log("hasOwnProperty(key) >>>>>", finalBody.hasOwnProperty(key))
+          if (finalBody.hasOwnProperty(key)) {
+            const keyValue = finalBody[key];
+            console.log("keyValue >>>>", keyValue);
 
+            if (typeof keyValue === 'object' && keyValue !== null && !Array.isArray(keyValue)) {
+              if (!Object.keys(keyValue).length) {
+                delete finalBody[key];
+              }
+            }
+          }
+        }
+
+        // finalBody.driverInfo["encryptedDriverLicenseNumber"] = "";
+        // finalBody.driverInfo["encryptedDateOfBirth"] = "";
+        // finalBody.personalInfo["encryptedSSN"] = "";
         console.log("finalBody >>>>>>", finalBody);
-
+        // return;
+        this.gs.isSpinnerShow = true;
         this.profileService.insertAndUpdateDriverKYC(finalBody, this.gs.loggedInUserInfo.userId).subscribe((res: any) => {
           console.log("res >>>>>", res);
           this.gs.isSpinnerShow = false;
@@ -1646,7 +1674,7 @@ export class DynamicFormComponent {
         console.log("finalBody >>>>>>", finalBody);
 
         // return;
-
+        this.gs.isSpinnerShow = true;
         this.branchService.InsertAndUpdateCompanyBranch(finalBody, {
           userId: this.gs.loggedInUserInfo.userId,
         }).subscribe((res: any) => {
@@ -1812,6 +1840,7 @@ export class DynamicFormComponent {
         finalBody.userId = this.gs.loggedInUserInfo.userId;
         console.log("finalBody >>>>>>", finalBody);
 
+        this.gs.isSpinnerShow = true;
         this.profileService.insertAndUpdateCompanyKyc(finalBody, {
           userId: this.gs.loggedInUserInfo.userId
         }).subscribe((res: any) => {
@@ -1867,19 +1896,25 @@ export class DynamicFormComponent {
       section.value.fields.forEach((field: any) => {
         if (field.modalValue && field.fieldType !== "BUTTON") {
           if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-            sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
+            if (field.value) {
+              sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
+            }
           } else {
-            sectionData[field.modalValue] = (field.value || field.value == false) ? field.value : null;
+            if (field.value || field.value == false || field.value == 0) {
+              sectionData[field.modalValue] = field.value;
+            }
           }
 
           if (field.county) { // set county
             sectionData["county"] = field.county || "";
           }
           if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
-            sectionData[field.valueCode] = field.valueCd || "";
+            if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
+              sectionData[field.valueCode] = field.valueCd || "";
+            }
           }
 
-          if (field.fieldType === "TEXTMASK") {
+          if (field.fieldType === "TEXTMASK" && field.valueCd && field.value) {
             sectionData[field.modalValue] = field.valueCd;
             sectionData[field.valueCode] = field.value;
           }
@@ -1921,7 +1956,6 @@ export class DynamicFormComponent {
       finalBody = {
         "vehicleOtherDetails": {
           "location": {
-            "id": null,
             "ownerId": this.singleDetailInfo.vehicleInfo.userId,
             "riskId": this.singleDetailInfo.vehicleInfo.vehicleId,
             "riskType": "Vehicle",
@@ -1971,20 +2005,26 @@ export class DynamicFormComponent {
               }
             })
           } else {
-            if (field.modalValue) {
+            if (field.value || field.value == false || field.value == 0) {
               sectionData[field.modalValue] = field.value;
-            } else {
-              sectionData[field.valueCode] = field.valueCd;
             }
+            // if (field.modalValue) {
+            // } else {
+            //   if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
+            //     sectionData[field.valueCode] = field.valueCd;
+            //   }
+            // }
           }
           if (field.county) { // set county
             sectionData["county"] = field.county;
           }
           if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
-            sectionData[field.valueCode] = field.valueCd;
+            if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
+              sectionData[field.valueCode] = field.valueCd;
+            }
           }
 
-          if (field.fieldType === "TEXTMASK") {
+          if (field.fieldType === "TEXTMASK" && field.valueCd && field.value) {
             sectionData[field.modalValue] = field.valueCd;
             sectionData[field.valueCode] = field.value;
           }
@@ -2007,7 +2047,8 @@ export class DynamicFormComponent {
               if (keys[2] == 'addresses') {
                 createObj.addressId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressId");
                 createObj.addressTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "addressTypeId") || field?.MasterTypeIds?.ID;
-                createObj.isPrimaryAddress = this.getFieldValue(this.singleDetailInfo, field.modalObject, "isPrimaryAddress");
+                const isPrimaryAddress = this.getFieldValue(this.singleDetailInfo, field.modalObject, "isPrimaryAddress");
+                createObj.isPrimaryAddress = isPrimaryAddress == false ? false : true;
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
               }
 
@@ -2022,7 +2063,8 @@ export class DynamicFormComponent {
                 createObj.phoneId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneId");
                 createObj.phoneTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "phoneTypeId") || field?.MasterTypeIds?.ID;
                 createObj.extension = this.getFieldValue(this.singleDetailInfo, field.modalObject, "extension");
-                createObj.primaryPhoneFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryPhoneFlag");
+                const primaryPhoneFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryPhoneFlag");
+                createObj.primaryPhoneFlag = primaryPhoneFlag == false ? false : true;
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
               }
               finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
@@ -2060,7 +2102,7 @@ export class DynamicFormComponent {
 
     if (section.value.sectionID === "8" || section.value.sectionID === "24") {
       console.log("finalBody >>>>>>", finalBody);
-      this.updateDriverKycOtherInfo(finalBody);
+      this.updateDriverKycOtherInfo(finalBody, section);
     }
 
     if (section.value.sectionID === "11") {
@@ -2234,7 +2276,7 @@ export class DynamicFormComponent {
   }
 
   // updateDriverKycOtherInfo
-  async updateDriverKycOtherInfo(finalBody: any) {
+  async updateDriverKycOtherInfo(finalBody: any, section: any) {
     let Body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "driverId": this.singleDetailInfo.driverInfo.driverId,
@@ -2250,6 +2292,40 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
+        if (this.formType === 'driver' || this.formType === 'individualCarOwner') {
+          const body = {
+            userId: this.gs.loggedInUserInfo.userId,
+            driverId: this.singleDetailInfo.driverInfo.driverId,
+          }
+          this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
+            if (response && response.driveInCity) {
+              this.singleDetailInfo = response;
+              let expiryDate: any = null;
+              let tempTableGridValueList: any = this.singleDetailInfo[section.value.modalObject];
+              section.get('loopArray').clear();
+              section.value.fields.forEach((field: any) => {
+                if (field.fieldType === "DATE" || field.fieldType === "date") {
+                  for (let i in tempTableGridValueList) {
+                    if (field.fieldId === 155 || field.fieldId === 226) {
+                      expiryDate = this.parseDate(tempTableGridValueList[i][field.modalValue]);
+                    }
+                    if (expiryDate) {
+                      if (this.todayDate.toISOString() < expiryDate.toISOString()) {
+                        tempTableGridValueList[i].status = true;
+                      } else {
+                        tempTableGridValueList[i].status = false;
+                      }
+                    }
+                  }
+                }
+              })
+              setTimeout(() => {
+                section.setControl('loopArray', this.fb.array(tempTableGridValueList || []));
+                section.get('tableGridValueList').patchValue(tempTableGridValueList);
+              }, 500);
+            }
+          })
+        }
       } else {
         this.toast.errorToastr(res.message);
       }

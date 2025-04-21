@@ -35,100 +35,109 @@ import { GlobalService } from '../../../../shared/services/global.service';
 })
 
 export class NftsInfoComponent {
+  pageSize: number = 5;
   currentPage: number = 1; //
-  pageSize: number = 1;
+
   totalRecord: any = 0;
   searchText: any;
   editIndex: any = 0;
-
-  @Input() formType: any;
-  editInfo: any = {}
-  isAdd: boolean = false;
-
-  menuForm: any = {
-    menu_name: "",
-    status: null,
-    sub_menu_name: "",
-    parent_menu: null,
-    redirect_url: "",
-    description: "",
-  };
-
-  statusList: any = [
-    { name: 'Active', value: true },
-    { name: 'Deactive', value: false },
-  ];
-
-  tableData: any = [
-    {
-      "id": 1,
-      "driver_name": "Jhon",
-      "purchased_status": true,
-    },
-    {
-      "id": 2,
-      "driver_name": "Smith",
-      "purchased_status": false,
-    }
-  ];
-
+  tableData: any = [];
   walletAddress: string | null = null;
-  uniqIdToPurchase: string = '';
-  priceToPurchase: string = '';
-  uniqIdToView: string = '';
   nftDetails: any = null;
+  search: any = null;
+  pageHeading: any = null;
 
   constructor(
     private toast: ToastService,
-    private alert: AlertService,
-    private paginationService: PaginationService,
     private modalService: NgbModal,
     private nftService: NftService,
-    private driverService: DriverService,
     public gs: GlobalService,
-    private _renderer2: Renderer2,
-    @Inject(DOCUMENT) private _document: Document
   ) {
   }
 
   public ngOnInit() {
-    this.driverService.getVerifiedDriver().subscribe((apiRes: any) => {
-      console.log("apiRes >>>>>>>", apiRes);
-      const driverList = apiRes.driver.filter((item: any) => item.kyc_id)
-      this.totalRecord = driverList.length;
-      this.tableData = this.nftService.checkNFTPurchased(driverList);
-    });
+
+    // this.driverService.getVerifiedDriver().subscribe((apiRes: any) => {
+    //   console.log("apiRes >>>>>>>", apiRes);
+    //   const driverList = apiRes.driver.filter((item: any) => item.kyc_id)
+    //   this.totalRecord = driverList.length;
+    //   this.tableData = this.nftService.checkNFTPurchased(driverList);
+    // });
+    this.onSearch();
   }
 
 
+  onSearch(searchFrom?: any) {
+    if (searchFrom == 'search') {
+      this.currentPage = 1;
+    }
+
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "masterSearch": this.search,
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize
+    }
+
+    this.gs.isSpinnerShow = true;
+    this.nftService.GetNftDocDetails(body).subscribe((res: any) => {
+      console.log("GetNftDocDetails >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      this.totalRecord = res.viewModel?.totalCount || 0;
+      this.pageHeading = res.viewModel?.pageHeading || 0;
+      this.tableData = res.nftDocsInfos || [];
+
+    })
+  }
+
+  onReset() {
+    this.search = null;
+    this.onSearch();
+  }
+
+  pageChanged(event: any) {
+    this.currentPage = event;
+    this.onSearch();
+  }
+
   async connectWallet() {
     try {
-      this.walletAddress = await this.nftService.connectWallet();
+      this.walletAddress = await this.nftService.connectWallet(this.tableData[0].recieverContractId);
       console.log("this.walletAddress >>>>>", this.walletAddress);
     } catch (error) {
       console.error(error);
     }
   }
 
-  async purchaseNFT(uniqId: any) {
+  async purchaseNFT(item: any) {
     try {
       if (!this.walletAddress) {
-        this.walletAddress = await this.nftService.connectWallet();
+        this.walletAddress = await this.nftService.connectWallet(item.recieverContractId);
       }
-      console.log("uniqId >>>>>>", uniqId);
+      console.log("item >>>>>>", item);
       console.log("this.walletAddress >>>>>", this.walletAddress);
 
-      await this.nftService.purchaseNFT(uniqId);
-      this.tableData = this.nftService.checkNFTPurchased(this.tableData);
+      await this.nftService.purchaseNFT(item);
+      this.onSearch();
+      // this.tableData = this.nftService.checkNFTPurchased(this.tableData);
     } catch (error) {
       console.error(error);
     }
   }
 
   async viewNFT(item: any, type: any) {
+    console.log("item >>>>>", item);
+
+    if (type === 'view') {
+      window.open(item.nftUrl);
+    }
+    if (type === 'download') {
+      this.gs.downloadFile(item.contactname + ' KYC', item.nftUrl);
+    }
+    return;
     try {
       if (!this.walletAddress) {
-        this.walletAddress = await this.nftService.connectWallet();
+        this.walletAddress = await this.nftService.connectWallet("");
       }
       this.nftDetails = await this.nftService.viewNFT(item.kyc_id);
       const hashKey = this.nftDetails[2][this.nftDetails[2].length - 1];
@@ -161,9 +170,5 @@ export class NftsInfoComponent {
 
     }, () => {
     });
-  }
-
-  pageChanged(event: any) {
-    this.currentPage = event;
   }
 }

@@ -34,7 +34,7 @@ export class ServiceProfileComponent {
   activeKycTab: any;
   kycForm: any = {
     state: 42,
-    menuId: 30
+    menuId: 27
   };
   isFormEdit: boolean = false;
   isAddEditVendor: boolean = false;
@@ -101,7 +101,7 @@ export class ServiceProfileComponent {
       "roleName": this.gs.loggedInUserInfo.roleName || null,
       "countryId": 230,
       "transactionId": 1,
-      "menuId": 30
+      "menuId": 27
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

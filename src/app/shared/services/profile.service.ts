@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { apiResultFormat } from './model/model';
+import { map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 
@@ -458,10 +457,6 @@ export class ProfileService {
       })
     );
   }
-
-  // Hello Paras Gogdani 
-  // TLHUB/DriverKYC/GetDriverWorkingHours?userId={userId}&driverId={driverId}please work on!
-  // TLHUB/DriverKYC/UpdateDriverWorkingHours
 
   // KYC -> GetDriverWorkingHours
   public GetDriverWorkingHours(dataParams: any) {

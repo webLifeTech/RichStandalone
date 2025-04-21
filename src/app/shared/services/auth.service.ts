@@ -42,15 +42,20 @@ export class AuthService {
   }
 
   register(data: any) {
-    this.isLoggedIn = true;
-    if (this.isLoggedIn) {
-      this.loggedInUserInfo = data;
-      this.gs.loggedInUserInfo = this.loggedInUserInfo;
-      localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('loggedInUser', JSON.stringify(data));
-      this.router.navigateByUrl('/cab/listing/list-view');
-      // this.toast.successToastr("Registration Successfully");
-    }
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/User/RegisterUser`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+    // this.isLoggedIn = true;
+    // if (this.isLoggedIn) {
+    //   this.loggedInUserInfo = data;
+    //   this.gs.loggedInUserInfo = this.loggedInUserInfo;
+    //   localStorage.setItem('loggedIn', 'true');
+    //   localStorage.setItem('loggedInUser', JSON.stringify(data));
+    //   this.router.navigateByUrl('/cab/listing/list-view');
+    //   // this.toast.successToastr("Registration Successfully");
+    // }
   }
 
   logOut() {
@@ -82,5 +87,37 @@ export class AuthService {
     //     return res;
     //   })
     // );
+  }
+
+  public GetRolesList(dataParams: any) {
+    const params = new HttpParams().set('userRole', dataParams.userRole);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetRolesList', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  public SendVerificationCodeAsync(dataParams: any) {
+    const params = new HttpParams()
+      .set('verificationType', dataParams.verificationType)
+      .set('phoneNumber', dataParams.phoneNumber)
+      .set('countryName', dataParams.countryName)
+      .set('emailId', dataParams.emailId)
+      .set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Communication/SendVerificationCodeAsync', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Communication -> ValidateVerificationCodeMethod
+  public ValidateVerificationCodeMethod(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Communication/ValidateVerificationCode`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 }

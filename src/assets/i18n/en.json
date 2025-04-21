@@ -78,7 +78,8 @@
       "resend": "re send",
       "otp": "otp",
       "seconds": "seconds",
-      "otp_enable": "will be enable in"
+      "otp_enable": "will be enable in",
+      "confirm_otp": "Confirm OTP"
     }
   },
   "car_list_page": {

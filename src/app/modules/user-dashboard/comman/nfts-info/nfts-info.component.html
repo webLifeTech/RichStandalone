@@ -1,5 +1,4 @@
 <div class="container-fluid">
-
   <div class="row align-items-center mt-4 mb-2">
     <div class="col-lg-12 mb-4">
       <div class="booking-wrapper">
@@ -8,42 +7,15 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="container">
-      <h1>Purchase NFT</h1>
-      <button class="button" onclick="connectWallet()">Connect Wallet</button>
-      <div id="walletAddress"></div>
-      <div class="input-group">
-        <label for="uniqId">Unique ID:</label>
-        <input type="text" id="uniqId" placeholder="Enter Unique ID">
-      </div>
-      <button class="button" onclick="purchaseNFT()">Purchase NFT</button>
-      <h1>View NFT</h1>
-      <div class="input-group">
-        <label for="uniqIdForView">Unique ID:</label>
-        <input type="text" id="uniqIdForView" placeholder="Enter Unique ID">
-      </div>
-      <button class="button" onclick="viewNFT()">View NFT</button>
-      <div id="nftDetails"></div>
-    </div> -->
     <div class="col-lg-4 mb-2 text-center">
-      <!-- (click)="connectWallet()" angular -->
       <button (click)="connectWallet()" class="btn btn-theme no-text-transorm ms-2">
         {{ 'Connect Wallet' | translate }}
       </button>
-      <!-- <button onclick="connectWallet()" class="btn btn-theme no-text-transorm ms-2">
-        {{ 'Connect Wallet' | translate }}
-      </button> -->
     </div>
     <div class="col-lg-8 mb-2">
       <div class="card dash-box-card flex-fill mb-0">
         <div class="card-header">
           <div class="row align-items-center">
-            <!-- <div class="col-md-12">
-              <h5>
-                <div id="walletAddress"></div>
-              </h5>
-            </div> -->
             <div *ngIf="walletAddress" class="col-md-12 mb-2">
               <h4>Wallet Connected</h4>
             </div>
@@ -59,24 +31,28 @@
     </div>
   </div>
   <div class="row align-items-center mt-4 mb-2">
-    <!-- <div class="col-lg-12 mb-2">
+    <div class="col-lg-12 mb-2">
       <h5 class="title-5">{{ "Search NFT'S" | translate }}</h5>
-    </div> -->
-    <!-- <div class="col-lg-6">
+    </div>
+    <div class="col-lg-12">
       <form class="form-inline align-self-end">
         <div class="d-flex">
-          <input [(ngModel)]="uniqIdToView" name="sub_menu_name" type="text" [placeholder]="'Driver ID' | translate"
+          <input [(ngModel)]="search" name="sub_menu_name" type="text" [placeholder]="'Search here ' | translate"
             class="form-control open-select" />
-          <button (click)="viewNFT()" class="btn btn-theme no-text-transorm ms-2">
+          <button (click)="onSearch('search')" class="btn btn-theme no-text-transorm ms-2">
             {{ 'Search' | translate }}
           </button>
-          <button (click)="isAdd = true" class="btn btn-solid color3 no-text-transorm ms-2">
-            {{ 'Cancel' | translate }}
+          <button (click)="onReset()" class="btn btn-solid color3 no-text-transorm ms-2">
+            {{ 'Reset' | translate }}
           </button>
         </div>
       </form>
-    </div> -->
-    <div *ngIf="!tableData.length" class="col-lg-12 mt-5">
+      <small class="fw-bold">Search by Driver name, Location, Vin number, Licence number</small>
+    </div>
+    <div class="col-lg-12 mt-3 text-end">
+      <h5 class="title-5 mb-0">{{ pageHeading | translate }}</h5>
+    </div>
+    <div *ngIf="!tableData.length && !gs.isSpinnerShow" class="col-lg-12 mt-5">
       <div class="text-center">
         <p>Driver Not Found</p>
       </div>
@@ -99,22 +75,22 @@
           </thead>
           <tbody>
             <tr
-              *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+              *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
               <td class="text-center">{{idx+1}}</td>
               <td class="text-start">
                 <div class="table-avatar">
                   <a class="avatar avatar-lg flex-shrink-0">
-                    <img class="avatar-img" [src]="item.driverImage || 'assets/images/driver/Male.jpg'" alt="Booking">
+                    <img class="avatar-img" [src]="item.profilepath || 'assets/images/driver/Male.jpg'" alt="Booking">
                   </a>
                   <div class="table-head-name flex-grow-1">
-                    <a>{{item.driverName}}</a>
-                    <p class="my-1"><b class="text-theme">KYC ID</b> : {{item.kyc_id}}</p>
-                    <p class="mb-0"><b class="text-theme">Hash Key</b> : {{item.hash_key || '-'}}</p>
+                    <a>{{item.contactname}}</a>
+                    <p class="my-1"><b class="text-theme">KYC ID</b> : {{item.riskId}}</p>
+                    <p class="mb-0"><b class="text-theme">Hash Key</b> : {{item.hash || '-'}}</p>
                   </div>
                 </div>
               </td>
               <td class="text-center">
-                <button *ngIf="!item.isPurchased" (click)="purchaseNFT(item.kyc_id)"
+                <button *ngIf="!item.isPurchased" (click)="purchaseNFT(item)"
                   class="btn btn-theme no-text-transorm ms-2">
                   {{ 'Buy' | translate }}
                 </button>

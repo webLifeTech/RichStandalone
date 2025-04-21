@@ -20,6 +20,7 @@ import { PaymentSuccessComponent } from '../../../shared/components/comman/payme
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PackageSubscriptionComponent } from '../comman/package-subscription/package-subscription.component';
 import { BranchService } from '../../../shared/services/branch.service';
+import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-user-master-configuration',
@@ -108,6 +109,7 @@ export class UserMasterConfigurationComponent {
     public gs: GlobalService,
     private profileService: ProfileService,
     private branchService: BranchService,
+    private modalService: NgbModal,
   ) {
     this.route.queryParams.subscribe((params: any) => {
       this.selectedPackage = params.packageId;
@@ -220,13 +222,40 @@ export class UserMasterConfigurationComponent {
   }
 
   changeKycTab(tab: any) {
-    this.kycForm.isAddSearchSection = false;
-    this.selectedTabObj = JSON.parse(JSON.stringify(tab));
-    this.activeKycTab = tab.formId;
-    if (this.selectedTabObj.formId == 6) {
-      this.getAllCompanies();
+    const confirm = () => {
+      this.kycForm.isAddSearchSection = false;
+      this.selectedTabObj = JSON.parse(JSON.stringify(tab));
+      this.activeKycTab = tab.formId;
+
+      console.log("this.activeKycTab >>>>>", this.activeKycTab);
+
+      if (this.selectedTabObj.formId == 6) {
+        this.getAllCompanies();
+      }
+      window.scrollTo({ top: 300, behavior: 'smooth' });
     }
-    window.scrollTo({ top: 300, behavior: 'smooth' });
+
+    console.log("this.gs.isModificationOn >>>", this.gs.isModificationOn);
+
+    if (this.gs.isModificationOn) {
+      const modalRef = this.modalService.open(ConfirmationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = 'Are you sure you want to leave this page? You will lose any unsaved data.';
+      modalRef.componentInstance.confirmButton = "Yes";
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) {
+          this.isFormEdit = false;
+          this.gs.isModificationOn = false;
+          this.isAddEditDriverDetail = false;
+          this.isAddEditBranch = false;
+          this.isVehicleInfoEdit = false;
+          confirm();
+        }
+      }, () => { });
+    } else {
+      confirm();
+    }
   }
 
   onEditInfo() {
