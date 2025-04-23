@@ -96,7 +96,7 @@ export class DocTripBookDetailsComponent {
     let params = {
       activeTab: type
     }
-    this.router.navigate(['/user/my-bookings'], {
+    this.router.navigate(['/user/booking'], {
       queryParams: params,
     });
   }

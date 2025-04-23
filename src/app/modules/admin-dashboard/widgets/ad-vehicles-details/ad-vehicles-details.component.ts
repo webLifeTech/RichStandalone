@@ -107,7 +107,7 @@ export class AdVehiclesDetailsComponent {
     let params = {
       activeTab: type
     }
-    this.router.navigate(['/admin/user-vehicles'], {
+    this.router.navigate(['/user/allVehicles'], {
       queryParams: params,
     });
   }

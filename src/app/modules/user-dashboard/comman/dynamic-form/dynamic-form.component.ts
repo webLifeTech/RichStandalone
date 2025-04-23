@@ -373,7 +373,7 @@ export class DynamicFormComponent {
     this.profileService.GetMasterTerritoryZip({ zipCode: zipCode }).subscribe((res: any) => {
 
       if (res && res.length) {
-        const vehicleModelArray = res.map((item: any) => ({ Name: item.TownName, ...item }));
+        const vehicleModelArray = res.map((item: any) => ({ Name: item.ZoneTownName, ...item }));
         this.sections.controls.forEach((section: any) => {
           const fieldsArray = section.get('fields') as FormArray;
           fieldsArray.controls.forEach((field: any) => {

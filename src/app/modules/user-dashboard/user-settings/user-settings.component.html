@@ -9,10 +9,12 @@
       <div class="faq-tab">
         <ul class="nav nav-tabs" id="top-tab" role="tablist">
 
-          @for(tab of sideTabs; track tab){
+          @for(tab of sidebarTabs; track tab){
           <li class="nav-item">
-            <a data-bs-toggle="tab" class="nav-link" [routerLink]="tab.route" routerLinkActive="active">
-              <i class={{tab.icon}}></i> {{ tab.title | translate }}
+            <!-- <a data-bs-toggle="tab" class="nav-link" [routerLink]="tab.route" routerLinkActive="active"> -->
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
+              (click)="changeKycTab(tab)">
+              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
             </a>
           </li>
           }
@@ -23,6 +25,15 @@
   </div>
 
   <div class="col-lg-9">
-    <router-outlet></router-outlet>
+    <div *ngIf="activeKycTab === 9">
+      <app-security></app-security>
+    </div>
+    <div *ngIf="activeKycTab === 10">
+      <app-preferences></app-preferences>
+    </div>
+    <div *ngIf="activeKycTab === 11">
+      <app-notifications></app-notifications>
+    </div>
+    <!-- <router-outlet></router-outlet> -->
   </div>
 </div>

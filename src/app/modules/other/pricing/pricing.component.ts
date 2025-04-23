@@ -141,14 +141,14 @@ export class PricingComponent {
       return;
     }
     if (this.from == 'subscription') {
-      this.router.navigate(['/user/master-configuration', payckageStatus], {
-        queryParams: { packageId: item.packageId },
+      this.router.navigate(['/user/configuration'], { // , payckageStatus
+        queryParams: { packageId: item.packageId, packageStatus: payckageStatus },
         queryParamsHandling: "merge"
       });
       this.onHandleSubmit.emit(null)
     } else {
-      this.router.navigate(['/user/master-configuration', payckageStatus], {
-        queryParams: { packageId: item.packageId },
+      this.router.navigate(['/user/configuration'], { // , payckageStatus
+        queryParams: { packageId: item.packageId, packageStatus: payckageStatus },
         queryParamsHandling: "merge"
       });
     }

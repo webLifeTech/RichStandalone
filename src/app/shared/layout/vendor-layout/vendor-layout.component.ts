@@ -37,7 +37,7 @@ export class VendorLayoutComponent {
   constructor(
     public router: Router
   ) {
-    if (this.router.url.includes('/user/my-bookings')) {
+    if (this.router.url.includes('/user/booking')) {
       this.title = "My Bookings";
       this.child = "My Bookings";
     }

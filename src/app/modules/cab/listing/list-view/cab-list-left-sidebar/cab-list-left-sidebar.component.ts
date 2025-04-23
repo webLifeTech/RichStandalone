@@ -134,7 +134,6 @@ export class CabListLeftSidebarComponent {
 
           }
           this.vehicleSearchResult = res;
-          this.vehicleSearchResult.vehicleMatches[0].ratingAverage = 3;
         } else {
           this.vehicleSearchResult = {
             vehicleMatches: [],

@@ -73,7 +73,7 @@ export class ServicesComponent {
         "location": this.searchObj.location || null,
         "category": this.searchObj.selectedCategory || null,
         "pageNumber": this.currentPage,
-        "pagesize": 1
+        "pagesize": 5
       },
       "filterCriteria": { "subCategory": this.selectedSubCats.length ? JSON.stringify(this.selectedSubCats) : null }
     }

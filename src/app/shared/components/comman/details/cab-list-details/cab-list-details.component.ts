@@ -83,8 +83,7 @@ export class CabListDetailsComponent {
     private paginationService: PaginationService,
     private router: Router,
     private route: ActivatedRoute,
-    private store: Store,
-    private auth: AuthService,
+    public auth: AuthService,
     private gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
@@ -131,7 +130,7 @@ export class CabListDetailsComponent {
         modalRef.componentInstance.title = "Please complete your KYC";
         modalRef.result.then((res: any) => {
           if (res.confirmed) {
-            this.router.navigateByUrl('/user/my-profile')
+            this.router.navigateByUrl('/user/profile')
           }
         }, () => { });
         return;

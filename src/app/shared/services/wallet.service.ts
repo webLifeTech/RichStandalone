@@ -13,13 +13,6 @@ export class WalletService {
 
   constructor(private http: HttpClient) { }
 
-  // -> TLHUB/Wallet/GetWalletDetails?userId={userId}
-  // -> TLHUB/Wallet/AddToWallet
-
-  // -> TLHUB/Wallet/AddWalletFunds
-  // -> TLHUB/Wallet/GetWalletDetails?userId={userId} 
-  // -> TLHUB/Wallet/WithDrawWalletFunds
-
   // Wallet -> GetWalletDetails
   public getWalletDetails(dataParams: any) {
     const params = new HttpParams().set('userId', dataParams.userId)

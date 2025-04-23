@@ -16,6 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { NftService } from '../../../../shared/services/nft.service';
 import { DriverService } from '../../../../shared/services/driver.service';
 import { GlobalService } from '../../../../shared/services/global.service';
+import { RolePermissionService } from '../../../../shared/services/rolepermission.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-nfts-info',
@@ -29,6 +31,7 @@ import { GlobalService } from '../../../../shared/services/global.service';
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
+    NgSelectModule,
   ],
   templateUrl: './nfts-info.component.html',
   styleUrl: './nfts-info.component.scss'
@@ -46,12 +49,15 @@ export class NftsInfoComponent {
   nftDetails: any = null;
   search: any = null;
   pageHeading: any = null;
+  roleId: any = null;
+  rolesList: any = []
 
   constructor(
     private toast: ToastService,
     private modalService: NgbModal,
     private nftService: NftService,
     public gs: GlobalService,
+    private roleService: RolePermissionService,
   ) {
   }
 
@@ -64,8 +70,16 @@ export class NftsInfoComponent {
     //   this.tableData = this.nftService.checkNFTPurchased(driverList);
     // });
     this.onSearch();
+    this.getRolesList();
   }
 
+  getRolesList() {
+    this.roleService.GetRolesList({
+      userRole: 'general'
+    }).subscribe((res: any) => {
+      this.rolesList = res;
+    })
+  }
 
   onSearch(searchFrom?: any) {
     if (searchFrom == 'search') {
@@ -74,7 +88,8 @@ export class NftsInfoComponent {
 
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
-      "masterSearch": this.search,
+      "roleId": this.roleId,
+      "masterSearch": this.search?.trim() || "",
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize
     }

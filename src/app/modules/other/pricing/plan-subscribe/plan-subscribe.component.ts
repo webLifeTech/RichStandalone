@@ -72,7 +72,7 @@ export class PlanSubscribeComponent {
     package: {},
     packageDetails: []
   };
-  payckageStatus: any = null
+  // payckageStatus: any = null
 
   constructor(
     public cabService: CabService,
@@ -85,7 +85,7 @@ export class PlanSubscribeComponent {
     private datePipe: DatePipe,
     private toast: ToastService,
   ) {
-    this.payckageStatus = route.snapshot.params['payckageStatus'];
+    // this.payckageStatus = route.snapshot.params['payckageStatus'];
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       this.getPricingDetails();
@@ -184,8 +184,8 @@ export class PlanSubscribeComponent {
       "startDate": this.transformDate(this.summaryObj.start_time, 'yyyy-MM/dd'), //  "2025-03-21"
       "endDate": this.transformDate(this.summaryObj.end_time, 'yyyy-MM/dd'), //  "2025-09-21"
       "noOfMonths": this.summaryObj.timeType == "Monthly" ? parseInt(this.summaryObj.timeDuration) : parseInt(this.summaryObj.timeDuration) * 12,
-      "remarks": "Package " + this.payckageStatus,
-      "payckageStatus": this.payckageStatus
+      "remarks": "Package " + this.params.packageStatus,
+      "payckageStatus": this.params.packageStatus
     }
 
     console.log("body >>>", body);
@@ -209,8 +209,8 @@ export class PlanSubscribeComponent {
   }
 
   backToPackage() {
-    this.router.navigate(['/user/master-configuration', this.payckageStatus], {
-      queryParams: { packageId: null },
+    this.router.navigate(['/user/configuration'], { // , this.payckageStatus
+      queryParams: { packageId: null, packageStatus: this.params.packageStatus },
       queryParamsHandling: "merge"
     });
     this.onHandleBack.emit(1)

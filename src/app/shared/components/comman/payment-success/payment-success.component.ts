@@ -72,8 +72,8 @@ export class PaymentSuccessComponent {
   }
 
   backToPackage() {
-    this.router.navigate(['/user/master-configuration', 'Upgrade'], {
-      queryParams: { packageId: null },
+    this.router.navigate(['/user/configuration'], { // , 'Upgrade'
+      queryParams: { packageId: null, packageStatus: 'Upgrade' },
       queryParamsHandling: "merge"
     });
     this.onHandleBack.emit(1)

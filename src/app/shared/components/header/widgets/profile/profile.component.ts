@@ -57,14 +57,14 @@ export class ProfileComponent {
   }
 
   goDashBoard() {
-    this.router.navigateByUrl('/user/my-profile');
+    this.router.navigateByUrl('/user/profile');
   }
 
   goSettings() {
-    this.router.navigateByUrl('/user/settings/security');
+    this.router.navigateByUrl('/user/setting/security');
   }
 
   goAdminDashBoard() {
-    this.router.navigateByUrl('/admin/dashboard');
+    this.router.navigateByUrl('/user/profile');
   }
 }

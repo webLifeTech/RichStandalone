@@ -136,15 +136,30 @@
               <div *ngIf="type === 'car'" class="brandLogo">
                 <img [src]="details.vehicleLogo" class="img-fluid blur-up lazyload" alt="BrandLogo">
               </div>
-              <div class="">
-                <div class="rating-star">
-                  <ngb-rating [rate]="details.ratingAverage" [max]="5" [disabled]="true"></ngb-rating>
+              <h6 *ngIf="type === 'car'" class="brand_name ms-2">
+                {{details.fleetCompanyName ? details.fleetCompanyName : details.contactName | translate}}
+              </h6>
+              <div class="rating-section">
+                <div class="rating-star" *ngIf="details.ratingAverage || details.driverRating || details.riskRating">
+                  <ngb-rating *ngIf="type === 'car' && !auth.isLoggedIn" [rate]="details.ratingAverage"
+                    [max]="details.ratingAverage" [disabled]="true"></ngb-rating>
+                  <ngb-rating *ngIf="type === 'driver' && !auth.isLoggedIn" [rate]="details.driverRating"
+                    [max]="details.driverRating" [disabled]="true"></ngb-rating>
+                  <ngb-rating *ngIf="auth.isLoggedIn" [rate]="details.riskRating" [max]="details.riskRating"
+                    [disabled]="true"></ngb-rating>
                 </div>
+                <h6 *ngIf="type === 'car'" class="brand_name">
+                  <span class="me-2" *ngIf="!details.ratingAverage && !auth.isLoggedIn">N/A</span>
+                  <span class="me-2" *ngIf="!details.riskRating && auth.isLoggedIn">N/A</span>
+                  {{auth.isLoggedIn ? "Risk Rating" : "Car Rating"}}
+                </h6>
+                <h6 *ngIf="type === 'driver'" class="brand_name">
+                  <span class="me-2" *ngIf="!details.driverRating && !auth.isLoggedIn">N/A</span>
+                  <span class="me-2" *ngIf="!details.riskRating && auth.isLoggedIn">N/A</span>
+                  {{auth.isLoggedIn ? "Risk Rating" : "Driver Rating"}}
+                </h6>
               </div>
-              <div *ngIf="type === 'car'">
-                <h6 class="brand_name">{{details.fleetCompanyName ? details.fleetCompanyName : details.contactName |
-                  translate}}</h6>
-              </div>
+
             </div>
             <div class="col-md-7 end">
               <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"

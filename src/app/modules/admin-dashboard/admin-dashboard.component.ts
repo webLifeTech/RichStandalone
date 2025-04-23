@@ -182,7 +182,7 @@ export class AdminDashboardComponent {
     let params = {
       activeTab: type
     }
-    this.router.navigate(['/user/my-bookings'], {
+    this.router.navigate(['/user/booking'], {
       queryParams: params,
     });
   }
@@ -207,10 +207,10 @@ export class AdminDashboardComponent {
   }
 
   goWallet() {
-    this.router.navigate(['/user/my-wallet']);
+    this.router.navigate(['/user/wallet']);
   }
   goTransactions() {
-    this.router.navigate(['/user/my-payments']);
+    this.router.navigate(['/user/payments']);
   }
   goWishlist() {
     this.router.navigate(['/user/favourite']);

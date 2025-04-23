@@ -31,7 +31,7 @@ export class ServiceListComponent {
   @Input() searchDetails: any = {};
 
   currentPage: number = 1;
-  pageSize: number = 1;
+  pageSize: number = 5;
 
   providerCategories: any = [];
   searchObj: any = {

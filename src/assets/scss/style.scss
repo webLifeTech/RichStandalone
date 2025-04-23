@@ -2394,6 +2394,15 @@
     justify-content: center;
   }
 
+  .rating-section {
+    border: 1px solid #c1c1c1;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    margin-left: 10px;
+    height: 32px;
+  }
+
   .rating-star {
     margin: 0 6px;
 

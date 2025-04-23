@@ -22,7 +22,9 @@
   </div>
 
   <div class="col-lg-9">
-    <form *ngIf="!gs.isLicenseVerified && !gs.isFleetOwnerLicenseVerified" class="row m-0 align-items-center">
+    <form
+      *ngIf="!gs.isLicenseVerified && !gs.isFleetOwnerLicenseVerified && gs.loggedInUserInfo.role !== 'Vendor'  && gs.loggedInUserInfo.role !== 'admin'"
+      class="row m-0 align-items-center">
       <div class="col-lg-3">
         <div class="form-group">
           <ng-select (change)="onChangeIam()" clearable="false" [items]="iAmArray" bindLabel="name"
@@ -285,7 +287,19 @@
           <app-nfts-info></app-nfts-info>
         </div>
 
+        <div *ngIf="activeKycTab === 19">
+          <ng-container *ngIf="!isAddEditVendor && isLoadVendorDetail">
+            <app-dynamic-grid [type]="'vendor-profile'" [data]="gridInfoData" [kycForm]="kycForm"
+              [selectedTabObj]="selectedTabObj" [columns]="vendorInfoColumns" [actions]="vendorInfoActions"
+              (actionEvent)="handleAction($event, 'vendor-profile')"></app-dynamic-grid>
+          </ng-container>
+          <ng-container *ngIf="isAddEditVendor">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'vendor-profile'" [isEditInfo]="isFormEdit"
+              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel('vendor-profile')"
+              [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+          </ng-container>
+
+        </div>
       </div>
     </div>
   </div>
-</div>

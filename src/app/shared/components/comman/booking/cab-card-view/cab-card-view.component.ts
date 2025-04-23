@@ -11,6 +11,7 @@ import { ToastService } from '../../../../services/toast.service';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { FavoriteService } from '../../../../services/favorite.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-cab-card-view',
@@ -34,82 +35,14 @@ export class CabCardViewComponent {
 
   public params: Params;
 
-  details: any = {
-    "id": 1,
-    "carName": "Peugeot Citroen",
-    "carBrand": "Peugeot",
-    "carImage": "assets/images/cab/car/5.png",
-    "brandLogo": "assets/images/cab/logo/Avis-Logo.png",
-    "carImages": [
-      {
-        "url": "assets/images/cab/car/12.jpg",
-        "fileType": "image"
-      },
-      {
-        "url": "assets/images/cab/car/13.jpg",
-        "fileType": "image"
-      }
-    ],
-    "carType": "car_list_page.car_type.sadan",
-    "unlimittedMileage": true,
-    "price": 1200,
-    "offer_discount": 0,
-    "fare": 25,
-    "per_km": 10,
-    "passenger": 5,
-    "luggage": 2,
-    "gearbox": "car_list_page.car_option.automatic",
-    "carOption": "automatic",
-    "rating": 4,
-    "review": 24,
-    "category": "popular",
-    "tags": [
-      "sadan",
-      "four",
-      "1_5",
-      "automatic"
-    ]
-  }
-
-  driverDetails: any = {
-    "id": 1,
-    "carName": "Peugeot Citroen",
-    "carImage": "assets/images/cab/car/5.png",
-    "carImages": [
-      {
-        "url": "assets/images/cab/car/12.jpg",
-        "fileType": "image"
-      },
-      {
-        "url": "assets/images/cab/car/13.jpg",
-        "fileType": "image"
-      }
-    ],
-    "carType": "car_list_page.car_type.sadan",
-    "status": "car_list_page.status.booked",
-    "price": 1200,
-    "offer_discount": 15,
-    "fare": 25,
-    "per_km": 10,
-    "passenger": 5,
-    "luggage": 2,
-    "gearbox": "car_list_page.car_option.automatic",
-    "carOption": "automatic",
-    "rating": 2,
-    "reviews": 64,
-    "category": "popular",
-    "tags": ["sadan", "two", "1_5", "automatic"],
-    "driverName": "John Doe",
-    "driverImage": "assets/images/driver/d1.png",
-    "location": "New York, NY",
-    "experience": 5
-  }
+  details: any = {}
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     public cabService: CabService,
     public gs: GlobalService,
+    public auth: AuthService,
     private toast: ToastService,
     private dialog: MatDialog,
     private modalService: NgbModal,
@@ -167,7 +100,7 @@ export class CabCardViewComponent {
       modalRef.componentInstance.title = "Please complete your KYC";
       modalRef.result.then((res: any) => {
         if (res.confirmed) {
-          this.router.navigateByUrl('/user/my-profile')
+          this.router.navigateByUrl('/user/profile')
         }
       }, () => { });
       return;

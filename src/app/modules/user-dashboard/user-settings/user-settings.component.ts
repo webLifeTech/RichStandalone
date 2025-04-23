@@ -6,11 +6,18 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../../shared/services/toast.service';
 import { GlobalService } from '../../../shared/services/global.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProfileService } from '../../../shared/services/profile.service';
+import { SecurityComponent } from './security/security.component';
+import { PreferencesComponent } from './preferences/preferences.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 @Component({
   selector: 'app-user-settings',
   standalone: true,
   imports: [
+    SecurityComponent,
+    PreferencesComponent,
+    NotificationsComponent,
     CommonModule,
     FormsModule,
     RouterLink,
@@ -25,38 +32,53 @@ import { TranslateModule } from '@ngx-translate/core';
 export class UserSettingsComponent {
 
   activeKycTab: any = "";
-  sideTabs: any = [
-    {
-      title: "Security",
-      value: "Security",
-      route: "/user/settings/security",
-      icon: "feather icon-shield"
-    },
-    {
-      title: "Preferences",
-      value: "Preferences",
-      route: "/user/settings/preferences",
-      icon: "feather icon-star"
-    },
-    {
-      title: "Notifications",
-      value: "Notifications",
-      route: "/user/settings/notifications",
-      icon: "feather icon-bell"
-    }
-  ];
+  sidebarTabs: any = [];
 
   constructor(
-    // private data: DataService,
-    private router: Router,
     private route: ActivatedRoute,
-    private toast: ToastService,
     public gs: GlobalService,
-    private modalService: NgbModal,
+    private profileService: ProfileService,
 
   ) {
     this.route.queryParams.subscribe((params) => {
+      this.getConfigUIForms()
     })
+  }
+
+  getConfigUIForms() {
+
+    let body = {
+      "stateCode": "42",
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName || null,
+      "countryId": 230,
+      "transactionId": 1,
+      "menuId": 28
+    }
+    this.profileService.getConfigUIForms(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>", response);
+      if (response && response.length) {
+        this.sidebarTabs = response;
+        this.filter();
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  filter() {
+    this.activeKycTab = "";
+    let activeInx = 0;
+    setTimeout(() => {
+
+      const sidebarTab = this.sidebarTabs[activeInx];
+      this.activeKycTab = sidebarTab.formId; // need to do 0
+      for (let i in this.sidebarTabs) {
+        this.sidebarTabs[i].isHidden = false;
+      }
+    }, 200);
+    return;
   }
 
   changeKycTab(tab: any) {

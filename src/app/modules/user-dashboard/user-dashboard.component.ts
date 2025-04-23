@@ -22,6 +22,9 @@ import { CarOwnerBookingDetailsComponent } from './widgets/dashboard/carowner-bo
 import { DocVehicleBookDetailsComponent } from './widgets/dashboard/doc-vehicle-book-details/doc-vehicle-book-details.component';
 import { DocTripBookDetailsComponent } from './widgets/dashboard/doc-trip-book-details/doc-trip-book-details.component';
 import { DashDriverOwnedCarComponent } from './dash-driver-owned-car/dash-driver-owned-car.component';
+import { AdBookingDetailsComponent } from '../admin-dashboard/widgets/ad-booking-details/ad-booking-details.component';
+import { ApexchartsComponent } from '../admin-dashboard/widgets/apexcharts/apexcharts.component';
+import { AdVehiclesDetailsComponent } from '../admin-dashboard/widgets/ad-vehicles-details/ad-vehicles-details.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -34,6 +37,10 @@ import { DashDriverOwnedCarComponent } from './dash-driver-owned-car/dash-driver
     DocVehicleBookDetailsComponent,
     DocTripBookDetailsComponent,
     DashDriverOwnedCarComponent,
+    ApexchartsComponent,
+    AdBookingDetailsComponent,
+    AdVehiclesDetailsComponent,
+
     CommonModule,
     FormsModule,
     NgbModule,
@@ -144,6 +151,27 @@ export class UserDashboardComponent {
     cancelledList: [],
   }
 
+  userDetails: any = {
+    "data": {
+      "series": [
+        {
+          name: "Active",
+          data: [44, 55, 57, 56]
+        },
+        {
+          name: "Inactive",
+          data: [76, 85, 101, 98]
+        },
+        {
+          name: "KYC Pending",
+          data: [35, 41, 36, 26]
+        },
+      ],
+      "chartLabels": ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
+      "chartColors": ["#dcc7fa", "#8e33ff"],
+    }
+  };
+
   @HostListener('window: scroll', [])
   onWindowScroll() {
     let number = window.pageYOffset || 0;
@@ -206,7 +234,7 @@ export class UserDashboardComponent {
     let params = {
       activeTab: type
     }
-    this.router.navigate(['/user/my-bookings'], {
+    this.router.navigate(['/user/booking'], {
       queryParams: params,
     });
   }
@@ -217,6 +245,15 @@ export class UserDashboardComponent {
       status: status || null
     }
     this.router.navigate(['/user/my-cars'], {
+      queryParams: params,
+    });
+  }
+
+  viewUsers(type: any) {
+    let params = {
+      activeTab: type
+    }
+    this.router.navigate(['/user/alluser'], {
       queryParams: params,
     });
   }
@@ -242,10 +279,10 @@ export class UserDashboardComponent {
   }
 
   goWallet() {
-    this.router.navigate(['/user/my-wallet']);
+    this.router.navigate(['/user/wallet']);
   }
   goTransactions() {
-    this.router.navigate(['/user/my-payments']);
+    this.router.navigate(['/user/payments']);
   }
   goWishlist() {
     this.router.navigate(['/user/favourite']);

@@ -4,7 +4,7 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ToastService } from '../../../shared/services/toast.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatMenuModule } from '@angular/material/menu';
@@ -23,6 +23,11 @@ import { DynamicFormComponent } from '../comman/dynamic-form/dynamic-form.compon
 import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.component';
 import { NftsInfoComponent } from '../comman/nfts-info/nfts-info.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { ActivatedRoute } from '@angular/router';
+import { SecurityComponent } from '../user-settings/security/security.component';
+import { PreferencesComponent } from '../user-settings/preferences/preferences.component';
+import { NotificationsComponent } from '../user-settings/notifications/notifications.component';
+import { VendorServService } from '../../../shared/services/vendor-service.service';
 
 @Component({
   selector: 'app-user-dashboard-kyc',
@@ -31,6 +36,9 @@ import { ConfirmationModalComponent } from '../../../shared/components/comman/mo
     DriverInfoDetailsComponent,
     FleetOwnerDetailsComponent,
     NftsInfoComponent,
+    SecurityComponent,
+    PreferencesComponent,
+    NotificationsComponent,
 
     // Common
     DriverDetailsFormComponent,
@@ -81,6 +89,12 @@ export class UserDashboardKycComponent {
   allComplateKycVehicleList: any = [];
   draftVehiclesResponse: any = [];
   vinUploadResponse: any = {};
+  menuID: any = null;
+  menuName: any = null;
+
+  isAddEditVendor: boolean = false;
+  isLoadVendorDetail: boolean = false;
+  gridInfoData: any = [];
 
   // Driver List Columns and Data
   driverColumns = [
@@ -104,9 +118,20 @@ export class UserDashboardKycComponent {
     { header: 'Territory Code', fieldObject: null, field: 'territoryCode' },
   ];
 
+  // Vehicle List Columns and Data
+  vendorInfoColumns = [
+    { header: 'Profile', fieldObject: "contactInfo", field: 'providerProfilePath' },
+    { header: 'BUSINESS NAME', fieldObject: "contactInfo", field: 'dbaName' },
+    { header: 'FIRST NAME', fieldObject: "contactInfo", field: 'firstName' },
+    { header: 'LAST NAME', fieldObject: "contactInfo", field: 'lastName' },
+    { header: 'PHONE NUMBER', fieldObject: null, field: 'phoneNumber' },
+    { header: 'CATEGORY', fieldObject: null, field: 'category' },
+  ];
+
   // Actions grids
   driverActions = ['View', 'Edit'];
   myVehicleActions = ['View', 'Edit'];
+  vendorInfoActions = ['View', 'Edit'];
 
   iAmArray: any = [
     {
@@ -197,11 +222,14 @@ export class UserDashboardKycComponent {
 
   constructor(
     public gs: GlobalService,
+    public route: ActivatedRoute,
     private fb: FormBuilder,
     private alert: AlertService,
     private toast: ToastService,
     private modalService: NgbModal,
     private profileService: ProfileService,
+    private location: Location,
+    private vendorService: VendorServService,
   ) {
     this.gs.isModificationOn = false;
     // this.allPendingKycVehicleList = this.allVehicleList;
@@ -275,6 +303,19 @@ export class UserDashboardKycComponent {
     this.sidebarTabs = [];
     // this.kycForm.state = 42; // need to do for direct
     // this.onSelectState() // // need to do for direct
+    if (this.gs.loggedInUserInfo.role == 'admin') {
+      this.gs.isLicenseVerified = true;
+      this.kycForm.state = 42;
+      this.getConfigUIForms();
+      return;
+    }
+    if (this.gs.loggedInUserInfo.role == 'Vendor') {
+      this.gs.isLicenseVerified = true;
+      this.kycForm.state = 42;
+      this.getConfigUIForms()
+      this.getProviderDetails()
+      return;
+    }
     if (this.kycForm.i_am != 2) {
       this.getDriverDetails(); // Driver, Individual car owner, Driver with owned car
     }
@@ -313,9 +354,29 @@ export class UserDashboardKycComponent {
         console.log(" >>>>>", this.driverInfoData);
         this.gs.isLicenseVerified = true;
         this.kycForm.state = 42;
-        this.onSelectState();
       }
+      this.onSelectState();
       console.log("getAllDrivers >>>>>", response);
+    })
+  }
+
+  getProviderDetails() {
+    this.isLoadVendorDetail = false;
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+    }
+    this.vendorService.GetProviderDetails(body).subscribe(async (response: any) => {
+      console.log("getProviderDetails response >>>>>>", response);
+      this.singleDetailInfo = { providerRequest: response };
+      if (response && !response.providerProfilePath) { // !response.businessType need to do
+        this.isFormEdit = true;
+        this.isAddEditVendor = true;
+      } else {
+        this.gs.isLicenseVerified = true;
+        this.isLoadVendorDetail = true;
+        response.phoneNumber = response.contactInfo.phoneNumbers[0].phoneNumber;
+        this.gridInfoData = [response];
+      }
     })
   }
 
@@ -326,7 +387,7 @@ export class UserDashboardKycComponent {
     let body = {
       "stateCode": this.kycForm.state || "42",
       "languageId": 1,
-      "roleName": findRoleObj.roleName || null,
+      "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
       "countryId": 230,
       "transactionId": 1,
       "menuId": 27
@@ -337,8 +398,6 @@ export class UserDashboardKycComponent {
       if (response && response.length) {
         this.sidebarTabs = response;
         this.filter();
-      } else {
-        this.toast.errorToastr("Something went wrong");
       }
     }, err => {
       this.gs.isSpinnerShow = false;
@@ -459,11 +518,18 @@ export class UserDashboardKycComponent {
     })
   }
 
-  handleCancel() {
+  handleCancel(type?: any) {
     this.isFormEdit = false;
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
-    this.getDriverDetails();
+    this.isAddEditVendor = false;
+
+    if (type === 'vendor-profile') {
+      this.getProviderDetails();
+    } else {
+      this.getDriverDetails();
+    }
+
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -558,5 +624,12 @@ export class UserDashboardKycComponent {
         }
       })
     }
+
+    if (type === 'vendor-profile') {
+      this.isFormEdit = true;
+      this.isAddEditVendor = true;
+    }
   }
+
+
 }

@@ -67,11 +67,11 @@ export class CabSearchComponent {
     this.windowHeight = window.innerHeight;
     this.route.queryParams.subscribe((params) => {
       this.params = params;
-      this.searchObj.type = params['type'] ? params['type'] : "car";
+      this.searchObj.type = params['type'] ? params['type'] : this.gs.loggedInUserInfo.role === 'user' ? "car" : "driver";
 
       this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { type: this.searchObj.type ? this.searchObj.type : "car" },
+        queryParams: { type: this.searchObj.type },
         queryParamsHandling: 'merge', // preserve the existing query params in the route
         skipLocationChange: false  // do trigger navigation
       });

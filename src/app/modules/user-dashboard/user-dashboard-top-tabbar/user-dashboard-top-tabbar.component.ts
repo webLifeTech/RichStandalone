@@ -5,6 +5,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { GlobalService } from '../../../shared/services/global.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../shared/services/auth.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-user-dashboard-top-tabbar',
@@ -21,7 +22,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 export class UserDashboardTopTabBarComponent {
 
   // @Input() tabs: tabs[];
-
+  menuItems: any = [];
   public userDashboardTopTabs: any = [
     {
       id: 101,
@@ -44,7 +45,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.my_bookings",
       value: "My Bookings",
-      route: "/user/my-bookings",
+      route: "/user/booking",
       icon: "assets/images/icon/dashboard/booking-icon.svg"
     },
     {
@@ -52,7 +53,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.my_car_bookings",
       value: "My Car Bookings",
-      route: "/user/my-bookings",
+      route: "/user/booking",
       icon: "assets/images/icon/dashboard/booking-icon.svg"
     },
     {
@@ -76,7 +77,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.wallet",
       value: "Wallet",
-      route: "/user/my-wallet",
+      route: "/user/wallet",
       icon: "assets/images/icon/dashboard/wallet-icon.svg"
     },
     {
@@ -84,7 +85,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.payments",
       value: "Payments",
-      route: "/user/my-payments",
+      route: "/user/payments",
       icon: "assets/images/icon/dashboard/payment-icon.svg"
     },
     {
@@ -92,7 +93,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.my_profile",
       value: "My Profile",
-      route: "/user/my-profile",
+      route: "/user/profile",
       icon: "assets/images/icon/dashboard/kyc.svg"
     },
     {
@@ -100,7 +101,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.settings",
       value: "Settings",
-      route: "/user/settings/security",
+      route: "/user/setting/security",
       icon: "assets/images/icon/dashboard/settings-icon.svg"
     },
     {
@@ -140,7 +141,7 @@ export class UserDashboardTopTabBarComponent {
       visible: false,
       title: "userDashboard.kyc.toptabs.master_configuration",
       value: "Master Configuration",
-      route: "/user/master-configuration/0",
+      route: "/user/configuration/0",
       icon: "assets/images/icon/dashboard/booking-icon.svg"
     },
     {
@@ -171,29 +172,42 @@ export class UserDashboardTopTabBarComponent {
 
   @Output() tabValue = new EventEmitter<string>();
 
-  public activeTab = 'My Profile';
+  public activeTab = 'MY PROFILE';
 
   constructor(
     public router: Router,
     public gs: GlobalService,
+    public roleService: RolePermissionService,
     public auth: AuthService,
   ) {
 
     if (this.auth.isLoggedIn) {
-      for (let i in this.userDashboardTopTabs) {
-        if (this.accessList[this.gs.loggedInUserInfo['role']].indexOf(this.userDashboardTopTabs[i].id) !== -1) {
-          this.userDashboardTopTabs[i].visible = true;
-        }
-      }
+
+      this.GetUsrMenuDetails();
+      // for (let i in this.userDashboardTopTabs) {
+      //   if (this.accessList[this.gs.loggedInUserInfo['role']].indexOf(this.userDashboardTopTabs[i].id) !== -1) {
+      //     this.userDashboardTopTabs[i].visible = true;
+      //   }
+      // }
     }
 
-    // if (this.router.url.includes('/user/my-bookings')) {
+    // if (this.router.url.includes('/user/booking')) {
     //   this.activeTab = "My Bookings";
     // }
-    // if (this.router.url.includes('/user/my-payments')) {
+    // if (this.router.url.includes('/user/payments')) {
     //   this.activeTab = "Payments";
     // }
     // this.changeTab(this.activeTab);
+  }
+
+  GetUsrMenuDetails() {
+    this.roleService.GetUsrMenuDetails({
+      userName: this.gs.loggedInUserInfo.userNameId || "",
+      systemId: "tlcHubAuthApp"
+    }).subscribe((res: any) => {
+      this.menuItems = res.filter((tRow: any) => tRow.parentMenuId == 19);
+      console.log("this.menuItems >>>>>", this.menuItems);
+    })
   }
 
   changeTab(value: string) {

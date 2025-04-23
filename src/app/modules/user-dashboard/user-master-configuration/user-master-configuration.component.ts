@@ -180,9 +180,9 @@ export class UserMasterConfigurationComponent {
         console.log("response[0] >>>>>>>", response[0]);
         this.kycForm.contactId = response[0].contactId;
         this.gs.isLicenseVerified = true;
-        this.kycForm.isAddSearchSection = true;
-        this.getCompanyBranches();
       }
+      this.kycForm.isAddSearchSection = true;
+      this.getCompanyBranches();
       console.log("getAllDrivers >>>>>", response);
     })
   }

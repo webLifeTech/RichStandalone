@@ -55,6 +55,15 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'services',
+    component: LayoutHeadFootComponent, children: [
+      {
+        path: '',
+        component: ServicesComponent
+      },
+    ]
+  },
+  {
     path: 'all-notification', component: LayoutHeadFootComponent, children: [
       { path: '', component: NotificationViewComponent },
     ]
@@ -121,11 +130,11 @@ export const routes: Routes = [
         component: UserDashboardComponent
       },
       {
-        path: 'my-bookings',
+        path: 'booking',
         component: UserDashboardBookingComponent
       },
       {
-        path: 'my-wallet',
+        path: 'wallet',
         component: UserWalletComponent
       },
       {
@@ -133,7 +142,7 @@ export const routes: Routes = [
         component: UserWishlistComponent
       },
       {
-        path: 'my-payments',
+        path: 'payments',
         component: UserDashboardPaymentsComponent
       },
       {
@@ -141,7 +150,7 @@ export const routes: Routes = [
         component: UserReviewsComponent
       },
       {
-        path: 'my-profile',
+        path: 'profile',
         component: UserDashboardKycComponent,
         canDeactivate: [CanDeactivateGuard],
       },
@@ -154,24 +163,45 @@ export const routes: Routes = [
         component: UserRecentActivityComponent
       },
       {
-        path: 'settings',
-        component: UserSettingsComponent, children: [
-          {
-            path: 'security',
-            component: SecurityComponent
-          },
-          {
-            path: 'preferences',
-            component: PreferencesComponent
-          },
-          {
-            path: 'notifications',
-            component: NotificationsComponent
-          },
-        ]
+        path: 'setting',
+        component: UserSettingsComponent
       },
       {
-        path: 'master-configuration/:payckageStatus',
+        path: 'enquiries',
+        component: EnquiriesComponent
+      },
+
+      { // admin
+        path: 'bookingOverview',
+        component: AllBookingOverviewComponent
+      },
+      { // admin
+        path: 'alluser', // path: 'user-listing',
+        component: UsersListingComponent
+      },
+      { // admin
+        path: 'allVehicles', // path: 'user-vehicles',
+        component: UserCarsListingComponent
+      },
+      // {
+      //   path: 'setting',
+      //   component: UserSettingsComponent, children: [
+      //     {
+      //       path: 'security',
+      //       component: SecurityComponent
+      //     },
+      //     {
+      //       path: 'preferences',
+      //       component: PreferencesComponent
+      //     },
+      //     {
+      //       path: 'notifications',
+      //       component: NotificationsComponent
+      //     },
+      //   ]
+      // },
+      {
+        path: 'configuration', // 'master-configuration/:payckageStatus'
         component: UserMasterConfigurationComponent, children: [
           {
             path: 'security',
@@ -183,7 +213,7 @@ export const routes: Routes = [
   },
   {
     path: 'vendor',
-    component: VendorLayoutComponent, children: [
+    component: Layout3Component, children: [
       {
         path: 'dashboard',
         component: VendorsComponent
@@ -198,15 +228,23 @@ export const routes: Routes = [
       },
     ]
   },
-  {
-    path: 'services',
-    component: LayoutHeadFootComponent, children: [
-      {
-        path: '',
-        component: ServicesComponent
-      },
-    ]
-  },
+  // {
+  //   path: 'vendor',
+  //   component: VendorLayoutComponent, children: [
+  //     {
+  //       path: 'dashboard',
+  //       component: VendorsComponent
+  //     },
+  //     {
+  //       path: 'enquiries',
+  //       component: EnquiriesComponent
+  //     },
+  //     {
+  //       path: 'service-profile',
+  //       component: ServiceProfileComponent
+  //     },
+  //   ]
+  // },
   {
     path: 'admin', component: Layout3Component, children: [
       {

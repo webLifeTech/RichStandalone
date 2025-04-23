@@ -31,9 +31,9 @@ export class AuthService {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('loggedInUser', JSON.stringify(data));
       if (this.loggedInUserInfo.role === 'admin') {
-        this.router.navigateByUrl('/admin/my-profile');
+        this.router.navigateByUrl('/user/profile'); // admin/my-profile
       } else if (this.loggedInUserInfo.role === 'Vendor') {
-        this.router.navigateByUrl('/vendor/service-profile');
+        this.router.navigateByUrl('/user/profile');
       } else {
         this.router.navigateByUrl('/cab/listing/list-view');
       }
@@ -60,6 +60,7 @@ export class AuthService {
 
   logOut() {
     this.isLoggedIn = false;
+    this.gs.loggedInUserInfo = {};
     localStorage.removeItem('loggedIn');
     localStorage.removeItem('loggedInUser');
     this.router.navigateByUrl('/home');
@@ -87,15 +88,6 @@ export class AuthService {
     //     return res;
     //   })
     // );
-  }
-
-  public GetRolesList(dataParams: any) {
-    const params = new HttpParams().set('userRole', dataParams.userRole);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetRolesList', { params }).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
   }
 
   public SendVerificationCodeAsync(dataParams: any) {

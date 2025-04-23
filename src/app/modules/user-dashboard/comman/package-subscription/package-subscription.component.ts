@@ -114,8 +114,8 @@ export class PackageSubscriptionComponent {
   }
 
   handleRenew() {
-    this.router.navigate(['/user/master-configuration', 'Renew'], {
-      queryParams: { packageId: this.currentPlan?.package?.packageId },
+    this.router.navigate(['/user/configuration'], { // , 'Renew'
+      queryParams: { packageId: this.currentPlan?.package?.packageId, packageStatus: 'Renew' },
       queryParamsHandling: "merge"
     });
     this.onHandleSubscribed.emit(null);

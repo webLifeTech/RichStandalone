@@ -10,6 +10,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { GlobalService } from '../../../../shared/services/global.service';
 import { VendorServService } from '../../../../shared/services/vendor-service.service';
 import { OnlynumberDirective } from '../../../../shared/directives/number-only.directive';
+import { RolePermissionService } from '../../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -51,16 +52,8 @@ export class CommanLoginFormComponent {
   vendorTypes: any = [];
   subCategories: any = [];
   rolesList: any = [];
-  // phoneNumber = null;
-  // emailId = null;
   verificationType: any = null;
 
-  iAmArray: any = [
-    // { id: 1, name: "Driver", value: "Driver" },
-    // { id: 2, name: "Fleet owner", value: "Fleet owner" },
-    // { id: 3, name: "Individual car owner", value: "Individual car owner" },
-    // { id: 4, name: "Driver with owned car", value: "Driver with owned car" }
-  ];
 
   users: any = [
     {
@@ -157,6 +150,7 @@ export class CommanLoginFormComponent {
     private route: ActivatedRoute,
     private toast: ToastService,
     private vendorServ: VendorServService,
+    private roleService: RolePermissionService,
   ) {
     this.route.queryParams.subscribe((pera: any) => {
       this.params = pera;
@@ -169,7 +163,7 @@ export class CommanLoginFormComponent {
   }
 
   getRolesList() {
-    this.authService.GetRolesList({
+    this.roleService.GetRolesList({
       userRole: 'general'
     }).subscribe((res: any) => {
       this.rolesList = res;
@@ -214,6 +208,7 @@ export class CommanLoginFormComponent {
         this.loginForm = {
           "name": res.fullName,
           "username": this.loginForm.username,
+          "userNameId": res.userName,
           "password": this.loginForm.password,
           "role": roles[res.roleName],
           "userRoleName": res.roleName, // "Fleet owner",

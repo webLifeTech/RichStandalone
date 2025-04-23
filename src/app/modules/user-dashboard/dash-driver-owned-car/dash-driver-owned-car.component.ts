@@ -52,7 +52,7 @@ export class DashDriverOwnedCarComponent {
 
 
   goWallet() {
-    this.router.navigate(['/user/my-wallet']);
+    this.router.navigate(['/user/wallet']);
   }
 
   goWishlist() {

@@ -11,40 +11,42 @@
         </div>
       </li>
       @for(menuItem of menuItems; track menuItem){
-      @if(menuItem.type==='link'){
+      @if(menuItem.parentMenuId == 1){
       <li>
-        @if(menuItem.title){
-        <a href="javascript:void(0)" [routerLink]="menuItem.path" [queryParams]="menuItem.queryParams"> {{
-          menuItem.title | translate }} </a>
+        @if(menuItem.name){
+        <a href="javascript:void(0)" [routerLink]="menuItem.path" [queryParams]="menuItem.queryParams">
+          {{ menuItem.name | translate }}
+        </a>
         }
       </li>
       }
       @else if(!menuItem.megaMenu){
       <li class="dropdown">
         @if(menuItem.title){
-        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.active && isOpen ? 'active' : ''"
+        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.isActive && isOpen ? 'active' : ''"
           (click)="toggleMenu(menuItem)">{{ menuItem.title | translate }}
           @if(isOpen){
-          <span class="according-menu">{{ menuItem.active && isOpen ? '-' : '+'}}</span>
+          <span class="according-menu">{{ menuItem.isActive && isOpen ? '-' : '+'}}</span>
           }
         </a>
         }
         <ul class="nav-submenu menu-content"
-          [ngClass]="{ 'd-block' : menuItem.active == true && isOpen , 'd-none d-md-block' : menuItem.active == false && !isOpen}">
+          [ngClass]="{ 'd-block' : menuItem.isActive == true && isOpen , 'd-none d-md-block' : menuItem.isActive == false && !isOpen}">
           <div *ngTemplateOutlet="recursiveMenu; context: { $implicit: menuItem.children }"></div>
           <ng-template #recursiveMenu let-menuItem>
             @for(item of menuItem; track item){
             <li>
               <a href="javascript:void(0)" [class.menu-title]="item.children"
-                [ngClass]="item.active && isOpen ? 'active' : ''" (click)="toggleMenu(item)" [routerLink]="item.path">{{
+                [ngClass]="item.isActive && isOpen ? 'active' : ''" (click)="toggleMenu(item)"
+                [routerLink]="item.path">{{
                 item.title | translate }}
                 @if(isOpen && item.children){
-                <span class="according-menu">{{ item.active && isOpen ? '-' : '+'}}</span>
+                <span class="according-menu">{{ item.isActive && isOpen ? '-' : '+'}}</span>
                 }
               </a>
               @if(item.children){
               <ul [class.nav-sub-childmenu]="item.children"
-                [ngClass]="{ 'level1' : item.level === 2,  'submenu-content level3' : item.level === 4 && item.children,'submenu-content level2' : item.level === 3 && item.type == 'sub','d-block' : item.active == true && isOpen }">
+                [ngClass]="{ 'level1' : item.level === 2,  'submenu-content level3' : item.level === 4 && item.children,'submenu-content level2' : item.level === 3 && item.type == 'sub','d-block' : item.isActive == true && isOpen }">
                 <div *ngTemplateOutlet="recursiveMenu; context: { $implicit: item.children }"></div>
               </ul>
               }
@@ -56,16 +58,16 @@
       }@else{
       <li class="mega-menu">
         @if(menuItem.title){
-        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.active && isOpen ? 'active' : ''"
+        <a href="javascript:void(0)" class="nav-link menu-title" [ngClass]="menuItem.isActive && isOpen ? 'active' : ''"
           (click)="toggleMenu(menuItem)">
           @if(isOpen){
-          <span class="according-menu">{{ menuItem.active && isOpen ? '-' : '+'}}</span>
+          <span class="according-menu">{{ menuItem.isActive && isOpen ? '-' : '+'}}</span>
           }
           {{ menuItem.title | translate }}
         </a>
         }
         <div class="mega-menu-container menu-content"
-          [ngClass]="{ 'd-block' : menuItem.active == true && isOpen , 'd-none d-md-block' : menuItem.active == false && !isOpen}">
+          [ngClass]="{ 'd-block' : menuItem.isActive == true && isOpen , 'd-none d-md-block' : menuItem.isActive == false && !isOpen}">
           <div class="container">
             <div class="row">
               <div *ngTemplateOutlet="recursiveMenu1; context: { $implicit: menuItem.children }"></div>
@@ -75,14 +77,14 @@
                   @if(!item.section){
                   <div class="link-section">
                     <div class="submenu-title">
-                      <h5 [ngClass]="item.active && isOpen ? 'active' : ''" (click)="toggleMenu(item)">{{ item.title |
+                      <h5 [ngClass]="item.isActive && isOpen ? 'active' : ''" (click)="toggleMenu(item)">{{ item.title |
                         translate }}</h5>
                       @if(isOpen){
-                      <span class="according-menu">{{ item.active && isOpen ? '-' : '+'}}</span>
+                      <span class="according-menu">{{ item.isActive && isOpen ? '-' : '+'}}</span>
                       }
                     </div>
                     <div class="submenu-content opensubmegamenu"
-                      [ngClass]="{ 'd-block' : item.active == true && isOpen , 'd-none d-md-block' : item.active == false && !isOpen}">
+                      [ngClass]="{ 'd-block' : item.isActive == true && isOpen , 'd-none d-md-block' : item.isActive == false && !isOpen}">
                       <ul class="list">
                         @for(data of item.children; track data){
                         <li [class.highlight-link]="data.badgeIcon">
@@ -104,14 +106,15 @@
                   @for(child of item.section; track child){
                   <div class="link-section">
                     <div class="submenu-title">
-                      <h5 [ngClass]="child.active && isOpen ? 'active' : ''" (click)="toggleMenu(child)">{{ child.title
+                      <h5 [ngClass]="child.isActive && isOpen ? 'active' : ''" (click)="toggleMenu(child)">{{
+                        child.title
                         | translate }}</h5>
                       @if(isOpen){
-                      <span class="according-menu">{{ child.active && isOpen ? '-' : '+'}}</span>
+                      <span class="according-menu">{{ child.isActive && isOpen ? '-' : '+'}}</span>
                       }
                     </div>
                     <div class="submenu-content opensubmegamenu"
-                      [ngClass]="{ 'd-block' : child.active == true && isOpen , 'd-none d-md-block' : child.active == false && !isOpen}">
+                      [ngClass]="{ 'd-block' : child.isActive == true && isOpen , 'd-none d-md-block' : child.isActive == false && !isOpen}">
                       <ul class="list">
                         @for(data of child.children; track data){
                         <li [class.highlight-link]="data.badgeIcon">

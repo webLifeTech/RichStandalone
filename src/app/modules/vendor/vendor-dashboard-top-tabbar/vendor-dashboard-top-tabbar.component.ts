@@ -49,10 +49,10 @@ export class VendorDashboardTopTabBarComponent {
   constructor(
     public router: Router
   ) {
-    // if (this.router.url.includes('/user/my-bookings')) {
+    // if (this.router.url.includes('/user/booking')) {
     //   this.activeTab = "My Bookings";
     // }
-    // if (this.router.url.includes('/user/my-payments')) {
+    // if (this.router.url.includes('/user/payments')) {
     //   this.activeTab = "Payments";
     // }
     // this.changeTab(this.activeTab);

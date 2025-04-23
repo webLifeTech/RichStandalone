@@ -22,9 +22,6 @@ export class NftService {
     private toast: ToastService,
   ) { }
 
-  // Nft/InsertNftPaymentst
-  // Nft/StoreMetaMaskResponse
-  // Nft/StoreMetaMaskRequest
 
   // Nft -> GetNftDocDetails
   public GetNftDocDetails(data: any) {
@@ -95,14 +92,14 @@ export class NftService {
 
       // Convert price from ETH to Wei
       const priceInWei = this.web3.utils.toWei(priceInEth, coinType);
-      console.log("uniqId", item.riskId);
-      console.log("buyer", buyer);
-      console.log("priceInWei", priceInWei);
 
       item.riskId = item.riskId.toString();
+      console.log("buyer", buyer);
+      console.log("priceInWei", priceInWei);
+      console.log("uniqId", item.riskId);
 
       let body: any = {
-        "userId": item.userId, // which user id pass ?
+        "userId": item.userId,
         "riskId": item.riskId,
         "riskType": item.documentType,
         "nftDocType": 0, // what is nftDocType ?
@@ -133,6 +130,9 @@ export class NftService {
         }
         return error;
       });;
+
+      console.log("purchaseRes >>>>>>>", purchaseRes);
+
 
       body.requestData = null;
       // delete purchaseRes.events;

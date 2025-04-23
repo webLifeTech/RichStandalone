@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { ProfileComponent } from '../header/widgets/profile/profile.component';
+import { RolePermissionService } from '../../services/rolepermission.service';
+import { GlobalService } from '../../services/global.service';
 
 @Component({
   selector: 'app-menu',
@@ -21,14 +23,33 @@ import { ProfileComponent } from '../header/widgets/profile/profile.component';
 })
 export class MenuComponent {
 
-  public menuItems: Menu[] = [];
+  public menuItems: any = [];
   public isOpen: boolean = false;
 
   constructor(
     public navServices: NavService,
-    public authService: AuthService
+    public authService: AuthService,
+    public gs: GlobalService,
+    private roleService: RolePermissionService,
   ) {
-    this.menuItems = navServices.MENUITEMS;
+    // this.menuItems = navServices.MENUITEMS;
+    this.GetUsrMenuDetails();
+  }
+
+  GetUsrMenuDetails() {
+    this.roleService.GetUsrMenuDetails({
+      userName: this.gs.loggedInUserInfo.userNameId || "",
+      systemId: "tlcHubAuthApp"
+    }).subscribe((res: any) => {
+      this.menuItems = res.filter((tRow: any) => tRow.parentMenuId == 1);
+      for (let i in this.menuItems) {
+        let pathObj: any = this.navServices.MENUITEMS.find((item: any) => item.title == this.menuItems[i].name);
+        this.menuItems[i].path = pathObj.path;
+        this.menuItems[i].queryParams = pathObj.queryParams;
+      }
+      this.roleService.menuItems = this.menuItems;
+      console.log("this.menuItems >>>>>", this.menuItems);
+    })
   }
 
   openSidebar() {
