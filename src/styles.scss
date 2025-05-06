@@ -827,6 +827,10 @@ header {
           padding: 5px 0;
         }
       }
+
+      .ng-select-multiple .ng-select-container {
+        height: auto !important;
+      }
     }
 
     label {
@@ -3170,5 +3174,76 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+.custom-toggle {
+  // display: flex;
+  // align-items: center;
+
+  .checktoggle {
+    background-color: #c4c4c4;
+    border: 1px solid #C4C4C4;
+    cursor: pointer;
+    display: block;
+    font-size: 0;
+    height: 24px;
+    margin: 4px auto;
+    margin-bottom: 0;
+    position: relative;
+    width: 48px;
+    top: 0;
+    border-radius: 12px;
+    transform: translate(calc(10% - 5px), -10%)
+  }
+
+  .checktoggle:after {
+    height: 15px;
+    width: 15px
+  }
+
+  .check {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute
+  }
+
+  .check:checked+.checktoggle {
+    background-color: #1fbc2f;
+    border: 1px solid #1FBC2F
+  }
+
+  .check:checked+.checktoggle:after {
+    background-color: #fff;
+    left: 100%;
+    transform: translate(calc(-100% - 5px), -50%);
+    height: 15px;
+    width: 15px
+  }
+
+  .checktoggle:after {
+    content: " ";
+    display: block;
+    background-color: #00000040;
+    height: 15px;
+    width: 15px;
+    transform: translate(5px, -50%);
+    -webkit-transform: translate(5px, -50%);
+    -ms-transform: translate(5px, -50%);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transition: all .2s ease
+  }
+
+  .checktoggle .checkbox-bg:after {
+    background: #00000040
   }
 }

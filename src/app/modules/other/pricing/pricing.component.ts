@@ -54,6 +54,9 @@ export class PricingComponent {
       if (response && response.length) {
         this.packageList = response;
         if (this.auth.isLoggedIn) {
+          if (this.gs.loggedInUserInfo.role === 'user_4') {
+            this.gs.loggedInUserInfo.userRoleName = 'Driver';
+          }
           this.filteredPackageList = this.packageList.filter((i: any) => i.Name == this.gs.loggedInUserInfo.userRoleName);
         } else {
           this.filteredPackageList = this.packageList;

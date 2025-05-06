@@ -34,9 +34,9 @@
           <div class="row">
             <div class="col-md-3 align-self-center">
               <div class="logo-sec">
-                <img *ngIf="type === 'car'" [src]="details.carImage" class="img-fluid blur-up lazyload" alt="cab-image">
+                <img *ngIf="type === 'car'" [src]="details.carImage" class="img-fluid blur-up lazyload" alt="CarImage">
                 <img *ngIf="type === 'driver'" [src]="details.profilepath" class="img-fluid blur-up lazyload"
-                  alt="cab-image">
+                  alt="DriverImage">
               </div>
             </div>
             <div class="col-md-5">
@@ -99,7 +99,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4 text-end align-self-end price-top">
+            <!-- text-end price-top align-self-end -->
+            <div class="col-md-4 text-end price-top">
               <div class="price">
                 <table *ngIf="searchInfo.timeType == 'ALL'" class="table table-borderless">
                   <tbody class="price-table">
@@ -124,9 +125,9 @@
                 <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
               </div>
               <div class="book-flight">
-                <a class="btn btn-theme margin-5" (click)="bookNow(details)">
+                <button class="btn btn-theme margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}
-                </a>
+                </button>
               </div>
             </div>
           </div>

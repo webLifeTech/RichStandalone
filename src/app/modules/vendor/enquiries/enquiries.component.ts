@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { apiResultFormat, userBookings } from '../../../shared/services/model/model';
@@ -37,7 +37,10 @@ import { VendorServService } from '../../../shared/services/vendor-service.servi
     NgSelectModule,
     TranslateModule,
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [
+    DatePipe,
+    provideNativeDateAdapter()
+  ],
   templateUrl: './enquiries.component.html',
   styleUrl: './enquiries.component.scss'
 })
@@ -47,7 +50,8 @@ export class EnquiriesComponent {
   public totalData = 0;
   public currentPage = 1;
   public searchFilter: any = {
-    dateRang: null,
+    startDate: null,
+    endDate: null,
     category: null,
     subCategory: null,
   };
@@ -63,6 +67,7 @@ export class EnquiriesComponent {
     public cabService: CabService,
     public gs: GlobalService,
     private vendorService: VendorServService,
+    private datePipe: DatePipe,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getCategories();
@@ -100,7 +105,19 @@ export class EnquiriesComponent {
   }
 
   onChangeFilter() {
-    this.applyFilters();
+    setTimeout(() => {
+      this.applyFilters();
+    }, 500);
+  }
+
+  resetFilter() {
+    this.searchFilter.startDate = null;
+    this.searchFilter.endDate = null;
+    this.searchFilter.category = null;
+    this.searchFilter.subCategory = null;
+    setTimeout(() => {
+      this.applyFilters();
+    }, 500);
   }
 
   onChangeServices(catId: any) {
@@ -117,30 +134,16 @@ export class EnquiriesComponent {
     console.log("this.searchFilter >>>", this.searchFilter);
     console.log("this.enquiries >>>", this.enquiries);
 
-    const { dateFrom, dateTo, category, subCategory, searchTerm } = this.searchFilter;
-
+    const { startDate, endDate, category, subCategory, searchTerm } = this.searchFilter;
     this.tableData = this.enquiries.filter((enquiry: any) => {
-
-
-      // const enquiryDate = new Date(enquiry.enquiryDate.split('/').reverse().join('-'));
-
-      // // if (dateFrom && enquiryDate < new Date(dateFrom)) return false;
-      // // if (dateTo && enquiryDate > new Date(dateTo)) return false;
-
-      // if (category && enquiry.categoryCd != category) return false;
-      // const catmatches = [
-      //   enquiry.category,
-      //   enquiry.categoryCd,
-      // ].some(field => field.includes(category));
-
-      // const subcatmatches = [
-      //   enquiry.subCategoryCd,
-      // ].some(field => field == subCategory);
-      // // if (subCategory && enquiry.subCategoryCd != subCategory) return false;
+      let catFilter = true;
+      let subCatFilter = true;
+      let dateFilter = true;
+      let matches = true;
 
       if (searchTerm) {
         const lower = searchTerm.toLowerCase();
-        const matches = [
+        matches = [
           enquiry.name,
           enquiry.phoneNumber,
           enquiry.emailId,
@@ -148,20 +151,40 @@ export class EnquiriesComponent {
           enquiry.subCategory,
           enquiry.enquiryDate
         ].some(field => field.toLowerCase().includes(lower));
-        console.log("matches >>>>>>", matches);
-
-        if (!matches) return false;
       }
 
-      // const emailMatch = enquiry.toLowerCase().includes(lower)
-      // const statusMatch = inv.status === filter.status
-      // return emailMatch || statusMatch
-      return true;
+      if (category) {
+        catFilter = enquiry.categoryCd == category;
+      }
+      if (subCategory) {
+        subCatFilter = enquiry.subCategoryCd == subCategory;
+      }
+      if (startDate && endDate) {
+        enquiry.tempEnquiryDate = this.parseDate(enquiry.enquiryDate)
+        dateFilter = (startDate <= enquiry.tempEnquiryDate && endDate >= enquiry.tempEnquiryDate);
+      }
+
+      return matches && catFilter && subCatFilter && dateFilter;
     });
+
+    this.totalData = this.tableData.length;
   }
 
   pageChanged(event: any) {
     this.currentPage = event;
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
+  parseDate(dateString: string) {
+    if (dateString) {
+      const [month, day, year] = dateString.split('/').map(Number);
+      return new Date(year, month - 1, day);
+    } else {
+      return null;
+    }
   }
 
 }

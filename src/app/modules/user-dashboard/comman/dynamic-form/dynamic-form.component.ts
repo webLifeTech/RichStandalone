@@ -109,10 +109,10 @@ export class DynamicFormComponent {
       this.isRequiredTermsAgree = false;
     }
     if (this.formType === 'driver_details') {
-      this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours
+      this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours;
     }
     if (this.formType === 'vendor-profile') {
-      this.workingHours = this.singleDetailInfo.providerRequest.workingHours
+      this.workingHours = this.singleDetailInfo.providerRequest.workingHours;
     }
   }
 
@@ -1970,8 +1970,7 @@ export class DynamicFormComponent {
     if (section.value.sectionID === '27') {
       finalBody = {
         "providerRequest": {
-          // "userId": this.singleDetailInfo.providerRequest.userId,
-          "workingHours": this.singleDetailInfo.providerRequest.workingHours,
+          "workingHours": this.workingHours, //  this.singleDetailInfo.providerRequest.workingHours
           "contactInfo": {
             "userId": this.singleDetailInfo.providerRequest.contactInfo.userId,
             "contactId": this.singleDetailInfo.providerRequest.contactInfo.contactId || null,
@@ -2514,7 +2513,7 @@ export class DynamicFormComponent {
   async updateDriverWorkingHours(finalBody: any) {
     let Body = {
       "userId": this.singleDetailInfo.driverDetailsRequest.userId,
-      "driverWorkingHours": this.singleDetailInfo.driverDetailsRequest.driverWorkingHours,
+      "driverWorkingHours": this.workingHours,
       ...finalBody
     };
 
@@ -2535,13 +2534,12 @@ export class DynamicFormComponent {
   async updateProviderDetails(finalBody: any) {
     let Body = finalBody['providerRequest'];
 
-    console.log("updateProviderDetails Body >>>>>", Body)
-    // return;
     this.vendorServ.UpdateProviderDetails(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
+        this.handleCancel();
       } else {
         this.toast.errorToastr(res.message);
       }

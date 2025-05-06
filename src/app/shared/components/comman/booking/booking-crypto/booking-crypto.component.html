@@ -1,13 +1,14 @@
 <form class="wallet-section">
   <h6>select crypto coin</h6>
   <ng-select [closeOnSelect]="true" [clearable]="false" #countryCode="ngModel" placeholder="Select coin"
-    name="countryCode" [(ngModel)]="selectedCoin">
+    name="countryCode" [(ngModel)]="selectedCoin" (change)="onChange(selectedCoin)">
     <ng-container *ngFor="let coin of coinList">
-      <ng-option [value]="coin.coin">
+      <!-- coin.coin -->
+      <ng-option [value]="coin.code">
         <img class="image-sm" [src]="coin.image" />
         <span>
           <b>
-            {{coin.name}}
+            {{coin.symbol}} {{coin.name}}
           </b>
         </span>
       </ng-option>

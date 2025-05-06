@@ -15,6 +15,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { GlobalService } from '../../../../shared/services/global.service';
 import { BranchService } from '../../../../shared/services/branch.service';
 import { FormsModule } from '@angular/forms';
+import { CarStatusChangeModalComponent } from '../../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 
 @Component({
   selector: 'app-dynamic-grid',
@@ -334,6 +335,21 @@ export class DynamicGridComponent {
         return 0;
       });
     }
+  }
+
+  async changeCarStatus(item: any) {
+    // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
+    const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.singleDetails = item;
+    modalRef.componentInstance.title = 'Are sure you want to change status ?';
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        item.status = res.status;
+        this.toast.successToastr("Status successfully");
+      }
+    }, () => { });
   }
 
 }

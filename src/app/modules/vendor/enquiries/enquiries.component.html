@@ -16,10 +16,10 @@
             <div class="col-lg-3 col-sm-12 col-12 text-end">
               <mat-form-field class="custom-date-rang">
                 <mat-label>Select Date Rang</mat-label>
-                <mat-date-range-input [rangePicker]="picker" [(ngModel)]="searchFilter.dateRang"
-                  (change)="onChangeFilter()">
-                  <input matStartDate placeholder="Start date">
-                  <input matEndDate placeholder="End date">
+                <mat-date-range-input [rangePicker]="picker">
+                  <input [(ngModel)]="searchFilter.startDate" name="startDate" matStartDate placeholder="Start date" />
+                  <input (ngModelChange)="onChangeFilter()" [(ngModel)]="searchFilter.endDate" name="endDate" matEndDate
+                    placeholder="End date" />
                 </mat-date-range-input>
                 <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -38,6 +38,13 @@
                 (change)="onChangeFilter()">
               </ng-select>
             </div>
+            <div class="col-lg-2 col-sm-12 col-12">
+              <div class="search-btn text-center">
+                <a class="btn btn-solid color3 ms-2" (click)="resetFilter()">
+                  {{ 'global.reset' | translate }}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -50,7 +57,7 @@
           <div class="card-header pt-0">
             <div class="row align-items-center">
               <div class="col-md-5">
-                <h4>{{'All Enquiries'}} <span>{{totalData}}</span></h4>
+                <h4>{{'Enquiries'}} <span>{{totalData}}</span></h4>
               </div>
               <div class="col-md-7 text-md-end">
                 <div class="table-search">

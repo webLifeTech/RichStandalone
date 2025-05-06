@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { walletDetails } from '../../../data/data/booking';
 import { PaymentService } from '../../../../services/payment.service';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ import { GlobalService } from '../../../../services/global.service';
 export class BookingCryptoComponent {
 
   @Input() coinList: any = [];
+  @Output() onSelectCoin = new EventEmitter<any>();
   // public coinList: any = [];
   selectedCoin: any = null;
   constructor(
@@ -31,6 +32,9 @@ export class BookingCryptoComponent {
 
   }
 
+  onChange(selectedCoin: any) {
+    this.onSelectCoin.emit(selectedCoin);
+  }
 
 
 }

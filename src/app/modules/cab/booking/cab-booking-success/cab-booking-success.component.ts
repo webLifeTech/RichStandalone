@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { InvoiceTemplateComponent } from '../../../../shared/components/comman/email-template/invoice-template/invoice-template.component';
 
@@ -30,7 +30,8 @@ export class CabBookingSuccessComponent {
   public isShowInvoice: boolean = false;
 
   constructor(
-    public route: ActivatedRoute
+    private router: Router,
+    public route: ActivatedRoute,
   ) {
     this.type = route.snapshot.params['type'];
     this.route.queryParams.subscribe((params) => {
@@ -57,5 +58,14 @@ export class CabBookingSuccessComponent {
   }
   checkCryptoStatus() {
     window.open(this.cryptoTransaction.status_url, "_blank");
+  }
+
+  back() {
+    this.router.navigate(['/cab/listing/list-view'], {
+      queryParams: {
+        'type': this.type
+      },
+      queryParamsHandling: "merge"
+    });
   }
 }

@@ -41,7 +41,7 @@ export class BookingComponent {
   @Input() params: any;
 
   coinList: any = [];
-  selectedCoin = "LTCT";
+  selectedCoin = ""; // LTCT
   type = "";
   isLoader: boolean = false;
 
@@ -85,56 +85,50 @@ export class BookingComponent {
     } else {
 
       this.router.navigate(['/cab/booking/booking-success', this.params.type]);
-
-      // const body = {
-      //   "packageId": this.params.packageId,
-      //   "userId": this.gs.loggedInUserInfo.userId || null,
-      //   "paymentId": "pay-123",
-      //   "startDate": "2025-03-21",
-      //   "endDate": "2025-09-21",
-      //   "noOfMonths": 6,
-      //   "remarks": "Package subscription for 6 months",
-      //   "payckageStatus": "Subscribe"
-      // }
-
-      // console.log("body >>>", body);
-      // this.gs.isSpinnerShow = true;
-      // this.pricingS.payPackagePaymentDummyTest(body).subscribe((response: any) => {
-      //   this.gs.isSpinnerShow = false;
-      //   if (response && response.statusCode == "200") {
-      //     this.router.navigate(['/cab/booking/booking-success', this.params.type]);
-      //     this.toast.successToastr(response.message);
-      //     // this.packageSummaryObj = response.packageSummary;
-      //     // console.log("packageSummaryObj <<<", response);
-      //   }
-      // });
     }
   }
 
   makePayment() {
+
+    if (!this.selectedCoin) {
+      this.toast.errorToastr("Please select crypto coin");
+      return;
+    }
     this.isLoader = true;
-    let body = {
-      "amount": 1,
-      "currency1": "USD",
-      "currency2": this.selectedCoin,
-      "buyerEmail": this.gs.loggedInUserInfo.username || "customer_email@gmail.com",
-      "customOrderId": this.gs.loggedInUserInfo.id || "1"
+    // let body = { // old
+    //   "amount": 1,
+    //   "currency1": "USD",
+    //   "currency2": this.selectedCoin,
+    //   "buyerEmail": this.gs.loggedInUserInfo.username || "customer_email@gmail.com",
+    //   "customOrderId": this.gs.loggedInUserInfo.id || "1"
+    // }
+
+    console.log("this.gs.bookingSummaryDetails >>>>>", this.gs.bookingSummaryDetails);
+
+    let body = { // new
+      "price": this.gs.bookingSummaryDetails.totalFare,
+      "currency": this.selectedCoin, //
+      "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username ||
+      "customOrderId": this.gs.loggedInUserInfo.contactId || "1",
+      "notificationURL": "https://webhook.site/12d25089-5eae-4954-8f41-cfa39961a4db"
     }
     this.paymentService.createTransaction(body).subscribe(response => {
       this.isLoader = false;
+      console.log("response >>>>>", response);
+
       if (response.status == 201) {
         let responseData = response.data;
-        if (responseData && responseData.checkout_url) {
-          localStorage.setItem("cryptoTransaction", JSON.stringify(responseData));
+        if (responseData && responseData.url) {
           this.toast.successToastr("Transaction created successfully");
-          if (!this.gs.loggedInUserInfo.cryptoTransactions) {
-            this.gs.loggedInUserInfo.cryptoTransactions = [];
-          }
-          this.gs.loggedInUserInfo.cryptoTransactions.push(responseData.txn_id);
-          localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+          // localStorage.setItem("cryptoTransaction", JSON.stringify(responseData));
+          // if (!this.gs.loggedInUserInfo.cryptoTransactions) {
+          //   this.gs.loggedInUserInfo.cryptoTransactions = [];
+          // }
+          // this.gs.loggedInUserInfo.cryptoTransactions.push(responseData.txn_id);
+          // localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
           setTimeout(() => {
-            window.open(responseData.status_url, "_blank");
-            window.open(responseData.checkout_url, "_blank");
+            // window.open(responseData.status_url, "_blank");
+            window.open(responseData.url, "_blank");
             this.router.navigate(['/cab/booking/booking-success', this.params.type], {
               queryParams: { paymentType: 'crypto' },
               queryParamsHandling: "merge"
@@ -143,6 +137,8 @@ export class BookingComponent {
         } else {
           this.toast.errorToastr("Something went wrong");
         }
+      } else {
+        this.toast.errorToastr("Something went wrong");
       }
     }, err => {
       this.isLoader = false;
@@ -158,5 +154,10 @@ export class BookingComponent {
 
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
+  }
+
+  onSelectCoin(event: any) {
+    console.log("event >>>>>>>>", event);
+    this.selectedCoin = event;
   }
 }

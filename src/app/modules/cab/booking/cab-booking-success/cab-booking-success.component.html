@@ -1,4 +1,11 @@
-<div *ngIf="this.type === 'car'" class="section-b-space success-section">
+<div class="container ext-center my-3">
+  <!-- btn btn-solid -->
+  <a class="back_search " (click)="back()">
+    {{type === 'car' ? 'Back to Car Rentals' : 'Back to Driver Rentals' | translate}}
+  </a>
+</div>
+
+<div *ngIf="type === 'car'" class="section-b-space success-section">
   <div class="container">
     <div class="row success-detail">
       <div class="col">
@@ -18,7 +25,7 @@
   </div>
 </div>
 
-<div *ngIf="this.type === 'driver'" class="section-b-space success-section">
+<div *ngIf="type === 'driver'" class="section-b-space success-section">
   <div class="container">
     <div class="row success-detail">
       <div class="col">

@@ -27,6 +27,20 @@
       <img src="assets/images/icon/dashboard/settings-icon.svg" width="24" alt="Settings" />
       Settings
     </a>
+    <a *ngIf="gs.loggedInUserInfo.role === 'user'" class="dropdown-item">
+      <div class="security-heading d-flex">
+        <span>Status</span>
+        <div class="custom-toggle ms-auto">
+          <input id="google_authenticator" class="check" type="checkbox" checked />
+          <label for="google_authenticator" class="checktoggle">checkbox</label>
+        </div>
+      </div>
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'user'" class="dropdown-item"
+      (click)="goConfiguration()">
+      <img src="assets/images/icon/dashboard/booking-icon.svg" width="24" alt="Settings" />
+      Cars Status
+    </a>
     <a class="dropdown-item" (click)="logOut()">
       <img src="assets/images/icon/logout.svg" width="24" alt="Logout" />
       Logout

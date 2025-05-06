@@ -17,7 +17,7 @@ export class BranchService {
   public GetAllCompanyBranches(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/CompanyBranchKYC/GetAllCompanyBranches', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/CompanyBranchKYC/GetAllCompanyBranches', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -29,7 +29,7 @@ export class BranchService {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('branchPersonNum', dataParams.branchPersonNum)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/CompanyBranchKYC/GetCompanyBranchByBranchId', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/CompanyBranchKYC/GetCompanyBranchByBranchId', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -38,7 +38,7 @@ export class BranchService {
 
   // CompanyBranchKYC -> InsertAndUpdateCompanyBranch
   public InsertAndUpdateCompanyBranch(data: any, dataParams: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/CompanyBranchKYC/InsertAndUpdateCompanyBranch?userId=${dataParams.userId}`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/CompanyBranchKYC/InsertAndUpdateCompanyBranch?userId=${dataParams.userId}`, data).pipe(
       map((res: any) => {
         return res;
       })

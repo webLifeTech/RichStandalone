@@ -72,7 +72,7 @@ export class PlanSubscribeComponent {
     package: {},
     packageDetails: []
   };
-  // payckageStatus: any = null
+  type: any = "CreditCard";
 
   constructor(
     public cabService: CabService,
@@ -176,29 +176,60 @@ export class PlanSubscribeComponent {
   }
 
   payNow() {
-    // this.onHandleSubmit.emit(null)
-    const body = {
-      "packageId": this.params.packageId,
-      "userId": this.gs.loggedInUserInfo.userId || null,
-      "paymentId": "pay-123",
-      "startDate": this.transformDate(this.summaryObj.start_time, 'yyyy-MM/dd'), //  "2025-03-21"
-      "endDate": this.transformDate(this.summaryObj.end_time, 'yyyy-MM/dd'), //  "2025-09-21"
-      "noOfMonths": this.summaryObj.timeType == "Monthly" ? parseInt(this.summaryObj.timeDuration) : parseInt(this.summaryObj.timeDuration) * 12,
+    let body: any = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "amount": this.packageSummaryObj.totalAmount,
       "remarks": "Package " + this.params.packageStatus,
-      "payckageStatus": this.params.packageStatus
+      "paymentType": this.type,
+      "currency": "USD",
+      "subscrptionPackageDetails": {
+        "packageId": this.packageSummaryObj.packageId,
+        "startDate": this.packageSummaryObj.startDate,
+        "endDate": this.packageSummaryObj.endDate,
+        "noOfMonths": this.packageSummaryObj.noOfMonths,
+        "payckageStatus": this.params.packageStatus
+      }
     }
 
+    if (this.type === 'CreditCard') {
+      if (!this.gs.paymentDetails.creditCard.valid) {
+        this.toast.errorToastr("Invalid Credit Card Details");
+        return;
+      }
+      body["creditCardInfo"] = {
+        "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
+        "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
+        "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
+        "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
+      }
+    }
+    if (this.type === 'ACH') {
+      if (!this.gs.paymentDetails.ach.valid) {
+        this.toast.errorToastr("Invalid ACH Details");
+        return;
+      }
+      body["bankAccount"] = {
+        "bank": this.gs.paymentDetails.ach.value?.bank,
+        "rountingNo": this.gs.paymentDetails.ach.value?.rountingNo,
+        "accountNo": this.gs.paymentDetails.ach.value?.accountNo,
+        "accountType": this.gs.paymentDetails.ach.value?.accountType,
+        "accountName": this.gs.paymentDetails.ach.value?.accountName,
+        "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
+      }
+    }
     console.log("body >>>", body);
 
+    // return;
     this.gs.isSpinnerShow = true;
-    this.pricingS.payPackagePaymentDummyTest(body).subscribe((response: any) => {
+    this.pricingS.payForSubscribePackage(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       if (response && response.statusCode == "200") {
         this.toast.successToastr(response.message);
-        this.onHandleSubmit.emit(null)
+        this.onHandleSubmit.emit(null);
+      } else {
+        this.toast.errorToastr(response.message);
       }
     });
-    // this.router.navigate(['/pricing/payment-success']);
   }
 
   bookCancel() {
@@ -242,5 +273,9 @@ export class PlanSubscribeComponent {
 
   onChange() {
     this.calculateDropTime();
+  }
+
+  selectPaymentMode(type: any) {
+    this.type = type;
   }
 }

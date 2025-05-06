@@ -23,11 +23,12 @@ import { DynamicFormComponent } from '../comman/dynamic-form/dynamic-form.compon
 import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.component';
 import { NftsInfoComponent } from '../comman/nfts-info/nfts-info.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SecurityComponent } from '../user-settings/security/security.component';
 import { PreferencesComponent } from '../user-settings/preferences/preferences.component';
 import { NotificationsComponent } from '../user-settings/notifications/notifications.component';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-user-dashboard-kyc',
@@ -223,16 +224,23 @@ export class UserDashboardKycComponent {
   constructor(
     public gs: GlobalService,
     public route: ActivatedRoute,
-    private fb: FormBuilder,
-    private alert: AlertService,
+    private router: Router,
     private toast: ToastService,
     private modalService: NgbModal,
     private profileService: ProfileService,
-    private location: Location,
     private vendorService: VendorServService,
+    private auth: AuthService,
   ) {
+    this.route.queryParams.subscribe((params: any) => {
+      if (!this.auth.isLoggedIn && params && params.type) {
+        this.router.navigate(['/auth/log-in'], {
+          queryParams: params,
+        });
+        return;
+      }
+    })
+
     this.gs.isModificationOn = false;
-    // this.allPendingKycVehicleList = this.allVehicleList;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     for (let i in this.iAmArray) {

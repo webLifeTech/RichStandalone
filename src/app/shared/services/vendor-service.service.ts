@@ -15,7 +15,7 @@ export class VendorServService {
 
   // Master -> GetMasterProviderCategories
   public getMasterProviderCategories() {
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterProviderCategories').pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterProviderCategories').pipe(
       map((res: any) => {
         return res;
       })
@@ -26,7 +26,7 @@ export class VendorServService {
   public getMasterProviderSubCategories(dataParams: any) {
     const params = new HttpParams()
       .set('categoryId', dataParams.categoryId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetMasterProviderSubCategories', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterProviderSubCategories', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -35,7 +35,7 @@ export class VendorServService {
 
   // User -> RegisterVendor
   public registerVendor(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/User/RegisterVendor', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/User/RegisterVendor', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -46,7 +46,7 @@ export class VendorServService {
   public GetProviderDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Provider/GetProviderDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetProviderDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -55,7 +55,7 @@ export class VendorServService {
 
   // Provider -> UpdateProviderDetails
   public UpdateProviderDetails(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Provider/UpdateProviderDetails', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/UpdateProviderDetails', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -64,7 +64,7 @@ export class VendorServService {
 
   // ProviderSearch -> ProviderSearchResult
   public ProviderSearchResult(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/ProviderSearch/ProviderSearchResult', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/ProviderSearch/ProviderSearchResult', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -73,7 +73,7 @@ export class VendorServService {
 
   // Provider -> AddProviderEnquiry
   public AddProviderEnquiry(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Provider/AddProviderEnquiry', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/AddProviderEnquiry', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -84,7 +84,7 @@ export class VendorServService {
   public GetAllProviderEnquiry(dataParams: any) {
     const params = new HttpParams()
       .set('providerId', dataParams.providerId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Provider/GetAllProviderEnquiry', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetAllProviderEnquiry', { params }).pipe(
       map((res: any) => {
         return res;
       })

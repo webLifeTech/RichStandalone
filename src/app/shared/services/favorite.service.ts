@@ -18,7 +18,7 @@ export class FavoriteService {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('riskType', dataParams.riskType)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Favorite/GetAllFavourite', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetAllFavourite', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -27,7 +27,7 @@ export class FavoriteService {
 
   // Favorite -> insertUpdateFavourite
   public insertUpdateFavourite(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Favorite/InsertAndUpdateFavourite', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Favorite/InsertAndUpdateFavourite', data).pipe(
       map((res: any) => {
         return res;
       })

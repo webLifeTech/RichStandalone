@@ -232,6 +232,9 @@ export class UserMasterConfigurationComponent {
       if (this.selectedTabObj.formId == 6) {
         this.getAllCompanies();
       }
+      if (this.selectedTabObj.formId == 3) {
+        this.getDriverWorkingHours();
+      }
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 

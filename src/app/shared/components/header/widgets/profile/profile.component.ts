@@ -61,10 +61,14 @@ export class ProfileComponent {
   }
 
   goSettings() {
-    this.router.navigateByUrl('/user/setting/security');
+    this.router.navigateByUrl('/user/setting');
   }
 
   goAdminDashBoard() {
     this.router.navigateByUrl('/user/profile');
+  }
+
+  goConfiguration() {
+    this.router.navigateByUrl('/user/configuration');
   }
 }

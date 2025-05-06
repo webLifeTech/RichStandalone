@@ -54,7 +54,6 @@ export class BookingNetBankingComponent {
 
     this.gs.paymentDetails.ach = this.form;
     this.form.valueChanges.subscribe(() => {
-      console.log("change -->", this.form.value);
       this.gs.paymentDetails.ach = this.form;
     });
   }

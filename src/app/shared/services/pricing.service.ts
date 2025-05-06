@@ -42,7 +42,7 @@ export class PricingService {
   public getMasterPackageType(dataParams: any) {
     const params = new HttpParams()
       .set('code', dataParams.code)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetMasterPackageType', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Package/GetMasterPackageType', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -53,7 +53,7 @@ export class PricingService {
   public getPackageDetails(dataParams: any) {
     const params = new HttpParams()
       .set('roleName', dataParams.roleName)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetPackageDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Package/GetPackageDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -63,7 +63,7 @@ export class PricingService {
   public getCurrentPackageDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetCurrentPackageDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Package/GetCurrentPackageDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -74,7 +74,7 @@ export class PricingService {
   public getSubcriptionHistory(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Package/GetSubcriptionHistory', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Package/GetSubcriptionHistory', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -84,7 +84,7 @@ export class PricingService {
 
   // Package -> InsertAndUpdatePackage
   public InsertAndUpdatePackage(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/InsertAndUpdatePackage`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Package/InsertAndUpdatePackage`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -93,7 +93,7 @@ export class PricingService {
 
   // Package -> GetPackageSubscriptionDetails
   public getPackageSubscriptionDetails(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/GetPackageSubscriptionDetails`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Package/GetPackageSubscriptionDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -102,7 +102,7 @@ export class PricingService {
 
   // Package -> GetPackageSummaryDetails
   public getPackageSummaryDetails(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/GetPackageSummaryDetails`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Package/GetPackageSummaryDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -111,7 +111,16 @@ export class PricingService {
 
   // Package -> payPackagePaymentDummyTest
   public payPackagePaymentDummyTest(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Package/PayPackagePaymentDummyTest`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Package/PayPackagePaymentDummyTest`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Package -> SubscribePackage
+  public payForSubscribePackage(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Package/SubscribePackage`, data).pipe(
       map((res: any) => {
         return res;
       })

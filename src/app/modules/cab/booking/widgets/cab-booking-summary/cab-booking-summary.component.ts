@@ -120,7 +120,8 @@ export class CabBookingSummaryComponent {
       console.log("getBookingVehicleDetails >>>>", res);
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.vehicleBookingSummaryDetails.bookingSummaryDetails;
-        console.log("this.bookingSummaryDetails >>>>>>", this.bookingSummaryDetails);
+        this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
+        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
 
       } else {
         this.gs.isSpinnerShow = false;
@@ -147,7 +148,8 @@ export class CabBookingSummaryComponent {
       console.log("getDriverBookingSummary >>>>", res);
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
-        console.log("this.bookingSummaryDetails >>>>>>", this.bookingSummaryDetails);
+        this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
+        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
 
       } else {
         this.gs.isSpinnerShow = false;

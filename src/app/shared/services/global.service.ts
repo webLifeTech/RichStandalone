@@ -27,6 +27,7 @@ export class GlobalService {
     ach: {},
     crypto: {},
   };
+  bookingSummaryDetails: any = {};
 
   // Get Currency
   public currencyItem = localStorage.getItem("currency");

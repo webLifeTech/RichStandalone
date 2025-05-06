@@ -58,6 +58,11 @@
               <span *ngIf="column.fieldObject">
                 {{ row[column.fieldObject][column.field] }}
               </span>
+              <span *ngIf="!column.fieldObject &&  column.field === 'vehicleStatus'" class="custom-toggle">
+                <input [id]="row.vehicleId+'_vehicleStatus'" class="check" type="checkbox"
+                  [checked]="row[column.field] == 'Active'" [disabled]="!row[column.field]" />
+                <label [for]="row.vehicleId+'_vehicleStatus'" class="checktoggle">checkbox</label>
+              </span>
             </td>
             <td *ngIf="this.type !== 'vendor-profile'" class="text-center">
               <span class="badge badge-success">

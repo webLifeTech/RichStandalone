@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   register(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/User/RegisterUser`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/User/RegisterUser`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -78,12 +78,12 @@ export class AuthService {
       .set('username', data.username)
       .set('client_id', 'tlcHubAuthApp')
       .set('grant_type', 'password');
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/token`, body.toString(), { headers }).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/token`, body.toString(), { headers }).pipe(
       map((res: any) => {
         return res;
       })
     );
-    // return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/token`, data).pipe(
+    // return this.http.post(this.baseUrl1 + `TLHUB/token`, data).pipe(
     //   map((res: any) => {
     //     return res;
     //   })
@@ -97,7 +97,7 @@ export class AuthService {
       .set('countryName', dataParams.countryName)
       .set('emailId', dataParams.emailId)
       .set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Communication/SendVerificationCodeAsync', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Communication/SendVerificationCodeAsync', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -106,7 +106,7 @@ export class AuthService {
 
   // Communication -> ValidateVerificationCodeMethod
   public ValidateVerificationCodeMethod(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/Communication/ValidateVerificationCode`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Communication/ValidateVerificationCode`, data).pipe(
       map((res: any) => {
         return res;
       })

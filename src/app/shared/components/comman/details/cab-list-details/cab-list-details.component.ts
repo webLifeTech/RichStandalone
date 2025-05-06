@@ -84,7 +84,7 @@ export class CabListDetailsComponent {
     private router: Router,
     private route: ActivatedRoute,
     public auth: AuthService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
     private nftService: NftService,
@@ -133,6 +133,15 @@ export class CabListDetailsComponent {
             this.router.navigateByUrl('/user/profile')
           }
         }, () => { });
+        return;
+      }
+
+      if (this.gs.loggedInUserInfo.userId === details.userid) {
+        if (this.type === 'car') {
+          this.toast.warningToastr("You can't book your own vehicle");
+        } else {
+          this.toast.warningToastr("You can't book your own driver");
+        }
         return;
       }
 

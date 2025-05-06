@@ -124,6 +124,8 @@ export class AddPaymentModalComponent {
           this.toast.successToastr(response.message);
         }
         this.activeModal.close({ confirmed: true });
+      } else {
+        this.toast.errorToastr(response.message);
       }
     })
     // this.activeModal.close({ confirmed: true, reason: this.reason });

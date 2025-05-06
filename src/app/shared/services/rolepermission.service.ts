@@ -20,7 +20,7 @@ export class RolePermissionService {
 
   public GetRolesList(dataParams: any) {
     const params = new HttpParams().set('userRole', dataParams.userRole);
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Master/GetRolesList', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetRolesList', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -32,7 +32,7 @@ export class RolePermissionService {
     const params = new HttpParams()
       .set('userName', dataParams.userName)
       .set('systemId', dataParams.systemId)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Menu/GetUsrMenuDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Menu/GetUsrMenuDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -41,7 +41,7 @@ export class RolePermissionService {
 
   // Wallet -> AddWalletFunds
   public addWalletFunds(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Wallet/AddWalletFunds', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/AddWalletFunds', data).pipe(
       map((res: any) => {
         return res;
       })

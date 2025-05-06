@@ -158,12 +158,24 @@
                   </div>
                 </div>
 
-                <div *ngIf="vinUploadResponse?.successVin?.length" class="alert alert-success fade show" role="alert">
-                  <b>
-                    {{vinUploadResponse?.successVin?.length}} out of {{vinUploadResponse?.allVinList?.length}} vehicles
-                    uploaded successful.
-                  </b>
-                </div>
+                <ng-container *ngIf="vinUploadResponse?.successList?.length">
+                  <div class="alert alert-success fade show" role="alert">
+                    <b>
+                      {{vinUploadResponse?.successList?.length}} out of {{vinUploadResponse?.allVinList?.length}}
+                      vehicles
+                      uploaded successful.
+                    </b>
+                  </div>
+
+                  <table class="table">
+                    <tbody>
+                      <tr *ngFor="let item of vinUploadResponse?.successList; let i = index">
+                        <th scope="row">{{i+1}}.</th>
+                        <td>{{item}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-container>
 
                 <ng-container *ngIf="vinUploadResponse?.errorList?.length">
                   <div class="alert alert-danger fade show" role="alert">

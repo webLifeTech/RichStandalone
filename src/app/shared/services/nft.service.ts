@@ -25,7 +25,7 @@ export class NftService {
 
   // Nft -> GetNftDocDetails
   public GetNftDocDetails(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Nft/GetNftDocDetails', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Nft/GetNftDocDetails', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -34,7 +34,7 @@ export class NftService {
 
   // Nft -> InsertNftPaymentst
   public InsertNftPaymentst(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Nft/InsertNftPaymentst', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Nft/InsertNftPaymentst', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -43,7 +43,7 @@ export class NftService {
 
   // Nft -> StoreMetaMaskRequest
   public StoreMetaMaskRequest(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Nft/StoreMetaMaskRequest', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Nft/StoreMetaMaskRequest', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -52,7 +52,7 @@ export class NftService {
 
   // Nft -> StoreMetaMaskResponse
   public StoreMetaMaskResponse(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB_API/TLHUB/Nft/StoreMetaMaskResponse', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Nft/StoreMetaMaskResponse', data).pipe(
       map((res: any) => {
         return res;
       })

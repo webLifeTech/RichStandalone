@@ -105,7 +105,7 @@ export class CabService {
     const params = new HttpParams()
       .set('code', dataParams.code)
       .set('noticeType', dataParams.noticeType)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/ImportantNotice/GetImportantNotice', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/ImportantNotice/GetImportantNotice', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -117,7 +117,7 @@ export class CabService {
     const params = new HttpParams()
       .set('location', dataParams.location)
       .set('risktype', dataParams.risktype)
-    return this.http.get(this.baseUrl1 + 'TLHUB_API/TLHUB/Location/GetLocations', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Location/GetLocations', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -126,7 +126,7 @@ export class CabService {
 
   // VehicleSearch -> VehicleSearachResult
   public VehicleSearchResult(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/VehicleSearchResult`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleSearch/VehicleSearchResult`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -135,7 +135,7 @@ export class CabService {
 
   // VehicleSearch -> GetVehicleBookingSummaryDetails
   public getVehicleBookingSummaryDetails(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/GetVehicleBookingSummaryDetails`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleSearch/GetVehicleBookingSummaryDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -144,7 +144,7 @@ export class CabService {
 
   // VehicleSearch -> GetBookingVehicleDetails
   public getBookingVehicleDetails(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/VehicleSearch/GetBookingVehicleDetails`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleSearch/GetBookingVehicleDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -153,7 +153,7 @@ export class CabService {
 
   // DriverSearch -> DriverSearchResult
   public DriverSearchResult(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverSearch/DriverSearchResult`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/DriverSearch/DriverSearchResult`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -163,7 +163,7 @@ export class CabService {
 
   // DriverSearch -> getDriverBookingSummary
   public getDriverBookingSummary(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverSearch/GetDriverBookingSummary`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/DriverSearch/GetDriverBookingSummary`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -172,7 +172,7 @@ export class CabService {
 
   // DriverSearch -> GetBookingDriverDetails
   public getBookingDriverDetails(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB_API/TLHUB/DriverSearch/GetBookingDriverDetails`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/DriverSearch/GetBookingDriverDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
