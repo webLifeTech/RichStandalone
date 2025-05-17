@@ -114,10 +114,13 @@ export class CabListLeftSidebarComponent {
               }
             }
 
+            console.log("this.aggregateFilters >>>", this.aggregateFilters);
+
             this.vehicleType = aggFilters['VEHICLETYPE'] ? aggFilters['VEHICLETYPE'].filterlist : [];
             this.router.navigate([], {
               relativeTo: this.route,
               queryParams: {
+                ['page']: null,
                 ['CAROWNERS']: null,
                 ['LOCATION']: null,
                 ['FLEETCOMPANY']: null,
@@ -174,7 +177,15 @@ export class CabListLeftSidebarComponent {
           if (!this.aggregateFilters.length || type == 'main-search') {
             const aggFilters = JSON.parse(res.aggregateFilters);
             this.aggregateFilters = Object.entries(aggFilters).map(([key, value]: any) => ({ ...value, key })).sort((a, b) => a.position - b.position);
+
+            for (let af in this.aggregateFilters) {
+              for (let fl in this.aggregateFilters[af].filterlist) {
+                this.aggregateFilters[af].filterlist[fl].checkID = this.aggregateFilters[af].key + "_" + this.aggregateFilters[af].filterlist[fl].value.replaceAll(/\s/g, '')
+              }
+            }
+
             console.log("this.aggregateFilters >>>", this.aggregateFilters);
+
             this.router.navigate([], {
               relativeTo: this.route,
               queryParams: {

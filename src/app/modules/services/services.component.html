@@ -1,4 +1,4 @@
-<div class="services-section">
+<div *ngIf="!isView" class="services-section">
   <section class="breadcrumb-dashboard pt-0 bg-size">
     <img [src]="bg_image" class="bg-img img-fluid blur-up lazyload" alt="background-image" style="display: none;">
     <div class="breadcrumb-content">
@@ -50,10 +50,25 @@
             </div>
           </div>
 
+          <div class="col-lg-12">
+            <div class="content-header pb-3">
+              <h4>{{viewModel.pageHeading}}</h4>
+            </div>
+          </div>
+
           <div class="col-md-8">
             <div *ngIf="reLoadDetails" class="car-driv-view-detail">
-              <app-service-list [servicSearchResult]="servicSearchResult"
-                [searchDetails]="searchObj"></app-service-list>
+              <div class="service-list">
+                <div
+                  *ngFor="let provider of servicSearchResult | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: searchObj.totalDataCount }">
+                  <app-service-list [singleProvider]="provider" [searchDetails]="searchObj"
+                    (viewAction)="viewDetails($event)"></app-service-list>
+                </div>
+              </div>
+
+              <div *ngIf="servicSearchResult?.length" class="text-center mt-4">
+                <pagination-controls (pageChange)="setPage($event)"></pagination-controls>
+              </div>
             </div>
             <div class="text-center" *ngIf="!servicSearchResult.length">
               Not Data
@@ -69,4 +84,7 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isView">
+  <app-service-details [singleDetailInfo]="singleDetailInfo" (backAction)="backAction()"></app-service-details>
 </div>

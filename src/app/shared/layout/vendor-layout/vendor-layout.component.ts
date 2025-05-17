@@ -7,7 +7,6 @@ import { Router, RouterOutlet } from '@angular/router';
 import { BreadcrumbsComponent } from '../../components/comman/breadcrumbs/breadcrumbs.component';
 import { UserDashboardTopTabBarComponent } from '../../../modules/user-dashboard/user-dashboard-top-tabbar/user-dashboard-top-tabbar.component';
 import { ModalComponent } from '../../components/comman/modal/modal.component';
-import { VendorDashboardTopTabBarComponent } from '../../../modules/vendor/vendor-dashboard-top-tabbar/vendor-dashboard-top-tabbar.component';
 
 @Component({
   selector: 'app-vendor-layout',
@@ -18,7 +17,6 @@ import { VendorDashboardTopTabBarComponent } from '../../../modules/vendor/vendo
     FooterComponent,
     BreadcrumbsComponent,
     ModalComponent,
-    VendorDashboardTopTabBarComponent,
     RouterOutlet,
     CommonModule
   ],

@@ -337,19 +337,55 @@ export class DynamicGridComponent {
     }
   }
 
-  async changeCarStatus(item: any) {
-    // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
-    const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
-      centered: true,
-    });
-    modalRef.componentInstance.singleDetails = item;
-    modalRef.componentInstance.title = 'Are sure you want to change status ?';
-    modalRef.result.then((res: any) => {
-      if (res.confirmed) {
-        item.status = res.status;
-        this.toast.successToastr("Status successfully");
-      }
-    }, () => { });
+  async changeStatus(event: any, row: any, column: any) {
+    if (this.type === 'my_vehicle') {
+      let Body = {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "vehicleId": row.vehicleId,
+        "vehicleStatus": event.target.checked,
+      };
+
+      this.gs.isSpinnerShow = true;
+      this.profileService.UpdateVehicleStatus(Body).subscribe((res: any) => {
+        this.gs.isSpinnerShow = false;
+        if (res && res.statusCode == "200") {
+          this.toast.successToastr("Updated successfully");
+          this.getSearchData();
+        } else {
+          this.toast.errorToastr(res.message);
+        }
+      }, (err: any) => {
+        this.toast.errorToastr("Something went wrong");
+        this.gs.isSpinnerShow = false;
+      })
+    }
+
+    if (this.type === 'vendor-profile') {
+      let Body2 = {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "status": event.target.checked,
+        "risktype": this.gs.loggedInUserInfo.role === "Vendor" ? "Provider" : "Driver",
+      };
+
+      this.gs.isSpinnerShow = true;
+      this.profileService.UpdateDriverAndProviderStatus(Body2).subscribe((res: any) => {
+        this.gs.isSpinnerShow = false;
+        if (res && res.statusCode == "200") {
+          this.toast.successToastr("Updated successfully");
+          console.log("column >>>>>", column);
+          console.log("row >>>>>", row);
+
+          row.status = row.status == "Active" ? "InActive" : "Active";
+          // this.gs.loggedInUserInfo.driverStatus = event.target.checked;
+          // localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+        } else {
+          this.toast.errorToastr(res.message);
+        }
+      }, (err: any) => {
+        this.toast.errorToastr("Something went wrong");
+        this.gs.isSpinnerShow = false;
+      })
+    }
   }
 
 }

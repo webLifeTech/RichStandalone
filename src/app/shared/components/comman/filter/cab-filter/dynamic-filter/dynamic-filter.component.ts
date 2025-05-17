@@ -20,7 +20,7 @@ export class DynamicFilterComponent {
 
   public shiftOptions = shiftOptions;
   public isOpenOption: boolean = true;
-  public selectedCarOption: string[] = [];
+  public selectedCarOption: any = {};
   @Input() filterOBj: any = {};
 
   constructor(
@@ -30,36 +30,29 @@ export class DynamicFilterComponent {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.selectedCarOption = params[this.filterOBj.key] ? params[this.filterOBj.key].split(",") : []
+      this.selectedCarOption[this.filterOBj.key] = params[this.filterOBj.key] ? params[this.filterOBj.key].split(",") : [];
     })
   }
 
 
   applyFilter(event: Event, key: any) {
     const value = (event.target as HTMLInputElement).value;
-    let index = this.selectedCarOption.indexOf(value);  // checked and unchecked value
+    let index = this.selectedCarOption[this.filterOBj.key].indexOf(value);  // checked and unchecked value
 
     if ((event.target as HTMLInputElement).checked) {
-      this.selectedCarOption.push((event.target as HTMLInputElement).value)
+      this.selectedCarOption[key].push((event.target as HTMLInputElement).value)
     } else {
-      console.log("event.target >>>>>>>>>", (event.target as HTMLInputElement).value);
-      console.log("this.selectedCarOption >>>>>>>>>", this.selectedCarOption);
-      console.log("key >>>>>>>>>", key);
-      console.log("index >>>>>>>>>", index);
-
       if (key == 'SEATINGCAPACITY' || key == 'EXPERIENCE') {
         const items = value ? value.split(',') : [];
-
-        console.log("items <<<<", items);
-        this.selectedCarOption = this.selectedCarOption.filter(item => !items.includes(item));
+        this.selectedCarOption[key] = this.selectedCarOption[key].filter((item: any) => !items.includes(item));
       } else {
-        this.selectedCarOption.splice(index, 1);
+        this.selectedCarOption[key].splice(index, 1);
       }
     }
 
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { [key]: this.selectedCarOption.length ? this.selectedCarOption.join(",") : null },
+      queryParams: { [key]: this.selectedCarOption[key].length ? this.selectedCarOption[key].join(",") : null, ['page']: 1 },
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation
     });
@@ -67,7 +60,7 @@ export class DynamicFilterComponent {
 
   // check if the item are selected
   checked(item: string) {
-    if (this.selectedCarOption?.includes(item)) {
+    if (this.selectedCarOption[this.filterOBj.key]?.includes(item)) {
       return true;
     }
     return false;

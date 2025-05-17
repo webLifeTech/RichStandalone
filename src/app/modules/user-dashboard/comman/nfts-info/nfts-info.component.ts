@@ -107,6 +107,7 @@ export class NftsInfoComponent {
 
   onReset() {
     this.search = null;
+    this.roleId = null;
     this.onSearch();
   }
 

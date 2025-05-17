@@ -46,7 +46,7 @@ export interface Location {
 })
 export class SearchCatLoactionComponent {
 
-  location: string = ''; //  // need to do
+  location: string = ''; // 11001  // need to do
   selectedCategory: any = ''; // Vehicle Inspections // need to do
 
   @Input() providerCategories: any = [];

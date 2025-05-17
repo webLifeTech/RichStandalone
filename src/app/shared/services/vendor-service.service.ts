@@ -91,4 +91,14 @@ export class VendorServService {
     );
   }
 
+  // Provider -> GetAllProviderEnquiry
+  public GetProviderDetailsByProviderId(dataParams: any) {
+    const params = new HttpParams().set('providerId', dataParams.providerId)
+    return this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetProviderDetailsByProviderId', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
 }

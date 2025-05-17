@@ -179,4 +179,41 @@ export class CabService {
     );
   }
 
+  // DriverKyc -> GetDriverRates
+  public GetDriverRates(dataParams: any) {
+    // const params = new HttpParams().set('driverId', dataParams.driverId).set('licenseNo', dataParams.licenseNo);
+    // return this.http.get(this.baseUrl1 + 'TLHUB/DriverKyc/GetDriverRates', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+
+    return new Promise((resolve, reject) => {
+      const params = new HttpParams().set('driverId', dataParams.driverId).set('licenseNo', dataParams.licenseNo);
+      this.http.get(this.baseUrl1 + 'TLHUB/DriverKyc/GetDriverRates', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+  // VehicleKYC -> GetVehicleRates
+  public GetVehicleRates(dataParams: any) {
+    // const params = new HttpParams().set('vehicleId', dataParams.vehicleId).set('vin', dataParams.vin);
+    // return this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetVehicleRates', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+
+    return new Promise((resolve, reject) => {
+      const params = new HttpParams().set('vehicleId', dataParams.vehicleId).set('vin', dataParams.vin);
+      this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetVehicleRates', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
 }

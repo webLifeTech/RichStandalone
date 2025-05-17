@@ -17,7 +17,6 @@ import { UserDashboardBookingComponent } from './modules/user-dashboard/user-das
 import { UserDashboardPaymentsComponent } from './modules/user-dashboard/user-dashboard-payments/user-dashboard-payments.component';
 import { UserWalletComponent } from './modules/user-dashboard/user-wallet/user-wallet.component';
 import { UserWishlistComponent } from './modules/user-dashboard/user-wishlist/user-wishlist.component';
-import { VendorLayoutComponent } from './shared/layout/vendor-layout/vendor-layout.component';
 import { PricingComponent } from './modules/other/pricing/pricing.component';
 import { LayoutHeadFootComponent } from './shared/layout/layout-head-foot/layout-head-foot.component';
 import { PlanSubscribeComponent } from './modules/other/pricing/plan-subscribe/plan-subscribe.component';
@@ -35,11 +34,11 @@ import { AllBookingOverviewComponent } from './modules/admin-dashboard/all-booki
 import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
 import { ServicesComponent } from './modules/services/services.component';
 import { EnquiriesComponent } from './modules/vendor/enquiries/enquiries.component';
-import { ServiceProfileComponent } from './modules/vendor/service-profile/service-profile.component';
 import { UserMasterConfigurationComponent } from './modules/user-dashboard/user-master-configuration/user-master-configuration.component';
 import { UserRecentActivityComponent } from './modules/user-dashboard/user-recent-activity/user-recent-activity.component';
 import { NotificationViewComponent } from './shared/components/header/widgets/notification-view/notification-view.component';
 import { AdminMyProfileComponent } from './modules/admin-dashboard/admin-my-profile/admin-my-profile.component';
+import { ServiceDetailsComponent } from './modules/services/service-details/service-details.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +59,10 @@ export const routes: Routes = [
       {
         path: '',
         component: ServicesComponent
+      },
+      {
+        path: 'details',
+        component: ServiceDetailsComponent
       },
     ]
   },
@@ -183,23 +186,6 @@ export const routes: Routes = [
         path: 'allVehicles', // path: 'user-vehicles',
         component: UserCarsListingComponent
       },
-      // {
-      //   path: 'setting',
-      //   component: UserSettingsComponent, children: [
-      //     {
-      //       path: 'security',
-      //       component: SecurityComponent
-      //     },
-      //     {
-      //       path: 'preferences',
-      //       component: PreferencesComponent
-      //     },
-      //     {
-      //       path: 'notifications',
-      //       component: NotificationsComponent
-      //     },
-      //   ]
-      // },
       {
         path: 'configuration', // 'master-configuration/:payckageStatus'
         component: UserMasterConfigurationComponent, children: [
@@ -222,29 +208,8 @@ export const routes: Routes = [
         path: 'enquiries',
         component: EnquiriesComponent
       },
-      {
-        path: 'service-profile',
-        component: ServiceProfileComponent
-      },
     ]
   },
-  // {
-  //   path: 'vendor',
-  //   component: VendorLayoutComponent, children: [
-  //     {
-  //       path: 'dashboard',
-  //       component: VendorsComponent
-  //     },
-  //     {
-  //       path: 'enquiries',
-  //       component: EnquiriesComponent
-  //     },
-  //     {
-  //       path: 'service-profile',
-  //       component: ServiceProfileComponent
-  //     },
-  //   ]
-  // },
   {
     path: 'admin', component: Layout3Component, children: [
       {

@@ -127,6 +127,7 @@ export class UserDashboardKycComponent {
     { header: 'LAST NAME', fieldObject: "contactInfo", field: 'lastName' },
     { header: 'PHONE NUMBER', fieldObject: null, field: 'phoneNumber' },
     { header: 'CATEGORY', fieldObject: null, field: 'category' },
+    { header: 'STATUS', fieldObject: null, field: 'status' },
   ];
 
   // Actions grids

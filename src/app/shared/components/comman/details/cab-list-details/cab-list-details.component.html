@@ -31,6 +31,12 @@
             class="btn">
             {{details.availability | translate}}
           </a>
+          <div *ngIf="details.isSelfWarn && type === 'car'" class="alert alert-warning alert-warn" role="alert">
+            You can't book your own vehicle
+          </div>
+          <div *ngIf="details.isSelfWarn && type === 'driver'" class="alert alert-warning alert-warn" role="alert">
+            You can't book your own driver
+          </div>
           <div class="row">
             <div class="col-md-3 align-self-center">
               <div class="logo-sec">
@@ -140,14 +146,90 @@
               <h6 *ngIf="type === 'car'" class="brand_name ms-2">
                 {{details.fleetCompanyName ? details.fleetCompanyName : details.contactName | translate}}
               </h6>
-              <div class="rating-section">
+              <ng-template #popContent>
+                <div class="rating-box">
+                  <div class="average-rating">
+                    <div class="rating-star"
+                      *ngIf="details.ratingAverage || details.driverRating || details.riskRating">
+                      <ng-template #t let-fill="fill">
+                        <i class="fa fa-star">
+                          @if (fill > 0) {
+                          <i class="fa fa-star filled" [style.width.%]="fill"></i>
+                          }
+                        </i>
+                      </ng-template>
+                      <ngb-rating *ngIf="type === 'car' && !auth.isLoggedIn" [rate]="details.ratingAverage"
+                        [max]="details.maxRate" [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
+                      <ngb-rating *ngIf="type === 'driver' && !auth.isLoggedIn" [rate]="details.driverRating"
+                        [max]="details.maxRate" [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
+                      <ngb-rating *ngIf="auth.isLoggedIn" [rate]="details.riskRating" [max]="details.maxRate"
+                        [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
+                    </div>
+                    <span *ngIf="type === 'car' && !auth.isLoggedIn" class="score">{{details.ratingAverage || 'N/A'}}
+                      out of
+                      5</span>
+                    <span *ngIf="type === 'driver' && !auth.isLoggedIn" class="score">{{details.driverRating || 'N/A'}}
+                      out of
+                      5</span>
+                    <span *ngIf="auth.isLoggedIn" class="score">{{details.riskRating || 'N/A'}} out of 5</span>
+                    <span class="total-ratings">is {{ratingInfo.type}} Rating</span>
+                  </div>
+                  <div *ngIf="type === 'car' && ratingInfo.riskAssessments">
+                    <div class="recommendation-section">
+                      <div class="recommendation-title">{{ "Recommendations" }}</div>
+                      <ul>
+                        <li *ngFor="let tip of ratingInfo?.riskAssessments[0]?.recommendations">
+                          {{ tip}}
+                        </li>
+                      </ul>
+                      <div class="recommendation-title">{{ "Territory Risk" }}</div>
+                      <ul>
+                        <li>
+                          {{ ratingInfo?.riskAssessments[0]?.territoryRisk.territoryCode}}
+                        </li>
+                        <li>
+                          {{ ratingInfo?.riskAssessments[0]?.territoryRisk.description}}
+                        </li>
+                        <li>
+                          {{ ratingInfo?.riskAssessments[0]?.territoryRisk.recommendation}}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div *ngIf="type === 'driver' && ratingInfo.riskAssessments">
+                    <div class="recommendation-section"
+                      *ngFor="let item of ratingInfo?.riskAssessments[0]?.recommendations">
+                      <div class="recommendation-title">{{ item.attribute }}</div>
+                      <ul>
+                        <li *ngFor="let tip of item.recommendtions">
+                          {{ tip}}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+
+              <!-- triggers="mouseenter:mouseleave" -->
+              <!-- [autoClose]="'inside'" -->
+              <div class="rating-section" [ngbPopover]="popContent" popoverClass="my-custom-class"
+                triggers="mouseenter:mouseleave" (mouseenter)='onHover(details)'
+                [disablePopover]="checkDisabled(details)">
                 <div class="rating-star" *ngIf="details.ratingAverage || details.driverRating || details.riskRating">
+                  <ng-template #t let-fill="fill">
+                    <i class="fa fa-star">
+                      @if (fill > 0) {
+                      <i class="fa fa-star filled" [style.width.%]="fill"></i>
+                      }
+                    </i>
+                  </ng-template>
                   <ngb-rating *ngIf="type === 'car' && !auth.isLoggedIn" [rate]="details.ratingAverage"
-                    [max]="details.ratingAverage" [disabled]="true"></ngb-rating>
+                    [max]="details.maxRate" [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
                   <ngb-rating *ngIf="type === 'driver' && !auth.isLoggedIn" [rate]="details.driverRating"
-                    [max]="details.driverRating" [disabled]="true"></ngb-rating>
-                  <ngb-rating *ngIf="auth.isLoggedIn" [rate]="details.riskRating" [max]="details.riskRating"
-                    [disabled]="true"></ngb-rating>
+                    [max]="details.maxRate" [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
+                  <ngb-rating *ngIf="auth.isLoggedIn" [rate]="details.riskRating" [max]="details.maxRate"
+                    [disabled]="true" [starTemplate]="t" [readonly]="true"></ngb-rating>
+
                 </div>
                 <h6 *ngIf="type === 'car'" class="brand_name">
                   <span class="me-2" *ngIf="!details.ratingAverage && !auth.isLoggedIn">N/A</span>
@@ -160,7 +242,6 @@
                   {{auth.isLoggedIn ? "Risk Rating" : "Driver Rating"}}
                 </h6>
               </div>
-
             </div>
             <div class="col-md-7 end">
               <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"

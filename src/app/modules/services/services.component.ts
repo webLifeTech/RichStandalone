@@ -9,6 +9,8 @@ import { GlobalService } from '../../shared/services/global.service';
 import { AdvertisementComponent } from './advertisement/advertisement.component';
 import { VendorServService } from '../../shared/services/vendor-service.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { ServiceDetailsComponent } from './service-details/service-details.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-services',
@@ -17,8 +19,9 @@ import { ToastService } from '../../shared/services/toast.service';
     SearchCatLoactionComponent,
     ServiceListComponent,
     AdvertisementComponent,
-
-    CommonModule
+    ServiceDetailsComponent,
+    CommonModule,
+    NgxPaginationModule,
   ],
   templateUrl: './services.component.html',
   styleUrl: './services.component.scss'
@@ -31,8 +34,12 @@ export class ServicesComponent {
   servicSearchResult: any = [];
   totalDataCount: any = 0;
   currentPage: any = 1;
+  pageSize: any = 5;
   selectedSubCats: string[] = [];
   searchObj: any = {};
+  isView: boolean = false;
+  viewModel: any = {};
+  singleDetailInfo: any = {};
 
   constructor(
     private router: Router,
@@ -43,13 +50,21 @@ export class ServicesComponent {
     private toast: ToastService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
-    this.route.queryParams.subscribe((params: any) => {
-      console.log("params >>>>>", params);
-      this.currentPage = params.currentPage || 1;
-      if (params.currentPage) {
-        this.searchVehicleResult();
-      }
-    })
+    // this.router.navigate([], {
+    //   relativeTo: this.route,
+    //   queryParams: { currentPage: 1 },
+    //   queryParamsHandling: "merge"
+    // });
+    this.searchVehicleResult();
+    // this.route.queryParams.subscribe((params: any) => {
+    //   console.log("params >>>>>", params);
+    //   this.currentPage = params.currentPage || 1;
+    //   if (params.currentPage) {
+    //     this.searchVehicleResult();
+    //   } else {
+    //     this.onHandleSubmit({});
+    //   }
+    // })
   }
 
   changeBookTab(item: any) {
@@ -63,6 +78,7 @@ export class ServicesComponent {
   }
 
   onHandleSubmit(obj: any) {
+    this.currentPage = 1;
     this.searchObj = obj;
     this.searchVehicleResult();
   }
@@ -73,7 +89,7 @@ export class ServicesComponent {
         "location": this.searchObj.location || null,
         "category": this.searchObj.selectedCategory || null,
         "pageNumber": this.currentPage,
-        "pagesize": 5
+        "pagesize": this.pageSize
       },
       "filterCriteria": { "subCategory": this.selectedSubCats.length ? JSON.stringify(this.selectedSubCats) : null }
     }
@@ -91,6 +107,7 @@ export class ServicesComponent {
         console.log("this.aggregateFilters >>>", this.aggregateFilters);
         this.servicSearchResult = res.providerMatches;
         this.searchObj.totalDataCount = res.viewModel.totalCount;
+        this.viewModel = res.viewModel;
         this.reLoadDetails = false;
       }
       this.reLoadDetails = true;
@@ -98,6 +115,22 @@ export class ServicesComponent {
       this.toast.errorToastr("Something went wrong");
       this.gs.isSpinnerShow = false;
     })
+  }
+
+  viewDetails(event: any) {
+    console.log("event>>>", event);
+    this.singleDetailInfo = event;
+    this.isView = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  backAction() {
+    this.isView = false;
+  }
+
+  setPage(page: number) {
+    this.currentPage = page;
+    this.searchVehicleResult();
   }
 
 }

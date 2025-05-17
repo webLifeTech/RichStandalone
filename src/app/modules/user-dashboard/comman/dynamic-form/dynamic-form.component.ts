@@ -754,57 +754,75 @@ export class DynamicFormComponent {
     }
 
     if (event.target.value.length === 17 && fieldRow.value.fieldId === 79) {
-      let dataParams = {
-        "userId": this.gs.loggedInUserInfo.userId,
-        "vinNumber": event.target.value, // "KMUMADTB9NU073089"
-      }
-      this.profileService.getVinQuery(dataParams).subscribe((res: any) => {
-        if (res && res.responseDtos && res.responseDtos.statusCode == "200") {
-          let resObj = res.vinMasterResponseDtos;
 
-          const autoFillObj: any = {
-            "vinNumber": "vin",
-            "make": "make",
-            "model": "model",
-            "modelYear": "modelYear",
-            "seatingCapacity": "numberofSeats",
-            "fuelType": "fuelTypePrimary"
+      this.profileService.checkDriverVehicleExist({
+        riskType: 'Vehicle',
+        vin: event.target.value,
+        licenseNumber: null
+      }).subscribe((existRes: any) => {
+        console.log("existRes >>>>>", existRes);
+
+        if (existRes && existRes.statusCode !== '200') {
+          if (fieldRow.value.value) {
+            this.toast.errorToastr(existRes.message);
           }
-
-          this.sections.controls.forEach((sectionMain: any) => {
-            const fieldsArray = sectionMain.get('fields') as FormArray;
-            fieldsArray.controls.forEach((fieldTwo: any) => {
-              if (autoFillObj && autoFillObj[fieldTwo.value.modalValue] && resObj[autoFillObj[fieldTwo.value.modalValue]]) {
-                if (fieldTwo.value.fieldType === "DATE" || fieldTwo.value.fieldType === "date") { // Date MM/dd/yyyy
-                  fieldTwo.get('value')?.setValue(this.parseDate(resObj[autoFillObj[fieldTwo.value.modalValue]]));
-                } else {
-                  fieldTwo.get('value')?.setValue(resObj[autoFillObj[fieldTwo.value.modalValue]]);
-                }
-
-                if (fieldTwo.value.fieldId === 82) {
-
-                  const vModelIndex = this.findControlIndexByFieldId(fieldsFmArray, 83);
-                  if (vModelIndex !== -1) {
-                    const makeField: any = fieldsFmArray.at(vModelIndex);
-                    const currentYear = new Date().getFullYear();
-                    const vehicleAge = currentYear - fieldTwo.value.value;
-                    makeField.get('value')?.setValue(vehicleAge);
-                  }
-                }
-
-                if (fieldTwo.value.fieldType === "DROPDOWN") {
-                  let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => (citem.Name.toLowerCase() == fieldTwo.value.value.toLowerCase())) || {};
-
-                  if (dataOptions.ID) {
-                    fieldTwo.get('value')?.setValue(dataOptions.Name);
-                    this.onChangeDrop(dataOptions, fieldTwo, section);
-                  }
-                }
-              }
-            });
-          });
+          fieldRow.get('value').setValue("");
+          return;
         }
+
+        let dataParams = {
+          "userId": this.gs.loggedInUserInfo.userId,
+          "vinNumber": event.target.value, // "KMUMADTB9NU073089"
+        }
+        this.profileService.getVinQuery(dataParams).subscribe((res: any) => {
+          if (res && res.responseDtos && res.responseDtos.statusCode == "200") {
+            let resObj = res.vinMasterResponseDtos;
+
+            const autoFillObj: any = {
+              "vinNumber": "vin",
+              "make": "make",
+              "model": "model",
+              "modelYear": "modelYear",
+              "seatingCapacity": "numberofSeats",
+              "fuelType": "fuelTypePrimary"
+            }
+
+            this.sections.controls.forEach((sectionMain: any) => {
+              const fieldsArray = sectionMain.get('fields') as FormArray;
+              fieldsArray.controls.forEach((fieldTwo: any) => {
+                if (autoFillObj && autoFillObj[fieldTwo.value.modalValue] && resObj[autoFillObj[fieldTwo.value.modalValue]]) {
+                  if (fieldTwo.value.fieldType === "DATE" || fieldTwo.value.fieldType === "date") { // Date MM/dd/yyyy
+                    fieldTwo.get('value')?.setValue(this.parseDate(resObj[autoFillObj[fieldTwo.value.modalValue]]));
+                  } else {
+                    fieldTwo.get('value')?.setValue(resObj[autoFillObj[fieldTwo.value.modalValue]]);
+                  }
+
+                  if (fieldTwo.value.fieldId === 82) {
+
+                    const vModelIndex = this.findControlIndexByFieldId(fieldsFmArray, 83);
+                    if (vModelIndex !== -1) {
+                      const makeField: any = fieldsFmArray.at(vModelIndex);
+                      const currentYear = new Date().getFullYear();
+                      const vehicleAge = currentYear - fieldTwo.value.value;
+                      makeField.get('value')?.setValue(vehicleAge);
+                    }
+                  }
+
+                  if (fieldTwo.value.fieldType === "DROPDOWN") {
+                    let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => (citem.Name.toLowerCase() == fieldTwo.value.value.toLowerCase())) || {};
+
+                    if (dataOptions.ID) {
+                      fieldTwo.get('value')?.setValue(dataOptions.Name);
+                      this.onChangeDrop(dataOptions, fieldTwo, section);
+                    }
+                  }
+                }
+              });
+            });
+          }
+        })
       })
+
     }
 
     if (fieldRow.value.fieldName === 'SSN') {
@@ -1223,8 +1241,6 @@ export class DynamicFormComponent {
       field.get('value')?.setValue(fieldValue); // on defaultValue create form
     }
 
-    console.log("field.value.fieldId >>>>>>", field.value.fieldId);
-
     let fieldsFmArray = section.get('fields') as FormArray;
     fieldsFmArray.controls.forEach((fieldTwo: any) => {
 
@@ -1248,8 +1264,6 @@ export class DynamicFormComponent {
 
     });
 
-    console.log("fieldsFmArray >>>", fieldsFmArray);
-
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -1266,8 +1280,6 @@ export class DynamicFormComponent {
   // Table Add
   addNew(section: any) {
     const fields = section.get('fields') as FormArray;
-
-    console.log("fields >>>>>",);
 
     fields.controls.forEach((field: any) => {
       if (field.get('isVisible')?.value === false) {
@@ -1322,8 +1334,6 @@ export class DynamicFormComponent {
           if (field.get('fieldId')?.value === 155 || field.get('fieldId')?.value === 226) {
             expiryDate = new Date(field.get('value')?.value);
           }
-          console.log("expiryDate >>>>>", expiryDate);
-          console.log("this.todayDate >>>>>", this.todayDate);
           if (expiryDate) {
             if (this.todayDate.toISOString() < expiryDate.toISOString()) {
               status = true;
@@ -1340,12 +1350,8 @@ export class DynamicFormComponent {
           sectionData["county"] = field.get('county')?.value || "";
         }
         if (field.get('fieldType')?.value === "DROPDOWN") {
-          console.log("field.get('selectUnique')?.value >>>>>", field);
-
           if (field.get('selectUnique')?.value) {
             let dpdOptions = field.value.dropdownList;
-            console.log("tempTableGridValueList >>>>>", tempTableGridValueList);
-
             if (!tempTableGridValueList.length) {
               for (let i in dpdOptions) {
                 if (field.get('value')?.value === dpdOptions[i].Name) {
@@ -1411,7 +1417,6 @@ export class DynamicFormComponent {
     } else {
       tempTableGridValueList[this.isTableEditIndex] = tempSectionData;
       loopArray.value[this.isTableEditIndex] = { ...loopArray.value[this.isTableEditIndex], ...sectionData };
-      console.log("loopArray.value >>>>>", loopArray.value)
       section.get('loopArray').setValue(loopArray.value);
       this.isTableEdit = false;
     }
@@ -1536,7 +1541,6 @@ export class DynamicFormComponent {
     let fileFormData: any = new FormData();
     fileFormData.append('Doc', file, file.name);
     this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
-      console.log("res >>>>>", res);
       if (res) {
         field.get('value').setValue(res);
       }
@@ -1551,11 +1555,7 @@ export class DynamicFormComponent {
 
     const getFormInfo = this.findInvalidControls();
     console.log("this.gs.loggedInUserInfo >>>>", this.gs.loggedInUserInfo);
-    console.log('this.kycForm.state >>>>', this.kycForm.state);
-    console.log('findInvalidControls >>>>', getFormInfo);
     console.log('sections >>>>', this.dynamicForm.value.sections);
-    console.log("this.formType >>>>>", this.formType);
-    console.log("draftVehicles >>>>>", this.kycForm.draftVehicles);
 
     // return;
     this.submitted = true;
@@ -1622,11 +1622,8 @@ export class DynamicFormComponent {
         finalBody.driverInfo["maskDateOfBirth"] = "XX/XX/1972"
 
         for (const key in finalBody) {
-          console.log("hasOwnProperty(key) >>>>>", finalBody.hasOwnProperty(key))
           if (finalBody.hasOwnProperty(key)) {
             const keyValue = finalBody[key];
-            console.log("keyValue >>>>", keyValue);
-
             if (typeof keyValue === 'object' && keyValue !== null && !Array.isArray(keyValue)) {
               if (!Object.keys(keyValue).length) {
                 delete finalBody[key];
@@ -1646,7 +1643,9 @@ export class DynamicFormComponent {
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
             this.toast.successToastr(res.message);
-            this.onHandleSubmit.emit(null)
+            this.gs.loggedInUserInfo.isKYCCompleted = true;
+            localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+            this.onHandleSubmit.emit(null);
           } else {
             this.toast.errorToastr(res.message);
           }
@@ -1693,7 +1692,6 @@ export class DynamicFormComponent {
       }
 
       if (this.formType === 'vehicleUpload') {
-        console.log("finalBody >>>>>>", finalBody);
         finalBody.driveInCity = this.kycForm.state;
         finalBody.vehicleInfo["userId"] = this.gs.loggedInUserInfo.userId;
         finalBody.vehicleInfo["vehicleId"] = 0// this.gs.generateUniqueId();
@@ -1708,8 +1706,6 @@ export class DynamicFormComponent {
             if (this.kycForm.draftVehicles && this.kycForm.draftVehicles.draftData) {
               let draftData = JSON.parse(this.kycForm.draftVehicles.draftData);
               draftData = draftData.filter((drow: any) => drow.vehicleInfo.vinNumber != this.singleDetailInfo.vehicleInfo.vinNumber);
-              console.log("draftData >>>>>>", draftData)
-
               this.kycForm.draftVehicles.draftData = JSON.stringify(draftData);
               this.kycForm.draftVehicles.isActive = true;
 
@@ -1880,9 +1876,6 @@ export class DynamicFormComponent {
 
     const exceptFields: any = [];
     const checkAllFill = this.findInvalidControlsBySection(section, exceptFields);
-
-    console.log("checkAllFill >>>", checkAllFill);
-    console.log("section >>>", section);
     this.submitted = true;
     if (!checkAllFill.valid) { // nned to do
       this.toast.errorToastr("Please fill all the details of " + section.value.sectionName);
@@ -2145,6 +2138,7 @@ export class DynamicFormComponent {
     }
 
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updateForeignDriverInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2170,6 +2164,7 @@ export class DynamicFormComponent {
     }
 
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updateDriverInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2195,6 +2190,7 @@ export class DynamicFormComponent {
     }
 
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updateDriverTlcInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2219,6 +2215,7 @@ export class DynamicFormComponent {
     }
 
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updatePersonalInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2260,6 +2257,7 @@ export class DynamicFormComponent {
       "address": finalBody
     }
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updateDriverKycAddress(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2286,6 +2284,7 @@ export class DynamicFormComponent {
     }
 
     // return
+    this.gs.isSpinnerShow = true;
     this.profileService.updateDriverKycOtherInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2344,6 +2343,7 @@ export class DynamicFormComponent {
 
     console.log("Body >>>>>", Body)
     // return;
+    this.gs.isSpinnerShow = true;
     this.profileService.updateCompanyInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2367,6 +2367,7 @@ export class DynamicFormComponent {
     }
     console.log("Body >>>>>", Body)
     // return;
+    this.gs.isSpinnerShow = true;
     this.profileService.updateFleetOwnerInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2391,6 +2392,7 @@ export class DynamicFormComponent {
     }
     console.log("Body >>>>>", Body)
     // return;
+    this.gs.isSpinnerShow = true;
     this.profileService.updateVehicleInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2414,6 +2416,7 @@ export class DynamicFormComponent {
     }
     console.log("Body >>>>>", Body)
     // return;
+    this.gs.isSpinnerShow = true;
     this.profileService.updateVehicleInspection(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2437,6 +2440,7 @@ export class DynamicFormComponent {
       ...finalBody
     }
     console.log("Body >>>>>", Body)
+    this.gs.isSpinnerShow = true;
     this.profileService.updateVehicleInsuranceInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2456,6 +2460,7 @@ export class DynamicFormComponent {
     let Body = finalBody['vehicleOtherDetails'];
     console.log("Body >>>>>", Body)
     // return;
+    this.gs.isSpinnerShow = true;
     this.profileService.updateVehicleOtherInfo(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
@@ -2492,6 +2497,7 @@ export class DynamicFormComponent {
       },
     }
 
+    this.gs.isSpinnerShow = true;
     this.branchService.InsertAndUpdateCompanyBranch(Body, {
       userId: this.gs.loggedInUserInfo.userId,
     }).subscribe((res: any) => {
@@ -2511,16 +2517,25 @@ export class DynamicFormComponent {
 
   // updateDriverWorkingHours
   async updateDriverWorkingHours(finalBody: any) {
+    const checkPending = this.workingHours.find((row: any) => row.isEdit == true) || null;
+    if (checkPending) {
+      this.toast.warningToastr("First save to working hours");
+      return;
+    }
+
     let Body = {
       "userId": this.singleDetailInfo.driverDetailsRequest.userId,
       "driverWorkingHours": this.workingHours,
       ...finalBody
     };
 
+    this.gs.isSpinnerShow = true;
     this.profileService.UpdateDriverWorkingHours(Body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
+        this.gs.loggedInUserInfo.driverStatus = Body.isActiveOrInActiveCd;
+        localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
       } else {
         this.toast.errorToastr(res.message);
       }
@@ -2532,8 +2547,14 @@ export class DynamicFormComponent {
 
   // updateProviderDetails
   async updateProviderDetails(finalBody: any) {
-    let Body = finalBody['providerRequest'];
+    const checkPending = this.workingHours.find((row: any) => row.isEdit == true) || null;
+    if (checkPending) {
+      this.toast.warningToastr("First save to working hours");
+      return;
+    }
 
+    let Body = finalBody['providerRequest'];
+    this.gs.isSpinnerShow = true;
     this.vendorServ.UpdateProviderDetails(Body).subscribe((res: any) => {
       console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;

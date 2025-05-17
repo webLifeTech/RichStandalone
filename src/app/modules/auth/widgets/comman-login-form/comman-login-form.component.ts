@@ -215,6 +215,8 @@ export class CommanLoginFormComponent {
           "roleName": res.userType, // "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
           "userId": res.userID, // "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
           "contactId": res.personNum,
+          "driverStatus": res.driverStatus || false,
+          "isKYCCompleted": res.isKYCCompleted == "false" ? false : true,
         };
 
         this.authService.login(this.loginForm);

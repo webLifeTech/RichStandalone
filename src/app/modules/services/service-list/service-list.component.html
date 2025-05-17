@@ -1,58 +1,36 @@
-<div class="service-list">
-  <div
-    *ngFor="let provider of servicSearchResult | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: searchDetails.totalDataCount }"
-    class="service-card">
-    <div class="service-image">
-      <img [src]="provider.providerProfilePath" alt="{{ provider.categoryName }} Logo">
+<div class="service-card">
+  <div class="service-image">
+    <img [src]="singleProvider.providerProfilePath" alt="{{ singleProvider.categoryName }} Logo">
+  </div>
+  <div class="service-details">
+    <h2 class="main-title pointer" (click)="viewDetails(singleProvider)">
+      {{ singleProvider.providerName }} ({{singleProvider.categoryName}})
+    </h2>
+    <p class="location">
+      <img src="assets/images/cab/icon/location-pin.svg" class="location-img" alt="seat-icon" />
+      {{ singleProvider.location }}
+    </p>
+    <div class="sub-categories">
+      <span *ngFor="let sub of singleProvider.subCategories" class="sub">{{ sub.subCategoryName }}</span>
     </div>
-    <div class="service-details">
-      <h2 class="main-title">{{ provider.providerName }} ({{ provider.categoryName }})</h2>
-      <!-- <div class="ratings">
-        <span class="rating">
-          {{ provider.rating }}
-        </span>
-        <span class="review">{{ provider.review }} Ratings</span>
-        <span class="tags">
-          <span *ngIf="provider.isTrusted" class="tag trust">
-            <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/trust_2x.gif" alt="Trusted" />
-          </span>
-          <span *ngIf="provider.isVerified" class="tag verified">
-            <img src="https://akam.cdn.jdmagicbox.com/images/icontent/newwap/web2022/verified_2x.gif" alt="verified" />
-          </span>
-        </span>
-        <span class="preference" *ngIf="provider.preference">
-          <img [src]="provider.preference.icon" alt="icon">
-        </span>
-      </div> -->
-      <p class="location">
-        <img src="assets/images/cab/icon/location-pin.svg" class="location-img" alt="seat-icon" />
-        {{ provider.location }}
-      </p>
-      <div class="sub-categories">
-        <span *ngFor="let sub of provider.subCategories" class="sub">{{ sub.subCategoryName }}</span>
-      </div>
-      <div class="contact-options">
-        <a class="btn btn-theme " href="tel:{{ provider.phoneNumber }}">
-          <i class="feather icon-phone"></i> {{ provider.phoneNumber }}
-        </a>
-        <a class="btn btn-theme btn-green no-text-transorm" [href]="'https://wa.me/' + provider.phoneNumber"
-          target="_blank">
-          <img src="assets/images/icon/whatsapp.svg" class="location-img" alt="seat-icon" width="20px" />
-          WhatsApp
-        </a>
-        <a (click)="openEnquirieModal(provider)" class="btn btn-solid color3 no-text-transorm">
-          Send Enquiry
-        </a>
-      </div>
+    <div class="contact-options">
+      <a class="btn btn-theme " href="tel:{{ singleProvider.phoneNumber }}">
+        <i class="feather icon-phone"></i> {{ singleProvider.phoneNumber }}
+      </a>
+      <a class="btn btn-theme btn-green no-text-transorm" [href]="'https://wa.me/' + singleProvider.phoneNumber"
+        target="_blank">
+        <img src="assets/images/icon/whatsapp.svg" class="location-img" alt="seat-icon" width="20px" />
+        WhatsApp
+      </a>
+      <a (click)="openEnquirieModal(singleProvider)" class="btn btn-solid color3 no-text-transorm">
+        Send Enquiry
+      </a>
     </div>
   </div>
 
-  <ng-container *ngIf="servicSearchResult?.length">
+  <!-- <ng-container *ngIf="servicSearchResult?.length">
     <div class="text-center">
       <pagination-controls (pageChange)="setPage($event)"></pagination-controls>
     </div>
-  </ng-container>
-
-  <!-- <app-pagination *ngIf="searchResult.vehicleMatches.length" [cabDetails]="searchResult.vehicleMatches"
-      [paginate]="paginate" (setPage)="setPage($event)"></app-pagination> -->
+  </ng-container> -->
 </div>

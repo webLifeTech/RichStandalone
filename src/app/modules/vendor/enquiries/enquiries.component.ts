@@ -87,7 +87,9 @@ export class EnquiriesComponent {
     }
     this.gs.isSpinnerShow = true;
     this.vendorService.GetProviderDetails(body).subscribe(async (response: any) => {
-      this.getTableData(response.providerId)
+      this.searchFilter.category = Number(response.categoryCd);
+      this.onChangeServices(this.searchFilter.category);
+      this.getTableData(response.providerId);
     })
   }
 
@@ -125,7 +127,7 @@ export class EnquiriesComponent {
     this.vendorService.getMasterProviderSubCategories({
       categoryId: catId
     }).subscribe((res: any) => {
-      this.filteredSubCategories = [...this.filteredSubCategories, ...res];
+      this.filteredSubCategories = res;
     })
   }
 

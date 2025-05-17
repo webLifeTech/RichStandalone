@@ -13,7 +13,8 @@
             <div class="row">
               <ng-container *ngIf="!(viewInfoDetails[item.modalObject] && viewInfoDetails[item.modalObject]?.length)">
                 <ng-container *ngFor="let field of item.fields">
-                  <div *ngIf="field.isConditionValid" class="col-lg-4 col-md-6 mb-3">
+                  <div *ngIf="field.isConditionValid" class="mb-3"
+                    [ngClass]="{ 'col-md-12': field.modalValue == 'companyDetails', 'col-lg-4 col-md-6': field.modalValue !== 'companyDetails' }">
                     <div class="booking-view">
                       <h6>{{ field.description }}</h6>
                       <ng-container

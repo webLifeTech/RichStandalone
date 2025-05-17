@@ -6,26 +6,50 @@ import { GlobalService } from '../../../../../shared/services/global.service';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../../../comman/modal/confirmation-modal/confirmation-modal.component';
+import { ToastService } from '../../../../services/toast.service';
+import { ProfileService } from '../../../../services/profile.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     RouterLink,
-    CommonModule
+    CommonModule,
+
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
   @Input() type: string;
+  isKYCCompleted: any = 0;
+
+
   constructor(
     public authService: AuthService,
-    private alert: AlertService,
     public gs: GlobalService,
     private router: Router,
     private modalService: NgbModal,
-  ) { }
+    private toast: ToastService,
+    private profileService: ProfileService,
+  ) {
+    if (this.authService.isLoggedIn) {
+      this.GetKycByUserId();
+    }
+  }
+
+  GetKycByUserId() {
+    this.profileService.GetKycByUserId({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      const type: any = {
+        "Driver": "driverkyc",
+        "Driver with owned car": "driverkyc",
+      }
+      this.isKYCCompleted = response.driverkyc == 0 ? false : true;
+      console.log("isKYCCompleted >>>>>", this.isKYCCompleted);
+    })
+  }
 
   async logOut() {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
@@ -54,6 +78,28 @@ export class ProfileComponent {
         this.authService.logOut();
       }
     }, () => { });
+  }
+
+  async updateStatus(event: any) {
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "status": event.target.checked,
+      "risktype": this.gs.loggedInUserInfo.role === "Vendor" ? "Provider" : "Driver",
+    };
+
+    this.profileService.UpdateDriverAndProviderStatus(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+        this.gs.loggedInUserInfo.driverStatus = event.target.checked;
+        localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   goDashBoard() {

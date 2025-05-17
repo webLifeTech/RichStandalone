@@ -4,19 +4,19 @@
     <div class="collection-brand-filter">
       <ng-container *ngFor="let option of filterOBj.filterlist; let idx = index">
         <div class="form-check collection-filter-checkbox">
-          <input type="checkbox" class="form-check-input" id="{{ option.value }}" [value]="option.value"
+          <input type="checkbox" class="form-check-input" id="{{ option.checkID }}" [value]="option.value"
             [checked]="checked(option.value)" (change)="applyFilter($event, filterOBj.key)" [disabled]="!option.count">
 
 
           <label *ngIf="filterOBj.key == 'VEHICLERATING' || filterOBj.key == 'DRIVERRATING'"
-            class="form-check-label rating" for="{{ option.value }}">
+            class="form-check-label rating" for="{{ option.checkID }}">
             <ngb-rating [rate]="option.value" [max]="5" [disabled]="true"></ngb-rating>
             <span class="ms-1">({{ option.name }})</span>
           </label>
           <label *ngIf="filterOBj.key != 'VEHICLERATING' && filterOBj.key != 'DRIVERRATING'" class="form-check-label"
-            for="{{ option.value }}">{{
+            for="{{ option.checkID }}">{{
             option.name | translate }}</label>
-          <label class="form-check-count" for="{{ option.value }}">{{ option.count || 0 }}</label>
+          <label class="form-check-count" for="{{ option.checkID }}">{{ option.count || 0 }}</label>
         </div>
       </ng-container>
       <!-- @for(option of filterOBj.value.FilterList; track option){

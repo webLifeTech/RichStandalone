@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../../pipe/currency.pipe';
 import { NoDataComponent } from '../../../ui/no-data/no-data.component';
 import { PaginationComponent } from '../../../ui/pagination/pagination.component';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { InformationModalComponent } from '../../modal/information-modal/information-modal.component';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../../services/toast.service';
@@ -39,6 +39,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgxsStoragePluginModule,
     NgbModule,
     NgxPaginationModule,
+    NgbPopoverModule
   ],
   templateUrl: './cab-list-details.component.html',
   styleUrl: './cab-list-details.component.scss'
@@ -76,7 +77,17 @@ export class CabListDetailsComponent {
   uniqIdToView: string = '';
   nftDetails: any = null;
   public selectedCarType: string[] = [];
-  searchInfo: any = {}
+  searchInfo: any = {};
+
+  stars = [
+    { label: 'Very Good', percentage: "★★★★★" },
+    { label: 'Good', percentage: "★★★★" },
+    { label: 'Average', percentage: "★★★" },
+    { label: 'Below Average', percentage: "★★" },
+    { label: 'Poor', percentage: "★" }
+  ];
+
+  ratingInfo: any = {};
 
   constructor(
     public cabService: CabService,
@@ -102,6 +113,20 @@ export class CabListDetailsComponent {
   }
 
   ngOnInit() {
+    // this.searchResult.vehicleMatches[0].riskRating = 5;
+    // this.searchResult.vehicleMatches[1].riskRating = 3.6;
+    // this.searchResult.vehicleMatches[2].riskRating = 2;
+    for (let i in this.searchResult.vehicleMatches) {
+      if (this.searchResult.vehicleMatches[i].type === 'car' && !this.auth.isLoggedIn) {
+        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].ratingAverage);
+      }
+      if (this.searchResult.vehicleMatches[i].type === 'driver' && !this.auth.isLoggedIn) {
+        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].driverRating);
+      }
+      if (this.auth.isLoggedIn) {
+        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].riskRating);
+      }
+    }
     this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
     this.searchInfo = this.gs.getLastSearch();
     this.checkFav();
@@ -136,12 +161,12 @@ export class CabListDetailsComponent {
         return;
       }
 
-      if (this.gs.loggedInUserInfo.userId === details.userid) {
-        if (this.type === 'car') {
-          this.toast.warningToastr("You can't book your own vehicle");
-        } else {
-          this.toast.warningToastr("You can't book your own driver");
-        }
+      if (this.gs.loggedInUserInfo.userId === details.userId && this.type === 'car' || this.gs.loggedInUserInfo.userId === details.userid && this.type === 'driver') {
+        details.isSelfWarn = true;
+        setTimeout(() => {
+          details.isSelfWarn = false;
+        }, 5000);
+        // this.toast.warningToastr("You can't book your own vehicle");
         return;
       }
 
@@ -302,4 +327,121 @@ export class CabListDetailsComponent {
       console.error(error);
     }
   }
+
+  async onHover(item: any) {
+
+    console.log("item >>>", item);
+    this.ratingInfo = {};
+    let res: any = {};
+    if (this.type === 'car') {
+      res = await this.cabService.GetVehicleRates({
+        "vehicleId": item.vehicleId,
+        "vin": item.vin
+      });
+
+      this.ratingInfo = res;
+    }
+    if (this.type === 'driver') {
+      res = await this.cabService.GetDriverRates({
+        "driverId": item.driverId,
+        "licenseNo": item.licenseNo || "",
+      });
+      this.ratingInfo = res;
+      // this.ratingInfo = {
+      //   "driverBatchId": 331,
+      //   "averageBatchRiskScore": 18,
+      //   "averageBatchStarRating": 4.00,
+      //   "batchQuality": {
+      //     "veryGood": 0,
+      //     "good": 1,
+      //     "average": 0,
+      //     "belowAverage": 0,
+      //     "poor": 0
+      //   },
+      //   "totalRecords": 1,
+      //   "riskAssessments": [
+      //     {
+      //       "licenseNumber": "XXXXX0003",
+      //       "activityId": "",
+      //       "calculatedDriverRiskScore": 18,
+      //       "calculatedAt": "05/08/2025",
+      //       "maxRiskScore": 51,
+      //       "minRiskScore": 8,
+      //       "starRating": 4.00,
+      //       "recommendations": [
+      //         {
+      //           "attribute": "Accident Analysis",
+      //           "recommendtions": [
+      //             "Review accident details and provide targeted training.",
+      //             "Maintain current safety measures and monitoring."
+      //           ]
+      //         },
+      //         {
+      //           "attribute": "Driver Analysis",
+      //           "recommendtions": [
+      //             "Regular health and vision check-ups in addition to standard safety training.",
+      //             "Provide extensive training and mentorship programs."
+      //           ]
+      //         },
+      //         {
+      //           "attribute": "License Status",
+      //           "recommendtions": [
+      //             "Renew license as soon as possible. Check for any other compliance issues that need to be addressed."
+      //           ]
+      //         },
+      //         {
+      //           "attribute": "Violation Analysis",
+      //           "recommendtions": [
+      //             "Continue safe driving practices.",
+      //             "Maintain current practices; monitor for changes."
+      //           ]
+      //         }
+      //       ],
+      //       "isClearanceHistoryPresent": false,
+      //       "isDriverLossHistoryPresent": false
+      //     }
+      //   ],
+      //   "responseResultDtos": {
+      //     "statusCode": "200",
+      //     "status": "Success",
+      //     "message": "Rates found"
+      //   }
+      // }
+    }
+    console.log(this.type + " res >>>>>>", res);
+
+    if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      const dd: any = {
+        "veryGood": "Very Good",
+        "good": "Good",
+        "average": "Average",
+        "belowAverage": "Below Average",
+        "poor": "Poor"
+      }
+      for (let i in this.ratingInfo.batchQuality) {
+        if (this.ratingInfo.batchQuality[i]) {
+          this.ratingInfo.type = dd[i];
+        }
+      }
+      console.log("ratingInfo >>>>>>", this.ratingInfo);
+    }
+  }
+
+  ariaValueText(current: number, max: number) {
+    return `${current} out of ${max} hearts`;
+  }
+  checkDisabled(details: any) {
+    let disablePopover = false;
+    if (this.type === 'car' && !details.ratingAverage && !this.auth.isLoggedIn) {
+      disablePopover = true;
+    }
+    if (this.type === 'driver' && !details.driverRating && !this.auth.isLoggedIn) {
+      disablePopover = true;
+    }
+    if (!details.riskRating && this.auth.isLoggedIn) {
+      disablePopover = true;
+    }
+    return disablePopover;
+  }
+
 }

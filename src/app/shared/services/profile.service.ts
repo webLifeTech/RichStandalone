@@ -478,4 +478,52 @@ export class ProfileService {
       })
     );
   }
+
+  // Vehicle KYC -> UpdateVehicleStatus
+  public UpdateVehicleStatus(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleKYC/UpdateVehicleStatus?userId=${data.userId}&vehicleId=${data.vehicleId}&vehicleStatus=${data.vehicleStatus}`, {}).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // http://209.10.88.76:2022/TLHUB_API/TLHUB/COMMON/UpdateDriverAndProviderStatus?
+  // userId=db9dd92d-de68-4810-9c19-9de4ab42cfec&
+  // status=false&
+  // risktype=Provider
+
+  // COMMON -> UpdateDriverAndProviderStatus
+  public UpdateDriverAndProviderStatus(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateDriverAndProviderStatus?userId=${data.userId}&status=${data.status}&risktype=${data.risktype}`, {}).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> checkDriverVehicleExist
+  public checkDriverVehicleExist(dataParams: any) {
+    const params = new HttpParams()
+      .set('riskType', dataParams.riskType)
+      .set('vin', dataParams.vin)
+      .set('licenseNumber', dataParams.licenseNumber)
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/IsDriverVehicleExist', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> GetKycByUserId
+  public GetKycByUserId(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetKycByUserId', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // http://209.10.88.76:2022/TLHUB_API/TLHUB/COMMON/GetKycByUserId?userId=36b1aa9d-7d41-48ba-b44b-182b41876e07
 }
