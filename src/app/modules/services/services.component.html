@@ -19,27 +19,24 @@
     </div>
     <div class="content">
       <div class="container">
-        <div class="content-header pb-3 pt-3">
+        <div *ngIf="searchObj.selectedCategory" class="content-header pb-3 pt-3">
           <div class="row">
             <div class="col-lg-12">
-              <h4>{{this.aggregateFilters.Header}}</h4>
+              <h4>{{aggregateFilters.Header}}</h4>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div
-            *ngIf="this.aggregateFilters && this.aggregateFilters.filterlist && this.aggregateFilters.filterlist.length"
+            *ngIf="searchObj.selectedCategory && aggregateFilters && aggregateFilters.filterlist && aggregateFilters.filterlist.length"
             class="col-lg-12">
             <div class="sorting-info">
               <div class="row align-items-center">
                 <div class="col-md-12 col-12">
                   <div class="booking-lists nav-scroller">
                     <ul class="nav">
-                      <!-- <li>
-                        <a>Top Rated</a>
-                      </li> -->
-                      <li *ngFor="let item of this.aggregateFilters.filterlist">
+                      <li *ngFor="let item of aggregateFilters.filterlist">
                         <a [class.active]="selectedSubCats.includes(item.value)"
                           (click)="changeBookTab(item)">{{item.name}}</a>
                       </li>

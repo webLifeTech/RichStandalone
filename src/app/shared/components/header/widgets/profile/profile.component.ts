@@ -38,6 +38,10 @@ export class ProfileComponent {
     }
   }
 
+  ngAfterViewInit() {
+    console.log("dddd <<<<");
+  }
+
   GetKycByUserId() {
     this.profileService.GetKycByUserId({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -45,8 +49,11 @@ export class ProfileComponent {
       const type: any = {
         "Driver": "driverkyc",
         "Driver with owned car": "driverkyc",
+        "Vendor": "providerkyc",
       }
-      this.isKYCCompleted = response.driverkyc == 0 ? false : true;
+      this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+      console.log("type[response.risktype] >>>>>", response.risktype[type[response.risktype]]);
+      console.log("type[response.risktype] >>>>>", type[response.risktype]);
       console.log("isKYCCompleted >>>>>", this.isKYCCompleted);
     })
   }
@@ -91,7 +98,7 @@ export class ProfileComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
-        this.gs.loggedInUserInfo.driverStatus = event.target.checked;
+        this.gs.loggedInUserInfo.activeStatus = event.target.checked;
         localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
       } else {
         this.toast.errorToastr(res.message);

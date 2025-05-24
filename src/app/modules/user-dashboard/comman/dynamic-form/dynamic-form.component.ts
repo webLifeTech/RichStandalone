@@ -2534,7 +2534,7 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
-        this.gs.loggedInUserInfo.driverStatus = Body.isActiveOrInActiveCd;
+        this.gs.loggedInUserInfo.activeStatus = Body.isActiveOrInActiveCd;
         localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
       } else {
         this.toast.errorToastr(res.message);
@@ -2560,6 +2560,9 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Updated successfully");
+        this.gs.loggedInUserInfo.activeStatus = Body.status == "Active" ? true : false;
+        // this.gs.loggedInUserInfo.isKYCCompleted = true;
+        localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
         this.handleCancel();
       } else {
         this.toast.errorToastr(res.message);

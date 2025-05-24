@@ -26,14 +26,20 @@
                 <mat-date-range-picker #picker></mat-date-range-picker>
               </mat-form-field>
             </div>
-            <div class="col-lg-2 col-sm-12 col-12">
-              <ng-select (change)="onChangeServices(searchFilter.category)" clearable="false" [items]="mainCatList"
-                bindLabel="Name" placeholder="-- Filter Category --" bindValue="ID" [(ngModel)]="searchFilter.category"
-                name="service" (change)="onChangeFilter()">
+            <div class="col-lg-2 col-sm-12 col-12" *ngIf="gs.loggedInUserInfo.role == 'admin'">
+              <ng-select clearable="false" [items]="providerList" bindLabel="CompanyName" bindValue="CompanyName"
+                placeholder="-- Filter Provider --" [(ngModel)]="searchFilter.providerName" name="providername"
+                (change)="onChangeFilter(); selectProvider($event)">
               </ng-select>
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
-              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="Name" bindValue="ID"
+              <ng-select clearable="false" [items]="mainCatList" bindLabel="Name" bindValue="Name"
+                placeholder="-- Filter Category --" [(ngModel)]="searchFilter.category" name="service"
+                (change)="onChangeServices($event)">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-12">
+              <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="Name" bindValue="Name"
                 placeholder="-- Filter Sub Category --" [(ngModel)]="searchFilter.subCategory" name="subCategory"
                 (change)="onChangeFilter()">
               </ng-select>
@@ -65,7 +71,7 @@
 
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchFilter.searchTerm" (keyup)="onChangeFilter()" type="search"
+                        <input [(ngModel)]="searchFilter.globalSearch" (keyup)="onChangeFilter()" type="search"
                           class="form-control" placeholder="Search" />
                       </label>
                     </div>
@@ -79,27 +85,24 @@
               <table class="table datatable">
                 <thead class="thead-light">
                   <tr>
-                    <!-- <th>
-                      <span>#sn</span>
-                    </th> -->
                     <th>Lead ID</th>
+                    <th *ngIf="gs.loggedInUserInfo.role == 'admin'">Company name</th>
                     <th>Contact Person</th>
                     <th>Mobile</th>
                     <th>Email</th>
                     <th>Category</th>
                     <th>Sub Category</th>
                     <th>Date</th>
-                    <!-- <th>View</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr
                     *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData }; let idx = index;">
-                    <!-- <td>
-                      <span>{{idx+1}}</span>
-                    </td> -->
                     <td>
                       <a>{{data.id}}</a>
+                    </td>
+                    <td *ngIf="gs.loggedInUserInfo.role == 'admin'">
+                      <a>{{data.companyName || '-'}}</a>
                     </td>
                     <td>
                       <a>{{data.name || '-'}}</a>

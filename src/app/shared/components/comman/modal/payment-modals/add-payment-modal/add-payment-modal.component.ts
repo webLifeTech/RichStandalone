@@ -65,9 +65,23 @@ export class AddPaymentModalComponent {
     this.modalService.dismissAll();
   }
 
-  addFunds() {
+  // GetPaymentEncryptvalue() {
+  //   this.gs.isSpinnerShow = true;
+  //   this.walletService.GetPaymentEncryptvalue({
+  //     "inputValue": this.gs.loggedInUserInfo.userId
+  //   }).subscribe((response: any) => {
+  //     console.log("response >>>>", response);
+  //     // if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+  //     // }
+  //     this.gs.isSpinnerShow = false;
+  //   })
+  // }
+
+  async addFunds() {
 
     console.log("this.amount >>>", this.amount);
+
+
 
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
@@ -84,15 +98,24 @@ export class AddPaymentModalComponent {
       this.toast.errorToastr("Please Enter Amount");
       return;
     }
+    console.log("this.type >>>>>>>", this.type);
     if (this.type === 'CreditCard') {
       if (!this.gs.paymentDetails.creditCard.valid) {
         this.toast.errorToastr("Invalid Credit Card Details");
         return;
       }
+      const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
+      const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
+      console.log("cardNumber >>>>>>>", cardNumber);
+      console.log("encryptCvv >>>>>>>", encryptCvv);
+      // return;
+
       body["creditCardInfo"] = {
-        "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
+        "cardNumber": cardNumber,
         "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
-        "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
+        "cvv": encryptCvv,
+        // "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
+        // "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
         "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
       }
     }
@@ -101,10 +124,17 @@ export class AddPaymentModalComponent {
         this.toast.errorToastr("Invalid ACH Details");
         return;
       }
+
+      const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
+      const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
+      console.log("rountingNo >>>>>>>", rountingNo);
+      console.log("accountNo >>>>>>>", accountNo);
+      // return;
+
       body["bankAccount"] = {
         "bank": this.gs.paymentDetails.ach.value?.bank,
-        "rountingNo": this.gs.paymentDetails.ach.value?.rountingNo,
-        "accountNo": this.gs.paymentDetails.ach.value?.accountNo,
+        "rountingNo": rountingNo,
+        "accountNo": accountNo,
         "accountType": this.gs.paymentDetails.ach.value?.accountType,
         "accountName": this.gs.paymentDetails.ach.value?.accountName,
         "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType

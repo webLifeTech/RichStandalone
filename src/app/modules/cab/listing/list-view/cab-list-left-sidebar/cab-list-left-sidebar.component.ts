@@ -84,7 +84,8 @@ export class CabListLeftSidebarComponent {
           "DropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
           "RentType": searchObj.timeType || "ALL",
           "PageNumber": this.params['page'] || 1,
-          "Pagesize": this.pageSize
+          "Pagesize": this.pageSize,
+          "userId": this.gs.loggedInUserInfo.userId || null,
         },
         "FilterCriteria": {
           "carOwners": this.params['CAROWNERS'] ? JSON.stringify(this.params['CAROWNERS'].split(',')) : null,
@@ -159,7 +160,8 @@ export class CabListLeftSidebarComponent {
           "dropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
           "rentType": searchObj.timeType || "ALL",
           "pageNumber": this.params['page'] || 1,
-          "pagesize": this.pageSize
+          "pagesize": this.pageSize,
+          "userId": this.gs.loggedInUserInfo.userId || null,
         },
         "FilterCriteria": {
           "location": this.params['LOCATION'] ? JSON.stringify(this.params['LOCATION'].split(',')) : null,

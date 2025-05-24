@@ -12,6 +12,6 @@ import { Component } from '@angular/core';
 })
 export class ContactComponent {
 
-  public footerLogo: string = 'assets/images/icon/header-logo.png';
+  public footerLogo: string = 'assets/images/icon/header-logo.jpg';
 
 }

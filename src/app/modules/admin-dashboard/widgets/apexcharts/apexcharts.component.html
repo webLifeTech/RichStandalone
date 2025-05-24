@@ -28,7 +28,8 @@
 <ng-container *ngIf="chartType === 'simplepie'">
   <div id="card">
     <div *ngIf="this.data.series.length" id="chart">
-      <apx-chart [series]="chartSimplePie.series" [chart]="chartSimplePie.chart" [labels]="chartSimplePie.labels"
+      <apx-chart [series]="chartSimplePie.series" [chart]="chartSimplePie.chart"
+        [dataLabels]="chartSimplePie.dataLabels" [labels]="chartSimplePie.labels" [legend]="chartSimplePie.legend"
         [responsive]="chartSimplePie.responsive"></apx-chart>
     </div>
   </div>

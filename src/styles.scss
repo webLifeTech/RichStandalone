@@ -3261,6 +3261,10 @@ header {
 }
 
 .service-details {
+  .mat-mdc-tab-group {
+    width: 100%;
+  }
+
   .mat-mdc-tab {
     font-family: $font_0, $font_1;
     letter-spacing: normal;
@@ -3269,6 +3273,12 @@ header {
       font-size: 16px !important;
       font-weight: 700 !important;
     }
+
+  }
+
+  .mat-mdc-tab-label-container {
+    border-bottom-width: 1px;
+    border-bottom-color: #e0e2ec;
   }
 
   .hours-container {
@@ -3403,4 +3413,19 @@ header {
     }
   }
 
+}
+
+footer {
+  .footer {
+    .footer-content {
+      .contact-detail {
+        .footer-logo {
+          background: #fff;
+          max-width: fit-content;
+          padding: 10px;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
 }

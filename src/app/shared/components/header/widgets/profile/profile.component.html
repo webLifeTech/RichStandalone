@@ -33,7 +33,7 @@
         <span>Status</span>
         <div class="custom-toggle ms-auto">
           <input id="google_authenticator" class="check" type="checkbox" [disabled]="!isKYCCompleted"
-            [checked]="gs.loggedInUserInfo.driverStatus == true || gs.loggedInUserInfo.driverStatus == 'true'"
+            [checked]="gs.loggedInUserInfo.activeStatus == true || gs.loggedInUserInfo.activeStatus == 'true'"
             (change)="updateStatus($event)" />
           <label for="google_authenticator" class="checktoggle">checkbox</label>
         </div>

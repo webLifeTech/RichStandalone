@@ -81,10 +81,19 @@ export class VendorServService {
   }
 
   // Provider -> GetAllProviderEnquiry
-  public GetAllProviderEnquiry(dataParams: any) {
-    const params = new HttpParams()
-      .set('providerId', dataParams.providerId)
-    return this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetAllProviderEnquiry', { params }).pipe(
+  // public GetAllProviderEnquiry(dataParams: any) {
+  //   const params = new HttpParams()
+  //     .set('providerId', dataParams.providerId)
+  //   return this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetAllProviderEnquiry', { params }).pipe(
+  //     map((res: any) => {
+  //       return res;
+  //     })
+  //   );
+  // }
+
+  // Provider -> GetAllProviderEnquiry
+  public GetAllProviderEnquiry(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/GetAllProviderEnquiry', data).pipe(
       map((res: any) => {
         return res;
       })

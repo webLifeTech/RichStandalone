@@ -24,6 +24,7 @@ import { ToastService } from '../../../../services/toast.service';
 import { NftService } from '../../../../services/nft.service';
 import { FavoriteService } from '../../../../services/favorite.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ApexchartsComponent } from '../../../../../modules/admin-dashboard/widgets/apexcharts/apexcharts.component';
 
 @Component({
   selector: 'app-cab-list-details',
@@ -39,7 +40,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgxsStoragePluginModule,
     NgbModule,
     NgxPaginationModule,
-    NgbPopoverModule
+    NgbPopoverModule,
+    ApexchartsComponent
   ],
   templateUrl: './cab-list-details.component.html',
   styleUrl: './cab-list-details.component.scss'
@@ -88,6 +90,34 @@ export class CabListDetailsComponent {
   ];
 
   ratingInfo: any = {};
+  isShowBatchChart: boolean = false;
+  batchChart: any = {
+    series: [],
+    chartLabels: []
+  };
+
+  userDetails: any = {
+    "data": {
+      "series": [
+        {
+          name: "Active",
+          data: [44, 55, 57, 56]
+        },
+        {
+          name: "Inactive",
+          data: [76, 85, 101, 98]
+        },
+        {
+          name: "KYC Pending",
+          data: [35, 41, 36, 26]
+        },
+      ],
+      "chartLabels": ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
+      "chartColors": ["#dcc7fa", "#8e33ff"],
+    }
+  };
+
+  riskScore: number = 24;
 
   constructor(
     public cabService: CabService,
@@ -333,6 +363,9 @@ export class CabListDetailsComponent {
     console.log("item >>>", item);
     this.ratingInfo = {};
     let res: any = {};
+    this.isShowBatchChart = false;
+    this.batchChart.series = [];
+    this.batchChart.chartLabels = [];
     if (this.type === 'car') {
       res = await this.cabService.GetVehicleRates({
         "vehicleId": item.vehicleId,
@@ -411,7 +444,7 @@ export class CabListDetailsComponent {
     console.log(this.type + " res >>>>>>", res);
 
     if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
-      const dd: any = {
+      const tempBatchQuality: any = {
         "veryGood": "Very Good",
         "good": "Good",
         "average": "Average",
@@ -419,10 +452,19 @@ export class CabListDetailsComponent {
         "poor": "Poor"
       }
       for (let i in this.ratingInfo.batchQuality) {
+        this.batchChart.series.push(this.ratingInfo.batchQuality[i]);
+        this.batchChart.chartLabels.push(tempBatchQuality[i]);
         if (this.ratingInfo.batchQuality[i]) {
-          this.ratingInfo.type = dd[i];
+          this.ratingInfo.type = tempBatchQuality[i];
         }
       }
+      const riskAs = this.ratingInfo?.riskAssessments[0] || {};
+      this.ratingInfo.riskPercentage = (((riskAs.calculatedDriverRiskScore || riskAs.calculatedVehicleRiskScore) - riskAs.minRiskScore) / (riskAs.maxRiskScore - riskAs.minRiskScore)) * 100 || 0;
+
+      // this.batchChart.series = [3, 2, 3, 4, 5];
+      this.isShowBatchChart = true;
+      console.log("this.batchChart >>>>>>", this.batchChart);
+      console.log("percentage >>>>>>", this.ratingInfo.riskPercentage);
       console.log("ratingInfo >>>>>>", this.ratingInfo);
     }
   }

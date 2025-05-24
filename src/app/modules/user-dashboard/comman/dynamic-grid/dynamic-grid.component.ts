@@ -372,12 +372,9 @@ export class DynamicGridComponent {
         this.gs.isSpinnerShow = false;
         if (res && res.statusCode == "200") {
           this.toast.successToastr("Updated successfully");
-          console.log("column >>>>>", column);
-          console.log("row >>>>>", row);
-
           row.status = row.status == "Active" ? "InActive" : "Active";
-          // this.gs.loggedInUserInfo.driverStatus = event.target.checked;
-          // localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+          this.gs.loggedInUserInfo.activeStatus = row.status == "Active" ? true : false;
+          localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
         } else {
           this.toast.errorToastr(res.message);
         }

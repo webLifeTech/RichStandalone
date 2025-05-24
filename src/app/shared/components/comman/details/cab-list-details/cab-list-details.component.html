@@ -174,6 +174,37 @@
                     <span *ngIf="auth.isLoggedIn" class="score">{{details.riskRating || 'N/A'}} out of 5</span>
                     <span class="total-ratings">is {{ratingInfo.type}} Rating</span>
                   </div>
+                  <div class="container">
+                    <div *ngIf="isShowBatchChart" class="row">
+                      <div class="col-7">
+                        <div class="risk-container">
+                          <div class="risk-label">
+                            <strong>Batch Quality Distribution</strong>
+                          </div>
+                        </div>
+                        <app-apexcharts [data]="batchChart" [chartType]="'simplepie'"
+                          [name]="'Performance grade'"></app-apexcharts>
+                      </div>
+                      <div class="col-5">
+                        <div class="risk-container">
+                          <div class="risk-label">
+                            <strong>Risk Score:</strong> {{ ratingInfo.averageBatchRiskScore }}
+                          </div>
+
+                          <div class="risk-bar-wrapper">
+                            <div class="risk-bar">
+                              <div class="risk-indicator" [ngStyle]="{ left: ratingInfo.riskPercentage + '%' }">
+                              </div>
+                            </div>
+                            <div class="risk-labels">
+                              <span>Low</span>
+                              <span>High</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div *ngIf="type === 'car' && ratingInfo.riskAssessments">
                     <div class="recommendation-section">
                       <div class="recommendation-title">{{ "Recommendations" }}</div>
@@ -212,6 +243,7 @@
 
               <!-- triggers="mouseenter:mouseleave" -->
               <!-- [autoClose]="'inside'" -->
+              <!-- (mouseenter)='onHover(details)' -->
               <div class="rating-section" [ngbPopover]="popContent" popoverClass="my-custom-class"
                 triggers="mouseenter:mouseleave" (mouseenter)='onHover(details)'
                 [disablePopover]="checkDisabled(details)">

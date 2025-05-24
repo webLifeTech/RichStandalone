@@ -41,4 +41,22 @@ export class WalletService {
     );
   }
 
+  // Paymentgateway -> GetPaymentEncryptvalue
+  public GetPaymentEncryptvalue(dataParams: any) {
+    const params = new HttpParams().set('inputValue', dataParams.inputValue);
+    // return this.http.get(this.baseUrl1 + 'TLHUB/Paymentgateway/GetPaymentEncryptvalue', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Paymentgateway/GetPaymentEncryptvalue', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
 }

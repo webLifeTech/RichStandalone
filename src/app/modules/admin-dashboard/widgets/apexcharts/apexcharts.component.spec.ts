@@ -10,8 +10,8 @@ describe('ApexchartsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ApexchartsComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ApexchartsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

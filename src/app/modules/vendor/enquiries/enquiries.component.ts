@@ -54,12 +54,15 @@ export class EnquiriesComponent {
     endDate: null,
     category: null,
     subCategory: null,
+    providerName: null,
+    globalSearch: null,
   };
   mainCatList: any = [];
   enquiries: any = [];
   filteredSubCategories: any = [
     // { Name: "All Sub Category", ID: "all" },
   ];
+  providerList: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -71,13 +74,14 @@ export class EnquiriesComponent {
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getCategories();
-      this.getProviderDetails();
+
     })
   }
 
   getCategories() {
     this.vendorService.getMasterProviderCategories().subscribe((res: any) => {
       this.mainCatList = res;
+      this.getProviderDetails();
     })
   }
 
@@ -87,28 +91,53 @@ export class EnquiriesComponent {
     }
     this.gs.isSpinnerShow = true;
     this.vendorService.GetProviderDetails(body).subscribe(async (response: any) => {
-      this.searchFilter.category = Number(response.categoryCd);
-      this.onChangeServices(this.searchFilter.category);
-      this.getTableData(response.providerId);
+      const slcdCat = this.mainCatList.find((item: any) => item.ID === Number(response.categoryCd)) || {};
+      this.searchFilter.category = slcdCat.Name || null;
+      if (this.searchFilter.category) {
+        this.onChangeServices(slcdCat);
+      }
+      this.getTableData();
     })
   }
 
-  getTableData(providerId: any) {
-    this.vendorService.GetAllProviderEnquiry({
-      providerId: providerId
-    }).subscribe((res: any) => {
+  getTableData() {
+    console.log(".......startDate", this.searchFilter.startDate);
+    console.log(".......endDate", this.searchFilter.endDate);
+
+    const body = {
+      "searchCriteria": {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": this.currentPage,
+        "pagesize": 10,
+        "globalSearch": this.searchFilter.globalSearch || null
+      },
+      "filterCriteria": {
+        "category": this.searchFilter.category || null, // "Mortgage brokers"
+        "subCategory": this.searchFilter.subCategory ? JSON.stringify([this.searchFilter.subCategory]) : null, // "[\"Personal Loans\",\"Home Loans\"]"
+        "startDate": this.searchFilter.startDate ? this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') : null,
+        "endDate": this.searchFilter.endDate ? this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy') : null,
+        "companyName": this.searchFilter.providerName || null
+      }
+    }
+    //  providerId: providerId
+    this.gs.isSpinnerShow = true;
+    this.vendorService.GetAllProviderEnquiry(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      if (res && res.length) {
-        this.totalData = res.length;
-        this.tableData = res;
-        this.enquiries = res;
+      if (res && res.responseResultDtos && res.responseResultDtos.statusCode === "200") {
+        const aggFilters = JSON.parse(res.aggregateFilters);
+        console.log("aggFilters >>>>>", aggFilters);
+        this.providerList = aggFilters.filter((item: any) => item.CompanyName);
+        this.tableData = res.providerEnquiryMatches;
+        this.totalData = res.viewModel.totalCount;
       }
     })
   }
 
   onChangeFilter() {
     setTimeout(() => {
-      this.applyFilters();
+      this.currentPage = 1;
+      console.log("searchFilter.category >>>>", this.searchFilter.category);
+      this.getTableData();
     }, 500);
   }
 
@@ -117,25 +146,32 @@ export class EnquiriesComponent {
     this.searchFilter.endDate = null;
     this.searchFilter.category = null;
     this.searchFilter.subCategory = null;
-    setTimeout(() => {
-      this.applyFilters();
-    }, 500);
+    this.searchFilter.providerName = null;
+    this.searchFilter.globalSearch = null;
+    this.onChangeFilter();
   }
 
-  onChangeServices(catId: any) {
-    this.applyFilters();
+
+  onChangeServices(event: any) {
+    this.onChangeFilter();
     this.vendorService.getMasterProviderSubCategories({
-      categoryId: catId
+      categoryId: event.ID
     }).subscribe((res: any) => {
       this.filteredSubCategories = res;
     })
   }
 
+  selectProvider(event: any) {
+    this.searchFilter.category = null;
+    this.searchFilter.subCategory = null;
+    this.searchFilter.category = event.Category || null;
+    if (this.searchFilter.category) {
+      this.onChangeServices({ ID: event.CategoryCd });
+    }
+  }
+
 
   applyFilters() {
-    console.log("this.searchFilter >>>", this.searchFilter);
-    console.log("this.enquiries >>>", this.enquiries);
-
     const { startDate, endDate, category, subCategory, searchTerm } = this.searchFilter;
     this.tableData = this.enquiries.filter((enquiry: any) => {
       let catFilter = true;
@@ -174,6 +210,7 @@ export class EnquiriesComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData();
   }
 
   transformDate(date: any, format: any) {

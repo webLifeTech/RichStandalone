@@ -40,7 +40,7 @@ export class HeaderComponent {
 
   public isOpen: boolean = false;
   // public logo: string = 'assets/images/icon/footer-logo.png';
-  public logo: string = 'assets/images/icon/header-logo.png';
+  public logo: string = 'assets/images/icon/header-logo.jpg';
 
   constructor(public authService: AuthService) {
 

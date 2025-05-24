@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 
-import { ApexNonAxisChartSeries, ApexPlotOptions, ApexChart, ApexFill, ChartComponent, ApexStroke, NgApexchartsModule, ApexAxisChartSeries, ApexDataLabels, ApexXAxis, ApexYAxis, ApexTooltip, ApexLegend, ApexResponsive } from "ng-apexcharts";
+import { ApexNonAxisChartSeries, ApexPlotOptions, ApexChart, ApexFill, ChartComponent, ApexStroke, NgApexchartsModule, ApexAxisChartSeries, ApexDataLabels, ApexXAxis, ApexYAxis, ApexTooltip, ApexLegend, ApexResponsive, ApexMarkers } from "ng-apexcharts";
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -40,6 +40,8 @@ export type SimplePieOptions = {
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
+  legend: ApexLegend;
+  dataLabels: ApexDataLabels;
 };
 
 export type ColumnChartsOptions = {
@@ -402,13 +404,36 @@ export class ApexchartsComponent implements OnInit {
     }
 
     if (this.chartType === 'simplepie') {
+      console.log("this.data.series ----->", this.data.series);
+
       this.chartSimplePie = {
-        series: [44, 55, 13, 43, 22],
+        series: this.data.series, // [1, 2, 3, 4, 5]
         chart: {
-          width: 360,
-          type: "pie"
+          width: 200,
+          type: "pie",
+          // offsetX: 10,
+          toolbar: {
+            show: false
+          },
         },
-        labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+        legend: {
+          show: true,
+          position: 'left',
+          fontSize: "10px",
+          fontWeight: 600,
+          offsetY: -10,
+          markers: {
+            strokeWidth: 1
+          },
+          itemMargin: {
+            horizontal: -10,
+            vertical: 0,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        labels: this.data.chartLabels,
         responsive: [
           {
             breakpoint: 480,
@@ -417,7 +442,7 @@ export class ApexchartsComponent implements OnInit {
                 width: 200
               },
               legend: {
-                position: "bottom"
+                position: "bottom",
               }
             }
           }

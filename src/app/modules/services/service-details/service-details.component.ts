@@ -56,8 +56,6 @@ export class ServiceDetailsComponent {
   }
 
   ngOnInit() {
-    // this.provider.rating = 5;
-    // this.provider.reviewCount = 7;
     this.get();
   }
 
