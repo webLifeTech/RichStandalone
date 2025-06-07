@@ -12,7 +12,7 @@
         @for(details of cabDetail.cabBooking; track details){
         <div class="card" ngbAccordionItem [collapsed]="details.panel !== 'First'">
           <div class="card-header" id="h_one">
-            <button class="btn btn-link" ngbAccordionButton (click)="change(details.title)">
+            <button class="btn btn-link" ngbAccordionButton (click)="change(details.type)">
               <label for='{{ details.checkId }}'>
                 <input type='radio' class="radio_animated ms-0" id='{{ details.checkId }}' name='occupation'
                   value='Working' [checked]="details.checked" required />

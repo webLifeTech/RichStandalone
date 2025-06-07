@@ -7,17 +7,24 @@
       <div class="booking-header">
         <div class="booking-img-wrap">
           <div class="book-img">
-            <img [src]="bookingDetails.img" alt="img">
+            <img [src]="bookingDetails.rentaldetails.image" alt="img">
           </div>
           <div class="book-info">
-            <h6>{{bookingDetails.carName}}</h6>
-            <p><i class="feather icon-map-pin"></i> Location : {{bookingDetails.pickupDeliveryLocation1}}</p>
+            <h6 *ngIf="!bookingDetails.rentaldetails?.driverName">
+              {{bookingDetails.rentaldetails.make}} ({{bookingDetails.rentaldetails.model}})
+            </h6>
+            <h6 *ngIf="bookingDetails.rentaldetails?.driverName">
+              {{bookingDetails.rentaldetails?.driverName}}
+            </h6>
+            <p><i class="feather icon-map-pin"></i> Location : {{bookingDetails.rentaldetails.location}}</p>
           </div>
         </div>
         <div class="book-amount">
           <p>Total Amount</p>
-          <h6>{{bookingDetails.total_amount | currencyPipe: gs.currency}} <a href="javascript:void(0);"><i
-                class="feather icon-alert-circle"></i></a></h6>
+          <h6>
+            {{bookingDetails.bookingDetails.totalAmount | currencyPipe: gs.currency}}
+            <a><i class="feather icon-alert-circle"></i></a>
+          </h6>
         </div>
       </div>
       <div class="booking-group">
@@ -25,147 +32,177 @@
           <div class="booking-title">
             <h6>Booking Details</h6>
           </div>
-          <div class="row">
+          <div class="row container mt-3">
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
-                <h6>Booking ID</h6>
-                <p>{{bookingDetails.bookingId}}</p>
+                <h6>Reference Number</h6>
+                <p>{{bookingDetails.bookingDetails.bookingReferenceNumber}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
-                <h6>Location</h6>
-                <p>{{bookingDetails.pickupDeliveryLocation1}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Booking Date</h6>
-                <p>{{bookingDetails.bookedOn}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Start Date</h6>
-                <p>{{bookingDetails.pickup_date_time}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>End Date</h6>
-                <p>{{bookingDetails.end_date_time}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Number of Days</h6>
-                <p>{{bookingDetails.number_of_days}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Price Per Day</h6>
-                <p>{{bookingDetails.price_per_day | currencyPipe: gs.currency}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Total Amount</h6>
-                <p class="text-red font-b">{{bookingDetails.total_amount | currencyPipe: gs.currency}}</p>
+                <h6>Status Remarks</h6>
+                <p>
+                  {{bookingDetails.bookingDetails.bookingStatusRemarks}}
+                </p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Status</h6>
                 <span class="badge" [ngClass]="{
-                  'badge-light-secondary': bookingDetails.status === 'Upcoming',
-                  'badge-light-warning': bookingDetails.status === 'Inprogress' ,
-                  'badge-light-danger': bookingDetails.status === 'Cancelled' || bookingDetails.status === 'Refund Started' || bookingDetails.status === 'Refund Completed',
-                  'badge-light-success': bookingDetails.status === 'Completed'}">
-                  {{bookingDetails.status}}
+                  'badge-light-secondary': bookingDetails.bookingDetails.bookingStatus === 'Confirmed',
+                  'badge-light-warning': bookingDetails.bookingDetails.bookingStatus === 'Inprogress' || bookingDetails.bookingDetails.bookingStatus ===  'Pending Request',
+                  'badge-light-danger': bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed' || bookingDetails.bookingDetails.bookingStatus === 'Refund Rejected',
+                  'badge-light-success': bookingDetails.bookingDetails.bookingStatus === 'Completed'}
+                ">
+                  {{bookingDetails.bookingDetails.bookingStatus}}
                 </span>
-                <!-- <span class="badge badge-light-secondary">Upcoming</span> -->
               </div>
             </div>
+            <div class="col-lg-12 col-md-12">
+              <div class="booking-view">
+                <h6>Location</h6>
+                <p>{{bookingDetails.rentaldetails.location}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Booking Date</h6>
+                <p>{{bookingDetails.bookingDetails.bookingDate}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Start Date</h6>
+                <p>{{bookingDetails.bookingDetails.startDate}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>End Date</h6>
+                <p>{{bookingDetails.bookingDetails.endDate}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Duration</h6>
+                <p>{{bookingDetails.bookingDetails.duration}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Price</h6>
+                <p>
+                  {{bookingDetails.bookingDetails.pricePerBooking | currencyPipe: gs.currency}} per week
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Total Amount</h6>
+                <p class="text-red font-b">
+                  {{bookingDetails.bookingDetails.totalAmount | currencyPipe: gs.currency}}
+                </p>
+              </div>
+            </div>
+
             <!-- <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Rental Request</h6>
                 <p>-</p>
               </div>
             </div> -->
-
           </div>
         </div>
-        <div class="booking-wrapper">
+        <div *ngIf="!bookingDetails.rentaldetails?.driverName" class="booking-wrapper">
           <div class="booking-title">
             <h6>Car Details</h6>
           </div>
-          <div class="row">
+          <div class="row container mt-3">
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Car Name</h6>
-                <p>{{bookingDetails.carName}}</p>
+                <p>{{bookingDetails.rentaldetails.make}} ({{bookingDetails.rentaldetails.model}})</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Seater</h6>
-                <p>5</p>
+                <p>{{bookingDetails.rentaldetails.seater}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Luggage</h6>
-                <p>2</p>
+                <p>{{bookingDetails.rentaldetails.luggage || "-"}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Unlimited Mileage</h6>
-                <p>Yes</p>
+                <p>{{bookingDetails.rentaldetails.mileage || "-"}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>AC</h6>
-                <p>Yes</p>
+                <p>{{bookingDetails.rentaldetails.transmission}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
-                <h6>Automatic</h6>
-                <p>No</p>
+                <h6>Transmission</h6>
+                <p>{{bookingDetails.rentaldetails.transmission}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="bookingDetails.rentaldetails.driverName" class="booking-wrapper">
+          <div class="booking-title">
+            <h6>Driver Details</h6>
+          </div>
+          <div class="row container mt-3">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Driver Name</h6>
+                <p>{{bookingDetails.rentaldetails.driverName}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Rating</h6>
+                <p>{{bookingDetails.rentaldetails.rating}} Star</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Experience</h6>
+                <p>{{bookingDetails.rentaldetails.driverExperience || "-"}} Year</p>
               </div>
             </div>
           </div>
         </div>
         <div class="booking-wrapper">
           <div class="booking-title">
-            <h6>Personal Details</h6>
+            <h6 *ngIf="!bookingDetails.rentaldetails?.driverName">Owner Details</h6>
+            <h6 *ngIf="bookingDetails.rentaldetails?.driverName">Driver Personal Details</h6>
           </div>
-          <div class="row">
+          <div class="row container mt-3">
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Details</h6>
-                <p>Johna Melinda</p>
-                <p>+1 56441 56464</p>
-                <p>Johna&#64;example.com</p>
+                <p>{{bookingDetails.personalDetails.name}}</p>
+                <p>{{bookingDetails.personalDetails.phoneNumber}}</p>
+                <p>{{bookingDetails.personalDetails.emailId}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Address</h6>
-                <p>78, 10th street</p>
-                <p>Laplace,USA</p>
-                <p>316 654</p>
+                <p>{{bookingDetails.personalDetails.address}}</p>
               </div>
             </div>
-            <!-- <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>No of Person’s</h6>
-                <p>2 Adults, 1 Child</p>
-              </div>
-            </div> -->
           </div>
         </div>
         <ng-container

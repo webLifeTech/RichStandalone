@@ -112,4 +112,31 @@ export class AuthService {
       })
     );
   }
+
+  // User -> IsEmailOrPhoneNumberExist
+  public IsEmailOrPhoneNumberExist(dataParams: any) {
+    return new Promise((resolve, reject) => {
+      const params = new HttpParams().set('email', dataParams.email).set('phoneNumber', dataParams.phoneNumber)
+      this.http.get(this.baseUrl1 + 'TLHUB/User/IsEmailOrPhoneNumberExist', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+
+    // return this.http.get(this.baseUrl1 + 'TLHUB/User/IsEmailOrPhoneNumberExist', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+  }
+
+  // Master -> GetTwilioCountryCodeList
+  public GetTwilioCountryCodeList() {
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetTwilioCountryCodeList').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

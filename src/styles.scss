@@ -80,6 +80,10 @@ a {
   background: linear-gradient(45deg, #6e57e3, #511b9b) !important;
 }
 
+.bg-white {
+  background: white;
+}
+
 .bg-pink {
   background: #fd6193;
 }
@@ -149,6 +153,10 @@ a {
 .badge-light-success {
   background: rgba(31, 188, 47, 0.1);
   color: #1FBC2F;
+}
+
+.text-white {
+  color: #fd6193;
 }
 
 .text-pink {
@@ -843,6 +851,16 @@ header {
 
     }
 
+    .form-control::-webkit-input-placeholder {
+      font-size: 14px;
+      // font-weight: 600;
+      color: #a9a0a0;
+    }
+
+    // .form-control::placeholder {
+    //   font: 125rem/3 sans-serif;
+    // }
+
     .input-group {
       .input-group-text {
         padding: 3px 6px !important;
@@ -1346,8 +1364,20 @@ header {
   text-decoration: underline;
 }
 
+.profile-info-img {
+  transition: all 0.5s ease;
+}
 
-.profile-info-img:before {
+.profile-info-img .img-action {
+  visibility: hidden;
+}
+
+.profile-info-img:hover .img-action {
+  visibility: visible;
+  transition: all 0.5s ease;
+}
+
+.profile-info-img:hover:before {
   content: "";
   position: absolute;
   left: 0;
@@ -1357,6 +1387,8 @@ header {
   border-radius: 5px;
   background: linear-gradient(0deg, #00000080 0% 100%);
   z-index: 1;
+  visibility: visible;
+  transition: all 0.5s ease;
 }
 
 .completed-msg {
@@ -1785,7 +1817,7 @@ header {
       span {
         display: inline-flex;
         background-color: #737373;
-        width: 26px;
+        min-width: 26px;
         height: 26px;
         align-items: center;
         -webkit-box-align: center;
@@ -2643,6 +2675,167 @@ header {
     padding: 20px 8px;
   }
 }
+
+.car-enquiry-modal {
+  @media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 640px;
+    }
+  }
+
+  .car-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .car-image {
+      width: 160px;
+      // height: 94px;
+    }
+
+    .car-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 100%;
+      overflow: hidden;
+
+      .car-header {
+        // background-color: #0a993c;
+        background-color: rgba(var(--theme-color), 1);
+        color: white;
+        padding: 12px 16px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+
+        table {
+          width: 100%;
+
+          .tr1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 600;
+            color: white;
+            margin: 0px;
+            width: 40%;
+          }
+
+          .tr2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 500;
+            color: white;
+            margin: 0px;
+          }
+        }
+      }
+
+      // #626262
+
+
+      .car-body {
+        padding: 16px;
+        background-color: #fff;
+
+        p {
+          margin: 6px 0;
+          font-size: 15px;
+          color: #626262;
+        }
+
+        table {
+          width: 100%;
+
+          .tr1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 600;
+            color: #626262;
+            margin: 0px;
+            width: 40%;
+          }
+
+          .tr2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 500;
+            color: #626262;
+            margin: 0px;
+          }
+        }
+      }
+
+
+      .highlight {
+        color: #0a993c;
+        font-weight: bold;
+      }
+    }
+  }
+
+
+}
+
+
+.document-modal {
+  .modal-dialog {
+    margin-top: 20px;
+  }
+
+  .modal-body {
+    padding: 12px;
+
+    .btn-close {
+      margin: 12px;
+      float: right;
+    }
+  }
+
+  iframe {
+    height: 600px;
+    width: 100%;
+    vertical-align: middle;
+    border: none;
+  }
+}
+
+.country-dialog {
+  height: 250px;
+  overflow: auto;
+  padding-top: 0;
+  border-radius: 16px;
+
+  .search-field {
+    background: #f2f2f8;
+    border: none;
+    border-radius: 24px;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .country-name {
+    font-size: 16px;
+  }
+
+  mat-radio-button {
+    margin-left: auto;
+  }
+
+  input.form-control {
+    outline: none;
+    box-shadow: none !important;
+  }
+
+  .mat-radio-button {
+    margin-right: 0;
+  }
+}
+
 
 // =========================
 // Modal END

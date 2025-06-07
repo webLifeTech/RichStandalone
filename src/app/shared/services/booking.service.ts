@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { cabClassic } from '../interface/cab-classic';
-import { cabMap } from '../interface/cab-map';
-import { cabDetails, cabs, cab, blog, testimonials, services } from '../interface/cab';
-import { driverDetails, drivers, driver } from '../interface/driver';
 import { apiResultFormat } from './model/model';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -13,6 +10,7 @@ import { apiResultFormat } from './model/model';
 })
 export class BookingService {
 
+  baseUrl1 = environment.apiUrl1;
   constructor(private http: HttpClient) { }
 
   public getuserPayment() {
@@ -67,6 +65,15 @@ export class BookingService {
         })
       );
   }
+  public getUserBookingPending() {
+    return this.http
+      .get<apiResultFormat>('assets/json/pages/user-booking-pending.json')
+      .pipe(
+        map((res: apiResultFormat) => {
+          return res;
+        })
+      );
+  }
   public getUserBookings() {
     return this.http
       .get<apiResultFormat>('assets/json/pages/user-bookings.json')
@@ -97,7 +104,22 @@ export class BookingService {
       );
   }
 
+  // Booking -> GetAllBookings
+  public GetAllBookings(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Booking/GetAllBookings`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
-
-
+  // Booking -> GetBookingByBookingId
+  public GetBookingByBookingId(dataParams: any) {
+    const params = new HttpParams().set('bookingId', dataParams.bookingId)
+    return this.http.get(this.baseUrl1 + 'TLHUB/Booking/GetBookingByBookingId', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

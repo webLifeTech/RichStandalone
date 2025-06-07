@@ -31,7 +31,8 @@
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text" />
+                            [readonly]="field.get('isReadOnly')?.value" [placeholder]="field.get('description')?.value"
+                            class="form-control open-select" type="text" />
 
                           <div class="text-danger mt-2"
                             *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
@@ -51,13 +52,15 @@
                           </label>
                           <ng-container *ngIf="field.get('action')?.value !== 'MASK'">
                             <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
-                              [mask]="field.get('validationType')?.value" />
+                              [readonly]="field.get('isReadOnly')?.value"
+                              [placeholder]="field.get('description')?.value" class="form-control open-select"
+                              type="text" [mask]="field.get('validationType')?.value" />
                           </ng-container>
                           <ng-container *ngIf="field.get('action')?.value === 'MASK'">
                             <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="text"
-                              [patterns]="customPatterns" [mask]="field.get('validationType')?.value" />
+                              [readonly]="field.get('isReadOnly')?.value"
+                              [placeholder]="field.get('description')?.value" class="form-control open-select"
+                              type="text" [patterns]="customPatterns" [mask]="field.get('validationType')?.value" />
                           </ng-container>
                           <div class="text-danger mt-2"
                             *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
@@ -78,7 +81,8 @@
                           <div class="input-group mb-3">
 
                             <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                              [readonly]="field.get('isReadOnly')?.value" class="form-control open-select"
+                              [readonly]="field.get('isReadOnly')?.value"
+                              [placeholder]="field.get('description')?.value" class="form-control open-select"
                               type="text" />
                             <span class="input-group-text" id="addon-wrapping">
                               <button mat-icon-button [matMenuTriggerFor]="menu"
@@ -112,8 +116,8 @@
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                            [readonly]="field.get('isReadOnly')?.value" class="form-control open-select" type="password"
-                            [name]="field.get('fieldCode')?.value" />
+                            [readonly]="field.get('isReadOnly')?.value" [placeholder]="field.get('description')?.value"
+                            class="form-control open-select" type="password" [name]="field.get('fieldCode')?.value" />
                           <div class="text-danger mt-2"
                             *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
                             <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
@@ -189,8 +193,8 @@
                           </label>
                           <ng-select (change)="onChangeDrop($event, field, section)" clearable="false"
                             [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
-                            bindLabel="Name" placeholder="-- Select One --" bindValue="Name"
-                            [formControlName]="'value'">
+                            bindLabel="Name" bindValue="Name" [formControlName]="'value'"
+                            [placeholder]="'SELECT '+field.get('description')?.value">
                           </ng-select>
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
                             class="text-danger mt-2">
@@ -210,8 +214,8 @@
                           <ng-select (change)="onChangeDrop($event, field, section)" [clearSearchOnAdd]="true"
                             [closeOnSelect]="false" [multiple]="true" clearable="false"
                             [readonly]="field.get('isReadOnly')?.value" [items]="field.get('dropdownList')?.value"
-                            bindLabel="Name" placeholder="-- Select One --" bindValue="Name"
-                            [formControlName]="'value'">
+                            bindLabel="Name" placeholder="-- Select One --" bindValue="Name" [formControlName]="'value'"
+                            [placeholder]="'SELECT '+field.get('description')?.value">
                           </ng-select>
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"
                             class="text-danger mt-2">
@@ -266,7 +270,8 @@
                             <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
                           </label>
                           <textarea (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
-                            [attr.disabled]="field.get('isReadOnly')?.value" type="text"
+                            [attr.disabled]="field.get('isReadOnly')?.value"
+                            [placeholder]="field.get('description')?.value" type="text"
                             class="form-control open-select"></textarea>
                           <div class="text-danger mt-2"
                             *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
@@ -282,11 +287,11 @@
                           <div class="position-relative profile-info-img">
                             <img [src]="field.get('value')?.value || 'assets/images/driver/Male.jpg'" class="avatar"
                               alt="...">
-                            <div class="centered">
-                              <i class="fas fa-pen me-2 pointer" (click)="myInput.click()" style="color: #fff;"></i>
+                            <div class="centered img-action">
+                              <i class="fas fa-pen me-2 pointer text-white" (click)="myInput.click()"></i>
                               <input (change)="handleUpload($event, field)" #myInput hidden type="file"
                                 [attr.accept]="field.get('acceptedTypes')?.value" class="form-control open-select" />
-                              <i class="fas fa-trash pointer" style="color: #fff;"></i>
+                              <i class="fas fa-trash pointer text-white" (click)="deleteProfile(field)"></i>
                             </div>
                           </div>
 
@@ -352,8 +357,9 @@
                           class="btn btn-solid color3 no-text-transorm ms-3" type="button">
                           Cancel
                         </button>
+                        <!-- && !section?.get('tableGridValueList')?.value?.length -->
                         <button
-                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && !section?.get('tableGridValueList')?.value?.length && isEditInfo"
+                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && (!isTableVisible || !section?.get('tableGridValueList')?.value?.length)  && isEditInfo"
                           (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
                           type="button">
                           {{ field.get('description')?.value }}

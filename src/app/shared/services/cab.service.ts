@@ -181,13 +181,6 @@ export class CabService {
 
   // DriverKyc -> GetDriverRates
   public GetDriverRates(dataParams: any) {
-    // const params = new HttpParams().set('driverId', dataParams.driverId).set('licenseNo', dataParams.licenseNo);
-    // return this.http.get(this.baseUrl1 + 'TLHUB/DriverKyc/GetDriverRates', { params }).pipe(
-    //   map((res: any) => {
-    //     return res;
-    //   })
-    // );
-
     return new Promise((resolve, reject) => {
       const params = new HttpParams().set('driverId', dataParams.driverId).set('licenseNo', dataParams.licenseNo);
       this.http.get(this.baseUrl1 + 'TLHUB/DriverKyc/GetDriverRates', { params }).subscribe((result) => {
@@ -197,15 +190,9 @@ export class CabService {
       })
     })
   }
+
   // VehicleKYC -> GetVehicleRates
   public GetVehicleRates(dataParams: any) {
-    // const params = new HttpParams().set('vehicleId', dataParams.vehicleId).set('vin', dataParams.vin);
-    // return this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetVehicleRates', { params }).pipe(
-    //   map((res: any) => {
-    //     return res;
-    //   })
-    // );
-
     return new Promise((resolve, reject) => {
       const params = new HttpParams().set('vehicleId', dataParams.vehicleId).set('vin', dataParams.vin);
       this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetVehicleRates', { params }).subscribe((result) => {
@@ -214,6 +201,24 @@ export class CabService {
         reject(err)
       })
     })
+  }
+
+  // ENQUIRY -> AddDriverOrVehicleEnquiry
+  public AddDriverOrVehicleEnquiry(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/ENQUIRY/AddDriverOrVehicleEnquiry?userId=${data.userId}&riskId=${data.riskId}&riskType=${data.riskType}&remarks=${data.remarks}`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // BookingAgreement -> CreateBookingAgreement
+  public CreateBookingAgreement(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/CreateBookingAgreement`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 
 }

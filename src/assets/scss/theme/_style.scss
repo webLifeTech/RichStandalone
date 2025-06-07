@@ -18170,6 +18170,53 @@ section {
   }
 
   form {
+    .password-eyes {
+      position: absolute;
+      right: 0;
+      top: 22px;
+      padding: 9px 12px;
+
+      i {
+        font-size: 16px;
+        font-weight: bolder;
+        color: #001940;
+      }
+    }
+
+
+    .countryFlag {
+      ng-select {
+        width: 150px !important;
+        padding: 0;
+      }
+
+      .ng-select.ng-select-single .ng-select-container {
+        // width: 100px;
+        border: none;
+      }
+    }
+
+    .form-check {
+      align-items: flex-end;
+
+      .form-check-input {
+        width: 1.7em;
+        height: 1.7em;
+        border-width: 3px;
+      }
+
+      .form-check-input:checked {
+        background-color: #001940;
+        border-color: #001940;
+      }
+
+      .form-check-label {
+        font-weight: 600;
+        font-size: 15px;
+        margin: 0;
+      }
+    }
+
     .form-group {
       label {
         text-transform: capitalize;

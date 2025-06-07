@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../../../../shared/services/global.service';
 import { ProfileService } from '../../../../../shared/services/profile.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
+import { addDays, addWeeks, addMonths, addYears, getDay, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 
@@ -57,11 +57,54 @@ export class CabBookingSummaryComponent {
     this.searchObj.summaryId = route.snapshot.params['summaryId'];
     this.route.queryParams.subscribe((params) => {
       this.params = params;
+      console.log("this.searchObj >>>>>>", this.searchObj);
       this.type = this.params['type'];
-      this.searchObj.timeType = "Monthly";
-      console.log("this.type >>>>>>", this.type);
+      const pickTime = new Date(this.searchObj.pick_time);
+      const dropTime = new Date(this.searchObj.drop_time);
+      // this.searchObj.timeType = "Daily";
+      // const durationInDays = differenceInDays(dropTime, pickTime);
+      // console.log("durationInDays >>>>>>", durationInDays);
+      // for (let step = 0; step < durationInDays; step++) {
+      //   this.duration.push({ value: step + 1 })
+      // }
+      // this.searchObj.timeDuration = durationInDays;
 
-      this.searchObj.timeDuration = 1;
+      switch (this.searchObj.timeType) {
+        case "Daily":
+          this.searchObj.timeDuration = differenceInDays(dropTime, pickTime);
+          console.log("this.searchObj.timeDuration >>>>>", this.searchObj.timeDuration);
+
+          break;
+        case "Weekly":
+          this.searchObj.timeDuration = differenceInWeeks(dropTime, pickTime);
+          break;
+        case "Monthly":
+          this.searchObj.timeDuration = differenceInMonths(dropTime, pickTime);
+          break;
+        case "Yearly":
+          this.searchObj.timeDuration = differenceInYears(dropTime, pickTime);
+          break;
+      }
+
+      let range = 0;
+      if (this.searchObj.timeType == 'Daily') {
+        range = 31;
+      }
+      if (this.searchObj.timeType == 'Weekly') {
+        range = 4;
+      }
+      if (this.searchObj.timeType == 'Monthly') {
+        range = 12;
+      }
+      if (this.searchObj.timeType == 'Yearly') {
+        range = 20;
+      }
+
+      for (let step = 0; step < range; step++) {
+        this.duration.push({ value: step + 1 })
+      }
+
+      this.calculateDropTime(null);
       if (this.type === 'car') {
         this.getVehicleBookingSummaryDetails();
       }
@@ -70,9 +113,6 @@ export class CabBookingSummaryComponent {
       }
     })
     this.getRentType();
-    for (let step = 0; step < 12; step++) {
-      this.duration.push({ value: step + 1 })
-    }
   }
 
   // Get All Dropdwon List
@@ -88,6 +128,13 @@ export class CabBookingSummaryComponent {
     this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
       if (res && res.length) {
         this.rentTypeList = this.gs.groupByMasterDropdown(res, 'TypeCode');
+        const slctType = this.rentTypeList['RENT_TYPE'].find((item: any) => item.Code === this.searchObj.timeType);
+        if (slctType) {
+          this.searchObj.timeTypeId = slctType.ID
+          this.gs.lastSearch = this.searchObj;
+        }
+
+        // this.rentTypeList.this.searchObj.timeType
       } else {
         this.gs.isSpinnerShow = false;
       }
@@ -96,14 +143,12 @@ export class CabBookingSummaryComponent {
     })
   }
 
-  onChange() {
-    this.calculateDropTime();
+  onChange(value: any) {
+    this.calculateDropTime(value);
   }
 
   // Get Booking VehicleDetails
   getVehicleBookingSummaryDetails() {
-
-    console.log("111 >>>>>>", this.searchObj);
 
     let body = {
       "rentType": this.searchObj.timeType,
@@ -163,9 +208,40 @@ export class CabBookingSummaryComponent {
     return this.datePipe.transform(date, format);
   }
 
-  calculateDropTime() {
-    const { pick_time, timeType, timeDuration } = this.searchObj;
+  calculateDropTime(value: any) {
+    let { pick_time, timeType, timeDuration } = this.searchObj;
     if (!pick_time || !timeType || !timeDuration) return;
+
+    console.log("value >>>>>", value);
+    console.log("timeType >>>>>", timeType);
+
+    if (value == 'type') {
+      let range = 0;
+      if (timeType == 'Daily') {
+        range = 31;
+      }
+      if (timeType == 'Weekly') {
+        range = 4;
+      }
+      if (timeType == 'Monthly') {
+        range = 12;
+      }
+      if (timeType == 'Yearly') {
+        range = 20;
+      }
+
+      this.searchObj.timeDuration = 1;
+      timeDuration = 1;
+      this.duration = [];
+      for (let step = 0; step < range; step++) {
+        this.duration.push({ value: step + 1 })
+      }
+      const slctType = this.rentTypeList['RENT_TYPE'].find((item: any) => item.Code === this.searchObj.timeType);
+      if (slctType) {
+        this.searchObj.timeTypeId = slctType.ID
+      }
+
+    }
 
     let dropTime = new Date(pick_time);
     switch (timeType) {

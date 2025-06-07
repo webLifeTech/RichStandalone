@@ -67,7 +67,7 @@
     "form": {
       "vendor_type": "Vendor Type",
       "sub_categories": "Sub Category",
-      "type": "Type",
+      "type": "User Type",
       "full_name": "Full name",
       "username": "Mobile Number or Email address",
       "password": "Password",
@@ -76,7 +76,7 @@
       "create_account": "Registration",
       "send": "send",
       "resend": "re send",
-      "otp": "otp",
+      "otp": "OTP",
       "seconds": "seconds",
       "otp_enable": "will be enable in",
       "confirm_otp": "Confirm OTP"
@@ -107,6 +107,7 @@
     "remove_to_wishlist": "Remove to Favourite",
     "important_info": "Important info",
     "email_quote": "Email quote",
+    "send_enquiry": "Send Enquiry",
     "back": "back",
     "status": {
       "available": "Available",

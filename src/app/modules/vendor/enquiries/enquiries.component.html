@@ -68,12 +68,14 @@
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
                   <div id="tablefilter">
-
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchFilter.globalSearch" (keyup)="onChangeFilter()" type="search"
-                          class="form-control" placeholder="Search" />
+                        <input [(ngModel)]="searchFilter.globalSearch" type="search" class="form-control"
+                          placeholder="Search" />
                       </label>
+                      <a class="btn btn-theme ms-2" (click)="onChangeFilter()">
+                        {{ 'global.search' | translate }}
+                      </a>
                     </div>
                   </div>
                 </div>

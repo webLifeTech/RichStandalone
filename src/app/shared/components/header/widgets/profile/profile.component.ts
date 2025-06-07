@@ -38,10 +38,6 @@ export class ProfileComponent {
     }
   }
 
-  ngAfterViewInit() {
-    console.log("dddd <<<<");
-  }
-
   GetKycByUserId() {
     this.profileService.GetKycByUserId({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -52,9 +48,6 @@ export class ProfileComponent {
         "Vendor": "providerkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
-      console.log("type[response.risktype] >>>>>", response.risktype[type[response.risktype]]);
-      console.log("type[response.risktype] >>>>>", type[response.risktype]);
-      console.log("isKYCCompleted >>>>>", this.isKYCCompleted);
     })
   }
 

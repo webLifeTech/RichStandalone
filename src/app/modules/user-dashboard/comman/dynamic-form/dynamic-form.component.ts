@@ -76,7 +76,7 @@ export class DynamicFormComponent {
   mvrDriverDetailsRes: any = {};
 
   customPatterns = {
-    '0': { pattern: new RegExp('[a-zA-Z0-9]') }  // Define the pattern for 0 (alphanumeric)
+    '0': { pattern: new RegExp('[X-X0-9]') }  // Define the pattern for 0 (alphanumeric)
   };
 
   isAgreeTerms: boolean = false;
@@ -110,6 +110,7 @@ export class DynamicFormComponent {
     }
     if (this.formType === 'driver_details') {
       this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours;
+      this.isRequiredTermsAgree = false;
     }
     if (this.formType === 'vendor-profile') {
       this.workingHours = this.singleDetailInfo.providerRequest.workingHours;
@@ -1052,7 +1053,11 @@ export class DynamicFormComponent {
           if (event.Code === fieldTwo.get('conditionValue').value) {
             fieldTwo.get('isConditionValid')?.setValue(true);
           } else {
-            fieldTwo.get('value')?.setValue(null);
+            if (field.value.fieldId === 56) {
+              // no value reset for IS AVAILABLE FOR PRIVATE BOOKING? ->  Driver Details
+            } else {
+              fieldTwo.get('value')?.setValue(null);
+            }
             fieldTwo.get('isConditionValid')?.setValue(false);
           }
         }
@@ -1061,8 +1066,8 @@ export class DynamicFormComponent {
       // for unable selectUnique dropdownList
       if (fieldTwo.get('fieldType')?.value === "DROPDOWN") {
         if (fieldTwo.get('selectUnique')?.value) {
-          let dpdOptions = fieldTwo.value.dropdownList
-          let tempTableGridValueList = fieldTwo.value.tempTableGridValueList
+          let dpdOptions = fieldTwo.value.dropdownList;
+          let tempTableGridValueList = fieldTwo.value.tempTableGridValueList;
           for (let i in dpdOptions) {
             for (let tgl in tempTableGridValueList) {
               if (tempTableGridValueList[tgl].insuranceType === dpdOptions[i].Name) {
@@ -1079,7 +1084,9 @@ export class DynamicFormComponent {
 
       // for oper addNew
       if (fieldTwo.get('fieldType')?.value === 'BUTTON' && fieldTwo.get('isMandatory')?.value && fieldTwo.get('action')?.value === 'ADD') {
-        this.addNew(section);
+        if (!section.value.tableGridValueList.length) {
+          this.addNew(section);
+        }
       }
     });
 
@@ -1128,12 +1135,11 @@ export class DynamicFormComponent {
     }
 
     if (field.value.fieldId === 150) {
-      if (section.value.tableGridValueList.length) {
-        section.get('tableGridValueList')?.setValue([]);
-        const loopArray = section.get('loopArray') as FormArray;
-        loopArray.clear();
+      if (field.get('valueCd')?.value == "true") {
+        this.isTableVisible = true;
+      } else {
+        this.isTableVisible = false;
       }
-      console.log("section >>>>>>", section);
     }
 
     if (field.value.fieldName === 'CATEGORY') {
@@ -1157,8 +1163,8 @@ export class DynamicFormComponent {
       } else {
         this.isPrivateBooking = false;
       }
-      console.log("section >>>>>>", section);
     }
+    console.log("section >>>>>>", section);
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -1548,6 +1554,10 @@ export class DynamicFormComponent {
         this.findInvalidControls();
       }
     })
+  }
+
+  deleteProfile(field: any) {
+    field.get('value').setValue("");
   }
 
   // All From Submit
@@ -2523,11 +2533,20 @@ export class DynamicFormComponent {
       return;
     }
 
+    // if (!this.isPrivateBooking) {
+    //   for (let i in this.workingHours) {
+    //     this.workingHours[i].status = false
+    //   }
+    // }
+
     let Body = {
       "userId": this.singleDetailInfo.driverDetailsRequest.userId,
       "driverWorkingHours": this.workingHours,
       ...finalBody
     };
+
+    console.log("Body >>>>>", Body)
+    // return;
 
     this.gs.isSpinnerShow = true;
     this.profileService.UpdateDriverWorkingHours(Body).subscribe((res: any) => {
@@ -2536,6 +2555,7 @@ export class DynamicFormComponent {
         this.toast.successToastr("Updated successfully");
         this.gs.loggedInUserInfo.activeStatus = Body.isActiveOrInActiveCd;
         localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
+        this.handleCancel();
       } else {
         this.toast.errorToastr(res.message);
       }
@@ -2696,7 +2716,7 @@ export class DynamicFormComponent {
       JPG: '.jpg,.jpeg',
       JPEG: '.jpeg,.jpg',
       GIF: '.gif',
-      PDF: '.pdf',
+      PDF: 'application/pdf,.pdf',
       EXCEL: '.xls,.xlsx',
       WORD: '.doc,.docx',
     };

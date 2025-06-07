@@ -108,7 +108,8 @@
             <!-- text-end price-top align-self-end -->
             <div class="col-md-4 text-end price-top">
               <div class="price">
-                <table *ngIf="searchInfo.timeType == 'ALL'" class="table table-borderless">
+                <!-- *ngIf="searchInfo.timeType == 'ALL'" -->
+                <table class="table table-borderless">
                   <tbody class="price-table">
                     <tr *ngIf="details.perDayPrice">
                       <td class="price-title">Price per Day:</td>
@@ -139,7 +140,7 @@
           </div>
           <hr class="div-line1" />
           <div class="row">
-            <div class="col-md-5 d-flex brand-sec">
+            <div class="col-md-6 d-flex brand-sec">
               <div *ngIf="type === 'car'" class="brandLogo">
                 <img [src]="details.vehicleLogo" class="img-fluid blur-up lazyload" alt="BrandLogo">
               </div>
@@ -275,7 +276,7 @@
                 </h6>
               </div>
             </div>
-            <div class="col-md-7 end">
+            <div class="col-md-6 end">
               <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
                 (click)="addRemoveWishlist(details)">
                 <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
@@ -287,9 +288,8 @@
               <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openImportantNoticeDialog()">
                 <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
               </a>
-              <a *ngIf="type === 'car'" class="btn btn-subscribe btn1 no-text-transorm"
-                (click)="openEmailQuoteDialog()">
-                <i class="fas fa-envelope"></i> {{'car_list_page.email_quote' | translate}}
+              <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openEmailQuoteDialog(details)">
+                <i class="fas fa-envelope"></i> {{'car_list_page.send_enquiry' | translate}}
               </a>
             </div>
 

@@ -53,7 +53,7 @@
           <div *ngIf="bookingStep == 1" class="review_box">
             <app-cab-information [singleItem]="bookingDetails.vehicleDetails"></app-cab-information>
           </div>
-          <app-booking *ngIf="bookingStep == 2" [itemId]="bookingDetails?.vehicleDetails?.vehicleId" [params]="params"
+          <app-booking *ngIf="bookingStep == 2" [singleItem]="bookingDetails.vehicleDetails" [params]="params"
             [title]="true"></app-booking>
         </div>
       </div>

@@ -206,7 +206,6 @@ export class UserDashboardTopTabBarComponent {
       systemId: "tlcHubAuthApp"
     }).subscribe((res: any) => {
       this.menuItems = res.filter((tRow: any) => tRow.parentMenuId == 19);
-      console.log("this.menuItems >>>>>", this.menuItems);
     })
   }
 

@@ -25,6 +25,7 @@ import { NftService } from '../../../../services/nft.service';
 import { FavoriteService } from '../../../../services/favorite.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ApexchartsComponent } from '../../../../../modules/admin-dashboard/widgets/apexcharts/apexcharts.component';
+import { EmailQuoteModalComponent } from '../../modal/email-quote-modal/email-quote-modal.component';
 
 @Component({
   selector: 'app-cab-list-details',
@@ -143,9 +144,6 @@ export class CabListDetailsComponent {
   }
 
   ngOnInit() {
-    // this.searchResult.vehicleMatches[0].riskRating = 5;
-    // this.searchResult.vehicleMatches[1].riskRating = 3.6;
-    // this.searchResult.vehicleMatches[2].riskRating = 2;
     for (let i in this.searchResult.vehicleMatches) {
       if (this.searchResult.vehicleMatches[i].type === 'car' && !this.auth.isLoggedIn) {
         this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].ratingAverage);
@@ -287,11 +285,36 @@ export class CabListDetailsComponent {
     });
   }
 
-  openEmailQuoteDialog(): void {
-    this.dialog.open(EmailQuoteDialogComponent, {
-      width: '600px',
-      data: {}
+  openEmailQuoteDialog(item: any): void {
+    if (!this.auth.isLoggedIn) {
+      const modalRef = this.modalService.open(InformationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = "Please login to Send Enquiry";
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) {
+          this.router.navigateByUrl('/auth/log-in');
+        }
+      });
+      return;
+    }
+
+    const modalRef = this.modalService.open(EmailQuoteModalComponent, {
+      centered: true,
+      size: 'md',
+      windowClass: "car-enquiry-modal"
     });
+    modalRef.componentInstance.type = this.type;
+    modalRef.componentInstance.details = item;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        this.router.navigateByUrl('/auth/log-in');
+      }
+    });
+    // this.dialog.open(EmailQuoteDialogComponent, {
+    //   width: '600px',
+    //   data: {}
+    // });
   }
 
   applyFilter(value: any) {
@@ -361,6 +384,12 @@ export class CabListDetailsComponent {
   async onHover(item: any) {
 
     console.log("item >>>", item);
+    if (this.type === 'car' && ((!this.auth.isLoggedIn && !item.ratingAverage) || (this.auth.isLoggedIn && !item.riskRating))) {
+      return;
+    }
+    if (this.type === 'driver' && ((!this.auth.isLoggedIn && !item.driverRating) || (this.auth.isLoggedIn && !item.riskRating))) {
+      return;
+    }
     this.ratingInfo = {};
     let res: any = {};
     this.isShowBatchChart = false;

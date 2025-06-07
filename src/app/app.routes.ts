@@ -7,7 +7,7 @@ import { CabListLeftSidebarComponent } from './modules/cab/listing/list-view/cab
 import { Layout2Component } from './shared/layout/layout-2/layout-2.component';
 import { UserDashboardComponent } from './modules/user-dashboard/user-dashboard.component';
 import { CabBookingComponent } from './modules/cab/booking/cab-booking/cab-booking.component';
-import { CabBookingPaymentComponent } from './modules/cab/booking/cab-booking-payment/cab-booking-payment.component';
+// import { CabBookingPaymentComponent } from './modules/cab/booking/cab-booking-payment/cab-booking-payment.component';
 import { CabBookingSuccessComponent } from './modules/cab/booking/cab-booking-success/cab-booking-success.component';
 import { CabBookingFailedComponent } from './modules/cab/booking/cab-booking-failed/cab-booking-failed.component';
 import { Layout3Component } from './shared/layout/layout-3/layout-3.component';
@@ -101,10 +101,10 @@ export const routes: Routes = [
             path: 'booking/:vehicleId/:summaryId', // cab or driver both id
             component: CabBookingComponent
           },
-          {
-            path: 'booking-payment/:vehicleId/:summaryId', // cab or driver both id
-            component: CabBookingPaymentComponent
-          },
+          // {
+          //   path: 'booking-payment/:vehicleId/:summaryId', // cab or driver both id
+          //   component: CabBookingPaymentComponent
+          // },
           {
             path: 'booking-success/:type',
             component: CabBookingSuccessComponent

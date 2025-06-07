@@ -41,7 +41,7 @@ export class CabSearchComponent {
     pick_time: "",
     drop_time: "",
     type: "",
-    timeType: "ALL",
+    timeType: "Daily",
     location_type: "option2",
   };
 
@@ -184,4 +184,39 @@ export class CabSearchComponent {
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
   }
+
+  onChangeRent() {
+    this.searchObj.pick_time = null;
+    this.searchObj.drop_time = null;
+  }
+
+  dropTimeFilter = (date: Date | null): boolean => {
+    if (!date || !this.searchObj.pick_time) return false;
+
+    const pickTime = new Date(this.searchObj.pick_time);
+
+    switch (this.searchObj.timeType) {
+      case 'Daily':
+        return true; // Allow all dates
+
+      case 'Weekly':
+        // Allow same weekday in the upcoming weeks (e.g., if pickup is Monday, allow all future Mondays)
+        return date.getDay() === pickTime.getDay() && date > pickTime;
+
+      case 'Monthly':
+        // Allow same day-of-month in future months (e.g., 5th of each month)
+        return date.getDate() === pickTime.getDate() && date > pickTime;
+
+      case 'Yearly':
+        // Allow same month and day in future years (e.g., March 15 each year)
+        return (
+          date.getDate() === pickTime.getDate() &&
+          date.getMonth() === pickTime.getMonth() &&
+          date > pickTime
+        );
+
+      default:
+        return true;
+    }
+  };
 }

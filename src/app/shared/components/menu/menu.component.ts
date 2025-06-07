@@ -48,7 +48,6 @@ export class MenuComponent {
         this.menuItems[i].queryParams = pathObj.queryParams;
       }
       this.roleService.menuItems = this.menuItems;
-      console.log("this.menuItems >>>>>", this.menuItems);
     })
   }
 

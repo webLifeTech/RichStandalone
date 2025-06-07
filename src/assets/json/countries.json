@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "United States of America (USA)",
+    "value": "United States",
+    "img": "https://cdn.policybazaar.ae/nationaties/us.svg",
+    "country_code": "+1",
+    "popular": 1
+  },
+  {
+    "id": 2,
+    "name": "India",
+    "value": "India",
+    "img": "https://cdn.policybazaar.ae/nationaties/in.svg",
+    "country_code": "+91",
+    "popular": 1
+  }
+]

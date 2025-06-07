@@ -91,7 +91,7 @@ export class UserMasterConfigurationComponent {
   branchInfoActions = ['View', 'Edit'];
 
   driverDetailsColumns = [
-    { header: 'Is Active/Inactive', fieldObject: null, field: 'isActiveOrInActive' },
+    { header: 'Is Active', fieldObject: null, field: 'isActiveOrInActive' },
     { header: 'Is Available for Private Booking?', fieldObject: null, field: 'isAvailableForPrivateBooking' },
     { header: 'Price per Day', fieldObject: null, field: 'pricePerDay' },
     { header: 'Price Per Week', fieldObject: null, field: 'pricePerWeek' },

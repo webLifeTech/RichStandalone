@@ -41,7 +41,7 @@
                           </label>
                           <input name="same_location" [(ngModel)]="searchObj.same_location" type="text"
                             class="form-control open-select" (keyup)="onSearchLocation()"
-                            placeholder="{{ 'global.pick_up' | translate }}-{{ 'global.drop_off' | translate }}">
+                            placeholder="{{ 'global.pick_up' | translate }}">
                           <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload"
                             alt="location-icon">
 
@@ -50,6 +50,16 @@
                               {{ location.address }}
                             </li>
                           </ul>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label>{{ 'global.type' | translate }}</label>
+                          <ng-select [items]="rentTypeList['RENT_TYPE']" bindLabel="Description" bindValue="Code"
+                            placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+                            [(ngModel)]="searchObj.timeType" name="timeType" clearable="false"
+                            (change)="onChangeRent()">
+                          </ng-select>
                         </div>
                       </div>
                       <div class="col">
@@ -68,7 +78,8 @@
                           <input name="drop_time" [(ngModel)]="searchObj.drop_time"
                             class="form-control datetimepicker-input digits"
                             placeholder="{{ 'global.drop_off_time' | translate }} {{ 'global.date_and_time' | translate }}"
-                            type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+                            type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop"
+                            [owlDateTimeFilter]="dropTimeFilter" [disabled]="!searchObj.pick_time">
                           <owl-date-time #drop></owl-date-time>
                         </div>
                       </div>

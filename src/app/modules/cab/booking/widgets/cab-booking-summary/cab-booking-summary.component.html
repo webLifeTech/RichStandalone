@@ -12,7 +12,7 @@
         <tr>
           <td>{{ 'global.type' | translate }}</td>
           <td>
-            <ng-select [items]="rentTypeList['RENT_TYPE']" (change)="onChange()" bindLabel="Description"
+            <ng-select [items]="rentTypeList['RENT_TYPE']" (change)="onChange('type')" bindLabel="Description"
               bindValue="Code" placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
               [(ngModel)]="searchObj.timeType" name="timeType" clearable="false">
             </ng-select>
@@ -21,7 +21,7 @@
         <tr *ngIf="searchObj.timeType">
           <td>{{ labels[searchObj.timeType] }}</td>
           <td>
-            <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange()"
+            <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange('duration')"
               placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
               [(ngModel)]="searchObj.timeDuration" name="timeDuration" clearable="false">
             </ng-select>
@@ -30,7 +30,7 @@
         <tr>
           <td>{{'booking_summary.pickup_date' | translate}}</td>
           <td>
-            <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange()" name="pick_time"
+            <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
               class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
               value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
               [min]="todayDate">
@@ -42,7 +42,7 @@
           <td>
             <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
               placeholder="{{ 'Choose Peturn Date' | translate }}" value="02:05 12/13/2019" type="text"
-              [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time">
+              [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time" [disabled]="true">
             <owl-date-time #drop></owl-date-time>
           </td>
         </tr>
@@ -78,7 +78,7 @@
           <input type="text" class="form-control" [(ngModel)]="searchObj.couponCode"
             [placeholder]="'have_coupon.input_plchold' | translate">
           <div class="input-group-prepend">
-            <span class="input-group-text" (click)="onChange()">{{'have_coupon.apply' | translate}}</span>
+            <span class="input-group-text" (click)="onChange(null)">{{'have_coupon.apply' | translate}}</span>
           </div>
         </div>
       </div>

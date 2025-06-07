@@ -20,6 +20,7 @@ import { BookingCancelModalComponent } from '../../../shared/components/comman/m
 import { WriteReviewModalComponent } from '../../../shared/components/comman/modal/booking-modals/write-review-modal/write-review-modal.component';
 import { RefundApproveRejectModalComponent } from '../../../shared/components/comman/modal/booking-modals/refund-approve-reject-modal/refund-approve-reject-modal.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { DocumentSignModalComponent } from '../../../shared/components/comman/modal/document-sign-modal/document-sign-modal.component';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -60,12 +61,13 @@ export class UserDashboardBookingComponent {
   total_refunded_amount: any = 200;
   total_net_profit: any = 1000;
   editInfo: any = {};
-  booktabs = [
-    { title: "All Bookings", value: "all_bookings" },
-    { title: "Upcoming", value: "upcoming" },
-    { title: "Inprogress", value: "inprogress" },
-    { title: "Completed", value: "completed" },
-    { title: "Cancelled", value: "cancelled" }
+  booktabs: any = [
+    // { name: "All Bookings", value: "All Bookings" },
+    // { name: "Pending Request", value: "Pending Request" },
+    // { name: "Confirmed", value: "Confirmed" },
+    // { name: "Cancelled", value: "Cancelled" },
+    // { name: "Inprogress", value: "Inprogress" },
+    // { name: "Completed", value: "Completed" },
   ]
 
   constructor(
@@ -82,18 +84,41 @@ export class UserDashboardBookingComponent {
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "all_bookings";
+      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
       this.getTableData(this.activeTab);
     })
   }
 
   getTableData(type: any) {
-    let tabName = this.booktabs.find((item: any) => item.value === type)?.title;
 
-    this.activeTabName = tabName;
 
-    if (type === "all_bookings") {
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "bookingStatus": JSON.stringify([type]),
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize,
+      "globalSearch": this.searchDataValue || ""
+    }
+    this.gs.isSpinnerShow = true;
+    this.bookingService.GetAllBookings(body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      this.tableData = res?.bookingMatches || [];
+      this.totalData = res?.viewModel?.totalCount || 0;
+      this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
+      let tabName = this.booktabs.find((item: any) => item.name === type)?.name;
+      this.activeTabName = tabName;
+      console.log("this.booktabs >>>>>", this.booktabs);
+    });
+    return;
+    if (type === "All Bookings") {
       this.bookingService.getUserBookings().subscribe((apiRes: apiResultFormat) => {
+        this.totalData = apiRes.totalData;
+        this.tableData = apiRes.data;
+      });
+    }
+    if (type === "pending_request") {
+      this.bookingService.getUserBookingPending().subscribe((apiRes: apiResultFormat) => {
         this.totalData = apiRes.totalData;
         this.tableData = apiRes.data;
       });
@@ -124,48 +149,25 @@ export class UserDashboardBookingComponent {
     }
   }
 
-  // private getTableData(pageOption: pageSelection): void {
-  //   this.bookingService.getUserBookings().subscribe((apiRes: apiResultFormat) => {
-  //     this.tableData = [];
-  //     this.serialNumberArray = [];
-  //     this.totalData = apiRes.totalData;
-  //     apiRes.data.map((res: userBookings, index: number) => {
-  //       const serialNumber = index + 1;
-  //       if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-  //         res.id = serialNumber;
-  //         this.tableData.push(res);
-  //         this.serialNumberArray.push(serialNumber);
-  //       }
-  //     });
-  //     // this.dataSource = new MatTableDataSource<userBookings>(
-  //     //   this.tableData
-  //     // );
-  //     // this.pagination.calculatePageSize.next({
-  //     //   totalData: this.totalData,
-  //     //   pageSize: this.pageSize,
-  //     //   tableData: this.tableData,
-  //     //   serialNumberArray: this.serialNumberArray,
-  //     // });
-  //   });
-  // }
-  public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
+  public searchData(): void {
+    // this.dataSource.filter = value.trim().toLowerCase();
+    // this.tableData = this.dataSource.filteredData;
+    this.getTableData(this.activeTab);
   }
+
   initChecked = false;
 
   changeBookTab(item: any) {
-    // item.isSelected = true;
-    this.activeTab = item.value;
-    let params = {
-      activeTab: this.activeTab
-    }
+    this.activeTab = item.name;
     this.getTableData(this.activeTab);
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: "merge"
-    });
+    // let params = {
+    //   activeTab: this.activeTab
+    // }
+    // this.router.navigate([], {
+    //   relativeTo: this.route,
+    //   queryParams: params,
+    //   queryParamsHandling: "merge"
+    // });
   }
 
   selectAll(initChecked: boolean) {
@@ -182,6 +184,7 @@ export class UserDashboardBookingComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData(this.activeTab);
   }
 
   openImportantNoticeDialog(): void {
@@ -196,7 +199,7 @@ export class UserDashboardBookingComponent {
     const modalRef = this.modalService.open(BookingDetailsModalComponent, {
       size: 'lg'
     });
-    modalRef.componentInstance.bookingDetails = item;
+    modalRef.componentInstance.bookingId = item.bookingId;
     modalRef.result.then((res: any) => {
 
     }, () => {
@@ -272,6 +275,22 @@ export class UserDashboardBookingComponent {
       }
     }, () => {
     });
+  }
+
+  viewDocument(document: any) {
+    const modalRef = this.modalService.open(DocumentSignModalComponent, {
+      centered: true,
+      // fullscreen: true,
+      backdrop: 'static',
+      windowClass: 'document-modal',
+      size: 'xl'
+    });
+    modalRef.componentInstance.documentIframe = document;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+      }
+    }, () => { });
   }
 
 }

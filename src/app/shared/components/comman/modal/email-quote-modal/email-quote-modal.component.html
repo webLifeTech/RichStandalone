@@ -1,0 +1,148 @@
+<div class="modal-content form-modal enquiry-modal">
+  <div class="modal-header p-0 border-0">
+    <button type="button" class="close-btn" (click)="onClose()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-4">
+      <h3 *ngIf="type === 'car'" class="text-theme font-b">Car Features</h3>
+      <h3 *ngIf="type === 'driver'" class="text-theme font-b">Driver Details</h3>
+    </div>
+    <div>
+      <div class="car-details">
+        <img *ngIf="type === 'car'" [src]="details.carImage" alt="Ford Fusion" class="car-image" />
+        <img *ngIf="type === 'driver'" [src]="details.profilepath" alt="Ford Fusion" class="car-image" />
+        <div class="car-card ms-5">
+          <div class="car-header">
+            <table class="w-100">
+              <tbody>
+                <tr>
+                  <td *ngIf="type === 'car' && details.fleetCompanyName" class="tr1 label" scope="row">
+                    Fleet Company :
+                  </td>
+                  <td *ngIf="type === 'car' && !details.fleetCompanyName" class="tr1 label" scope="row">
+                    Car Owner :
+                  </td>
+                  <td *ngIf="type === 'driver'" class="tr1 label" scope="row">
+                    Driver Name :
+                  </td>
+                  <td *ngIf="type === 'car'" class="tr2" scope="row">
+                    <span class="value">{{details.fleetCompanyName ? details.fleetCompanyName :
+                      details.contactName}}</span>
+                  </td>
+                  <td *ngIf="type === 'driver'" class="tr2" scope="row">
+                    <span class="value">{{details.contactName}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+          </div>
+          <div *ngIf="type === 'car'" class="car-body">
+            <!-- <p><strong>Car Name : </strong> <span class="highlight">{{details.make}}</span></p>
+            <p><strong>Car Model : </strong> ({{details.model}})</p>
+            <p><strong>Seat : </strong> {{details.seating}} Seater</p>
+            <p><strong>AC : </strong> Yes</p>
+            <p><strong>Transmission : </strong> {{details.transmission}}</p> -->
+            <table>
+              <tbody>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Car Name :
+                  </td>
+                  <td class="tr2" scope="row">
+                    <span class="highlight">{{details.make}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Car Model :
+                  </td>
+                  <td class="tr2" scope="row">
+                    ({{details.model}})
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Seat :
+                  </td>
+                  <td class="tr2" scope="row">
+                    {{details.seating}} Seater
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    AC :
+                  </td>
+                  <td class="tr2" scope="row">
+                    Yes
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Transmission :
+                  </td>
+                  <td class="tr2" scope="row">
+                    {{details.transmission}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="type === 'driver'" class="car-body">
+            <table>
+              <tbody>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Rating:
+                  </td>
+                  <td class="tr2" scope="row">
+                    {{details.driverRating}} Star
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Location:
+                  </td>
+                  <td class="tr2" scope="row">
+                    {{details.location}}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="tr1" scope="row">
+                    Experience:
+                  </td>
+                  <td class="tr2" scope="row">
+                    {{details.driverExperience}} Years
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- <p><strong>Rating : </strong> {{details.driverRating}}</p>
+            <p><strong>Location : </strong> {{details.location}}</p>
+            <p><strong>Experience : </strong> {{details.driverExperience}}</p> -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-form-group">
+        <label>Remark <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" placeholder="Enter Remark" [(ngModel)]="remarks" name="remarks" />
+      </div>
+      <!-- <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Email address</mat-label>
+      <input matInput [(ngModel)]="email" placeholder="Enter your email">
+    </mat-form-field> -->
+    </div>
+    <div class="modal-btn">
+      <div class="row">
+        <div class="col-12 mt-3 text-end">
+          <a (click)="submitEmail()" class="btn btn-theme">
+            Send Enquiry
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

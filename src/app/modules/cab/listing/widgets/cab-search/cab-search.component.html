@@ -25,8 +25,8 @@
           {{ 'global.location' | translate }}
         </label>
         <input [(ngModel)]="searchObj.same_location" (keyup)="onSearchLocation()" name="same_location" type="text"
-          class="form-control open-select" placeholder="drop off">
-        <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+          class="form-control open-select" placeholder="{{ 'global.pick_up' | translate }}">
+        <img src=" assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
 
         <ul class="location-dropdown" *ngIf="locationArray.length > 0">
           <li *ngFor="let location of locationArray" (click)="selectLocation(location.address)">
@@ -37,10 +37,20 @@
     </div>
     <div class="col">
       <div class="form-group">
+        <label>{{ 'global.type' | translate }}</label>
+        <ng-select [items]="rentTypeList['RENT_TYPE']" bindLabel="Description" bindValue="Code"
+          placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+          [(ngModel)]="searchObj.timeType" name="timeType" clearable="false" (change)="onChangeRent()">
+        </ng-select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
         <label>{{ 'global.pick_up_time' | translate }}</label>
         <input [(ngModel)]="searchObj.pick_time" name="pick_time" class="form-control datetimepicker-input digits"
-          placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}"
-          value="02:05 11/13/2019" type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+          placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
+          [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+        <!-- value="02:05 11/13/2019" -->
         <owl-date-time #pickup></owl-date-time>
       </div>
     </div>
@@ -48,8 +58,10 @@
       <div class="form-group">
         <label>{{ 'global.drop_off_time' | translate }}</label>
         <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
-          placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}"
-          value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop">
+          placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
+          [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [owlDateTimeFilter]="dropTimeFilter"
+          [disabled]="!searchObj.pick_time">
+        <!-- value="02:05 12/13/2019" -->
         <owl-date-time #drop></owl-date-time>
       </div>
     </div>

@@ -11,6 +11,9 @@ import { GlobalService } from '../../../../shared/services/global.service';
 import { VendorServService } from '../../../../shared/services/vendor-service.service';
 import { OnlynumberDirective } from '../../../../shared/directives/number-only.directive';
 import { RolePermissionService } from '../../../../shared/services/rolepermission.service';
+import { AlphabetOnlyDirective } from '../../../../shared/directives/alphabet-only.directive';
+import { CountryDialogComponent } from '../../../../shared/components/dialoge/country-dialog/country-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -20,7 +23,8 @@ import { RolePermissionService } from '../../../../shared/services/rolepermissio
     FormsModule,
     NgSelectModule,
     TranslateModule,
-    OnlynumberDirective
+    OnlynumberDirective,
+    AlphabetOnlyDirective
   ],
   templateUrl: './comman-login-form.component.html',
   styleUrl: './comman-login-form.component.scss'
@@ -52,96 +56,18 @@ export class CommanLoginFormComponent {
   vendorTypes: any = [];
   subCategories: any = [];
   rolesList: any = [];
+  countryList: any = [];
   verificationType: any = null;
+  rePassword: any = "";
+  isShowPassOne: boolean = false;
+  isShowPassTwo: boolean = false;
+  userNameType: any = "mobile";
+  countryCode: any = "INDIA";
+  selectedCountry: any = {};
 
+  // emailPattern = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
+  emailPattern: any = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
-  users: any = [
-    {
-      "name": "Driver",
-      "username": "driver@gmail.com",
-      "password": "123123",
-      "role": "user",
-      "userRoleName": "Driver",
-      "roleName": "53D8CF61-E99B-43A9-AA8F-4CE5B0E12872",
-
-      // New york (Driver User)
-      "userId": "99ea64c3-17b4-4bb4-bcbc-c9ed65708ff5",
-      "contactId": 1001,
-
-      // New york city (Driver User)
-      // "userId": "bd485943-ece2-4d67-85a4-113fd36f3908",
-      // "contactId": 10020,
-
-      // Other (Driver User)
-      // "userId": "f408b99f-6ec4-4603-b89d-be8fb828238e",
-      // "contactId": 10029,
-      "id": 1
-    },
-    {
-      "name": "Individualcarowner",
-      "username": "individualcarowner@gmail.com",
-      "password": "123123",
-      "role": "user_2",
-      "userRoleName": "Individual car owner",
-      "roleName": "E56F8C18-B4F6-4EE4-976D-A693AA6F98FF",
-
-      // New york (Individualcarowner User)
-      // "userId": "dce35052-51e8-4091-bada-b1d7108d6bf8",
-      // "contactId": 10023,
-
-      // New york city (Individualcarowner User)
-      "userId": "f438ebd8-a2d3-4cc6-addf-2d29aff084d7",
-      "contactId": 10040,
-
-      // Other (Individualcarowner User)
-      // "userId": "31f77d5b-5749-44dc-9e16-6d0140bf86dd",
-      // "contactId": 301,
-
-      "id": 2
-    },
-    {
-      "name": "Fleetowner",
-      "username": "fleetowner@gmail.com",
-      "password": "123123",
-      "role": "user_3",
-      "userRoleName": "Fleet owner",
-      "roleName": "B5107AB1-19BF-430B-9553-76F39DB1CDCD",
-
-      // New york (Fleetowner User)
-      // "userId": "2991e709-4966-4b64-beb4-4e9ff34f4a4f",
-      // "contactId": 10066,
-
-      // New york city (Fleetowner User)
-      "userId": "5901c8d4-6a9b-400e-b063-fa2d217b2af5",
-      "contactId": 10081,
-
-      // Other (Fleetowner User)
-      // "userId": "f7cce929-b2bf-422c-9383-35480e468ff0",
-      // "contactId": 10025,
-      "id": 3
-    },
-    {
-      "name": "Driverwithownedcar",
-      "username": "driverwithownedcar@gmail.com",
-      "password": "123123",
-      "role": "user_4",
-      "userRoleName": "Individual car owner",
-      "roleName": "416D4E0F-32BB-4218-B2EA-499764D5F62E",
-
-      // New york (Driverwithownedcar User 1)
-      "userId": "d837179a-44cd-4fec-b45e-bb16bf572966",
-      "contactId": 297,
-
-      // New york city (Driverwithownedcar User 1)
-      // "userId": "fbe52ab4-3bf2-4131-9265-1f8fb6a1d152",
-      // "contactId": 1002,
-
-      // Other (Driverwithownedcar User 1)
-      // "userId": "00a25198-7a94-4265-9ae1-2446c7928fb3",
-      // "contactId": 304,
-      "id": 4
-    }
-  ]
 
   constructor(
     private router: Router,
@@ -151,6 +77,7 @@ export class CommanLoginFormComponent {
     private toast: ToastService,
     private vendorServ: VendorServService,
     private roleService: RolePermissionService,
+    private dialog: MatDialog
   ) {
     this.route.queryParams.subscribe((pera: any) => {
       this.params = pera;
@@ -159,6 +86,7 @@ export class CommanLoginFormComponent {
         this.getVendorTypes();
       }
       this.getRolesList();
+      this.getCountryCodeList();
     })
   }
 
@@ -167,6 +95,13 @@ export class CommanLoginFormComponent {
       userRole: 'general'
     }).subscribe((res: any) => {
       this.rolesList = res;
+    })
+  }
+
+  getCountryCodeList(): void {
+    this.authService.GetTwilioCountryCodeList().subscribe((res: any) => {
+      this.countryList = res;
+      this.selectedCountry = this.countryList[1];
     })
   }
 
@@ -187,11 +122,12 @@ export class CommanLoginFormComponent {
 
   authUser(frm: any, type: string) {
     if (type == 'login') {
-      // if (this.loginForm.username === 'admin@gmail.com') {
-      //   this.loginForm.role = 'admin';
-      //   this.loginForm.name = 'Admin';
-      //   this.loginForm.id = 100;
-      // } else {
+      console.log("frm >>>>>", frm);
+
+      if (!frm.valid) {
+        this.toast.errorToastr("Fill the required fields!");
+        return;
+      }
       this.gs.isSpinnerShow = true;
       this.authService.userLogin(this.loginForm).subscribe((res: any) => {
         console.log("res >>>>>>>", res);
@@ -224,9 +160,9 @@ export class CommanLoginFormComponent {
 
       }, err => {
         this.gs.isSpinnerShow = false;
-        console.log("Username or password not correct!");
-        this.toast.errorToastr("Username or password not correct!");
+        console.log("err >>>>>", err);
 
+        this.toast.errorToastr(err?.error?.error_description || "Username or password not correct!");
       })
       // }
     }
@@ -234,6 +170,10 @@ export class CommanLoginFormComponent {
     // return;
     if (type == 'register') {
 
+      if (this.loginForm.password !== this.rePassword) {
+        this.toast.errorToastr('Password and confirm password do not match.');
+        return;
+      }
       let body: any = {
         "passWord": this.loginForm.password,
         "firstName": this.registerForm.full_name,
@@ -261,13 +201,15 @@ export class CommanLoginFormComponent {
     }
   }
 
-  sendOtp() {
-
-    console.log("(this.isVendor && !this.registerForm.category) >>", (this.isVendor && !this.registerForm.category));
-    console.log("(!this.isVendor && !this.registerForm.type) >>", (!this.isVendor && !this.registerForm.type));
+  async sendOtp(frm: any, sendType: any) {
 
     if (!this.loginForm.username || !this.registerForm.full_name || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {
       this.toast.warningToastr("Please fill the all details!");
+      return;
+    }
+
+    if (!frm.valid) {
+      this.toast.errorToastr("Fill the required fields!");
       return;
     }
 
@@ -277,11 +219,23 @@ export class CommanLoginFormComponent {
       this.verificationType = "PhoneNo";
     }
 
+    const checkExist: any = await this.authService.IsEmailOrPhoneNumberExist({
+      phoneNumber: this.verificationType == "PhoneNo" ? this.loginForm.username : null,
+      email: this.verificationType == "EmailId" ? this.loginForm.username : null,
+    })
+
+    console.log("checkExist >>>>", checkExist);
+    if (checkExist.statusCode != "200") {
+      this.toast.errorToastr(checkExist.message);
+      return;
+    }
+
+
     const body = {
       verificationType: this.verificationType,
       phoneNumber: this.verificationType == "PhoneNo" ? this.loginForm.username : null,
       emailId: this.verificationType == "EmailId" ? this.loginForm.username : null,
-      countryName: 'India',
+      countryName: this.selectedCountry.CountryName,
       userId: null,
     }
     this.gs.isSpinnerShow = true;
@@ -289,7 +243,11 @@ export class CommanLoginFormComponent {
       console.log("SendVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
-        this.toast.successToastr(res.message);
+        if (sendType === 'resend') {
+          this.toast.successToastr("Re-Send OTP Succesfully");
+        } else {
+          this.toast.successToastr(res.message);
+        }
         this.enterOTP = true;
         this.sentotp = true;
         this.timer = 60; // Start the timer at 60 seconds
@@ -354,4 +312,29 @@ export class CommanLoginFormComponent {
 
   }
 
+  viewPassword(pass: any) {
+    if (pass == 1) {
+      this.isShowPassOne = !this.isShowPassOne;
+    }
+    if (pass == 2) {
+      this.isShowPassTwo = !this.isShowPassTwo;
+    }
+  }
+
+  openCountryDialog(): void {
+    const dialogRef = this.dialog.open(CountryDialogComponent, {
+      width: '300px',
+      data: {
+        selectedCountry: this.selectedCountry,
+        countries: this.countryList,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log('Selected Country Code:', result);
+      if (result) {
+        this.selectedCountry = result;
+      }
+    });
+  }
 }

@@ -1,19 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { cabDetail, cabDetails } from '../../../../shared/interface/cab';
 import { CabService } from '../../../../shared/services/cab.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingCreditCardComponent } from './booking-credit-card/booking-credit-card.component';
 import { BookingDebitCardComponent } from './booking-debit-card/booking-debit-card.component';
 import { BookingMyWalletComponent } from './booking-my-wallet/booking-my-wallet.component';
 import { BookingNetBankingComponent } from './booking-net-banking/booking-net-banking.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaymentService } from '../../../services/payment.service';
 import { BookingCryptoComponent } from './booking-crypto/booking-crypto.component';
 import { ToastService } from '../../../services/toast.service';
 import { GlobalService } from '../../../services/global.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { PricingService } from '../../../services/pricing.service';
+import { DocumentSignModalComponent } from '../modal/document-sign-modal/document-sign-modal.component';
+import { WalletService } from '../../../services/wallet.service';
 
 @Component({
   selector: 'app-booking',
@@ -37,13 +39,15 @@ export class BookingComponent {
 
   @Input() flight: boolean = false;
   @Input() title: boolean = false;
-  @Input() itemId: any;
+  @Input() singleItem: any = {};
+  // singleItem.vehicleId
   @Input() params: any;
 
   coinList: any = [];
   selectedCoin = ""; // LTCT
-  type = "";
+  type = "CreditCard";
   isLoader: boolean = false;
+  riskType = "";
 
   public cabDetail: cabDetails;
 
@@ -53,10 +57,16 @@ export class BookingComponent {
     private paymentService: PaymentService,
     private toast: ToastService,
     private gs: GlobalService,
-    // private route: ActivatedRoute,
+    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private pricingS: PricingService,
+    private modalService: NgbModal,
+    public walletService: WalletService,
   ) {
+
+    this.route.queryParams.subscribe((params) => {
+      this.riskType = params['type'] ? params['type'] : "car";
+    })
     this.getCrypto();
     this.cabService.getCabById().subscribe(response => {
       this.cabDetail = response;
@@ -79,12 +89,108 @@ export class BookingComponent {
     this.type = type;
   }
 
-  bookNow() {
-    if (this.type === "crypto") {
+  async bookNow() {
+    if (this.type === "Crypto") {
       this.makePayment();
     } else {
 
-      this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+      console.log("Booking Summary >>>>>>>>>", this.gs.bookingSummaryDetails);
+
+      let body: any = {
+        "bookingId": null,
+        "userId": this.gs.loggedInUserInfo.userId,
+        "BookingPaymentRequest": {
+          "userId": this.gs.loggedInUserInfo.userId,
+          "amount": this.gs.bookingSummaryDetails.totalFare,
+          "bankAccount": null,
+          "creditCardInfo": null,
+          "transactionType": null,
+          "remarks": null,
+          "paymentType": this.type, // CreditCard,ACH
+          "currency": "USD", // USD,INR,EUR
+        },
+        "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,
+        "riskType": this.riskType === 'car' ? 'Vehicle' : 'Driver',
+        "bookingRefNumber": null,
+        "pickupLocation": this.gs.bookingSummaryDetails.location,
+        "dropLocation": this.gs.bookingSummaryDetails.location,
+        "pickupDate": this.gs.bookingSummaryDetails.pickUpTime,
+        "dropDate": this.gs.bookingSummaryDetails.dropTime,
+        "duration": parseInt(this.gs.lastSearch.timeDuration),
+        "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
+        "discountId": this.gs.bookingSummaryDetails.discountId,
+        "totalAmount": this.gs.bookingSummaryDetails.totalFare,
+        "discountAmount": this.gs.bookingSummaryDetails.discount,
+        "taxFee": this.gs.bookingSummaryDetails.tax,
+        "insuranceFee": this.gs.bookingSummaryDetails.insuranceFee,
+        "siteFee": 0,
+        "otherFee": this.gs.bookingSummaryDetails.otherFee,
+        "bookingStatus": null,
+        "bookingStatusRemarks": null,
+        "remarks": null
+      }
+
+      console.log("this.riskType >>>>>>>", this.riskType);
+      console.log("this.type >>>>>>>", this.type);
+      if (this.type === 'CreditCard') {
+        if (!this.gs.paymentDetails.creditCard.valid) {
+          this.toast.errorToastr("Invalid Credit Card Details");
+          return;
+        }
+        const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
+        const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
+        body["BookingPaymentRequest"]["creditCardInfo"] = {
+          "cardNumber": cardNumber,
+          "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
+          "cvv": encryptCvv,
+          "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
+        }
+      }
+      if (this.type === 'ACH') {
+        if (!this.gs.paymentDetails.ach.valid) {
+          this.toast.errorToastr("Invalid ACH Details");
+          return;
+        }
+
+        const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
+        const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
+        body["BookingPaymentRequest"]["bankAccount"] = {
+          "bank": this.gs.paymentDetails.ach.value?.bank,
+          "rountingNo": rountingNo,
+          "accountNo": accountNo,
+          "accountType": this.gs.paymentDetails.ach.value?.accountType,
+          "accountName": this.gs.paymentDetails.ach.value?.accountName,
+          "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
+        }
+      }
+
+      console.log("body >>>>>>", body);
+
+      // return;
+
+      this.gs.isSpinnerShow = true;
+      this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
+        if (res && res.statusCode == "200") {
+          this.toast.successToastr(res.message);
+          const modalRef = this.modalService.open(DocumentSignModalComponent, {
+            centered: true,
+            backdrop: 'static',
+            windowClass: 'document-modal',
+            size: 'xl'
+          });
+          modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
+          modalRef.result.then((res: any) => {
+            if (res.confirmed) {
+              this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+            }
+          }, () => { });
+        }
+        this.gs.isSpinnerShow = false;
+      }, (err: any) => {
+        this.gs.isSpinnerShow = false;
+      })
+
+      return;
     }
   }
 
@@ -146,7 +252,7 @@ export class BookingComponent {
   }
 
   bookCancel() {
-    this.router.navigate(['/cab/booking/booking-failed', this.itemId], {
+    this.router.navigate(['/cab/booking/booking-failed', this.singleItem.itemId], {
       queryParams: this.params,
       queryParamsHandling: "merge"
     });
