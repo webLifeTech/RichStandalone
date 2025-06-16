@@ -58,7 +58,7 @@
         <div *ngIf="activeKycTab === 1">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
           <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
@@ -83,7 +83,7 @@
         <div *ngIf="activeKycTab === 5">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'fleetOwner'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleFleetSubmit()" (cancel)="cancelFleet()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleFleetSubmit()" (onCancel)="cancelFleet()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
@@ -112,7 +112,7 @@
 
         <!-- Vehicle Upload -->
         <div *ngIf="activeKycTab === 7">
-          <div class="profile-info-grid">
+          <div *ngIf="isKYCCompleted" class="profile-info-grid">
             <div *ngIf="this.gs.loggedInUserInfo.roleName === 'B5107AB1-19BF-430B-9553-76F39DB1CDCD'"
               class="row m-0 align-items-end">
               <div class="col-lg-12">
@@ -141,7 +141,7 @@
                 [selectedTabObj]="selectedTabObj" ></app-dynamic-form> -->
 
               <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="handleCancel()"
+                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (onCancel)="handleCancel()"
                 [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
             </ng-container>
 
@@ -266,7 +266,7 @@
         <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
         <div *ngIf="isVehicleInfoEdit">
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
             [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
         </div>
 
@@ -280,7 +280,7 @@
         <div *ngIf="activeKycTab === 12">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
@@ -307,7 +307,7 @@
           </ng-container>
           <ng-container *ngIf="isAddEditVendor">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'vendor-profile'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel('vendor-profile')"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel('vendor-profile')"
               [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </ng-container>
 

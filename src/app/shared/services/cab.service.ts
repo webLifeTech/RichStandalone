@@ -205,7 +205,8 @@ export class CabService {
 
   // ENQUIRY -> AddDriverOrVehicleEnquiry
   public AddDriverOrVehicleEnquiry(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/ENQUIRY/AddDriverOrVehicleEnquiry?userId=${data.userId}&riskId=${data.riskId}&riskType=${data.riskType}&remarks=${data.remarks}`, data).pipe(
+    // ?userId=${data.userId}&riskId=${data.riskId}&riskType=${data.riskType}&remarks=${data.remarks}
+    return this.http.post(this.baseUrl1 + `TLHUB/ENQUIRY/AddDriverOrVehicleEnquiry`, data).pipe(
       map((res: any) => {
         return res;
       })

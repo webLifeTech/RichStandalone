@@ -1,0 +1,109 @@
+<div class="checklist">
+  <div class="container py-4 text-start">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- vehicle-checklist.component.html -->
+        <div class="checklist-container p-4 border rounded shadow-sm bg-white">
+          <div class="checklist-header mb-4">
+            <h4 class="text-white text-center fw-bold mb-0">CHECKLIST DAILY VEHICLE</h4>
+          </div>
+
+          <form>
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Inspector Name:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Date:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Inspector Signature:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Vehicle Type:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>License Plate Number:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>VIN Number:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Driver's Signature:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Owner's Signature:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Odometer Reading:</label><input type="text" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive dashboard-table  mt-4">
+              <table class="table checklist-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Description</th>
+                    <th>Satisfactory</th>
+                    <th>Defective</th>
+                    <th>N/A</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of checklist;let indx = index">
+                    <td class="text-start">{{ item.description }}</td>
+                    <td>
+                      <div class="custom-check-box">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="item.satisfactory"
+                          [name]="'satisfactory_'+indx" (ngModelChange)="onChangeCheck(item,'satisfactory')">
+                      </div>
+                      <!-- <input type="radio" name="{{ item.description }}" value="Satisfactory"> -->
+                    </td>
+                    <td>
+                      <div class="custom-check-box">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="item.defective"
+                          [name]="'defective_'+indx" (ngModelChange)="onChangeCheck(item,'defective')">
+                      </div>
+                      <!-- <input type="radio" name="{{ item.description }}" value="Defective"> -->
+                    </td>
+                    <td>
+                      <div class="custom-check-box">
+                        <input type="checkbox" class="form-check-input" [(ngModel)]="item.na" [name]="'na_'+indx"
+                          (ngModelChange)="onChangeCheck(item,'na')">
+                      </div>
+                      <!-- <input type="radio" name="{{ item.description }}" value="NA"> -->
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-center mt-4">
+              <button type="button" (click)="onSubmit()" class="btn btn-theme no-text-transorm mx-2 mb-2">
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

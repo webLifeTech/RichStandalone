@@ -115,7 +115,7 @@
             </div> -->
           </div>
         </div>
-        <div *ngIf="!bookingDetails.rentaldetails?.driverName" class="booking-wrapper">
+        <div *ngIf="bookingDetails.bookingDetails?.riskType == 'Vehicle'" class="booking-wrapper">
           <div class="booking-title">
             <h6>Car Details</h6>
           </div>
@@ -158,7 +158,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="bookingDetails.rentaldetails.driverName" class="booking-wrapper">
+        <div *ngIf="bookingDetails.bookingDetails?.riskType == 'Driver'" class="booking-wrapper">
           <div class="booking-title">
             <h6>Driver Details</h6>
           </div>
@@ -185,8 +185,11 @@
         </div>
         <div class="booking-wrapper">
           <div class="booking-title">
-            <h6 *ngIf="!bookingDetails.rentaldetails?.driverName">Owner Details</h6>
-            <h6 *ngIf="bookingDetails.rentaldetails?.driverName">Driver Personal Details</h6>
+            <h6 *ngIf="isShowOwnerDetails">
+              Owner Details
+            </h6>
+            <h6 *ngIf="isShowDriverDetails">
+              Driver Personal Details</h6>
           </div>
           <div class="row container mt-3">
             <div class="col-lg-4 col-md-6">

@@ -19,6 +19,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { addMonths, addYears } from 'date-fns';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { WalletService } from '../../../../shared/services/wallet.service';
 
 @Component({
   selector: 'app-plan-subscribe',
@@ -84,6 +85,7 @@ export class PlanSubscribeComponent {
     private profileService: ProfileService,
     private datePipe: DatePipe,
     private toast: ToastService,
+    public walletService: WalletService,
   ) {
     // this.payckageStatus = route.snapshot.params['payckageStatus'];
     this.route.queryParams.subscribe((params) => {
@@ -175,7 +177,7 @@ export class PlanSubscribeComponent {
     });
   }
 
-  payNow() {
+  async payNow() {
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
       "amount": this.packageSummaryObj.totalAmount,
@@ -196,26 +198,44 @@ export class PlanSubscribeComponent {
         this.toast.errorToastr("Invalid Credit Card Details");
         return;
       }
+      const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
+      const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
       body["creditCardInfo"] = {
-        "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
+        "cardNumber": cardNumber,
         "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
-        "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
+        "cvv": encryptCvv,
         "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
       }
+      // body["creditCardInfo"] = {
+      //   "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
+      //   "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
+      //   "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
+      //   "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
+      // }
     }
     if (this.type === 'ACH') {
       if (!this.gs.paymentDetails.ach.valid) {
         this.toast.errorToastr("Invalid ACH Details");
         return;
       }
+      const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
+      const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
       body["bankAccount"] = {
         "bank": this.gs.paymentDetails.ach.value?.bank,
-        "rountingNo": this.gs.paymentDetails.ach.value?.rountingNo,
-        "accountNo": this.gs.paymentDetails.ach.value?.accountNo,
+        "rountingNo": rountingNo,
+        "accountNo": accountNo,
         "accountType": this.gs.paymentDetails.ach.value?.accountType,
         "accountName": this.gs.paymentDetails.ach.value?.accountName,
         "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
       }
+      // body["bankAccount"] = {
+      //   "bank": this.gs.paymentDetails.ach.value?.bank,
+      //   "rountingNo": this.gs.paymentDetails.ach.value?.rountingNo,
+      //   "accountNo": this.gs.paymentDetails.ach.value?.accountNo,
+      //   "accountType": this.gs.paymentDetails.ach.value?.accountType,
+      //   "accountName": this.gs.paymentDetails.ach.value?.accountName,
+      //   "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
+      // }
     }
     console.log("body >>>", body);
 

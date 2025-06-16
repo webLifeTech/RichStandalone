@@ -1,0 +1,141 @@
+<div class="cancellation-screen">
+  <div class="container py-4 text-start">
+    <div class="row g-4">
+      <!-- Left Panel -->
+      <div class="col-md-8">
+        <h6 class="fw-bold mb-3">Review your cancellation</h6>
+        <div class="can-box">
+          <div class="car-info">
+            <div class="airline">
+              <img [src]="bookingDetails.rentaldetails.image" alt="img" />
+              <div>
+                <div *ngIf="!bookingDetails.rentaldetails?.driverName" class="fw-bold">
+                  {{bookingDetails.rentaldetails.make}} ({{bookingDetails.rentaldetails.model}})
+                </div>
+                <div *ngIf="bookingDetails.rentaldetails?.driverName" class="fw-bold">
+                  {{bookingDetails.rentaldetails?.driverName}}
+                </div>
+                <small>{{bookingDetails.bookingDetails.duration}}</small>
+              </div>
+            </div>
+            <div class="timing">
+              <div>
+                <div class="time">
+                  {{bookingDetails.bookingDetails.startDate}}
+                </div>
+                <div class="location"></div>
+              </div>
+              <div class="duration">
+                <div>To</div>
+              </div>
+              <div>
+                <div class="time">
+                  {{bookingDetails.bookingDetails.endDate}}
+                </div>
+                <div class="location"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-success text-end refund-info mt-3">
+            Fully refundable for 22h 20m
+          </div>
+
+          <div class="mt-4">
+            <table class="table border mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Booking amount</th>
+                  <th scope="col">Cancellation charges</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$38.11</td>
+                  <td>FREE</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="!isBookingCancelled" class="can-box mt-4">
+          <h6 class="fw-bold">Proceed to cancel</h6>
+          <p class="text-muted small">Your selected parts of trip are ready to be cancelled.</p>
+          <form [formGroup]="cancellationForm">
+            <div class="">
+              <div class="row">
+                <div class="form-group col-md-8 text-start">
+                  <label class="fw-bold">Cancellation Reason <span class="text-danger">*</span></label>
+                  <ng-select [items]="reasons" formControlName="reason" name="reason" bindLabel="Name"
+                    placeholder="-- Select Reason --" bindValue="Name" [autofocus]="false">
+                  </ng-select>
+                  <span class="text-danger"
+                    *ngIf="(cancelFormControl.reason?.touched || submitted) && cancelFormControl.reason?.errors?.required">
+                    Reason is required
+                  </span>
+                </div>
+                <div class="form-group col-md-8 text-start">
+                  <label class="fw-bold">Remark</label>
+                  <textarea type="text" formControlName="remarks" name="remarks"
+                    class="form-control open-select"></textarea>
+                  <span class="text-danger"
+                    *ngIf="(cancelFormControl.remarks?.touched || submitted) && cancelFormControl.remarks?.errors?.required">
+                    Remarks is required
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+          <a (click)="onConfirm()" class="btn btn-theme me-3">
+            Confirm cancellation
+          </a>
+        </div>
+        <div *ngIf="isBookingCancelled" class="can-box mt-4 text-center">
+          <h4 class="mt-4"><strong>Your Booking Has Been Cancelled</strong></h4>
+          <h5 class="my-3">Refund is Being Processed</h5>
+          <p>
+            Your booking has been cancelled. The refund process has been initiated and may take 3–7 business days to
+            reflect in your account, depending on your payment method.
+            Thank you for your patience.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="col-md-4">
+        <h6 class="fw-bold mb-3">Cancellation price breakdown</h6>
+        <div class="can-box price-breakdown">
+          <div class="breakdown-box">
+            <div class="section-title">Booking Amount</div>
+            <div class="d-flex justify-content-between mt-2">
+              <div class="small">Total</div>
+              <div>$38.11</div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total Amount</span>
+              <span>$38.11</span>
+            </div>
+          </div>
+
+          <div class="breakdown-box mt-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Deductions</span>
+              <span class="text-success fw-bold">$0</span>
+            </div>
+          </div>
+          <hr>
+          <div class="refund-summary text-success mt-3 text-center">
+            <div class="section-title">Estimated refunds</div>
+            <div class="fw-bold fs-5">$38.11</div>
+            <small class="text-muted">
+              Refunds are typically processed within 30 business days. The exact amount will be sent later via
+              email.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

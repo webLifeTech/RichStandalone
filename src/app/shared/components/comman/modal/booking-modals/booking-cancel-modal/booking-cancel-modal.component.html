@@ -5,24 +5,149 @@
         <h4>Booking Cancel</h4>
         <p>{{title || "Are you sure want to cancel?"}}</p>
       </div>
-      <form>
-        <div class="row">
-          <div class="form-group col-12 text-start">
-            <label>Reason Cancel</label>
-            <textarea type="text" [(ngModel)]="reason" class="form-control open-select"></textarea>
+      <form [formGroup]="cancellationForm">
+        <div class="breakdown-box">
+          <div class="row">
+            <div class="form-group col-md-6 offset-md-3 text-start">
+              <label>Cancellation Reason <span class="text-danger">*</span></label>
+              <ng-select [items]="reasons" formControlName="reason" name="reason" bindLabel="Name"
+                placeholder="-- Select Reason --" bindValue="Name" autofocus="off">
+              </ng-select>
+              <span class="text-danger"
+                *ngIf="(cancelFormControl.reason?.touched || submitted) && cancelFormControl.reason?.errors?.required">
+                Reason is required
+              </span>
+            </div>
+            <div class="form-group col-md-6 offset-md-3 text-start">
+              <label>Remark</label>
+              <textarea type="text" formControlName="remarks" name="remarks"
+                class="form-control open-select"></textarea>
+              <span class="text-danger"
+                *ngIf="(cancelFormControl.remarks?.touched || submitted) && cancelFormControl.remarks?.errors?.required">
+                Remarks is required
+              </span>
+            </div>
           </div>
         </div>
       </form>
+      <div>
+        <div class="container py-4 text-start">
+          <div class="row g-4">
+            <!-- Left Panel -->
+            <div class="col-md-8">
+              <h6 class="fw-bold mb-3">Review your cancellation</h6>
+              <div class="card-box">
+                <div class="flight-info">
+                  <div class="airline">
+                    <img [src]="bookingDetails.rentaldetails.image" alt="img" />
+                    <div>
+                      <div *ngIf="!bookingDetails.rentaldetails?.driverName" class="fw-bold">
+                        {{bookingDetails.rentaldetails.make}} ({{bookingDetails.rentaldetails.model}})
+                      </div>
+                      <div *ngIf="bookingDetails.rentaldetails?.driverName" class="fw-bold">
+                        {{bookingDetails.rentaldetails?.driverName}}
+                      </div>
+                      <small>{{bookingDetails.bookingDetails.duration}}</small>
+                    </div>
+                  </div>
+                  <div class="timing">
+                    <div>
+                      <div class="time">
+                        {{bookingDetails.bookingDetails.startDate}}
+                      </div>
+                      <div class="location"></div>
+                    </div>
+                    <div class="duration">
+                      <div>To</div>
+                    </div>
+                    <div>
+                      <div class="time">
+                        {{bookingDetails.bookingDetails.endDate}}
+                      </div>
+                      <div class="location"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-success text-end refund-info mt-3">
+                  Fully refundable for 22h 20m
+                </div>
+
+                <div class="breakdown-box mt-4">
+                  <table class="table border mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">Booking amount</th>
+                        <th scope="col">Cancellation charges</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>$38.11</td>
+                        <td>FREE</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card-box mt-4">
+                <h6>Proceed to cancel</h6>
+                <p class="text-muted small">Your selected parts of trip are ready to be cancelled.</p>
+                <a (click)="onConfirm()" class="btn btn-theme me-3">
+                  Confirm cancellation
+                </a>
+              </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="col-md-4">
+              <h6 class="fw-bold mb-3">Cancellation price breakdown</h6>
+              <div class="card-box price-breakdown">
+                <div class="breakdown-box">
+                  <div class="section-title">Booking amount</div>
+                  <div class="text-muted small">{{bookingDetails.rentaldetails.location}}</div>
+                  <div class="d-flex justify-content-between mt-2">
+                    <div class="small">Booking charges</div>
+                    <div>$38.11</div>
+                  </div>
+                  <hr>
+                  <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>$38.11</span>
+                  </div>
+                </div>
+
+                <div class="breakdown-box mt-3">
+                  <div class="d-flex justify-content-between">
+                    <span class="text-muted">Deductions</span>
+                    <span class="text-success fw-bold">$0</span>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="refund-summary text-success mt-3 text-center">
+                  <div class="section-title">Estimated refunds</div>
+                  <div class="fw-bold fs-5">$38.11</div>
+                  <small class="text-muted">
+                    Refunds are typically processed within 30 business days. The exact amount will be sent later via
+                    email.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="modal-btn">
         <div class="row">
-          <div class="col-6">
-            <a (click)="onConfirm()" class="btn btn-theme w-100">
-              Yes, Cancel
-            </a>
-          </div>
-          <div class="col-6">
-            <a (click)="closeModal()" class="btn btn-primary w-100">
-              No
+          <div class="col-md-12 text-end">
+            <!-- <a (click)="onConfirm()" class="btn btn-theme me-3">
+              Review
+            </a> -->
+            <a (click)="closeModal()" class="btn btn-primary">
+              Close
             </a>
           </div>
         </div>

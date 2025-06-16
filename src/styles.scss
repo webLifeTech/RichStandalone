@@ -1366,11 +1366,21 @@ header {
 
 .profile-info-img {
   transition: all 0.5s ease;
+
+  .img-action {
+    visibility: hidden;
+  }
+
+  .img-action {
+    visibility: hidden;
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    transform: translate(-25%, -50%);
+    z-index: 1;
+  }
 }
 
-.profile-info-img .img-action {
-  visibility: hidden;
-}
 
 .profile-info-img:hover .img-action {
   visibility: visible;
@@ -1682,6 +1692,8 @@ header {
       font-size: 14px;
       color: #737373;
       font-weight: 600;
+      word-break: break-word; // works in most browsers
+      white-space: normal;
     }
   }
 
@@ -3620,5 +3632,151 @@ footer {
         }
       }
     }
+  }
+}
+
+.cancellation-screen {
+  .can-box {
+    background: #fff;
+    margin: 0 0 24px;
+    padding: 20px;
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+    z-index: 0;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    border-radius: 16px !important;
+  }
+
+  .car-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .airline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 80px;
+        height: auto;
+      }
+    }
+
+    .timing {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .time {
+        font-weight: bold;
+      }
+
+      .location {
+        text-align: center;
+      }
+
+      .duration {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #555;
+      }
+    }
+  }
+
+  .traveler-box {
+    .traveler-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .traveler-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+
+      .traveler-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .initial {
+          width: 32px;
+          height: 32px;
+          background: #007bff;
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .section-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .breakdown-box {
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+    padding: 14px;
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+  }
+}
+
+/* checklist scss */
+.checklist {
+  .checklist-container {
+    max-width: 1000px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 30px;
+
+    .checklist-header {
+      background-color: rgba(var(--theme-color), 1);
+      padding: 30px;
+      border-radius: 30px 30px 0 0;
+    }
+
+    label {
+      font-weight: 700;
+    }
+
+    .checklist-table {
+
+      th,
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.custom-check-box {
+  align-items: flex-end;
+
+  .form-check-input {
+    width: 1.7em;
+    height: 1.7em;
+    border-width: 3px;
+  }
+
+  .form-check-input:checked {
+    background-color: #001940;
+    border-color: #001940;
+  }
+
+  .form-check-label {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0;
   }
 }

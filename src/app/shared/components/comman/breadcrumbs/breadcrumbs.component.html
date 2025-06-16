@@ -1,7 +1,8 @@
 @if(type == 'cab'){
-  <app-cab-breadcrumb [bg_image]="bg_image" [title]="title" [parent]="parent"  [child]="child"></app-cab-breadcrumb>
+<app-cab-breadcrumb [bg_image]="bg_image" [title]="title" [parent]="parent" [child]="child"></app-cab-breadcrumb>
 }
 
 @if(type == 'pages'){
-  <app-pages-breadcrumb [bg_image]="bg_image" [title]="title" [parent]="parent"  [child]="child" [paddingClass]="paddingClass"></app-pages-breadcrumb>
+<app-pages-breadcrumb [bg_image]="bg_image" [title]="title" [parent]="parent" [parentRoute]="parentRoute"
+  [child]="child" [paddingClass]="paddingClass"></app-pages-breadcrumb>
 }

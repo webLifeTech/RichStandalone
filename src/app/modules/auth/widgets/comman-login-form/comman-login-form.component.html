@@ -42,26 +42,33 @@
     </div>
     <div *ngIf="!isVendor" class="form-group">
       <label for="name">{{'auth.form.type' | translate}} <span class="mandatory">*</span></label>
-      <ng-select clearable="false" [items]="rolesList" bindLabel="Description" placeholder="-- Select user type --"
-        bindValue="Id" [(ngModel)]="registerForm.type" name="type">
+      <ng-select clearable="false" [items]="rolesList" bindLabel="Description" placeholder="-- Select User Type --"
+        bindValue="Id" [(ngModel)]="registerForm.type" name="type" #type="ngModel" required>
       </ng-select>
+      <div class="text-danger mt-1" *ngIf="type.errors && (type.dirty || type.touched || submitted)">
+        <span *ngIf="type.invalid">User Type is required</span>
+      </div>
     </div>
     <div class="form-group">
       <label for="name">{{'auth.form.full_name' | translate}} <span class="mandatory">*</span></label>
       <input type="text" class="form-control" id="name" [(ngModel)]="registerForm.full_name" name="full_name"
-        placeholder="{{'auth.form.full_name' | translate}}" autocomplete="off" appAlphabetOnly>
+        #full_name="ngModel" placeholder="{{'global.enter' | translate}} {{'auth.form.full_name' | translate}}"
+        autocomplete="off" appAlphabetOnly required />
+      <div class="text-danger mt-1" *ngIf="full_name.errors && (full_name.dirty || full_name.touched || submitted)">
+        <span *ngIf="full_name.invalid">Full Name is required</span>
+      </div>
     </div>
     <div class="form-group d-flex mb-1">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="type_mobile" id="type_mobile" value="mobile"
-          [(ngModel)]="userNameType" (change)="loginForm.username = ''">
+          [(ngModel)]="userNameType" (change)="loginForm.username = ''" [disabled]="isOtpVerified">
         <label class="form-check-label ms-2" for="type_mobile">
           Mobile Number
         </label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="type_mobile" id="type_email" value="email"
-          [(ngModel)]="userNameType" (change)="loginForm.username = ''">
+          [(ngModel)]="userNameType" (change)="loginForm.username = ''" [disabled]="isOtpVerified">
         <label class="form-check-label ms-2" for="type_email">
           Email address
         </label>
@@ -71,34 +78,29 @@
       <!-- <label for="exampleInputEmail1">{{'auth.form.username' | translate}}</label> -->
       <div *ngIf="userNameType == 'mobile'">
         <div class="input-group ">
-
-          <!-- <button type="button" (click)="openCountryDialog()">country</button> -->
-          <!-- <ng-select [closeOnSelect]="true" [clearable]="false" #countryName="ngModel" name="countryName"
-            [(ngModel)]="countryCode" placeholder="{{'Choose Category' | translate}}" class="form-control">
-            <ng-container *ngFor="let lang of countryList">
-              <ng-option [value]="lang.CountryName">
-                <img class="image-sm me-2" [src]="lang.img" />
-                <span><b>{{lang.CountryCode}}</b></span>
-              </ng-option>
-            </ng-container>
-          </ng-select> -->
-
           <span class="input-group-text fw-bold pointer bg-white" (click)="openCountryDialog()">
             {{selectedCountry.CountryCode}} <i class="fa fa-sort-down pointer ms-2 pb-1" aria-hidden="true"></i>
           </span>
 
-          <input type="text" [(ngModel)]="loginForm.username" name="username" #phone_number="ngModel"
-            class="form-control" placeholder="Mobile Number" autocomplete="off" [disabled]="isOtpVerified"
-            minlength="10" maxlength="10" numbersOnly>
+          <input type="text" [(ngModel)]="loginForm.username" name="phone_number" #phone_number="ngModel"
+            class="form-control" placeholder="Enter Mobile Number" autocomplete="off" [disabled]="isOtpVerified"
+            minlength="10" maxlength="10" numbersOnly required />
         </div>
-        <div class="text-danger mt-1" *ngIf="phone_number.errors">
+        <!-- <div class="text-danger mt-1" *ngIf="full_name.errors && (full_name.dirty || full_name.touched || submitted)">
+        <span *ngIf="full_name.invalid">Full Name is required</span>
+      </div> -->
+        <div class="text-danger mt-1"
+          *ngIf="phone_number.errors && (phone_number.dirty || phone_number.touched || submitted)">
+          <span *ngIf="phone_number.errors['required']">Mobile Number is required</span>
           <span *ngIf="phone_number.errors['minlength']">Enter 10 digit Mobile Number</span>
         </div>
       </div>
       <div *ngIf="userNameType == 'email'">
         <input type="text" [(ngModel)]="loginForm.username" name="username" #email="ngModel" class="form-control"
-          [pattern]="emailPattern" placeholder="Email address" autocomplete="off" [disabled]="isOtpVerified">
-        <div class="text-danger mt-1" *ngIf="email.errors">
+          [pattern]="emailPattern" placeholder="Enter Email Address" autocomplete="off" [disabled]="isOtpVerified"
+          required />
+        <div class="text-danger mt-1" *ngIf="email.errors && (email.dirty || email.touched || submitted)">
+          <span *ngIf="email.errors['required']">Email is required</span>
           <span *ngIf="email.errors['pattern']">Email is not correct</span>
         </div>
       </div>
@@ -115,36 +117,47 @@
           {{'auth.form.resend' | translate}}
         </button>
       </div>
-      <input type="text" class="form-control" id="otp" [(ngModel)]="registerForm.otp" name="otp"
+      <input type="text" class="form-control" id="otp" [(ngModel)]="registerForm.otp" name="otp" #otp="ngModel"
         [disabled]="isOtpVerified" placeholder="{{'global.enter' | translate}} {{'auth.form.otp' | translate}}"
-        autocomplete="off" numbersOnly maxlength="4" />
+        autocomplete="off" numbersOnly maxlength="4" required />
+      <div class="text-danger mt-1" *ngIf="otp.errors && (otp.dirty || otp.touched || submitted)">
+        <span *ngIf="otp.errors['required']">OTP is required</span>
+      </div>
     </div>
-
     <div *ngIf="isOtpVerified" class="form-group position-relative">
-      <label for="password">{{'auth.form.password' | translate}}</label>
-      <input [type]="isShowPassOne ? 'text':'password'" [(ngModel)]="loginForm.password" name="password"
-        class=" form-control" id="password"
-        placeholder="{{'global.enter' | translate}} {{'auth.form.password' | translate}}" autocomplete="off" />
+      <label>{{'auth.form.password' | translate}}</label>
+      <input [type]="isShowPassOne ? 'text':'password'" [(ngModel)]="loginForm.password" name="password_1"
+        #passwordRef="ngModel" class=" form-control" minlength="8" maxlength="20" [pattern]="passPattern"
+        placeholder="{{'global.enter' | translate}} {{'auth.form.password' | translate}}" autocomplete="off" required />
       <a class="password-eyes" (click)="viewPassword(1)">
         <i *ngIf="isShowPassOne" class="feather icon-eye-off"></i>
         <i *ngIf="!isShowPassOne" class="feather icon-eye"></i>
       </a>
-      <small>
-        Must be 8-20 characters, with at least one uppercase letter, one lowercase letter, one number, and one
-        special character.
-      </small>
+      <div class="text-danger mt-1"
+        *ngIf="passwordRef.errors && (passwordRef.dirty || passwordRef.touched || submitted)">
+        <span *ngIf="passwordRef.errors['required']">Password is required</span>
+      </div>
+      <div *ngIf="passwordRef.invalid && passwordRef.touched" class="text-danger mt-1">
+        <div *ngIf="passwordRef.errors?.['pattern']">
+          Password must be 8–20 characters, with uppercase, lowercase, number, and special character.
+        </div>
+      </div>
     </div>
 
     <div *ngIf="isOtpVerified" class="form-group position-relative">
       <label for="confirmpassword">{{'auth.form.confirm_password' | translate}}</label>
-      <input [type]="isShowPassTwo ? 'text':'password'" [(ngModel)]="rePassword" name="rePassword" class="form-control"
-        id="confirmpassword" placeholder="{{'global.enter' | translate}} {{'auth.form.confirm_password' | translate}}"
-        autocomplete="off" />
+      <input [type]="isShowPassTwo ? 'text':'password'" [(ngModel)]="rePassword" name="rePassword" #rePassword="ngModel"
+        class="form-control" id="confirmpassword"
+        placeholder="{{'global.enter' | translate}} {{'auth.form.confirm_password' | translate}}" autocomplete="off"
+        required />
       <a class="password-eyes" (click)="viewPassword(2)">
         <i *ngIf="isShowPassTwo" class="feather icon-eye-off"></i>
         <i *ngIf="!isShowPassTwo" class="feather icon-eye"></i>
       </a>
-      <small>Re Enter the Password Exactly same as above</small>
+      <div class="text-danger mt-1" *ngIf="rePassword.errors && (rePassword.dirty || rePassword.touched || submitted)">
+        <span *ngIf="rePassword.errors['required']">Confirm Password is required</span>
+      </div>
+      <small>Re-enter the password exactly same as above</small>
     </div>
 
     <div class="button-bottom">
@@ -157,7 +170,7 @@
         {{ ('auth.form.confirm_otp' | translate)}}
       </button>
       <button *ngIf="isOtpVerified" type="button" class="w-100 btn btn-theme" (click)="authUser(frm, type)">
-        {{ ('auth.form.create_account' | translate)}}
+        {{ ('auth.form.register' | translate)}}
       </button>
     </div>
   </div>

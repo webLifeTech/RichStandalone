@@ -1,0 +1,92 @@
+.card-box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.flight-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .airline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 80px;
+      height: auto;
+    }
+  }
+
+  .timing {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .time {
+      font-weight: bold;
+    }
+
+    .location {
+      text-align: center;
+    }
+
+    .duration {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  }
+}
+
+.traveler-box {
+  .traveler-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .traveler-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+
+    .traveler-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .initial {
+        width: 32px;
+        height: 32px;
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.price-breakdown {}
+
+.breakdown-box {
+  box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+  padding: 14px;
+  border: 1px solid #eeeeee;
+  border-radius: 10px;
+}

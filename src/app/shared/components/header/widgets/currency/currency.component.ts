@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CabService } from '../../../../../shared/services/cab.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GlobalService } from '../../../../services/global.service';
 
 @Component({
   selector: 'app-currency',
@@ -39,7 +40,10 @@ export class CurrencyComponent {
     },
   ]
   public selectedCur: string;
-  constructor(private cabService: CabService) {
+  constructor(
+    private cabService: CabService,
+    public gs: GlobalService,
+  ) {
     this.selectedCur = localStorage.getItem('currency') || 'usd';
   }
 
@@ -47,6 +51,7 @@ export class CurrencyComponent {
     if (event) {
       this.selectedCur = (event.target as HTMLInputElement).value;
       this.cabService.currency = (event.target as HTMLInputElement).value;
+      this.gs.currency = (event.target as HTMLInputElement).value;
       localStorage.setItem('currency', (event.target as HTMLInputElement).value)
     }
   }

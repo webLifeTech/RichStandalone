@@ -52,8 +52,6 @@ export class EmailQuoteModalComponent {
 
     let body = {
       "userId": this.gs.loggedInUserInfo.userId,
-      // "riskId": this.details.timeType,
-      // "riskType": this.details.timeType,
       "riskId": this.type === 'car' ? this.details.vehicleId : this.details.driverId,
       "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
       "remarks": this.remarks

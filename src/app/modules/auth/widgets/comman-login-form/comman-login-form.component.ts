@@ -64,9 +64,23 @@ export class CommanLoginFormComponent {
   userNameType: any = "mobile";
   countryCode: any = "INDIA";
   selectedCountry: any = {};
+  submitted: boolean = false;
 
-  // emailPattern = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
   emailPattern: any = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+  passRequirement = {
+    passwordMinUpperCase: 1,
+    passwordMinLowerCase: 1,
+    passwordMinNumber: 1,
+    passwordMinSymbol: 1,
+    passwordMinCharacters: 8
+  };
+  passPattern = [
+    `(?=([^A-Z]*[A-Z]){${this.passRequirement.passwordMinUpperCase},})`,
+    `(?=([^a-z]*[a-z]){${this.passRequirement.passwordMinLowerCase},})`,
+    `(?=([^0-9]*[0-9])\{${this.passRequirement.passwordMinNumber},\})`,
+    `(?=(\.\*[\$\@\$\!\%\*\#\^\(\)\&])\{${this.passRequirement.passwordMinSymbol},\})`,
+    `[A-Za-z\\d\$\@\$\!\%\*\#\^\(\)\&]{${this.passRequirement.passwordMinCharacters},}`
+  ].map(item => item.toString()).join('');
 
 
   constructor(
@@ -121,6 +135,7 @@ export class CommanLoginFormComponent {
   }
 
   authUser(frm: any, type: string) {
+    this.submitted = true;
     if (type == 'login') {
       console.log("frm >>>>>", frm);
 
@@ -170,10 +185,15 @@ export class CommanLoginFormComponent {
     // return;
     if (type == 'register') {
 
+      if (!frm.valid) {
+        this.toast.errorToastr("Please enter valid details.");
+        return;
+      }
       if (this.loginForm.password !== this.rePassword) {
         this.toast.errorToastr('Password and confirm password do not match.');
         return;
       }
+
       let body: any = {
         "passWord": this.loginForm.password,
         "firstName": this.registerForm.full_name,
@@ -203,13 +223,14 @@ export class CommanLoginFormComponent {
 
   async sendOtp(frm: any, sendType: any) {
 
-    if (!this.loginForm.username || !this.registerForm.full_name || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {
-      this.toast.warningToastr("Please fill the all details!");
-      return;
-    }
+    this.submitted = true;
+    // if (!this.loginForm.username || !this.registerForm.full_name?.trim() || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {
+    //   this.toast.errorToastr("Please fill the all details!");
+    //   return;
+    // }
 
     if (!frm.valid) {
-      this.toast.errorToastr("Fill the required fields!");
+      this.toast.errorToastr("Please fill the all required fields.");
       return;
     }
 
@@ -243,6 +264,7 @@ export class CommanLoginFormComponent {
       console.log("SendVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
+        this.submitted = false;
         if (sendType === 'resend') {
           this.toast.successToastr("Re-Send OTP Succesfully");
         } else {
@@ -268,8 +290,9 @@ export class CommanLoginFormComponent {
   }
 
   confirmOtp() {
+    this.submitted = true;
     if (!this.registerForm.otp) {
-      this.toast.warningToastr("Please enter otp.");
+      this.toast.errorToastr("Please enter otp.");
       return;
     }
     const body = {
@@ -285,6 +308,7 @@ export class CommanLoginFormComponent {
       console.log("ValidateVerificationCodeMethod >>>", res);
       if (res && res.statusCode == "200") {
         this.isOtpVerified = true;
+        this.submitted = false;
         this.toast.successToastr(res.message);
       } else {
         this.toast.errorToastr(res.message);

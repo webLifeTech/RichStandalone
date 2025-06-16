@@ -20,6 +20,7 @@ export class BreadcrumbsComponent {
   @Input() bg_image: string;
   @Input() title: string;
   @Input() parent: string;
+  @Input() parentRoute: string;
   @Input() subParent: string;
   @Input() child: string;
   @Input() days: number;

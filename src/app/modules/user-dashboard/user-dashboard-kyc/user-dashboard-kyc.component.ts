@@ -96,6 +96,7 @@ export class UserDashboardKycComponent {
   isAddEditVendor: boolean = false;
   isLoadVendorDetail: boolean = false;
   gridInfoData: any = [];
+  isKYCCompleted: any = 0;
 
   // Driver List Columns and Data
   driverColumns = [
@@ -122,12 +123,12 @@ export class UserDashboardKycComponent {
   // Vehicle List Columns and Data
   vendorInfoColumns = [
     { header: 'Profile', fieldObject: "contactInfo", field: 'providerProfilePath' },
-    { header: 'BUSINESS NAME', fieldObject: "contactInfo", field: 'dbaName' },
-    { header: 'FIRST NAME', fieldObject: "contactInfo", field: 'firstName' },
-    { header: 'LAST NAME', fieldObject: "contactInfo", field: 'lastName' },
-    { header: 'PHONE NUMBER', fieldObject: null, field: 'phoneNumber' },
-    { header: 'CATEGORY', fieldObject: null, field: 'category' },
-    { header: 'STATUS', fieldObject: null, field: 'status' },
+    { header: 'Business name', fieldObject: "contactInfo", field: 'dbaName' },
+    { header: 'First name', fieldObject: "contactInfo", field: 'firstName' },
+    { header: 'Last name', fieldObject: "contactInfo", field: 'lastName' },
+    { header: 'Phone number', fieldObject: null, field: 'phoneNumber' },
+    { header: 'Category', fieldObject: null, field: 'category' },
+    { header: 'Status', fieldObject: null, field: 'status' },
   ];
 
   // Actions grids
@@ -258,19 +259,38 @@ export class UserDashboardKycComponent {
       this.usaStatesArray = response;
     })
     this.onChangeIam();
+    this.GetKycByUserId();
   }
 
   canDeactivate(): boolean {
-    if (!this.gs.isLicenseVerified || this.isFormEdit) {
+    if ((!this.gs.isLicenseVerified || this.isFormEdit) && this.auth.isLoggedIn) {
       return confirm('Are you sure you want to leave this page? You will lose any unsaved data.');
     }
     return true;
   }
 
+  GetKycByUserId() {
+    this.profileService.GetKycByUserId({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      const type: any = {
+        "Fleet owner": "companykyc",
+        "Driver with owned car": "driverkyc",
+      }
+      this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+    })
+  }
+
   changeKycTab(tab: any) {
     console.log("this.isFormEdit >>>>>", this.isFormEdit);
+    console.log("tab >>>>>", tab);
+    console.log("isKYCCompleted >>>>>", this.isKYCCompleted);
+
 
     const confirm = () => {
+      if (tab.formId == 7 && !this.isKYCCompleted) {
+        this.toast.errorToastr("KYC is pending, Able to vehicle upload once kyc done.");
+      }
       tab.termCode = this.tandcCodes[tab.formName];
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
       console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
@@ -394,7 +414,7 @@ export class UserDashboardKycComponent {
     const findRoleObj = this.iAmArray.find((item: any) => item.id == this.kycForm.i_am) || {};
 
     let body = {
-      "stateCode": this.kycForm.state || "42",
+      "stateCode": this.kycForm.state, // || "42"
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
       "countryId": 230,
@@ -427,7 +447,7 @@ export class UserDashboardKycComponent {
   }
 
   reset() {
-    this.kycForm.i_am = 1;
+    // this.kycForm.i_am = 1;
     this.kycForm.state = null;
     this.activeKycTab = "";
     this.onChangeIam();
@@ -451,11 +471,13 @@ export class UserDashboardKycComponent {
 
   handleSubmit() {
     this.getDriverDetails();
+    this.GetKycByUserId();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleFleetSubmit() {
     this.getAllCompanies();
+    this.GetKycByUserId();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 

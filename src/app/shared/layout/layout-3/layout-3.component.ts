@@ -29,6 +29,7 @@ export class Layout3Component {
   public bg_image = 'assets/images/inner-bg.jpg';
   public title = 'My Profile';
   public parent = 'Home';
+  public parentRoute = '/home';
   public child = 'My Profile';
 
   public activeTab: string = 'My Bookings'; //dashboard

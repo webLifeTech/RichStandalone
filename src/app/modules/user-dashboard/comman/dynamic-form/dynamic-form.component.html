@@ -287,7 +287,9 @@
                           <div class="position-relative profile-info-img">
                             <img [src]="field.get('value')?.value || 'assets/images/driver/Male.jpg'" class="avatar"
                               alt="...">
-                            <div class="centered img-action">
+                            <div class="img-action">
+                              <i class="fa fa-eye me-2 pointer text-white"
+                                (click)="gs.viewDocumentFile(field.get('value')?.value)"></i>
                               <i class="fas fa-pen me-2 pointer text-white" (click)="myInput.click()"></i>
                               <input (change)="handleUpload($event, field)" #myInput hidden type="file"
                                 [attr.accept]="field.get('acceptedTypes')?.value" class="form-control open-select" />
@@ -519,11 +521,11 @@
       <div class="mb-4">
         <div class="form-check">
           <input [(ngModel)]="isAgreeTerms" [disabled]="!isAgreeTerms" class="form-check-input" type="checkbox">
-          <label class="mx-2 mb-0">
+          <h5 class="mx-2 mb-0 font-b">
             <a (click)="viewTermsConditions()" class="text-primary ">Please read and accept the terms and conditions
               before proceeding. (Read and Agree)</a>
             <span class="mandatory">*</span>
-          </label>
+          </h5>
 
         </div>
         <div *ngIf="(!isAgreeTerms && submitted)" class="text-danger mt-2">

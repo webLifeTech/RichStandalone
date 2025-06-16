@@ -113,10 +113,21 @@ export class BookingService {
     );
   }
 
-  // Booking -> GetBookingByBookingId
-  public GetBookingByBookingId(dataParams: any) {
-    const params = new HttpParams().set('bookingId', dataParams.bookingId)
-    return this.http.get(this.baseUrl1 + 'TLHUB/Booking/GetBookingByBookingId', { params }).pipe(
+  // Booking -> GetBookingByBookingRefNo
+  public GetBookingByBookingRefNo(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingRefNo', dataParams.bookingRefNo)
+      .set('loginUserId', dataParams.loginUserId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Booking/GetBookingByBookingRefNo', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Booking -> BookingCancellationRequest
+  public BookingCancellationRequest(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Booking/BookingCancellationRequest`, data).pipe(
       map((res: any) => {
         return res;
       })

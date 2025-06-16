@@ -19,8 +19,14 @@ import { BookingService } from '../../../../../services/booking.service';
   styleUrl: './booking-details-modal.component.scss'
 })
 export class BookingDetailsModalComponent {
-  @Input() bookingId: any = "";
-  bookingDetails: any = {};
+  @Input() bookingRefNo: any = "";
+  isShowOwnerDetails: any = false;
+  isShowDriverDetails: any = false;
+  bookingDetails: any = {
+    bookingDetails: {},
+    rentaldetails: {},
+    personalDetails: {},
+  };
 
   constructor(
     private modalService: NgbModal,
@@ -29,18 +35,28 @@ export class BookingDetailsModalComponent {
   ) { }
 
   ngOnInit() {
-    this.GetBookingByBookingId();
+    this.GetBookingByBookingRefNo();
   }
 
-  GetBookingByBookingId() {
-    console.log("bookingId >>>>", this.bookingId);
+  GetBookingByBookingRefNo() {
+    console.log("bookingRefNo >>>>", this.bookingRefNo);
 
-    this.bookingService.GetBookingByBookingId({
-      bookingId: this.bookingId
+    this.bookingService.GetBookingByBookingRefNo({
+      bookingRefNo: this.bookingRefNo,
+      loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      console.log("GetBookingByBookingId >>>>>", response);
+      console.log("GetBookingByBookingRefNo >>>>>", response);
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
         this.bookingDetails = response;
+        if (!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver' || this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle') {
+          this.isShowOwnerDetails = true;
+          this.bookingDetails.personalDetails = this.bookingDetails.vehicleOwnerPersonalDetails;
+        }
+
+        if (!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle' || this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver') {
+          this.isShowDriverDetails = true;
+          this.bookingDetails.personalDetails = this.bookingDetails.driverPersonalDetails;
+        }
       }
     })
   }

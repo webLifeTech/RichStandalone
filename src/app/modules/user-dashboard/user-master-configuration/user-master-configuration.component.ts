@@ -81,7 +81,7 @@ export class UserMasterConfigurationComponent {
 
   // Vehicle List Columns and Data
   branchInfoColumns = [
-    { header: 'DBA Name', fieldObject: null, field: 'dbaName' },
+    { header: 'Commercial Name', fieldObject: null, field: 'commercialName' },
     { header: 'Contact Number', fieldObject: null, field: 'phoneNumber' },
     { header: 'Email ID', fieldObject: null, field: 'emailId' },
     { header: 'City', fieldObject: null, field: 'city' },
