@@ -47,6 +47,7 @@
     "enter": "Enter",
     "select": "Select",
     "or": "OR",
+    "rental_type": "Rental Type",
     "type": "Type",
     "am": "am",
     "pm": "pm"
@@ -64,6 +65,7 @@
   "auth": {
     "login": "log in",
     "signup": "sign up",
+    "forgot_password": "forgot password",
     "form": {
       "vendor_type": "Vendor Type",
       "sub_categories": "Sub Category",

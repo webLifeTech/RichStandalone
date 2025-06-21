@@ -39,6 +39,7 @@ import { UserRecentActivityComponent } from './modules/user-dashboard/user-recen
 import { NotificationViewComponent } from './shared/components/header/widgets/notification-view/notification-view.component';
 import { AdminMyProfileComponent } from './modules/admin-dashboard/admin-my-profile/admin-my-profile.component';
 import { ServiceDetailsComponent } from './modules/services/service-details/service-details.component';
+import { ForgotPasswordComponent } from './modules/auth/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,10 @@ export const routes: Routes = [
       {
         path: 'register',
         component: RegisterComponent
+      },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
       },
     ]
   },

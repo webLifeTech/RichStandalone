@@ -67,13 +67,12 @@ export class UserDashboardKycComponent {
     i_am: 1, // 1 need to do
     looking_for: "",
     state: null,   // New York City need to do null
+    menuId: 27
   }
 
   isFormEdit: boolean = false;
   isEditCarOwnerInfo: boolean = false;
   driverInfoData: any = [];
-  fleetOwnerInfoData: any = {};
-
   singleDetailInfo: any = {};
 
   isStartGetKyc: boolean = false;
@@ -90,8 +89,6 @@ export class UserDashboardKycComponent {
   allComplateKycVehicleList: any = [];
   draftVehiclesResponse: any = [];
   vinUploadResponse: any = {};
-  menuID: any = null;
-  menuName: any = null;
 
   isAddEditVendor: boolean = false;
   isLoadVendorDetail: boolean = false;
@@ -163,59 +160,6 @@ export class UserDashboardKycComponent {
     }
   ];
 
-  allVehicleList: any = [
-    {
-      "id": 1,
-      "vin_number": "1HGCM82633A004352",
-      "plate_number": "TLC1234",
-      "car_category": "Luxury",
-      "fuel_type": "Fully Electric",
-      "transmission": "Automatic",
-      "status": "Pending",
-      "kyc": false
-    },
-    {
-      "id": 2,
-      "vin_number": "2T1BU4EE9DC123456",
-      "plate_number": "TLC5678",
-      "car_category": "SUV",
-      "fuel_type": "Hybrid",
-      "transmission": "Automatic",
-      "status": "Pending",
-      "kyc": false
-    },
-    {
-      "id": 3,
-      "vin_number": "3FAHP0HA4CR123456",
-      "plate_number": "TLC9101",
-      "car_category": "Medium",
-      "fuel_type": "Fully Electric",
-      "transmission": "Gas",
-      "status": "Pending",
-      "kyc": false
-    },
-    {
-      "id": 4,
-      "vin_number": "1FTFW1EF1EFC12345",
-      "plate_number": "TLC1122",
-      "car_category": "Standrad",
-      "fuel_type": "Hybrid",
-      "transmission": "Automatic",
-      "status": "Pending",
-      "kyc": false
-    },
-    {
-      "id": 5,
-      "vin_number": "JH4KA8270MC012345",
-      "plate_number": "TLC3344",
-      "car_category": "Luxury",
-      "fuel_type": "Hybrid",
-      "transmission": "Automatic",
-      "status": "Pending",
-      "kyc": false
-    }
-  ];
-
   tandcCodes: any = {
     "DRIVER INFO": "D_KYC_TC",
     "CAR OWNER INFO": "D_KYC_TC",
@@ -275,6 +219,7 @@ export class UserDashboardKycComponent {
     }).subscribe((response: any) => {
       const type: any = {
         "Fleet owner": "companykyc",
+        "Individual car owner": "driverkyc",
         "Driver with owned car": "driverkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
@@ -419,7 +364,7 @@ export class UserDashboardKycComponent {
       "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
       "countryId": 230,
       "transactionId": 1,
-      "menuId": 27
+      "menuId": this.kycForm.menuId || 27
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

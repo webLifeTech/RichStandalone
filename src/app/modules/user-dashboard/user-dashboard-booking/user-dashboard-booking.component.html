@@ -33,11 +33,11 @@
                     <option value="2">Last 30 Days</option>
                     <option value="3">Custom</option>
                   </select>
-                  <select class="form-select">
-                    <option selected>Sort By Relevance</option>
-                    <option value="1">Sort By Ascending</option>
-                    <option value="2">Sort By Descending</option>
-                    <option value="3">Sort By Alphabet</option>
+                  <select class="form-select" [(ngModel)]="sortOrder" (change)="searchData()">
+                    <!-- <option selected>Sort By Relevance</option> -->
+                    <option value="ASC">Sort By Ascending</option>
+                    <option value="DESC">Sort By Descending</option>
+                    <!-- <option value="3">Sort By Alphabet</option> -->
                   </select>
                 </div>
               </div>
@@ -111,9 +111,9 @@
                       <td>
                         <span class="badge" [ngClass]="{
                             'badge-light-secondary': data.bookingStatus === 'Confirmed',
-                            'badge-light-warning': data.bookingStatus === 'Inprogress' || data.bookingStatus ===  'Pending Request',
-                            'badge-light-danger': data.bookingStatus === 'Cancelled' || data.bookingStatus === 'Refund Started' || data.bookingStatus === 'Refund Completed' || data.bookingStatus === 'Refund Rejected',
-                            'badge-light-success': data.bookingStatus === 'Completed'}">
+                            'badge-light-warning': data.bookingStatus === 'Delivered' || data.bookingStatus ===  'Pending Request',
+                            'badge-light-danger': data.bookingStatus === 'Cancelled' || data.bookingStatus === 'Refund Started' || data.bookingStatus === 'Refund Received' || data.bookingStatus === 'Refund Rejected',
+                            'badge-light-success': data.bookingStatus === 'Received'}">
                           {{data.bookingStatus}}
                         </span>
                       </td>
@@ -167,23 +167,23 @@
                             <i class="feather icon-check-square"></i>
                             <span class="ms-2">Checklist</span>
                           </button> -->
-                          <button *ngIf="data.bookingStatus === 'Confirmed'" (click)="changeStatus(data,'Inprogress')"
+                          <button *ngIf="data.bookingStatus === 'Confirmed'" (click)="changeStatus(data,'Delivered')"
                             type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Delivered</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Inprogress'" (click)="changeStatus(data,'Completed')"
+                          <button *ngIf="data.bookingStatus === 'Delivered'" (click)="changeStatus(data,'Received')"
                             type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatus === 'Pending Request' || data.bookingStatus === 'Confirmed' || data.bookingStatus === 'Inprogress'"
+                            *ngIf="data.bookingStatus === 'Pending Request' || data.bookingStatus === 'Confirmed' || data.bookingStatus === 'Delivered'"
                             (click)="bookingCancel(data)" type="button" mat-menu-item>
                             <i class="feather icon-x-square"></i>
                             <span class="ms-2">Cancel Booking</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Completed'" (click)="writeReview(data)" type="button"
+                          <button *ngIf="data.bookingStatus === 'Received'" (click)="writeReview(data)" type="button"
                             mat-menu-item>
                             <i class="feather icon-star"></i>
                             <span class="ms-2">Write Review</span>

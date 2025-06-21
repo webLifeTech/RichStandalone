@@ -54,7 +54,8 @@ export class PlanSubscribeComponent {
   public packageFor = '';
   public searchFrom = 'checkout';
   public params: any = {};
-  public cabDetail: cabDetails;
+  paymentOptions: any = [];
+  firstPayOpt: any = {};
   isAgreeTerms: boolean = false;
   today: any = new Date();
   summaryObj: any = {
@@ -97,14 +98,42 @@ export class PlanSubscribeComponent {
   }
 
   ngOnInit() {
-    this.cabService.getCabById().subscribe(response => {
-      this.cabDetail = response;
-    })
     for (let step = 0; step < 12; step++) {
       this.duration.push({ value: step + 1 })
     }
+    this.getConfigUIForms();
     this.getPackageType();
     this.calculateDropTime();
+  }
+
+  getConfigUIForms() {
+    let body = {
+      "menuId": 26,
+      "countryId": 230,
+      "transactionId": 1,
+      "stateCode": "42",
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
+    }
+    this.profileService.getConfigUIForms(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.length) {
+        this.paymentOptions = response;
+        this.paymentOptions[0].checked = true;
+        this.firstPayOpt = this.paymentOptions[0];
+        const types: any = {
+          "21": "CreditCard",
+          "22": "ACH",
+          "23": "Wallet",
+          "24": "Crypto"
+        }
+        for (let i in this.paymentOptions) {
+          this.paymentOptions[i].type = types[this.paymentOptions[i].formId] || null;
+        }
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   getPricingDetails() {
@@ -295,7 +324,11 @@ export class PlanSubscribeComponent {
     this.calculateDropTime();
   }
 
-  selectPaymentMode(type: any) {
+  selectPaymentMode(details: any, type: any) {
     this.type = type;
+    for (let i in this.paymentOptions) {
+      this.paymentOptions[i].checked = false;
+    }
+    details.checked = true;
   }
 }

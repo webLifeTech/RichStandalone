@@ -16,6 +16,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { PricingService } from '../../../services/pricing.service';
 import { DocumentSignModalComponent } from '../modal/document-sign-modal/document-sign-modal.component';
 import { WalletService } from '../../../services/wallet.service';
+import { ProfileService } from '../../../services/profile.service';
 
 @Component({
   selector: 'app-booking',
@@ -43,6 +44,8 @@ export class BookingComponent {
   // singleItem.vehicleId
   @Input() params: any;
 
+  paymentOptions: any = [];
+  firstPayOpt: any = {};
   coinList: any = [];
   selectedCoin = ""; // LTCT
   type = "CreditCard";
@@ -62,14 +65,46 @@ export class BookingComponent {
     private pricingS: PricingService,
     private modalService: NgbModal,
     public walletService: WalletService,
+    private profileService: ProfileService,
   ) {
 
     this.route.queryParams.subscribe((params) => {
       this.riskType = params['type'] ? params['type'] : "car";
     })
     this.getCrypto();
+    this.getConfigUIForms();
     this.cabService.getCabById().subscribe(response => {
       this.cabDetail = response;
+    })
+  }
+
+  getConfigUIForms() {
+    let body = {
+      "menuId": 26,
+      "countryId": 230,
+      "transactionId": 1,
+      "stateCode": "42",
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
+    }
+    this.profileService.getConfigUIForms(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.length) {
+        this.paymentOptions = response;
+        this.paymentOptions[0].checked = true;
+        this.firstPayOpt = this.paymentOptions[0];
+        const types: any = {
+          "21": "CreditCard",
+          "22": "ACH",
+          "23": "Wallet",
+          "24": "Crypto"
+        }
+        for (let i in this.paymentOptions) {
+          this.paymentOptions[i].type = types[this.paymentOptions[i].formId] || null;
+        }
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
     })
   }
 
@@ -85,8 +120,12 @@ export class BookingComponent {
     })
   }
 
-  change(type: any) {
+  change(details: any, type: any) {
     this.type = type;
+    for (let i in this.paymentOptions) {
+      this.paymentOptions[i].checked = false;
+    }
+    details.checked = true;
   }
 
   async bookNow() {
@@ -106,7 +145,8 @@ export class BookingComponent {
           "creditCardInfo": null,
           "transactionType": null,
           "remarks": null,
-          "paymentType": this.type, // CreditCard,ACH
+          "walletId": null,
+          "paymentType": this.type, // CreditCard,ACH,Wallet
           "currency": "USD", // USD,INR,EUR
         },
         "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,
@@ -130,6 +170,7 @@ export class BookingComponent {
         "remarks": null
       }
 
+      console.log("this.gs.paymentDetails >>>>>>>", this.gs.paymentDetails);
       console.log("this.riskType >>>>>>>", this.riskType);
       console.log("this.type >>>>>>>", this.type);
       if (this.type === 'CreditCard') {
@@ -163,6 +204,9 @@ export class BookingComponent {
           "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
         }
       }
+      if (this.type === 'Wallet') {
+        body["BookingPaymentRequest"]["walletId"] = this.gs.paymentDetails.wallet.walletId;
+      }
 
       console.log("body >>>>>>", body);
 
@@ -184,6 +228,8 @@ export class BookingComponent {
               this.router.navigate(['/cab/booking/booking-success', this.params.type]);
             }
           }, () => { });
+        } else {
+          this.toast.errorToastr(res.message);
         }
         this.gs.isSpinnerShow = false;
       }, (err: any) => {
@@ -252,7 +298,8 @@ export class BookingComponent {
   }
 
   bookCancel() {
-    this.router.navigate(['/cab/booking/booking-failed', this.singleItem.itemId], {
+    const itemId = this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId;
+    this.router.navigate(['/cab/booking/booking-failed', itemId], {
       queryParams: this.params,
       queryParamsHandling: "merge"
     });

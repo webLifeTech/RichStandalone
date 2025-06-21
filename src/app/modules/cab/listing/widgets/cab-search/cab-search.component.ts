@@ -9,6 +9,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CabService } from '../../../../../shared/services/cab.service';
 import { ProfileService } from '../../../../../shared/services/profile.service';
+import { ToastService } from '../../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cab-search',
@@ -49,6 +50,7 @@ export class CabSearchComponent {
   windowHeight: number;
   locationArray: any = [];
   rentTypeList: any = [];
+  todayDate = new Date();
 
   constructor(
     private route: ActivatedRoute,
@@ -57,8 +59,11 @@ export class CabSearchComponent {
     public cabService: CabService,
     private profileService: ProfileService,
     private datePipe: DatePipe,
+    private toast: ToastService,
   ) {
+    // use for continue seearch
     this.searchInfo = this.gs.getLastSearch();
+    console.log("this.searchInfo >>>>>", this.searchInfo);
     if (this.searchInfo.location_type) {
       this.searchObj = this.searchInfo;
     }
@@ -96,18 +101,28 @@ export class CabSearchComponent {
     this.isSearchVisible = false;
   }
 
-  sameLocation(event: Event) {
-    this.searchObj.location_type = (event.target as HTMLInputElement).value;
-  }
-
-  serachCarDetails() {
-    // if (this.windowWidth > 991) {
-    //   this.isSearchVisible = false;
-    // }
+  serachCarDetails(searchType?: any) {
+    if (searchType != "reset") {
+      if (!this.searchObj.same_location) {
+        this.toast.errorToastr("Please enter location");
+        return;
+      }
+      if (!this.searchObj.timeType) {
+        this.toast.errorToastr("Please enter type");
+        return;
+      }
+      if (!this.searchObj.pick_time) {
+        this.toast.errorToastr("Please enter pick up time");
+        return;
+      }
+      if (!this.searchObj.drop_time) {
+        this.toast.errorToastr("Please enter drop time");
+        return;
+      }
+    }
     localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
     this.locationArray = [];
     this.searchEvent.emit({ searchObj: this.searchObj });
-    // this.closeSearchBox();
   }
 
   resetFilter() {
@@ -118,10 +133,11 @@ export class CabSearchComponent {
       pick_time: "",
       drop_time: "",
       type: this.params['type'] ? this.params['type'] : "car",
-      timeType: "ALL",
+      timeType: "Daily",
       location_type: "option2",
     };
-    this.serachCarDetails();
+    // localStorage.removeItem('lastSearch'); // auto reset
+    this.serachCarDetails("reset");
   }
 
   applyFilter(event: Event) {
@@ -142,7 +158,7 @@ export class CabSearchComponent {
     }
     let body = {
       "location": this.searchObj.same_location,
-      "risktype": 'vehicle'
+      "risktype": this.params['type'] === 'car' ? 'vehicle' : 'driver'
     }
     this.gs.isSpinnerShow = true;
     this.cabService.GetLocations(body).subscribe((response: any) => {

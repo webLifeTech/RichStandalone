@@ -78,20 +78,20 @@ export class DynamicGridComponent {
     console.log("selectedTabObj >>>>>", this.selectedTabObj);
 
     if (this.type === 'my_vehicle') {
-      this.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
+      this.kycForm.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
     } else {
 
       if (this.type === 'driver') {
-        this.formName = 'DRIVER INFO';
+        this.kycForm.formName = 'DRIVER INFO';
       }
       if (this.type === 'individualCarOwner') {
-        this.formName = 'CAR OWNER INFO';
+        this.kycForm.formName = 'CAR OWNER INFO';
       }
       if (this.type === 'fleetOwner') {
-        this.formName = 'COMPANY INFO';
+        this.kycForm.formName = 'COMPANY INFO';
       }
       if (this.type === 'branch' || this.type === 'driver_details' || this.type === 'vendor-profile') {
-        this.formName = this.selectedTabObj.formName;
+        this.kycForm.formName = this.selectedTabObj.formName;
       }
       this.filteredData = this.data;
       console.log("this.filteredData >>>>>", this.filteredData);
@@ -110,7 +110,7 @@ export class DynamicGridComponent {
         if (response && response.length) {
           this.filteredData = response;
           this.totalData = response.length;
-          // this.onEdit(this.filteredData[0]); // need to do
+          // this.onEdit(this.filteredData[0]);
         }
       })
     }
@@ -127,7 +127,7 @@ export class DynamicGridComponent {
       "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
       "countryId": 230,
       "transactionId": 2,
-      "formName": this.formName,//THis is name you have send form names
+      "formName": this.kycForm.formName,//THis is name you have send form names
       "menuId": this.kycForm?.menuId || 27
     }
 
@@ -197,8 +197,9 @@ export class DynamicGridComponent {
             size: 'lg'
           });
           modalRef.componentInstance.formType = this.type;
+          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.componentInstance.viewInfoDetails = response;
-          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
           modalRef.result.then((res: any) => {
           });
         }

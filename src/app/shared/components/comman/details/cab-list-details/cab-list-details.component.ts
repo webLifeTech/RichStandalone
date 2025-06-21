@@ -174,6 +174,17 @@ export class CabListDetailsComponent {
   }
 
   async bookNow(details: any) {
+    if (details.isBooked) {
+      const modalRef = this.modalService.open(InformationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = `${this.type === 'car' ? 'Vehicle' : 'Driver'} is already booked, cannot book now.`;
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) { }
+      });
+      return;
+    }
+
     if (this.auth.isLoggedIn) {
       this.gs.isLicenseVerified = true // need to do
       if (!this.gs.isLicenseVerified) {

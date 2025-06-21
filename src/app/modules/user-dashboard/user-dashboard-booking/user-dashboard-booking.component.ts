@@ -49,22 +49,17 @@ export class UserDashboardBookingComponent {
   public tableData: any = [];
   dataSource!: MatTableDataSource<userBookings>;
   public searchDataValue = '';
-  public pageSize = 10;
-  public totalData = 0;
-  public currentPage = 1;
-  public activeTab = '';
+  sortColumn: any = "bookingDate";
+  sortOrder: any = "DESC";
+  pageSize: any = 10;
+  totalData: any = 0;
+  currentPage: any = 1;
+  activeTab: any = '';
   activeTabName: any = '';
   editInfo: any = {};
-  booktabs: any = [
-    // { name: "All Bookings", value: "All Bookings" },
-    // { name: "Pending Request", value: "Pending Request" },
-    // { name: "Confirmed", value: "Confirmed" },
-    // { name: "Cancelled", value: "Cancelled" },
-    // { name: "Inprogress", value: "Inprogress" },
-    // { name: "Completed", value: "Completed" },
-  ]
+  booktabs: any = []
   isShowCancellation: any = false;
-  isShowChecklist: any = true;
+  isShowChecklist: any = false;
   selectedRefNo: any = "";
   tempTableData: any = [];
 
@@ -95,7 +90,9 @@ export class UserDashboardBookingComponent {
       "bookingStatus": JSON.stringify([this.activeTab]),
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
-      "globalSearch": this.searchDataValue || ""
+      "globalSearch": this.searchDataValue || "",
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.GetAllBookings(body).subscribe((res: any) => {
@@ -306,7 +303,7 @@ export class UserDashboardBookingComponent {
         data.bookingStatus = status;
         this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
         this.totalData = this.tableData.length;
-        if (status === "Completed")
+        if (status === "Received")
           this.goToChecklist();
         // this.openOtpVerification(data, status);
       }

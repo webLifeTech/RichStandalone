@@ -1,6 +1,6 @@
 <div *ngIf="isSearchVisible" class="flight-search-detail position-relative" [class.show]="isShow">
   <form class="row m-0">
-    <div class="col"
+    <!-- <div class="col"
       [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
       <div class="form-group">
         <label>{{ 'global.pick_up' | translate }} {{ 'global.location' | translate }}</label>
@@ -17,7 +17,7 @@
           class="form-control open-select" placeholder="drop off">
         <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
       </div>
-    </div>
+    </div> -->
     <div class="col"
       [ngClass]="{ 'd-none': searchObj.location_type == 'option1', 'd-block': searchObj.location_type == 'option2' }">
       <div class="form-group position-relative">
@@ -49,7 +49,7 @@
         <label>{{ 'global.pick_up_time' | translate }}</label>
         <input [(ngModel)]="searchObj.pick_time" name="pick_time" class="form-control datetimepicker-input digits"
           placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
-          [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+          [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup" [min]="todayDate">
         <!-- value="02:05 11/13/2019" -->
         <owl-date-time #pickup></owl-date-time>
       </div>
@@ -60,7 +60,7 @@
         <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
           placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
           [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [owlDateTimeFilter]="dropTimeFilter"
-          [disabled]="!searchObj.pick_time">
+          [min]="searchObj.pick_time" [disabled]="!searchObj.pick_time">
         <!-- value="02:05 12/13/2019" -->
         <owl-date-time #drop></owl-date-time>
       </div>

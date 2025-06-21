@@ -23,9 +23,12 @@
         <i *ngIf="!isShowPassOne" class="feather icon-eye"></i>
       </a>
     </div>
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1"> &nbsp;
-      <label class="form-check-label" for="exampleCheck1"> {{'auth.form.remember_me' | translate}}</label>
+    <div class="form-group d-flex">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1"> &nbsp;
+        <label class="form-check-label" for="exampleCheck1"> {{'auth.form.remember_me' | translate}}</label>
+      </div>
+      <a class="ms-auto mt-1 fw-bold" [routerLink]="['/auth/forgot-password']">Forgot Password</a>
     </div>
     <button type="button" class="w-100 btn btn-theme" (click)="authUser(frm, type)">
       {{ ('auth.login' | translate) }}
@@ -37,25 +40,32 @@
     <div *ngIf="isVendor" class="form-group">
       <label for="name">{{'auth.form.vendor_type' | translate}} <span class="mandatory">*</span></label>
       <ng-select clearable="false" [items]="vendorTypes" bindLabel="Description" placeholder="-- Select --"
-        bindValue="Description" [(ngModel)]="registerForm.category" name="category" (change)="selectCategory($event)">
+        bindValue="Description" [(ngModel)]="registerForm.category" name="category" (change)="selectCategory($event)"
+        #type="ngModel" [ngClass]="{'mandatory-input': type.errors && submitted}" required>
       </ng-select>
+      <div class="mandatory-text mt-1" *ngIf="type.errors && (type.dirty || type.touched || submitted)">
+        <span *ngIf="type.errors['required']">Vendor Type is required</span>
+      </div>
     </div>
     <div *ngIf="!isVendor" class="form-group">
       <label for="name">{{'auth.form.type' | translate}} <span class="mandatory">*</span></label>
       <ng-select clearable="false" [items]="rolesList" bindLabel="Description" placeholder="-- Select User Type --"
-        bindValue="Id" [(ngModel)]="registerForm.type" name="type" #type="ngModel" required>
+        bindValue="Id" [(ngModel)]="registerForm.type" name="type" #type="ngModel"
+        [ngClass]="{'mandatory-input': type.errors && submitted}" required>
       </ng-select>
-      <div class="text-danger mt-1" *ngIf="type.errors && (type.dirty || type.touched || submitted)">
-        <span *ngIf="type.invalid">User Type is required</span>
+      <div class="mandatory-text mt-1" *ngIf="type.errors && (type.dirty || type.touched || submitted)">
+        <span *ngIf="type.errors['required']">User Type is required</span>
       </div>
     </div>
     <div class="form-group">
       <label for="name">{{'auth.form.full_name' | translate}} <span class="mandatory">*</span></label>
       <input type="text" class="form-control" id="name" [(ngModel)]="registerForm.full_name" name="full_name"
         #full_name="ngModel" placeholder="{{'global.enter' | translate}} {{'auth.form.full_name' | translate}}"
-        autocomplete="off" appAlphabetOnly required />
-      <div class="text-danger mt-1" *ngIf="full_name.errors && (full_name.dirty || full_name.touched || submitted)">
-        <span *ngIf="full_name.invalid">Full Name is required</span>
+        [pattern]="fullNameRegex" autocomplete="off" appAlphabetOnly
+        [ngClass]="{'mandatory-input': full_name.errors && submitted}" required />
+      <div class="mandatory-text mt-1" *ngIf="full_name.errors && (full_name.dirty || full_name.touched || submitted)">
+        <span *ngIf="full_name.errors['required']">Full Name is required</span>
+        <span *ngIf="full_name.errors['pattern']">No leading or trailing spaces allowed.</span>
       </div>
     </div>
     <div class="form-group d-flex mb-1">
@@ -75,7 +85,6 @@
       </div>
     </div>
     <div class="form-group">
-      <!-- <label for="exampleInputEmail1">{{'auth.form.username' | translate}}</label> -->
       <div *ngIf="userNameType == 'mobile'">
         <div class="input-group ">
           <span class="input-group-text fw-bold pointer bg-white" (click)="openCountryDialog()">
@@ -84,12 +93,10 @@
 
           <input type="text" [(ngModel)]="loginForm.username" name="phone_number" #phone_number="ngModel"
             class="form-control" placeholder="Enter Mobile Number" autocomplete="off" [disabled]="isOtpVerified"
-            minlength="10" maxlength="10" numbersOnly required />
+            minlength="10" maxlength="10" numbersOnly [ngClass]="{'mandatory-input': phone_number.errors && submitted}"
+            required />
         </div>
-        <!-- <div class="text-danger mt-1" *ngIf="full_name.errors && (full_name.dirty || full_name.touched || submitted)">
-        <span *ngIf="full_name.invalid">Full Name is required</span>
-      </div> -->
-        <div class="text-danger mt-1"
+        <div class="mandatory-text mt-1"
           *ngIf="phone_number.errors && (phone_number.dirty || phone_number.touched || submitted)">
           <span *ngIf="phone_number.errors['required']">Mobile Number is required</span>
           <span *ngIf="phone_number.errors['minlength']">Enter 10 digit Mobile Number</span>
@@ -98,10 +105,10 @@
       <div *ngIf="userNameType == 'email'">
         <input type="text" [(ngModel)]="loginForm.username" name="username" #email="ngModel" class="form-control"
           [pattern]="emailPattern" placeholder="Enter Email Address" autocomplete="off" [disabled]="isOtpVerified"
-          required />
-        <div class="text-danger mt-1" *ngIf="email.errors && (email.dirty || email.touched || submitted)">
+          [ngClass]="{'mandatory-input': email.errors && submitted}" required />
+        <div class="mandatory-text mt-1" *ngIf="email.errors && (email.dirty || email.touched || submitted)">
           <span *ngIf="email.errors['required']">Email is required</span>
-          <span *ngIf="email.errors['pattern']">Email is not correct</span>
+          <span *ngIf="email.errors['pattern']">Email is invalid</span>
         </div>
       </div>
     </div>
@@ -119,8 +126,9 @@
       </div>
       <input type="text" class="form-control" id="otp" [(ngModel)]="registerForm.otp" name="otp" #otp="ngModel"
         [disabled]="isOtpVerified" placeholder="{{'global.enter' | translate}} {{'auth.form.otp' | translate}}"
-        autocomplete="off" numbersOnly maxlength="4" required />
-      <div class="text-danger mt-1" *ngIf="otp.errors && (otp.dirty || otp.touched || submitted)">
+        autocomplete="off" numbersOnly maxlength="4" [ngClass]="{'mandatory-input': otp.errors && submitted}"
+        required />
+      <div class="mandatory-text mt-1" *ngIf="otp.errors && (otp.dirty || otp.touched || submitted)">
         <span *ngIf="otp.errors['required']">OTP is required</span>
       </div>
     </div>
@@ -128,16 +136,17 @@
       <label>{{'auth.form.password' | translate}}</label>
       <input [type]="isShowPassOne ? 'text':'password'" [(ngModel)]="loginForm.password" name="password_1"
         #passwordRef="ngModel" class=" form-control" minlength="8" maxlength="20" [pattern]="passPattern"
-        placeholder="{{'global.enter' | translate}} {{'auth.form.password' | translate}}" autocomplete="off" required />
+        placeholder="{{'global.enter' | translate}} {{'auth.form.password' | translate}}" autocomplete="off"
+        [ngClass]="{'mandatory-input': passwordRef.errors && submitted}" required />
       <a class="password-eyes" (click)="viewPassword(1)">
         <i *ngIf="isShowPassOne" class="feather icon-eye-off"></i>
         <i *ngIf="!isShowPassOne" class="feather icon-eye"></i>
       </a>
-      <div class="text-danger mt-1"
+      <div class="mandatory-text mt-1"
         *ngIf="passwordRef.errors && (passwordRef.dirty || passwordRef.touched || submitted)">
         <span *ngIf="passwordRef.errors['required']">Password is required</span>
       </div>
-      <div *ngIf="passwordRef.invalid && passwordRef.touched" class="text-danger mt-1">
+      <div *ngIf="passwordRef.invalid && passwordRef.touched" class="mandatory-text mt-1">
         <div *ngIf="passwordRef.errors?.['pattern']">
           Password must be 8–20 characters, with uppercase, lowercase, number, and special character.
         </div>
@@ -145,19 +154,23 @@
     </div>
 
     <div *ngIf="isOtpVerified" class="form-group position-relative">
-      <label for="confirmpassword">{{'auth.form.confirm_password' | translate}}</label>
-      <input [type]="isShowPassTwo ? 'text':'password'" [(ngModel)]="rePassword" name="rePassword" #rePassword="ngModel"
-        class="form-control" id="confirmpassword"
+      <label>{{'auth.form.confirm_password' | translate}}</label>
+      <input [type]="isShowPassTwo ? 'text':'password'" [(ngModel)]="rePassword" name="rePassword"
+        #confirmPassword="ngModel" class="form-control"
         placeholder="{{'global.enter' | translate}} {{'auth.form.confirm_password' | translate}}" autocomplete="off"
-        required />
+        [ngClass]="{'mandatory-input': confirmPassword.errors && submitted}" required />
       <a class="password-eyes" (click)="viewPassword(2)">
         <i *ngIf="isShowPassTwo" class="feather icon-eye-off"></i>
         <i *ngIf="!isShowPassTwo" class="feather icon-eye"></i>
       </a>
-      <div class="text-danger mt-1" *ngIf="rePassword.errors && (rePassword.dirty || rePassword.touched || submitted)">
-        <span *ngIf="rePassword.errors['required']">Confirm Password is required</span>
+      <div class="mandatory-text mt-1"
+        *ngIf="confirmPassword.errors && (confirmPassword.dirty || confirmPassword.touched || submitted)">
+        <span *ngIf="confirmPassword.errors['required']">Confirm Password is required</span>
       </div>
-      <small>Re-enter the password exactly same as above</small>
+      <div class="mandatory-text mt-1" *ngIf="this.loginForm.password !== this.rePassword && confirmPassword.touched">
+        <span>Re-enter the password exactly same as above</span>
+      </div>
+      <!-- <small>Re-enter the password exactly same as above</small> -->
     </div>
 
     <div class="button-bottom">

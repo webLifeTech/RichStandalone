@@ -21,8 +21,9 @@ import { ProfileService } from '../../../../../shared/services/profile.service';
 })
 export class DynamicInfoModalComponent {
   @Input() formType: any = "";
+  @Input() kycForm: any = {};
   @Input() viewInfoDetails: any = {};
-  @Input() groupedSectionsData: any = {};
+  @Input() groupedSectionsData: any = [];
   masterDropdwonList: any = [];
   workingHours: any = [];
 
@@ -39,12 +40,13 @@ export class DynamicInfoModalComponent {
     console.log("1111111 viewInfoDetails >>>>>>>", this.viewInfoDetails);
     console.log("1111111 formType >>>>>>>", this.formType);
 
-    if (this.formType !== 'my_vehicle') {
-      this.getMasterPolicyCodes();
-    }
-    if (this.formType === 'my_vehicle') {
-      this.getMasterVehicleCodes();
-    }
+    this.getConfigUIFields();
+    // if (this.formType !== 'my_vehicle') {
+    //   this.getMasterPolicyCodes();
+    // }
+    // if (this.formType === 'my_vehicle') {
+    //   this.getMasterVehicleCodes();
+    // }
     if (this.formType === 'driver_details') {
       this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours;
     }
@@ -52,6 +54,60 @@ export class DynamicInfoModalComponent {
       this.workingHours = this.viewInfoDetails.providerRequest.workingHours;
     }
     // this.createForm();
+  }
+
+  // Get Config UI Fields
+  getConfigUIFields() {
+    this.gs.isSpinnerShow = true;
+
+    let body = {
+      "clientID": null,
+      "stateCode": this.viewInfoDetails.driveInCity,
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
+      "countryId": 230,
+      "transactionId": 2,
+      "formName": this.kycForm.formName,//THis is name you have send form names
+      "menuId": this.kycForm.menuId || 27
+    }
+
+    this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
+      console.log("aaaaaaaaaaaa >>>>>>>>", response);
+      const groupedSections = this.groupBy(response, 'sectionID');
+
+      Object.keys(groupedSections).forEach((sectionID, index) => {
+        const fieldsArray: any = groupedSections[sectionID].sort(
+          (a: any, b: any) => a.fieldOrder - b.fieldOrder
+        );
+
+        const modalObjectCounts: { [key: string]: number } = {};
+        fieldsArray.forEach((item: any) => {
+          modalObjectCounts[item.modalObject] = (modalObjectCounts[item.modalObject] || 0) + 1;
+        });
+        const mostFrequentModalObject = Object.keys(modalObjectCounts).reduce((a, b) =>
+          modalObjectCounts[a] > modalObjectCounts[b] ? a : b
+        );
+
+        const section: any = {
+          sectionID: sectionID,
+          sectionName: (fieldsArray[0]?.sectionName || ''),
+          modalObject: mostFrequentModalObject,
+          fields: fieldsArray
+        };
+        this.groupedSectionsData.push(section);
+      });
+
+      // this.getSearchData();
+      if (this.formType !== 'my_vehicle') {
+        this.getMasterPolicyCodes();
+      }
+      if (this.formType === 'my_vehicle') {
+        this.getMasterVehicleCodes();
+      }
+      this.gs.isSpinnerShow = false;
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   // Get All Dropdwon List

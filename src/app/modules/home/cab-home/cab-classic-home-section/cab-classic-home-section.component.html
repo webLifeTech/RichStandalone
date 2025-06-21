@@ -68,7 +68,7 @@
                           <input name="pick_time" [(ngModel)]="searchObj.pick_time"
                             class="form-control datetimepicker-input digits"
                             placeholder="{{ 'global.pick_up_time' | translate }} {{ 'global.date_and_time' | translate }}"
-                            type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup">
+                            type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup" [min]="todayDate">
                           <owl-date-time #pickup></owl-date-time>
                         </div>
                       </div>
@@ -79,16 +79,18 @@
                             class="form-control datetimepicker-input digits"
                             placeholder="{{ 'global.drop_off_time' | translate }} {{ 'global.date_and_time' | translate }}"
                             type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop"
-                            [owlDateTimeFilter]="dropTimeFilter" [disabled]="!searchObj.pick_time">
+                            [owlDateTimeFilter]="dropTimeFilter" [min]="searchObj.pick_time"
+                            [disabled]="!searchObj.pick_time">
                           <owl-date-time #drop></owl-date-time>
                         </div>
                       </div>
                       <div id="type" class="col">
                         <div class="form-group">
-                          <label class="font-xs-white">{{ 'global.type' | translate }}</label>
+                          <label class="font-xs-white">{{ 'global.rental_type' | translate }}</label>
                           <select id="type" name="type" [(ngModel)]="searchObj.type" class="form-control open-select"
                             (change)="onChangeType()">
-                            <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.type' |
+                            <option value="" disabled selected>{{ 'global.select' | translate }} {{ 'global.rental_type'
+                              |
                               translate }}</option>
                             <option value="car">Car</option>
                             <option value="driver">Driver</option>

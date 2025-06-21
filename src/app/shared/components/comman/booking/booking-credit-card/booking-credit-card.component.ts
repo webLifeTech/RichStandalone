@@ -45,10 +45,10 @@ export class BookingCreditCardComponent {
     private gs: GlobalService
   ) {
     this.form = this._fb.group({
-      cardNumber: [''], // [CreditCardValidators.validateCCNumber]
-      expirationDate: [''], // [CreditCardValidators.validateExpDate]
+      cardNumber: ['', Validators.required], // [CreditCardValidators.validateCCNumber]
+      expirationDate: ['', Validators.required], // [CreditCardValidators.validateExpDate]
       cvc: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
-      holderName: ['']
+      holderName: ['', Validators.required]
     });
     this.gs.paymentDetails.creditCard = this.form;
 

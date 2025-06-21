@@ -36,6 +36,7 @@ export class BookingMyWalletComponent {
       console.log("response >>>>", response);
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
         this.walletDetails = response.walletDetails;
+        this.gs.paymentDetails.wallet = this.walletDetails;
       }
       this.gs.isSpinnerShow = false;
     })

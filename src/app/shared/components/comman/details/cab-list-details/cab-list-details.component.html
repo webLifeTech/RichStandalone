@@ -27,8 +27,7 @@
         <div
           *ngFor="let details of searchResult.vehicleMatches | paginate: { itemsPerPage: this.pageSize, currentPage: pageNo, totalItems: this.searchResult.viewModel?.totalCount }; let idx = index;"
           class="container-fluid detail-wrap wow fadeInUp">
-          <a [ngClass]="{'btn-available': details.availability === 'Available', 'btn-booked' :details.availability !== 'Available'}"
-            class="btn">
+          <a [ngClass]="{'btn-available': !details.isBooked, 'btn-booked' :details.isBooked}" class="btn">
             {{details.availability | translate}}
           </a>
           <div *ngIf="details.isSelfWarn && type === 'car'" class="alert alert-warning alert-warn" role="alert">

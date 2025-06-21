@@ -90,7 +90,12 @@ export class ProfileComponent {
     this.profileService.UpdateDriverAndProviderStatus(Body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
-        this.toast.successToastr("Updated successfully");
+        // this.toast.successToastr("Updated successfully");
+        if (event.target.checked) {
+          this.toast.successToastr("User Active");
+        } else {
+          this.toast.successToastr("User Inactive");
+        }
         this.gs.loggedInUserInfo.activeStatus = event.target.checked;
         localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
       } else {

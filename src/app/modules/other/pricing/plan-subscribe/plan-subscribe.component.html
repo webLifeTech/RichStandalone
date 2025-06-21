@@ -58,36 +58,43 @@
 
             <div class="flight_detail payment-gateway" [class.p-0]="!title">
               <div class="accordion" id="accordionExample" ngbAccordion [closeOthers]="true">
-                @if(cabDetail){
-                @for(details of cabDetail.cabBooking; track details){
-                <div class="card" ngbAccordionItem [collapsed]="details.panel !== 'First'">
-                  <div class="card-header" id="h_one">
-                    <button class="btn btn-link" ngbAccordionButton (click)="selectPaymentMode(details.type)">
-                      <label for='{{ details.checkId }}'>
-                        <input type='radio' class="radio_animated ms-0" id='{{ details.checkId }}' name='occupation'
-                          value='Working' [checked]="details.checked" required />
-                        {{ details.title }}
-                      </label>
-                    </button>
-                  </div>
-                  <div id="one" class="collapse" ngbAccordionCollapse>
-                    <div class="card-body" ngbAccordionBody>
-                      <ng-template>
-                        @if(details.value == 'credit'){
-                        <app-booking-credit-card></app-booking-credit-card>
-                        }
-                        @if(details.value == 'net_banking'){
-                        <app-booking-net-banking></app-booking-net-banking>
-                        }
-                        @if(details.value == 'wallet'){
-                        <app-booking-my-wallet></app-booking-my-wallet>
-                        }
-                      </ng-template>
+                <ng-container *ngFor="let details of paymentOptions">
+                  <div class="card" ngbAccordionItem [collapsed]="details.formId != firstPayOpt.formId">
+                    <div class="card-header" id="h_one" ngbAccordionHeader>
+                      <button class="btn btn-link" ngbAccordionButton
+                        (click)="selectPaymentMode(details, details.type)">
+                        <input type='radio' class="radio_animated ms-3" name='occupation' [checked]="details.checked" />
+                        <label> {{ details.description }} </label>
+                      </button>
+                    </div>
+                    <!-- <div class="card-header d-flex align-items-center" ngbAccordionHeader ngbAccordionButton
+                    (click)="selectPaymentMode(details.type)">
+                    <label class="mb-0 w-100 d-flex align-items-center" for="{{ details.checkId }}">
+                      <input type="radio" class="radio_animated ms-0 me-2" id="{{ details.checkId }}" name="occupation"
+                        [checked]="details.checked" (click)="$event.stopPropagation()" />
+                      {{ details.title }}
+                    </label>
+                  </div> -->
+
+                    <div id="one" class="collapse" ngbAccordionCollapse>
+                      <div class="card-body" ngbAccordionBody>
+                        <ng-template>
+                          @if(details.type == 'CreditCard'){
+                          <app-booking-credit-card></app-booking-credit-card>
+                          }
+
+                          @if(details.type == 'ACH'){
+                          <app-booking-net-banking></app-booking-net-banking>
+                          }
+
+                          @if(details.type == 'Wallet'){
+                          <app-booking-my-wallet></app-booking-my-wallet>
+                          }
+                        </ng-template>
+                      </div>
                     </div>
                   </div>
-                </div>
-                }
-                }
+                </ng-container>
               </div>
 
               <div class="my-4">
@@ -105,7 +112,7 @@
                 <button (click)="payNow()" [disabled]="!isAgreeTerms" type="button" class="btn btn-theme color1 me-3">
                   {{'pricing_summary.pay_now' | translate}}
                 </button>
-                <button (click)="bookCancel()" type="button" class="btn btn-solid ">
+                <button (click)="backToPackage()" type="button" class="btn btn-solid ">
                   {{'pricing_summary.cancel' | translate}}
                 </button>
               </div>

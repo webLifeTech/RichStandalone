@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { interval } from 'rxjs';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     NgSelectModule,
     TranslateModule,
     OnlynumberDirective,
@@ -81,6 +82,7 @@ export class CommanLoginFormComponent {
     `(?=(\.\*[\$\@\$\!\%\*\#\^\(\)\&])\{${this.passRequirement.passwordMinSymbol},\})`,
     `[A-Za-z\\d\$\@\$\!\%\*\#\^\(\)\&]{${this.passRequirement.passwordMinCharacters},}`
   ].map(item => item.toString()).join('');
+  fullNameRegex: any = /^(?! )[A-Za-z ]*(?<! )$/;
 
 
   constructor(
@@ -189,6 +191,9 @@ export class CommanLoginFormComponent {
         this.toast.errorToastr("Please enter valid details.");
         return;
       }
+      console.log("this.loginForm.password >>>>>>", this.loginForm.password);
+      console.log("this.rePassword >>>>>>", this.rePassword);
+
       if (this.loginForm.password !== this.rePassword) {
         this.toast.errorToastr('Password and confirm password do not match.');
         return;
@@ -258,6 +263,7 @@ export class CommanLoginFormComponent {
       emailId: this.verificationType == "EmailId" ? this.loginForm.username : null,
       countryName: this.selectedCountry.CountryName,
       userId: null,
+      OTPPurpose: "Registration",
     }
     this.gs.isSpinnerShow = true;
     this.authService.SendVerificationCodeAsync(body).subscribe((res: any) => {
@@ -287,6 +293,18 @@ export class CommanLoginFormComponent {
       }
     })
 
+  }
+
+  async reRendOTP(frm: any, sendType: any) {
+    const body = {};
+    this.gs.isSpinnerShow = true;
+    this.authService.SendVerificationCodeAsync(body).subscribe((res: any) => {
+      console.log("SendVerificationCodeAsync >>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+
+      }
+    })
   }
 
   confirmOtp() {

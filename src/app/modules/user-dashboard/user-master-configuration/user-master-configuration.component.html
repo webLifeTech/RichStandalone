@@ -35,7 +35,7 @@
           </ng-container>
           <ng-container *ngIf="isAddEditDriverDetail">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'driver_details'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </ng-container>
         </div>
@@ -54,7 +54,7 @@
           </ng-container>
           <ng-container *ngIf="isAddEditBranch">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'branch'" [isEditInfo]="isFormEdit"
-              (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </ng-container>
         </div>
@@ -69,7 +69,7 @@
         <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
         <div *ngIf="isVehicleInfoEdit">
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (cancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
             [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
         </div>
 

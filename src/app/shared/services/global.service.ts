@@ -25,6 +25,7 @@ export class GlobalService {
   paymentDetails: any = {
     creditCard: {},
     ach: {},
+    wallet: {},
     crypto: {},
   };
   bookingSummaryDetails: any = {};

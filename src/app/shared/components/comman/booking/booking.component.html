@@ -8,46 +8,41 @@
 
     <div class="flight_detail payment-gateway" [class.p-0]="!title">
       <div class="accordion" id="accordionExample" ngbAccordion [closeOthers]="true">
-        @if(cabDetail){
-        @for(details of cabDetail.cabBooking; track details){
-        <div class="card" ngbAccordionItem [collapsed]="details.panel !== 'First'">
-          <div class="card-header" id="h_one">
-            <button class="btn btn-link" ngbAccordionButton (click)="change(details.type)">
-              <label for='{{ details.checkId }}'>
-                <input type='radio' class="radio_animated ms-0" id='{{ details.checkId }}' name='occupation'
-                  value='Working' [checked]="details.checked" required />
-                {{ details.title }}
-              </label>
-            </button>
-          </div>
-          <div id="one" class="collapse" ngbAccordionCollapse>
-            <div class="card-body" ngbAccordionBody>
-              <ng-template>
-                <!-- @if(details.value == 'debit'){
-                <app-booking-debit-card></app-booking-debit-card>
-                } -->
+        <ng-container *ngFor="let details of paymentOptions">
+          <div class="card" ngbAccordionItem [collapsed]="details.formId != firstPayOpt.formId">
+            <div class="card-header" id="h_one">
+              <button class="btn btn-link" ngbAccordionButton (click)="change(details, details.type)">
+                <input type='radio' class="radio_animated ms-3" name='occupation' [checked]="details.checked" />
+                <label> {{ details.description }} </label>
+              </button>
+            </div>
+            <div id="one" class="collapse" ngbAccordionCollapse>
+              <div class="card-body" ngbAccordionBody>
+                <ng-template>
+                  <!-- @if(details.value == 'debit'){
+                    <app-booking-debit-card></app-booking-debit-card>
+                    } -->
 
-                @if(details.value == 'credit'){
-                <app-booking-credit-card></app-booking-credit-card>
-                }
+                  @if(details.type == 'CreditCard'){
+                  <app-booking-credit-card></app-booking-credit-card>
+                  }
 
-                @if(details.value == 'net_banking'){
-                <app-booking-net-banking></app-booking-net-banking>
-                }
+                  @if(details.type == 'ACH'){
+                  <app-booking-net-banking></app-booking-net-banking>
+                  }
 
-                @if(details.value == 'wallet'){
-                <app-booking-my-wallet></app-booking-my-wallet>
-                }
+                  @if(details.type == 'Wallet'){
+                  <app-booking-my-wallet></app-booking-my-wallet>
+                  }
 
-                @if(details.value == 'crypto'){
-                <app-booking-crypto [coinList]="coinList" (onSelectCoin)="onSelectCoin($event)"></app-booking-crypto>
-                }
-              </ng-template>
+                  @if(details.type == 'Crypto'){
+                  <app-booking-crypto [coinList]="coinList" (onSelectCoin)="onSelectCoin($event)"></app-booking-crypto>
+                  }
+                </ng-template>
+              </div>
             </div>
           </div>
-        </div>
-        }
-        }
+        </ng-container>
       </div>
 
       <div class="payment-btn text-end mt-5">

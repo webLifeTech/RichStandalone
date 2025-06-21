@@ -8,6 +8,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { CabService } from '../../../../shared/services/cab.service';
 import { ProfileService } from '../../../../shared/services/profile.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cab-classic-home-section',
@@ -43,6 +44,7 @@ export class CabClassicHomeSectionComponent {
   public params: Params | any;
   locationArray: any = [];
   rentTypeList: any = [];
+  todayDate = new Date();
 
   constructor(
     public router: Router,
@@ -51,11 +53,13 @@ export class CabClassicHomeSectionComponent {
     public cabService: CabService,
     private datePipe: DatePipe,
     private profileService: ProfileService,
+    private toast: ToastService,
   ) {
-    this.searchInfo = this.gs.getLastSearch();
-    if (this.searchInfo.location_type) {
-      this.searchObj = this.searchInfo;
-    }
+    // use for continue seearch
+    // this.searchInfo = this.gs.getLastSearch();
+    // if (this.searchInfo.location_type) {
+    //   this.searchObj = this.searchInfo;
+    // }
     this.getRentType();
   }
 
@@ -124,7 +128,26 @@ export class CabClassicHomeSectionComponent {
   }
 
   findToSearch() {
-    console.log("this.searchObj >>>>>>>", this.searchObj);
+    if (!this.searchObj.same_location) {
+      this.toast.errorToastr("Please enter location");
+      return;
+    }
+    if (!this.searchObj.timeType) {
+      this.toast.errorToastr("Please enter type");
+      return;
+    }
+    if (!this.searchObj.pick_time) {
+      this.toast.errorToastr("Please enter pick up time");
+      return;
+    }
+    if (!this.searchObj.drop_time) {
+      this.toast.errorToastr("Please enter drop time");
+      return;
+    }
+    if (!this.searchObj.type) {
+      this.toast.errorToastr("Please enter rental type");
+      return;
+    }
 
     localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
     this.router.navigate(['/cab/listing/list-view'], {
@@ -142,24 +165,26 @@ export class CabClassicHomeSectionComponent {
   dropTimeFilter = (date: Date | null): boolean => {
     if (!date || !this.searchObj.pick_time) return false;
 
+    const pickTime = new Date(this.searchObj.pick_time);
+
     switch (this.searchObj.timeType) {
       case 'Daily':
         return true; // Allow all dates
 
       case 'Weekly':
         // Allow same weekday in the upcoming weeks (e.g., if pickup is Monday, allow all future Mondays)
-        return date.getDay() === this.searchObj.pick_time.getDay() && date > this.searchObj.pick_time;
+        return date.getDay() === pickTime.getDay() && date > pickTime;
 
       case 'Monthly':
         // Allow same day-of-month in future months (e.g., 5th of each month)
-        return date.getDate() === this.searchObj.pick_time.getDate() && date > this.searchObj.pick_time;
+        return date.getDate() === pickTime.getDate() && date > pickTime;
 
       case 'Yearly':
         // Allow same month and day in future years (e.g., March 15 each year)
         return (
-          date.getDate() === this.searchObj.pick_time.getDate() &&
-          date.getMonth() === this.searchObj.pick_time.getMonth() &&
-          date > this.searchObj.pick_time
+          date.getDate() === pickTime.getDate() &&
+          date.getMonth() === pickTime.getMonth() &&
+          date > pickTime
         );
 
       default:

@@ -1,29 +1,29 @@
-<form [formGroup]="form" class="wallet-section">
+<form [formGroup]="form">
   <div class="row m-0 align-items-end">
     <div class="col-lg-12">
       <div class="row" [ngClass]="{'m-0' : from === 'wallet'}">
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label>Routing Number</label>
+            <label>Routing Number<span class="mandatory">*</span></label>
             <input type="text" class="form-control" formControlName="rountingNo" name="rountingNo" maxlength="9"
               numbersOnly />
           </div>
         </div>
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label>Account number</label>
+            <label>Account number<span class="mandatory">*</span></label>
             <input type="text" class="form-control" formControlName="accountNo" name="accountNo" maxlength="16" />
           </div>
         </div>
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label>Bank Name</label>
+            <label>Bank Name<span class="mandatory">*</span></label>
             <input type="text" class="form-control" formControlName="bank" name="bank" />
           </div>
         </div>
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label>Account Holder Name</label>
+            <label>Account Holder Name<span class="mandatory">*</span></label>
             <input type="text" class="form-control" formControlName="accountName" name="accountName" />
           </div>
         </div>

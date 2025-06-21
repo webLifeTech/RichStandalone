@@ -14,6 +14,7 @@ import { WalletService } from '../../../../../services/wallet.service';
 import { GlobalService } from '../../../../../services/global.service';
 import { OnlynumberDirective } from '../../../../../directives/number-only.directive';
 import { ToastService } from '../../../../../services/toast.service';
+import { ProfileService } from '../../../../../services/profile.service';
 
 @Component({
   selector: 'app-add-payment-modal',
@@ -38,26 +39,53 @@ export class AddPaymentModalComponent {
   @Input() paymentType: any;
   @Input() walletId: any;
   reason: any = "";
-  public cabDetail: cabDetails;
   type: any = "CreditCard";
   amount: any;
   coinList: any = [];
+  paymentOptions: any = [];
+  firstPayOpt: any = {};
 
   constructor(
-    private cabService: CabService,
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
     private paymentService: PaymentService,
     public gs: GlobalService,
     public walletService: WalletService,
     private toast: ToastService,
+    private profileService: ProfileService,
   ) {
-    this.getCrypto()
-    this.cabService.getCabById().subscribe(response => {
-      this.cabDetail = response;
-      console.log("this.cabDetail >>>>", this.cabDetail.cabBooking);
-      this.cabDetail.cabBooking = this.cabDetail.cabBooking.filter((i: any) => i.value != "wallet");
+    this.getCrypto();
+    this.getConfigUIForms();
+  }
 
+  getConfigUIForms() {
+    let body = {
+      "menuId": 26,
+      "countryId": 230,
+      "transactionId": 1,
+      "stateCode": "42",
+      "languageId": 1,
+      "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
+    }
+    this.profileService.getConfigUIForms(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.length) {
+        this.paymentOptions = response;
+        this.paymentOptions = this.paymentOptions.filter((i: any) => i.formId != 23);
+        this.paymentOptions[0].checked = true;
+        this.firstPayOpt = this.paymentOptions[0];
+        const types: any = {
+          "21": "CreditCard",
+          "22": "ACH",
+          "23": "Wallet",
+          "24": "Crypto"
+        }
+        for (let i in this.paymentOptions) {
+          this.paymentOptions[i].type = types[this.paymentOptions[i].formId] || null;
+        }
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
     })
   }
 
@@ -65,23 +93,7 @@ export class AddPaymentModalComponent {
     this.modalService.dismissAll();
   }
 
-  // GetPaymentEncryptvalue() {
-  //   this.gs.isSpinnerShow = true;
-  //   this.walletService.GetPaymentEncryptvalue({
-  //     "inputValue": this.gs.loggedInUserInfo.userId
-  //   }).subscribe((response: any) => {
-  //     console.log("response >>>>", response);
-  //     // if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-  //     // }
-  //     this.gs.isSpinnerShow = false;
-  //   })
-  // }
-
   async addFunds() {
-
-    console.log("this.amount >>>", this.amount);
-
-
 
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
@@ -92,13 +104,10 @@ export class AddPaymentModalComponent {
       "currency": "USD", // USD,INR,EUR
     }
 
-    console.log("this.gs.paymentDetails >>>", this.gs.paymentDetails);
-
     if (!this.amount) {
       this.toast.errorToastr("Please Enter Amount");
       return;
     }
-    console.log("this.type >>>>>>>", this.type);
     if (this.type === 'CreditCard') {
       if (!this.gs.paymentDetails.creditCard.valid) {
         this.toast.errorToastr("Invalid Credit Card Details");
@@ -106,16 +115,11 @@ export class AddPaymentModalComponent {
       }
       const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
       const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
-      console.log("cardNumber >>>>>>>", cardNumber);
-      console.log("encryptCvv >>>>>>>", encryptCvv);
       // return;
-
       body["creditCardInfo"] = {
         "cardNumber": cardNumber,
         "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
         "cvv": encryptCvv,
-        // "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
-        // "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
         "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
       }
     }
@@ -127,10 +131,6 @@ export class AddPaymentModalComponent {
 
       const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
       const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
-      console.log("rountingNo >>>>>>>", rountingNo);
-      console.log("accountNo >>>>>>>", accountNo);
-      // return;
-
       body["bankAccount"] = {
         "bank": this.gs.paymentDetails.ach.value?.bank,
         "rountingNo": rountingNo,
@@ -145,7 +145,6 @@ export class AddPaymentModalComponent {
     this.gs.isSpinnerShow = true;
     this.walletService.addWalletFunds(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>", response);
       if (response && response.statusCode == "200") {
         if (this.paymentType === 'add') {
           this.toast.successToastr(response.message);
@@ -178,7 +177,6 @@ export class AddPaymentModalComponent {
 
     this.gs.isSpinnerShow = true;
     this.walletService.withDrawWalletFunds(body).subscribe((response: any) => {
-      console.log("response >>>>", response);
       if (response && response.statusCode == "200") {
         if (this.paymentType === 'add') {
           this.toast.successToastr("Added successfully");
@@ -194,7 +192,6 @@ export class AddPaymentModalComponent {
 
   getCrypto() {
     this.paymentService.getSupportedCoins().subscribe((response: any) => {
-      console.log(response);
       if (response.status == 200) {
         for (const property in response.data) {
           response.data[property]['coin'] = property;
@@ -204,8 +201,12 @@ export class AddPaymentModalComponent {
     })
   }
 
-  change(type: any) {
+  change(details: any, type: any) {
     this.type = type;
+    for (let i in this.paymentOptions) {
+      this.paymentOptions[i].checked = false;
+    }
+    details.checked = true;
   }
 
 }

@@ -148,6 +148,244 @@ export class DynamicFormComponent {
     }
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
+      if (this.selectedTabObj.formName == "VEHICLE DETAILS") {
+        this.formArray = [...this.formArray, ...[
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_SHIFT",
+            "fieldId": 1001,
+            "fieldType": "DROPDOWN",
+            "sectionID": 100,
+            "fieldName": "CANCELLATION TIME",
+            "description": "CANCELLATION TIME",
+            "modalValue": "cancellationTime",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 1,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": "CANCELLATION_TIME",
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": null,
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": "cancellationTimeCd",
+            "relatedFields": null
+          },
+          // {
+          //   "languageId": "1",
+          //   "formId": 14,
+          //   "formName": "VEHICLE DETAILS",
+          //   "fieldCode": "FLD_VIN_OTH_INSU_FEE_INCLUDE",
+          //   "fieldId": 1003,
+          //   "fieldType": "DROPDOWN",
+          //   "sectionID": 100,
+          //   "fieldName": "CANCELLATION TYPE",
+          //   "description": "CANCELLATION TYPE",
+          //   "modalValue": "cancellationType",
+          //   "sectionName": "REFUND POLICY",
+          //   "fieldOrder": 8,
+          //   "isVisible": true,
+          //   "isMandatory": false,
+          //   "transactionId": 2,
+          //   "isReadOnly": false,
+          //   "validationType": "",
+          //   "roles": null,
+          //   "isActive": false,
+          //   "dropdownValues": "CANCELLATION_TYPE",
+          //   "modalObject": "vehicleOtherDetails",
+          //   "dependentFields": null,
+          //   "condition": null,
+          //   "conditionValue": null,
+          //   "fieldClass": "col-lg-4 col-md-4",
+          //   "defaultValue": null,
+          //   "staticValue": null,
+          //   "selectUnique": false,
+          //   "action": null,
+          //   "modalValueCode": "cancellationTypeCd",
+          //   "relatedFields": null
+          // },
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
+            "fieldId": 1004,
+            "fieldType": "TEXT",
+            "sectionID": 100,
+            "fieldName": "PERCENTAGE (%)",
+            "description": "PERCENTAGE (%)",
+            "modalValue": "insuranceFee",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 2,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": null,
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": "col-md-4",
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": null,
+            "relatedFields": null
+          },
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_SHIFT",
+            "fieldId": 1006,
+            "fieldType": "DROPDOWN",
+            "sectionID": 100,
+            "fieldName": "CANCELLATION TIME",
+            "description": "CANCELLATION TIME",
+            "modalValue": "cancellationTime",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 3,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": "CANCELLATION_TIME",
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": null,
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": "cancellationTimeCd",
+            "relatedFields": null
+          },
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
+            "fieldId": 1007,
+            "fieldType": "TEXT",
+            "sectionID": 100,
+            "fieldName": "PERCENTAGE (%)",
+            "description": "PERCENTAGE (%)",
+            "modalValue": "insuranceFee",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 4,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": null,
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": "col-md-4",
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": null,
+            "relatedFields": null
+          },
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_SHIFT",
+            "fieldId": 1007,
+            "fieldType": "DROPDOWN",
+            "sectionID": 100,
+            "fieldName": "CANCELLATION TIME",
+            "description": "CANCELLATION TIME",
+            "modalValue": "cancellationTime",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 5,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": "CANCELLATION_TIME",
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": null,
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": "cancellationTimeCd",
+            "relatedFields": null
+          },
+          {
+            "languageId": "1",
+            "formId": 14,
+            "formName": "VEHICLE DETAILS",
+            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
+            "fieldId": 1008,
+            "fieldType": "TEXT",
+            "sectionID": 100,
+            "fieldName": "PERCENTAGE (%)",
+            "description": "PERCENTAGE (%)",
+            "modalValue": "insuranceFee",
+            "sectionName": "REFUND POLICY",
+            "fieldOrder": 6,
+            "isVisible": true,
+            "isMandatory": false,
+            "transactionId": 2,
+            "isReadOnly": false,
+            "validationType": "",
+            "roles": null,
+            "isActive": false,
+            "dropdownValues": null,
+            "modalObject": "vehicleOtherDetails",
+            "dependentFields": null,
+            "condition": null,
+            "conditionValue": null,
+            "fieldClass": "col-lg-4 col-md-4",
+            "defaultValue": null,
+            "staticValue": "col-md-4",
+            "selectUnique": false,
+            "action": null,
+            "modalValueCode": null,
+            "relatedFields": null
+          }
+        ]];
+      }
+
+      console.log("this.formArray >>>>>", this.formArray);
+
       this.configMasterDp = await this.profileService.getConfigMasterDropDown();
 
       if (response && response.length) {
@@ -160,6 +398,9 @@ export class DynamicFormComponent {
           // if (this.formArray[i].fieldId == 222) {
           //   this.formArray[i].selectUnique = true;
           // }
+          if (this.formArray[i].fieldId == 156) {
+            this.formArray[i].defaultValue = null;
+          }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
           this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
@@ -266,8 +507,68 @@ export class DynamicFormComponent {
     }
     this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
       if (res && res.length) {
+
+
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
+
+        this.masterDropdwonList["CANCELLATION_TIME"] = [
+          {
+            "ID": "222",
+            "StateCode": 0,
+            "Code": "ALL",
+            "Type": 26,
+            "TypeCode": "cancellationTime",
+            "Name": "Before 12 Hours",
+            "Description": "Before 12 Hours",
+            "IsActive": true
+          },
+          {
+            "ID": "220",
+            "StateCode": 0,
+            "Code": "MRNG",
+            "Type": 26,
+            "TypeCode": "SHIFT_STATUS",
+            "Name": "Before 24 Hours",
+            "Description": "Before 24 Hours",
+            "IsActive": true
+          },
+          {
+            "ID": "221",
+            "StateCode": 0,
+            "Code": "NIGHT",
+            "Type": 26,
+            "TypeCode": "SHIFT_STATUS",
+            "Name": "Before 48 Hours",
+            "Description": "Before 48 Hours",
+            "IsActive": true
+          },
+
+        ]
+
+
+        this.masterDropdwonList["CANCELLATION_TYPE"] = [
+          {
+            "ID": "220",
+            "StateCode": 0,
+            "Code": "MRNG",
+            "Type": 26,
+            "TypeCode": "cancellationType",
+            "Name": "Fixed",
+            "Description": "Fixed",
+            "IsActive": true
+          },
+          {
+            "ID": "221",
+            "StateCode": 0,
+            "Code": "NIGHT",
+            "Type": 26,
+            "TypeCode": "cancellationType",
+            "Name": "Percentage",
+            "Description": "Percentage",
+            "IsActive": true
+          }
+        ]
 
         this.createForm();
       } else {
@@ -1209,6 +1510,11 @@ export class DynamicFormComponent {
           }
         });
       }
+    } else {
+      // section: any, fieldId:any, key:any, value:any
+      if (field.value.fieldId == 156 || field.value.fieldId == 227) {
+        this.updateValueByFieldId(sectionRow, field.value.fieldId, "value", "")
+      }
     }
 
     if (field.value.fieldName === "primary_address") {
@@ -1576,7 +1882,7 @@ export class DynamicFormComponent {
 
     // return;
     this.submitted = true;
-    if (getFormInfo.valid) { // need to do
+    if (getFormInfo.valid) {
       let finalBody: any = {};
 
       if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch') {
@@ -1893,6 +2199,7 @@ export class DynamicFormComponent {
 
     const exceptFields: any = [];
     const checkAllFill = this.findInvalidControlsBySection(section, exceptFields);
+    console.log("checkAllFill >>>>", checkAllFill)
     this.submitted = true;
     if (!checkAllFill.valid) { // nned to do
       this.toast.errorToastr("Please fill all the details of " + section.value.sectionName);
@@ -2296,6 +2603,13 @@ export class DynamicFormComponent {
         this.toast.errorToastr("Please add insurance details.");
         return;
       }
+    } else {
+      if (!finalBody["doYouWantToGetQuotesFromTLH"]) {
+        // section: any, fieldId:any, key:any, value:any
+        this.updateValueByFieldId(section, "156", "value", "")
+        this.toast.errorToastr("Please fill all the required fields");
+        return;
+      }
     }
     let Body = {
       "userId": this.gs.loggedInUserInfo.userId,
@@ -2675,6 +2989,15 @@ export class DynamicFormComponent {
           field.get('dropdownList').setValue(countryOptions);
         }
       });
+    });
+  }
+
+  updateValueByFieldId(section: any, fieldId: any, key: any, value: any) { // value update in key
+    const fieldsArray = section.get('fields') as FormArray;
+    fieldsArray.controls.forEach((field: any) => {
+      if (field.get('fieldId').value == fieldId) {
+        field.get(key).setValue(value);
+      }
     });
   }
 

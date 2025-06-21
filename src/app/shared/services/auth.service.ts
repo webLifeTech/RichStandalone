@@ -96,7 +96,8 @@ export class AuthService {
       .set('phoneNumber', dataParams.phoneNumber)
       .set('countryName', dataParams.countryName)
       .set('emailId', dataParams.emailId)
-      .set('userId', dataParams.userId);
+      .set('userId', dataParams.userId)
+      .set('OTPPurpose', dataParams.OTPPurpose);
     return this.http.get(this.baseUrl1 + 'TLHUB/Communication/SendVerificationCodeAsync', { params }).pipe(
       map((res: any) => {
         return res;
@@ -134,6 +135,15 @@ export class AuthService {
   // Master -> GetTwilioCountryCodeList
   public GetTwilioCountryCodeList() {
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetTwilioCountryCodeList').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Account -> SetPassword
+  public SetPassword(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Account/SetPassword`, data).pipe(
       map((res: any) => {
         return res;
       })

@@ -4,7 +4,7 @@
       <div class="row">
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label for="c-name">Credit Card Number</label>
+            <label for="c-name">Credit Card Number<span class="mandatory">*</span></label>
             <div class="input-group">
               <input class="form-control" id="cc-number" formControlName="cardNumber" name="cardNumber" type="tel"
                 autocomplete="cc-number" ccNumber #ccNumber="ccNumber" placeholder="•••• •••• •••• ••••"
@@ -16,21 +16,21 @@
         </div>
         <div class="col-lg-6">
           <div class="form-group">
-            <label for="c-name">Expiry Date (MM/YY)</label>
+            <label for="c-name">Expiry Date (MM/YY)<span class="mandatory">*</span></label>
             <input class="form-control" id="cc-exp-date" formControlName="expirationDate" name="expirationDate"
               type="tel" autocomplete="cc-exp" ccExp placeholder="•• / ••">
           </div>
         </div>
         <div class="col-lg-6">
           <div class="form-group">
-            <label for="c-name">CVV</label>
+            <label for="c-name">CVV<span class="mandatory">*</span></label>
             <input class="form-control" id="cc-cvc" formControlName="cvc" name="cvc" type="tel" autocomplete="off" ccCVC
               placeholder="•••">
           </div>
         </div>
         <div [ngClass]="from === 'wallet' ? 'col-lg-12' : 'col-lg-6'">
           <div class="form-group">
-            <label for="c-name">Name</label>
+            <label for="c-name">Name<span class="mandatory">*</span></label>
             <input class="form-control" id="holder_name" formControlName="holderName" name="holderName" type="text"
               placeholder="Holder Name">
           </div>

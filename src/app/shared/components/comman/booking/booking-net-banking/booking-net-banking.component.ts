@@ -24,19 +24,6 @@ export class BookingNetBankingComponent {
   selectedMethod: any = "";
   paymentMethodForm: any = {};
   public netBankingDetails = netBankingDetails;
-
-  paymentOptions: any = [
-    {
-      "id": 1,
-      "routing_number": "333333333333",
-      "account_number": "8888888888",
-      "bank_name": "SBI",
-      "holder_name": "Paras",
-      "last4": "8888",
-      "type": "banking"
-    }
-  ];
-
   form: FormGroup;
 
   constructor(
