@@ -197,9 +197,9 @@ export class DynamicGridComponent {
             size: 'lg'
           });
           modalRef.componentInstance.formType = this.type;
-          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.result.then((res: any) => {
           });
         }
@@ -219,7 +219,8 @@ export class DynamicGridComponent {
             size: 'lg'
           });
           modalRef.componentInstance.viewInfoDetails = response;
-          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.result.then((res: any) => {
           });
         }
@@ -239,7 +240,8 @@ export class DynamicGridComponent {
           });
           modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
-          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.result.then((res: any) => {
           });
         }
@@ -258,7 +260,8 @@ export class DynamicGridComponent {
             size: 'lg'
           });
           modalRef.componentInstance.viewInfoDetails = response;
-          modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+          modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+          modalRef.componentInstance.kycForm = this.kycForm;
           modalRef.result.then((res: any) => {
           });
         }
@@ -269,11 +272,11 @@ export class DynamicGridComponent {
       const modalRef = this.modalService.open(DynamicInfoModalComponent, {
         size: 'lg'
       });
-      console.log("this.groupedSectionsData >>>>", this.groupedSectionsData);
 
       modalRef.componentInstance.formType = this.type;
       modalRef.componentInstance.viewInfoDetails = { [this.groupedSectionsData[0].modalObject]: item };
-      modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+      modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+      modalRef.componentInstance.kycForm = this.kycForm;
       modalRef.result.then((res: any) => {
       });
     }
@@ -282,11 +285,11 @@ export class DynamicGridComponent {
       const modalRef = this.modalService.open(DynamicInfoModalComponent, {
         size: 'lg'
       });
-      console.log("this.groupedSectionsData >>>>", this.groupedSectionsData);
 
       modalRef.componentInstance.formType = this.type;
       modalRef.componentInstance.viewInfoDetails = { "providerRequest": item };
-      modalRef.componentInstance.groupedSectionsData = this.groupedSectionsData;
+      modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+      modalRef.componentInstance.kycForm = this.kycForm;
       modalRef.result.then((res: any) => {
       });
     }

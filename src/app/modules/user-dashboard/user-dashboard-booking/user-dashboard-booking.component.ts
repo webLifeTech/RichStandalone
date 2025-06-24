@@ -303,8 +303,9 @@ export class UserDashboardBookingComponent {
         data.bookingStatus = status;
         this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
         this.totalData = this.tableData.length;
-        if (status === "Received")
+        if (status === "Received") {
           this.goToChecklist();
+        }
         // this.openOtpVerification(data, status);
       }
     }, () => { });

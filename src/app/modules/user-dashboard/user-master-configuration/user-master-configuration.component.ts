@@ -129,7 +129,7 @@ export class UserMasterConfigurationComponent {
       "roleName": this.gs.loggedInUserInfo.roleName || null,
       "countryId": 230,
       "transactionId": 1,
-      "menuId": 29
+      "menuId": this.kycForm.menuId
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

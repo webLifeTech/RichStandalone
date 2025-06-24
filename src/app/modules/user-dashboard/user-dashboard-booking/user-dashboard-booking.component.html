@@ -14,7 +14,7 @@
         <div class="col-lg-12">
           <div class="sorting-info">
             <div class="row align-items-center">
-              <div class="col-lg-12 col-sm-12 col-12">
+              <div class="col-lg-10 col-12">
                 <div class="booking-lists">
                   <ul class="nav">
                     <li *ngFor="let item of booktabs">
@@ -23,9 +23,15 @@
                   </ul>
                 </div>
               </div>
-              <!-- <div class="col-lg-2 col-sm-12 col-12 text-end">
-              </div> -->
-              <div class="offset-md-8 col-md-4 col-12 justify-content-end mt-2">
+              <div class="col-lg-2 col-12 text-end">
+                <select class="form-select me-2">
+                  <option selected>This Week</option>
+                  <option value="1">This Month</option>
+                  <option value="2">Last 30 Days</option>
+                  <option value="3">Custom</option>
+                </select>
+              </div>
+              <!-- <div class="offset-md-8 col-md-4 col-12 justify-content-end mt-2">
                 <div class="filter-group d-md-flex">
                   <select class="form-select me-2">
                     <option selected>This Week</option>
@@ -34,13 +40,11 @@
                     <option value="3">Custom</option>
                   </select>
                   <select class="form-select" [(ngModel)]="sortOrder" (change)="searchData()">
-                    <!-- <option selected>Sort By Relevance</option> -->
                     <option value="ASC">Sort By Ascending</option>
                     <option value="DESC">Sort By Descending</option>
-                    <!-- <option value="3">Sort By Alphabet</option> -->
                   </select>
                 </div>
-              </div>
+              </div> -->
 
             </div>
           </div>
@@ -82,7 +86,7 @@
                   <thead class="thead-light">
                     <tr>
                       <th>
-                        <span>#Sn</span>
+                        <span>S#</span>
                       </th>
                       <th class="text-center">Reference Number</th>
                       <th class="text-center">Status</th>

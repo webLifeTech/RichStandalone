@@ -320,14 +320,27 @@
                           </label>
 
                           <div class="input-group mb-3">
-                            <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
+                            <div class="custom-file-upload">
+                              <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
+                                type="file" [attr.accept]="field.get('acceptedTypes')?.value" id="licenseUpload"
+                                class="file-input" />
+                              <span class="choose-file">Choose File</span>
+                              <span *ngIf="field.get('value')?.value"
+                                class="file-name">{{field.get('value')?.value}}</span>
+                              <span *ngIf="!field.get('value')?.value" class="file-name">No file chosen</span>
+                              <span class="eye-icon" (click)="gs.viewDocumentFile(field.get('value')?.value)"
+                                [title]="'View Document'">
+                                <i class="fas fa-eye"></i>
+                              </span>
+                            </div>
+                            <!-- <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
                               type="file" [attr.accept]="field.get('acceptedTypes')?.value"
-                              class="form-control open-select" />
-                            <span class="input-group-text" id="addon-wrapping">
+                              class="form-control open-select" /> -->
+                            <!-- <span class="input-group-text" id="addon-wrapping">
                               <a (click)="gs.viewDocumentFile(field.get('value')?.value)" [title]="'View Document'">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                               </a>
-                            </span>
+                            </span> -->
                           </div>
 
                           <div *ngIf="(field.get('value')?.invalid && (field.get('value')?.touched || submitted) )"

@@ -62,7 +62,7 @@ export class DynamicInfoModalComponent {
 
     let body = {
       "clientID": null,
-      "stateCode": this.viewInfoDetails.driveInCity,
+      "stateCode": this.viewInfoDetails.driveInCity || "42",
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
       "countryId": 230,

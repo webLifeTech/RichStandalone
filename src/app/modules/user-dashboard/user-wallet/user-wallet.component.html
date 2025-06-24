@@ -21,28 +21,28 @@
                   </a>
                 </div>
               </div>
-              <!-- <div class="balance-list">
+              <div class="balance-list">
                 <div class="row">
-                  <div class="col-lg-4 col-md-6 d-flex">
+                  <div class="col-md-6 d-flex">
                     <div class="balance-inner credit-info">
-                      <h6>{{123464 | currencyPipe: gs.currency}}</h6>
-                      <p>Total Credit</p>
+                      <h6>+{{500 | currencyPipe: gs.currency}}</h6>
+                      <p>Payment Clearance</p>
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-6 d-flex">
+                  <div class="col-md-6 d-flex">
                     <div class="balance-inner debit-info">
-                      <h6>{{7357 | currencyPipe: gs.currency}}</h6>
-                      <p>Total Debit</p>
+                      <h6>-{{100 | currencyPipe: gs.currency}}</h6>
+                      <p>Payment Clearance</p>
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-6 d-flex">
+                  <!-- <div class="col-lg-4 col-md-6 d-flex">
                     <div class="balance-inner transaction-info">
                       <h6>{{656415 | currencyPipe: gs.currency}}</h6>
                       <p>Total Transaction</p>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
-              </div> -->
+              </div>
             </div>
             <!-- <div class="form-group wallet-form-group">
               <label>Add Wallet Credits ($)</label>
@@ -146,9 +146,10 @@
               <table class="table datatable">
                 <thead class="thead-light">
                   <tr>
-                    <th>#Sn</th>
+                    <th>S#</th>
                     <th>Ref Id</th>
                     <th>Transaction Type</th>
+                    <th>Remarks</th>
                     <th>Date</th>
                     <th>Total</th>
                     <th>Status</th>
@@ -163,6 +164,9 @@
                       <td
                         [ngClass]="{ 'text-danger': item.transactionType === 2, 'text-success-light': item.transactionType === 1}">
                         Amount - {{item.transactionType === 1 ? 'Added' : 'Withdrawal'}}
+                      </td>
+                      <td>
+                        {{item.remarks || "-"}}
                       </td>
                       <td>{{item.transactionDate}}</td>
                       <td

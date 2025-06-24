@@ -103,10 +103,10 @@ export class CabSearchComponent {
 
   serachCarDetails(searchType?: any) {
     if (searchType != "reset") {
-      if (!this.searchObj.same_location) {
-        this.toast.errorToastr("Please enter location");
-        return;
-      }
+      // if (!this.searchObj.same_location) {
+      //   this.toast.errorToastr("Please enter location");
+      //   return;
+      // }
       if (!this.searchObj.timeType) {
         this.toast.errorToastr("Please enter type");
         return;

@@ -16,14 +16,13 @@ import { BookingDetailsModalComponent } from '../../../shared/components/comman/
 import { PaymentService } from '../../../shared/services/payment.service';
 import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
+import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-user-dashboard-payments',
   standalone: true,
   imports: [
-    DeleteModalComponent,
-    BookingDetailsModalComponent,
-
     CommonModule,
     FormsModule,
     NgbModule,
@@ -38,25 +37,19 @@ import { GlobalService } from '../../../shared/services/global.service';
 export class UserDashboardPaymentsComponent {
 
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public showFilter = false;
   public searchDataValue = '';
-  public lastIndex = 0;
   public pageSize = 10;
   public totalData = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
 
-  total_booking_amount: any = 1200;
-  total_refunded_amount: any = 200;
-  total_net_profit: any = 1000;
-  editInfo: any = {};
+  tabs: any = [
+    { "name": "All Payments", "value": "All Payments" },
+    { "name": "Pending Confirmation", "value": "Pending Confirm" },
+    { "name": "Pending Disbursement", "value": "Pending Disburse" },
+    { "name": "Cleared", "value": "Cleared" },
+  ]
+  activeTab: any = "";
+  tempTableData: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -65,9 +58,12 @@ export class UserDashboardPaymentsComponent {
     public gs: GlobalService,
     private dialog: MatDialog,
     private modalService: NgbModal,
+    private toast: ToastService,
 
   ) {
+    window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
+      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Payments";
       this.getTableData();
     })
   }
@@ -81,6 +77,7 @@ export class UserDashboardPaymentsComponent {
     this.paymentService.getUserPayment().subscribe((apiRes: apiResultFormat) => {
       this.totalData = apiRes.totalData;
       this.tableData = apiRes.data;
+      this.tempTableData = JSON.parse(JSON.stringify(apiRes.data)) || [];
 
       this.paymentService.getCryptoPaymentTxnByIds({
         arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
@@ -105,34 +102,12 @@ export class UserDashboardPaymentsComponent {
   }
 
   public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
-  }
-  initChecked = false;
 
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
-    }
   }
 
   pageChanged(event: any) {
     this.currentPage = event;
   }
-
-  openImportantNoticeDialog(): void {
-    this.dialog.open(DeleteModalComponent, {
-      width: '100%',
-      data: {}
-    });
-  }
-
 
   onView(item: any) {
     const modalRef = this.modalService.open(InvoiceModalComponent, {
@@ -142,15 +117,35 @@ export class UserDashboardPaymentsComponent {
 
     }, () => {
     });
-    this.editInfo = item;
   }
 
-  onEdit(item: any, index: any) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  changeBookTab(row: any) {
+    this.activeTab = row.name;
+
+    if (this.activeTab == "All Payments") {
+      this.tableData = this.tempTableData;
+      this.totalData = this.tableData.length;
+    } else {
+      this.tableData = this.tempTableData.filter((item: any) => item.admin_status == row.value);
+      this.totalData = this.tableData.length;
+    }
   }
 
-  async onDelete(index: any, content: any) {
-    this.modalService.open(content, { centered: true });
-  }
+  changeStatus(data: any, status: any) {
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = "Are you sure you want to move to " + status + " ?";
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        const oldStatus = JSON.parse(JSON.stringify(data.admin_status));
+        data.admin_status = status == "Confirm" ? "Pending Disburse" : "Cleared";
+        this.tableData = this.tempTableData.filter((item: any) => item.admin_status == oldStatus);
+        this.totalData = this.tableData.length;
 
+        this.toast.successToastr("Payment status updated");
+      }
+    }, () => { });
+    return;
+  }
 }

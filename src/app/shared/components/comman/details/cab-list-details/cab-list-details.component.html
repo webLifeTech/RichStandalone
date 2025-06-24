@@ -131,9 +131,12 @@
                 <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
               </div>
               <div class="book-flight">
-                <button class="btn btn-theme margin-5" (click)="bookNow(details)">
+                <button *ngIf="!details.isBooked" class="btn btn-theme margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}
                 </button>
+                <div *ngIf="details.isBooked" class="fw-bold mt-2 badge badge-light-success ">
+                  Available after Mar 12, 2025
+                </div>
               </div>
             </div>
           </div>

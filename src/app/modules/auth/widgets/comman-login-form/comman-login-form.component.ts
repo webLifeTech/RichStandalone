@@ -234,7 +234,7 @@ export class CommanLoginFormComponent {
     //   return;
     // }
 
-    if (!frm.valid) {
+    if (!frm.valid && sendType !== 'resend') {
       this.toast.errorToastr("Please fill the all required fields.");
       return;
     }
@@ -296,10 +296,43 @@ export class CommanLoginFormComponent {
   }
 
   async reRendOTP(frm: any, sendType: any) {
-    const body = {};
+    if (!frm.valid && sendType !== 'resend') {
+      this.toast.errorToastr("Please fill the all required fields.");
+      return;
+    }
+
+    if (this.verificationType == "PhoneNo") {
+      this.ReSendPhoneVerificationCodeAsync();
+    }
+    if (this.verificationType == "EmailId") {
+      this.ReSendEmailVerificationCodeAsync();
+    }
+  }
+
+  ReSendPhoneVerificationCodeAsync() {
+    const body = {
+      phoneNumber: this.loginForm.username,
+      countryName: this.selectedCountry.CountryName,
+      userId: null,
+    };
     this.gs.isSpinnerShow = true;
-    this.authService.SendVerificationCodeAsync(body).subscribe((res: any) => {
-      console.log("SendVerificationCodeAsync >>>", res);
+    this.authService.ReSendPhoneVerificationCodeAsync(body).subscribe((res: any) => {
+      console.log("ReSendPhoneVerificationCodeAsync >>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+
+      }
+    })
+  }
+
+  ReSendEmailVerificationCodeAsync() {
+    const body = {
+      emailId: this.loginForm.username,
+      userId: null,
+    };
+    this.gs.isSpinnerShow = true;
+    this.authService.ReSendEmailVerificationCodeAsync(body).subscribe((res: any) => {
+      console.log("ReSendEmailVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
 

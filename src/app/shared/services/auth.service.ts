@@ -149,4 +149,27 @@ export class AuthService {
       })
     );
   }
+
+  // Communication -> ReSendPhoneVerificationCodeAsync
+  public ReSendPhoneVerificationCodeAsync(dataParams: any) {
+    const params = new HttpParams()
+      .set('phoneNumber', dataParams.phoneNumber)
+      .set('countryName', dataParams.countryName)
+      .set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Communication/ReSendPhoneVerificationCodeAsync', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Communication -> ReSendEmailVerificationCodeAsync
+  public ReSendEmailVerificationCodeAsync(dataParams: any) {
+    const params = new HttpParams().set('emailId', dataParams.emailId).set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Communication/ReSendEmailVerificationCodeAsync', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

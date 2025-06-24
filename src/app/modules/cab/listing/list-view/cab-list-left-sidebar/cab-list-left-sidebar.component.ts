@@ -7,6 +7,7 @@ import { CabService } from '../../../../../shared/services/cab.service';
 import { GlobalService } from '../../../../../shared/services/global.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { RouteTrackerService } from '../../../../../shared/services/route-tracker.service';
 
 @Component({
   selector: 'app-cab-list-left-sidebar',
@@ -43,13 +44,17 @@ export class CabListLeftSidebarComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private router: Router,
+    private routeTracker: RouteTrackerService
   ) {
   }
 
   ngOnInit() {
+
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       console.log("this.params >>>>>>>>", this.params);
+      // const prev = this.routeTracker.getPreviousUrl();
+      // console.log("prev >>>>>>>>>", prev);
 
       const searchInfo = this.gs.getLastSearch();
       if (Object.keys(this.params).length > 1) {
@@ -79,7 +84,7 @@ export class CabListLeftSidebarComponent {
     if (this.params.type == 'car') {
       let Body = {
         "SearchCriteria": {
-          "PickUpLocation": searchObj.same_location,
+          "PickUpLocation": searchObj.same_location || null,
           "PickUpTime": searchObj.pick_time ? this.datePipe.transform(searchObj.pick_time, 'MM/dd/yyyy') : null,
           "DropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
           "RentType": searchObj.timeType || "ALL",
@@ -155,7 +160,7 @@ export class CabListLeftSidebarComponent {
       this.vehicleType = [];
       let Body = {
         "SearchCriteria": {
-          "pickUpLocation": searchObj.same_location,
+          "pickUpLocation": searchObj.same_location || null,
           "pickUpTime": searchObj.pick_time ? this.datePipe.transform(searchObj.pick_time, 'MM/dd/yyyy') : null,
           "dropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
           "rentType": searchObj.timeType || "ALL",
