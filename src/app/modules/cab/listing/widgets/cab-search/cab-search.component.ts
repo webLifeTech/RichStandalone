@@ -29,22 +29,23 @@ import { ToastService } from '../../../../../shared/services/toast.service';
 export class CabSearchComponent {
 
   @Input() searchFrom: any;
+  @Input() searchObj: any = {};
   @Output() searchEvent = new EventEmitter<any>();
   public params: Params;
 
   public isSearchVisible: boolean = true; // need to do
   public isShow: boolean = false;
   searchInfo: any = {}
-  searchObj: any = {
-    pick_up_location: "",
-    drop_location: "",
-    same_location: "",
-    pick_time: "",
-    drop_time: "",
-    type: "",
-    timeType: "Daily",
-    location_type: "option2",
-  };
+  // searchObj: any = {
+  //   pick_up_location: "",
+  //   drop_location: "",
+  //   same_location: "",
+  //   pick_time: "",
+  //   drop_time: "",
+  //   type: "",
+  //   timeType: "Daily",
+  //   location_type: "option2",
+  // };
 
   windowWidth: number;
   windowHeight: number;
@@ -62,11 +63,11 @@ export class CabSearchComponent {
     private toast: ToastService,
   ) {
     // use for continue seearch
-    this.searchInfo = this.gs.getLastSearch();
-    console.log("this.searchInfo >>>>>", this.searchInfo);
-    if (this.searchInfo.location_type) {
-      this.searchObj = this.searchInfo;
-    }
+    // this.searchInfo = this.gs.getLastSearch();
+    // console.log("this.searchInfo >>>>>", this.searchInfo);
+    // if (this.searchInfo.location_type) {
+    //   this.searchObj = this.searchInfo;
+    // }
 
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;

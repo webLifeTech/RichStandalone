@@ -88,17 +88,53 @@
                       <th>
                         <span>S#</span>
                       </th>
-                      <th class="text-center">Reference Number</th>
-                      <th class="text-center">Status</th>
-                      <th class="text-center">Status Remarks</th>
+                      <th class="text-center pointer" (click)="onSort('bookingReferenceNumber')">
+                        Reference Number
+                        <span *ngIf="sortColumn === 'bookingReferenceNumber'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-center pointer" (click)="onSort('bookingStatus')">
+                        Status
+                        <span *ngIf="sortColumn === 'bookingStatus'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-center pointer" (click)="onSort('bookingStatusRemarks')">
+                        Status Remarks
+                        <span *ngIf="sortColumn === 'bookingStatusRemarks'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <th class="text-center">Document</th>
                       <!-- <th class="text-center">Location</th> -->
                       <!-- <th class="text-center">Booking Date</th> -->
-                      <th class="text-center">Pickup Date</th>
+                      <th class="text-center pointer" (click)="onSort('pickUpDate')">
+                        Pickup Date
+                        <span *ngIf="sortColumn === 'pickUpDate'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <!-- <th class="text-center">End Date</th> -->
-                      <th class="text-center">Duration</th>
+                      <th class="text-center pointer" (click)="onSort('bookingDuration')">
+                        Duration
+                        <span *ngIf="sortColumn === 'bookingDuration'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <!-- <th class="text-center">Price</th> -->
-                      <th class="text-center">Total Amount</th>
+                      <th class="text-center pointer" (click)="onSort('totalAmount')">
+                        Total Amount
+                        <span *ngIf="sortColumn === 'totalAmount'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Cancelled By</th>
                       <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Reason</th>
 
@@ -167,10 +203,6 @@
                             <i class="feather icon-eye"></i>
                             <span class="ms-2">View</span>
                           </button>
-                          <!-- <button (click)="goToChecklist()" type="button" mat-menu-item>
-                            <i class="feather icon-check-square"></i>
-                            <span class="ms-2">Checklist</span>
-                          </button> -->
                           <button *ngIf="data.bookingStatus === 'Confirmed'" (click)="changeStatus(data,'Delivered')"
                             type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
@@ -204,10 +236,6 @@
                             <i class="feather icon-x-circle"></i>
                             <span class="ms-2">Refund Reject</span>
                           </button>
-                          <!-- <button (click)="onDelete(idx)" type="button" mat-menu-item>
-                            <i class="feather icon-trash"></i>
-                            <span class="ms-2">Delete</span>
-                          </button> -->
                         </mat-menu>
                       </td>
                     </tr>

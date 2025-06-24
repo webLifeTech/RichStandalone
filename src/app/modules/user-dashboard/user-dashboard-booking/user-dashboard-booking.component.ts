@@ -49,7 +49,7 @@ export class UserDashboardBookingComponent {
   public tableData: any = [];
   dataSource!: MatTableDataSource<userBookings>;
   public searchDataValue = '';
-  sortColumn: any = "bookingDate";
+  sortColumn: any = "bookingReferenceNumber";
   sortOrder: any = "DESC";
   pageSize: any = 10;
   totalData: any = 0;
@@ -113,7 +113,12 @@ export class UserDashboardBookingComponent {
     this.getTableData();
   }
 
-  initChecked = false;
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getTableData();
+  }
+
 
   changeBookTab(row: any) {
     this.activeTab = row.name;
@@ -138,30 +143,10 @@ export class UserDashboardBookingComponent {
     // });
   }
 
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
-    }
-  }
-
   pageChanged(event: any) {
     this.currentPage = event;
     this.getTableData();
   }
-
-  openImportantNoticeDialog(): void {
-    this.dialog.open(DeleteModalComponent, {
-      width: '100%',
-      data: {}
-    });
-  }
-
 
   onView(item: any) {
     const modalRef = this.modalService.open(BookingDetailsModalComponent, {
@@ -259,22 +244,9 @@ export class UserDashboardBookingComponent {
   }
 
 
-  async onDelete(index: any) {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
-      centered: true,
-    });
-    modalRef.result.then((res: any) => {
-
-      if (res.confirmed) {
-      }
-    }, () => {
-    });
-  }
-
   viewDocument(document: any) {
     const modalRef = this.modalService.open(DocumentSignModalComponent, {
       centered: true,
-      // fullscreen: true,
       backdrop: 'static',
       windowClass: 'document-modal',
       size: 'xl'
@@ -282,7 +254,6 @@ export class UserDashboardBookingComponent {
     modalRef.componentInstance.documentIframe = document;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
       }
     }, () => { });
   }

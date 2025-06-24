@@ -7,7 +7,7 @@ import { CabService } from '../../../../../shared/services/cab.service';
 import { GlobalService } from '../../../../../shared/services/global.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { RouteTrackerService } from '../../../../../shared/services/route-tracker.service';
+import { AuthService } from '../../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-cab-list-left-sidebar',
@@ -36,6 +36,16 @@ export class CabListLeftSidebarComponent {
   reLoadDetails: boolean = false;
   public params: any;
   vehicleType: any = [];
+  searchObj: any = {
+    pick_up_location: "",
+    drop_location: "",
+    same_location: "",
+    pick_time: "",
+    drop_time: "",
+    type: "",
+    timeType: "Daily",
+    location_type: "option2",
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +54,7 @@ export class CabListLeftSidebarComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private router: Router,
-    private routeTracker: RouteTrackerService
+    public auth: AuthService,
   ) {
   }
 
@@ -53,14 +63,18 @@ export class CabListLeftSidebarComponent {
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       console.log("this.params >>>>>>>>", this.params);
-      // const prev = this.routeTracker.getPreviousUrl();
-      // console.log("prev >>>>>>>>>", prev);
+      console.log("this.gs.lastSearch >>>>>>>>", this.gs.lastSearch);
+      if (this.gs.lastSearch.type !== this.params.type) {
+        this.gs.lastSearch = {};
+      }
+      this.searchObj = JSON.parse(JSON.stringify(this.gs.lastSearch));
+      this.searchObj.type = this.params.type;
+      // this.searchObj = this.gs.getLastSearch();
 
-      const searchInfo = this.gs.getLastSearch();
       if (Object.keys(this.params).length > 1) {
-        this.searchVehicleResult(searchInfo, 'filter-search');
+        this.searchVehicleResult(this.searchObj, 'filter-search');
       } else {
-        this.searchVehicleResult(searchInfo, 'main-search');
+        this.searchVehicleResult(this.searchObj, 'main-search');
       }
     });
     document.documentElement.style.setProperty('--theme-color1', '233, 179, 14');
@@ -70,6 +84,8 @@ export class CabListLeftSidebarComponent {
   ngOnDestroy() {
     document.documentElement.style.removeProperty('--theme-color1');
     document.documentElement.style.removeProperty('--theme-color2');
+    localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    this.gs.lastSearch = {};
   }
 
   async searchVehicleResult(obj: any, type: any) {

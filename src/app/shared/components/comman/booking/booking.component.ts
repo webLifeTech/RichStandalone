@@ -17,6 +17,7 @@ import { PricingService } from '../../../services/pricing.service';
 import { DocumentSignModalComponent } from '../modal/document-sign-modal/document-sign-modal.component';
 import { WalletService } from '../../../services/wallet.service';
 import { ProfileService } from '../../../services/profile.service';
+import { VerificationSuccessModalComponent } from '../../../../modules/user-dashboard/user-settings/modals/verification-success-modal/verification-success-modal.component';
 
 @Component({
   selector: 'app-booking',
@@ -62,7 +63,6 @@ export class BookingComponent {
     private gs: GlobalService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private pricingS: PricingService,
     private modalService: NgbModal,
     public walletService: WalletService,
     private profileService: ProfileService,
@@ -132,9 +132,6 @@ export class BookingComponent {
     if (this.type === "Crypto") {
       this.makePayment();
     } else {
-
-      console.log("Booking Summary >>>>>>>>>", this.gs.bookingSummaryDetails);
-
       let body: any = {
         "bookingId": null,
         "userId": this.gs.loggedInUserInfo.userId,
@@ -170,9 +167,6 @@ export class BookingComponent {
         "remarks": null
       }
 
-      console.log("this.gs.paymentDetails >>>>>>>", this.gs.paymentDetails);
-      console.log("this.riskType >>>>>>>", this.riskType);
-      console.log("this.type >>>>>>>", this.type);
       if (this.type === 'CreditCard') {
         if (!this.gs.paymentDetails.creditCard.valid) {
           this.toast.errorToastr("Invalid Credit Card Details");
@@ -216,18 +210,27 @@ export class BookingComponent {
       this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
         if (res && res.statusCode == "200") {
           this.toast.successToastr(res.message);
-          const modalRef = this.modalService.open(DocumentSignModalComponent, {
+          const infoRef = this.modalService.open(VerificationSuccessModalComponent, {
             centered: true,
-            backdrop: 'static',
-            windowClass: 'document-modal',
-            size: 'xl'
           });
-          modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
-          modalRef.result.then((res: any) => {
-            if (res.confirmed) {
-              this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+          infoRef.componentInstance.title = "Payment successfully completed.";
+          infoRef.componentInstance.buttonLabel = "OK";
+          infoRef.result.then((infoRes: any) => {
+            if (infoRes.confirmed) {
+              const modalRef = this.modalService.open(DocumentSignModalComponent, {
+                centered: true,
+                backdrop: 'static',
+                windowClass: 'document-modal',
+                size: 'xl'
+              });
+              modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
+              modalRef.result.then((signModalRes: any) => {
+                if (signModalRes.confirmed) {
+                  this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+                }
+              }, () => { });
             }
-          }, () => { });
+          });
         } else {
           this.toast.errorToastr(res.message);
         }

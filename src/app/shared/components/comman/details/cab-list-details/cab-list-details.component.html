@@ -134,8 +134,8 @@
                 <button *ngIf="!details.isBooked" class="btn btn-theme margin-5" (click)="bookNow(details)">
                   {{'car_list_page.book' | translate}}
                 </button>
-                <div *ngIf="details.isBooked" class="fw-bold mt-2 badge badge-light-success ">
-                  Available after Mar 12, 2025
+                <div *ngIf="details.isBooked" class="fw-bold mt-2 badge badge-light-success">
+                  {{details.availableDates}} <i class="feather icon-alert-circle"></i>
                 </div>
               </div>
             </div>

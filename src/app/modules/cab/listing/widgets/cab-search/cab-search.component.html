@@ -18,8 +18,7 @@
         <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
       </div>
     </div> -->
-    <div class="col"
-      [ngClass]="{ 'd-none': searchObj.location_type == 'option1', 'd-block': searchObj.location_type == 'option2' }">
+    <div class="col d-block">
       <div class="form-group position-relative">
         <label class="font-xs-white">
           {{ 'global.location' | translate }}
@@ -65,7 +64,7 @@
         <owl-date-time #drop></owl-date-time>
       </div>
     </div>
-    <div *ngIf="!searchObj.type" class="col">
+    <!-- <div *ngIf="!searchObj.type" class="col">
       <div class="form-group">
         <label class="font-xs-white">{{ 'global.type' | translate }}</label>
         <select [(ngModel)]="searchObj.type" name="type" id="type" class="form-control open-select"
@@ -75,7 +74,7 @@
           <option value="driver">Driver</option>
         </select>
       </div>
-    </div>
+    </div> -->
     <div class="col">
       <div class="search-btn">
         <a class="btn btn-theme" (click)="serachCarDetails()">

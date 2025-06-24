@@ -149,7 +149,8 @@ export class CabClassicHomeSectionComponent {
       return;
     }
 
-    localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    // localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    this.gs.lastSearch = this.searchObj;
     this.router.navigate(['/cab/listing/list-view'], {
       queryParams: {
         type: this.searchObj.type || null,
