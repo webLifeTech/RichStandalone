@@ -1,4 +1,45 @@
 <div class="title-top">
+  <h5>{{'refund_policy.title' | translate}}</h5>
+</div>
+<div class="flight_detail">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="boxes d-flex ">
+        <table class="table border mb-0">
+          <thead>
+            <tr>
+              <th class="p-3" scope="col">Time of Cancellation</th>
+              <th class="p-3" scope="col">Refund Percentage/Fixed</th>
+              <th class="p-3" scope="col">Refund Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of refundPolicy">
+              <td class="p-3">
+                <span class="fw-bold">{{item.time_of_cancellation}}</span>
+              </td>
+              <td class="p-3">
+                <span *ngIf="item.cancellation_type === 'Percentage'" class="fw-bold">
+                  {{item.cancellation_charges}}
+                </span>
+                <span *ngIf="item.cancellation_type === 'Fixed'" class="fw-bold">
+                  {{item.cancellation_charges | currencyPipe: gs.currency}}
+                </span>
+                <small class="ms-2">({{item.cancellation_type}})</small>
+                <!-- <div>
+                </div> -->
+              </td>
+              <td class="p-3">
+                <span class="fw-bold">{{item.refund_amount | currencyPipe: gs.currency}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="title-top">
   <h5>{{'great_choice.title' | translate}}</h5>
 </div>
 <div class="flight_detail">
@@ -43,4 +84,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

@@ -7,8 +7,11 @@
       <h4>Successful</h4>
       <p>{{title || 'You Phone number has been successfully Verified.'}}</p>
       <div class="modal-btn">
-        <a (click)="closeModal()" class="btn btn-theme no-text-transorm">
+        <a *ngIf="!buttonLabel" (click)="closeModal()" class="btn btn-theme no-text-transorm">
           Close
+        </a>
+        <a *ngIf="buttonLabel" (click)="onConfirm()" class="btn btn-theme no-text-transorm">
+          {{buttonLabel}}
         </a>
       </div>
     </div>

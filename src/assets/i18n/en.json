@@ -269,6 +269,15 @@
     "easy_to_find_counter": "Easy to find counter",
     "free_cancellation": "Free Cancellation"
   },
+  "refund_policy": {
+    "title": "Cancellation Policy",
+    "customer_rating": "Customer rating",
+    "short_queues": "Short queues",
+    "helpful_counter_staff": "Helpful counter staff",
+    "most_popular_fuel_policy": "Most popular fuel policy",
+    "easy_to_find_counter": "Easy to find counter",
+    "free_cancellation": "Free Cancellation"
+  },
   "payment_success": {
     "car_title": "Booking Successful",
     "car_massage1": "Thank you for your payment. we have received your payment successfully.",

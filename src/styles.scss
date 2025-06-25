@@ -164,6 +164,11 @@ a {
   color: #1FBC2F;
 }
 
+.badge-light-theme {
+  background: rgba(18, 115, 132, 0.1);
+  color: rgba(var(--theme-color), 1) !important;
+}
+
 .text-white {
   color: #fd6193;
 }

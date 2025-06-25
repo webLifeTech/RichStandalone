@@ -97,29 +97,6 @@ export class CabListDetailsComponent {
     chartLabels: []
   };
 
-  userDetails: any = {
-    "data": {
-      "series": [
-        {
-          name: "Active",
-          data: [44, 55, 57, 56]
-        },
-        {
-          name: "Inactive",
-          data: [76, 85, 101, 98]
-        },
-        {
-          name: "KYC Pending",
-          data: [35, 41, 36, 26]
-        },
-      ],
-      "chartLabels": ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
-      "chartColors": ["#dcc7fa", "#8e33ff"],
-    }
-  };
-
-  riskScore: number = 24;
-
   constructor(
     public cabService: CabService,
     private paginationService: PaginationService,
@@ -420,68 +397,7 @@ export class CabListDetailsComponent {
         "licenseNo": item.licenseNo || "",
       });
       this.ratingInfo = res;
-      // this.ratingInfo = {
-      //   "driverBatchId": 331,
-      //   "averageBatchRiskScore": 18,
-      //   "averageBatchStarRating": 4.00,
-      //   "batchQuality": {
-      //     "veryGood": 0,
-      //     "good": 1,
-      //     "average": 0,
-      //     "belowAverage": 0,
-      //     "poor": 0
-      //   },
-      //   "totalRecords": 1,
-      //   "riskAssessments": [
-      //     {
-      //       "licenseNumber": "XXXXX0003",
-      //       "activityId": "",
-      //       "calculatedDriverRiskScore": 18,
-      //       "calculatedAt": "05/08/2025",
-      //       "maxRiskScore": 51,
-      //       "minRiskScore": 8,
-      //       "starRating": 4.00,
-      //       "recommendations": [
-      //         {
-      //           "attribute": "Accident Analysis",
-      //           "recommendtions": [
-      //             "Review accident details and provide targeted training.",
-      //             "Maintain current safety measures and monitoring."
-      //           ]
-      //         },
-      //         {
-      //           "attribute": "Driver Analysis",
-      //           "recommendtions": [
-      //             "Regular health and vision check-ups in addition to standard safety training.",
-      //             "Provide extensive training and mentorship programs."
-      //           ]
-      //         },
-      //         {
-      //           "attribute": "License Status",
-      //           "recommendtions": [
-      //             "Renew license as soon as possible. Check for any other compliance issues that need to be addressed."
-      //           ]
-      //         },
-      //         {
-      //           "attribute": "Violation Analysis",
-      //           "recommendtions": [
-      //             "Continue safe driving practices.",
-      //             "Maintain current practices; monitor for changes."
-      //           ]
-      //         }
-      //       ],
-      //       "isClearanceHistoryPresent": false,
-      //       "isDriverLossHistoryPresent": false
-      //     }
-      //   ],
-      //   "responseResultDtos": {
-      //     "statusCode": "200",
-      //     "status": "Success",
-      //     "message": "Rates found"
-      //   }
-      // }
     }
-    console.log(this.type + " res >>>>>>", res);
 
     if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
       const tempBatchQuality: any = {
@@ -500,12 +416,7 @@ export class CabListDetailsComponent {
       }
       const riskAs = this.ratingInfo?.riskAssessments[0] || {};
       this.ratingInfo.riskPercentage = (((riskAs.calculatedDriverRiskScore || riskAs.calculatedVehicleRiskScore) - riskAs.minRiskScore) / (riskAs.maxRiskScore - riskAs.minRiskScore)) * 100 || 0;
-
-      // this.batchChart.series = [3, 2, 3, 4, 5];
       this.isShowBatchChart = true;
-      console.log("this.batchChart >>>>>>", this.batchChart);
-      console.log("percentage >>>>>>", this.ratingInfo.riskPercentage);
-      console.log("ratingInfo >>>>>>", this.ratingInfo);
     }
   }
 
