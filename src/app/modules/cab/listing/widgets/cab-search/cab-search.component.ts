@@ -122,6 +122,7 @@ export class CabSearchComponent {
       }
     }
     localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    this.gs.lastSearch = this.searchObj;
     this.locationArray = [];
     this.searchEvent.emit({ searchObj: this.searchObj });
   }
@@ -236,4 +237,8 @@ export class CabSearchComponent {
         return true;
     }
   };
+
+  onChangePickUpTime() {
+    this.searchObj.drop_time = null;
+  }
 }

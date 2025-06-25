@@ -64,12 +64,13 @@ export class CabListLeftSidebarComponent {
       this.params = params;
       console.log("this.params >>>>>>>>", this.params);
       console.log("this.gs.lastSearch >>>>>>>>", this.gs.lastSearch);
-      if (this.gs.lastSearch.type !== this.params.type) {
+      if (this.gs.lastSearch.type === this.params.type) {
+        this.gs.lastSearch = this.gs.getLastSearch();
+      } else {
         this.gs.lastSearch = {};
       }
       this.searchObj = JSON.parse(JSON.stringify(this.gs.lastSearch));
       this.searchObj.type = this.params.type;
-      // this.searchObj = this.gs.getLastSearch();
 
       if (Object.keys(this.params).length > 1) {
         this.searchVehicleResult(this.searchObj, 'filter-search');
@@ -85,6 +86,8 @@ export class CabListLeftSidebarComponent {
     document.documentElement.style.removeProperty('--theme-color1');
     document.documentElement.style.removeProperty('--theme-color2');
     localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    console.log("ngOnDestroy >>>",);
+
     this.gs.lastSearch = {};
   }
 

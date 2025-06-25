@@ -97,29 +97,6 @@ export class CabListDetailsComponent {
     chartLabels: []
   };
 
-  userDetails: any = {
-    "data": {
-      "series": [
-        {
-          name: "Active",
-          data: [44, 55, 57, 56]
-        },
-        {
-          name: "Inactive",
-          data: [76, 85, 101, 98]
-        },
-        {
-          name: "KYC Pending",
-          data: [35, 41, 36, 26]
-        },
-      ],
-      "chartLabels": ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
-      "chartColors": ["#dcc7fa", "#8e33ff"],
-    }
-  };
-
-  riskScore: number = 24;
-
   constructor(
     public cabService: CabService,
     private paginationService: PaginationService,
