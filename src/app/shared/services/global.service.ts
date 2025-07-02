@@ -154,7 +154,7 @@ export class GlobalService {
       const fileURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = fileURL;
-      a.download = filename + ' KYC';
+      a.download = filename;
       a.click();
       window.URL.revokeObjectURL(fileURL);
     });

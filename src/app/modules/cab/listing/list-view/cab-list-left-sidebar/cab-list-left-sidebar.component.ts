@@ -62,14 +62,24 @@ export class CabListLeftSidebarComponent {
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
+      // debugger;
       console.log("this.params >>>>>>>>", this.params);
       console.log("this.gs.lastSearch >>>>>>>>", this.gs.lastSearch);
-      if (this.gs.lastSearch.type === this.params.type) {
-        this.gs.lastSearch = this.gs.getLastSearch();
+      if (this.gs.lastSearch.searchFrom == "home") {
+        this.gs.lastSearch.searchFrom = null;
+      } else if (this.gs.lastSearch.type === this.params.type) {
+        console.log("yessssssss");
+        const lastSearch = this.gs.getLastSearch();
+        console.log("lastSearch ----->", lastSearch);
+        if (lastSearch && lastSearch.type) {
+          this.gs.lastSearch = lastSearch;
+        }
       } else {
+        console.log("nooooooooo");
         this.gs.lastSearch = {};
       }
       this.searchObj = JSON.parse(JSON.stringify(this.gs.lastSearch));
+      console.log("1111 searchObj >>>>>>>>", this.searchObj);
       this.searchObj.type = this.params.type;
 
       if (Object.keys(this.params).length > 1) {

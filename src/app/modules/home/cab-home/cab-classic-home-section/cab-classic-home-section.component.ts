@@ -39,6 +39,7 @@ export class CabClassicHomeSectionComponent {
     type: "",
     timeType: "Daily",
     location_type: "option2",
+    searchFrom: "home",
   };
 
   public params: Params | any;

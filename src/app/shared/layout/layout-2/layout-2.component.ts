@@ -25,6 +25,7 @@ export class Layout2Component {
   public bg_image = 'assets/images/cab/breadcrumb.jpg';
   public title = 'cab_list.cab_search';
   public parent = 'menu.home';
+  public parentRoute = '/home';
   public child = 'cab_list.cab_search';
 
 }

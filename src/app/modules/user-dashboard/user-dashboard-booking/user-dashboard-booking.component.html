@@ -203,15 +203,24 @@
                             <i class="feather icon-eye"></i>
                             <span class="ms-2">View</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Confirmed'" (click)="changeStatus(data,'Delivered')"
-                            type="button" mat-menu-item>
+                          <button (click)="onViewDocument(data)" type="button" mat-menu-item>
+                            <i class="feather icon-file-text"></i>
+                            <span class="ms-2">View Documents</span>
+                          </button>
+                          <button *ngIf="data.bookingStatus === 'Confirmed' && gs.loggedInUserInfo.role !== 'user'"
+                            (click)="changeStatus(data,'Delivered')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Delivered</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Delivered'" (click)="changeStatus(data,'Received')"
-                            type="button" mat-menu-item>
+                          <button *ngIf="data.bookingStatus === 'Delivered' && gs.loggedInUserInfo.role !== 'user'"
+                            (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>
+                          </button>
+                          <button *ngIf="data.bookingStatus === 'Delivered' && gs.loggedInUserInfo.role === 'user'"
+                            (click)="changeStatus(data,'Accept')" type="button" mat-menu-item>
+                            <i class="feather icon-send"></i>
+                            <span class="ms-2">Accept</span>
                           </button>
                           <button
                             *ngIf="data.bookingStatus === 'Pending Request' || data.bookingStatus === 'Confirmed' || data.bookingStatus === 'Delivered'"
@@ -286,7 +295,8 @@
           </div>
         </div>
       </div>
-      <app-booking-checklist [bookingRefNo]="selectedRefNo"></app-booking-checklist>
+      <app-booking-checklist (onCancel)="backToBooking()"
+        [bookingDetails]="singleBookingDetail"></app-booking-checklist>
     </div>
   </ng-container>
 </div>

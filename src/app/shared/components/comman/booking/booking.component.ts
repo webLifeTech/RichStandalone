@@ -157,6 +157,7 @@ export class BookingComponent {
         "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
         "discountId": this.gs.bookingSummaryDetails.discountId,
         "totalAmount": this.gs.bookingSummaryDetails.totalFare,
+        "basePrice": this.gs.bookingSummaryDetails.basePrice,
         "discountAmount": this.gs.bookingSummaryDetails.discount,
         "taxFee": this.gs.bookingSummaryDetails.tax,
         "insuranceFee": this.gs.bookingSummaryDetails.insuranceFee,

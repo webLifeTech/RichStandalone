@@ -125,9 +125,76 @@ export class BookingService {
     );
   }
 
-  // Booking -> BookingCancellationRequest
+  // Cancellation -> BookingCancellationRequest
   public BookingCancellationRequest(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Booking/BookingCancellationRequest`, data).pipe(
+    return this.http.post(this.baseUrl1 + `TLHUB/Cancellation/BookingCancellationRequest`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // BookingAgreement -> InitiateDeliverVehicleToDriver
+  public InitiateDeliverVehicleToDriver(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/InitiateDeliverVehicleToDriver`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Master -> GetMasterInspectionLineItems
+  public GetMasterInspectionLineItems(dataParams: any) {
+    const params = new HttpParams().set('inspectiontype', dataParams.inspectiontype);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectionLineItems', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Master -> GetPostMasterInspectionLineItems
+  public GetPostMasterInspectionLineItems(dataParams: any) {
+    const params = new HttpParams().set('bookingId', dataParams.bookingId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetPostMasterInspectionLineItems', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // BookingAgreement -> ConfirmVehicleAcceptanceByDriver
+  public ConfirmVehicleAcceptanceByDriver(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/ConfirmVehicleAcceptanceByDriver`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // BookingAgreement -> ConfirmVehicleReceivedByOwnerfromDriver
+  public ConfirmVehicleReceivedByOwnerfromDriver(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/ConfirmVehicleReceivedByOwnerfromDriver`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // http://209.10.88.76:2025/TLHUB_API_DEMO/TLHUB/COMMON/GetBookingAllDocuments?
+  // bookingId=42&
+  // userId=3e89dba8-792c-493e-a26d-562914d1da78&
+  // riskId=4610&
+  // riskType=Vehicle
+
+  // Booking -> GetBookingAllDocuments
+  public GetBookingAllDocuments(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingId', dataParams.bookingId)
+      .set('userId', dataParams.userId)
+      .set('riskId', dataParams.riskId)
+      .set('riskType', dataParams.riskType);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetBookingAllDocuments', { params }).pipe(
       map((res: any) => {
         return res;
       })

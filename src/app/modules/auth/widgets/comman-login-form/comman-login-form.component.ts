@@ -14,6 +14,7 @@ import { RolePermissionService } from '../../../../shared/services/rolepermissio
 import { AlphabetOnlyDirective } from '../../../../shared/directives/alphabet-only.directive';
 import { CountryDialogComponent } from '../../../../shared/components/dialoge/country-dialog/country-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-comman-login-form',
@@ -25,8 +26,13 @@ import { MatDialog } from '@angular/material/dialog';
     NgSelectModule,
     TranslateModule,
     OnlynumberDirective,
-    AlphabetOnlyDirective
+    AlphabetOnlyDirective,
+    NgxMaskDirective,
+    NgxMaskPipe
+
   ],
+  providers: [provideNgxMask()],
+
   templateUrl: './comman-login-form.component.html',
   styleUrl: './comman-login-form.component.scss'
 })
@@ -227,6 +233,8 @@ export class CommanLoginFormComponent {
   }
 
   async sendOtp(frm: any, sendType: any) {
+
+    console.log("frm >>>>", frm);
 
     this.submitted = true;
     // if (!this.loginForm.username || !this.registerForm.full_name?.trim() || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {

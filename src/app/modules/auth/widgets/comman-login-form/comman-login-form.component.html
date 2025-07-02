@@ -93,8 +93,9 @@
 
           <input type="text" [(ngModel)]="loginForm.username" name="phone_number" #phone_number="ngModel"
             class="form-control" placeholder="Enter Mobile Number" autocomplete="off" [disabled]="isOtpVerified"
-            minlength="10" maxlength="10" numbersOnly [ngClass]="{'mandatory-input': phone_number.errors && submitted}"
+            [ngClass]="{'mandatory-input': phone_number.errors && submitted}" minlength="10" maxlength="10" numbersOnly
             required />
+          <!-- mask="(000)-000-0000" -->
         </div>
         <div class="mandatory-text mt-1"
           *ngIf="phone_number.errors && (phone_number.dirty || phone_number.touched || submitted)">

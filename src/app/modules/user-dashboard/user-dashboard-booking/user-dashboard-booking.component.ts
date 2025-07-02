@@ -25,6 +25,7 @@ import { BookingCancellationComponent } from './booking-cancellation/booking-can
 import { OtpVerificationModalComponent } from '../user-settings/modals/otp-verification-modal/otp-verification-modal.component';
 import { VerificationSuccessModalComponent } from '../user-settings/modals/verification-success-modal/verification-success-modal.component';
 import { BookingChecklistComponent } from './booking-checklist/booking-checklist.component';
+import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -62,19 +63,16 @@ export class UserDashboardBookingComponent {
   isShowChecklist: any = false;
   selectedRefNo: any = "";
   tempTableData: any = [];
+  singleBookingDetail: any = {};
 
 
   constructor(
-    // private data: DataService,
-    private router: Router,
     private route: ActivatedRoute,
     private bookingService: BookingService,
     public cabService: CabService,
     public gs: GlobalService,
-    private dialog: MatDialog,
     private modalService: NgbModal,
     private toast: ToastService,
-
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -125,14 +123,14 @@ export class UserDashboardBookingComponent {
     console.log("bookingStatus >>>>", row);
 
 
-    if (this.activeTab == "All Bookings") {
-      this.getTableData();
-    } else {
-      this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == row.name);
-      this.totalData = this.tableData.length;
-      let tabName = this.booktabs.find((item: any) => item.name === this.activeTab)?.name;
-      this.activeTabName = tabName;
-    }
+    this.getTableData();
+    // if (this.activeTab == "All Bookings") {
+    // } else {
+    //   this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == row.name);
+    //   this.totalData = this.tableData.length;
+    //   let tabName = this.booktabs.find((item: any) => item.name === this.activeTab)?.name;
+    //   this.activeTabName = tabName;
+    // }
     // let params = {
     //   activeTab: this.activeTab
     // }
@@ -264,6 +262,8 @@ export class UserDashboardBookingComponent {
   }
 
   changeStatus(data: any, status: any) {
+    console.log("data >>>>>", data);
+
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
@@ -271,10 +271,14 @@ export class UserDashboardBookingComponent {
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
         const oldStatus = JSON.parse(JSON.stringify(data.bookingStatus));
-        data.bookingStatus = status;
-        this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
-        this.totalData = this.tableData.length;
-        if (status === "Received") {
+        // data.bookingStatus = status;
+        // this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
+        // this.totalData = this.tableData.length;
+        if (status === "Delivered") {
+          this.InitiateDeliverVehicleToDriver(data);
+        }
+        if (status === "Accept" || status === "Received") {
+          this.singleBookingDetail = data;
           this.goToChecklist();
         }
         // this.openOtpVerification(data, status);
@@ -309,6 +313,34 @@ export class UserDashboardBookingComponent {
 
     }, () => {
     });
+  }
+
+  InitiateDeliverVehicleToDriver(item: any) {
+    const body = {
+      "bookingId": item.bookingId,
+      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "riskId": item.riskId,
+      "riskType": item.riskType
+    }
+    this.gs.isSpinnerShow = true;
+    this.bookingService.InitiateDeliverVehicleToDriver(body).subscribe((res: any) => {
+      console.log("BookingCancellationRequest >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(res.message);
+        this.getTableData();
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    });
+  }
+
+  onViewDocument(item: any) {
+    const modalRef = this.modalService.open(ViewAllDocumentsModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.bookingDetails = item;
+
   }
 
 }

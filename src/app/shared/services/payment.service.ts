@@ -36,16 +36,16 @@ export class PaymentService {
   }
 
   public getSupportedCoins() {
-    // this.baseUrl + 'getSupportedCoins'
-    return this.http.get('https://crypto-taxibooking-20030426091.asia-south1.run.app/api/getSupportedCoins').pipe(
+    // https://crypto-taxibooking-20030426091.asia-south1.run.app/api/getSupportedCoins
+    return this.http.get(this.baseUrl + 'getSupportedCoins').pipe(
       map((res: any) => {
         return res;
       })
     );
   }
   public createTransaction(data: any) {
-    // this.baseUrl + 'createTransaction'
-    return this.http.post('https://crypto-taxibooking-20030426091.asia-south1.run.app/api/createTransaction', data).pipe(
+    // https://crypto-taxibooking-20030426091.asia-south1.run.app/api/createTransaction
+    return this.http.post(this.baseUrl + 'createTransaction', data).pipe(
       map((res: any) => {
         return res;
       })
