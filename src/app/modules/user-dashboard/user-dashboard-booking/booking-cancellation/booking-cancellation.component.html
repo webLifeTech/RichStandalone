@@ -7,21 +7,28 @@
         <div class="can-box">
           <div class="car-info">
             <div class="airline">
-              <img [src]="bookingDetails.rentaldetails.image" alt="img" />
+              <img *ngIf="cancellationInfo.carImage" [src]="cancellationInfo.carImage" alt="img" />
+              <img *ngIf="cancellationInfo.driverProfile" [src]="cancellationInfo.driverProfile" alt="img" />
+              <!-- <img *ngIf="type === 'car'" [src]="details.carImage" class="img-fluid blur-up lazyload" alt="CarImage">
+              <img *ngIf="type === 'driver' && details.profilepath" [src]="details.profilepath"
+                class="img-fluid blur-up lazyload" alt="DriverImage">
+              <img *ngIf="type === 'driver' && !details.profilepath" src="assets/images/driver/Male.jpg"
+                class="img-fluid blur-up lazyload" alt="DriverImage"> -->
+
               <div>
-                <div *ngIf="!bookingDetails.rentaldetails?.driverName" class="fw-bold">
-                  {{bookingDetails.rentaldetails.make}} ({{bookingDetails.rentaldetails.model}})
+                <div *ngIf="cancellationInfo.make" class="fw-bold">
+                  {{cancellationInfo.make}} ({{cancellationInfo.model}})
                 </div>
-                <div *ngIf="bookingDetails.rentaldetails?.driverName" class="fw-bold">
-                  {{bookingDetails.rentaldetails?.driverName}}
+                <div *ngIf="!cancellationInfo.make" class="fw-bold">
+                  {{cancellationInfo.contactName}}
                 </div>
-                <small>{{bookingDetails.bookingDetails.duration}}</small>
+                <small>{{cancellationInfo.durationDays}}</small>
               </div>
             </div>
             <div class="timing">
               <div>
                 <div class="time">
-                  {{bookingDetails.bookingDetails.startDate}}
+                  {{cancellationInfo.pickUpDate}}
                 </div>
                 <div class="location"></div>
               </div>
@@ -30,7 +37,7 @@
               </div>
               <div>
                 <div class="time">
-                  {{bookingDetails.bookingDetails.endDate}}
+                  {{cancellationInfo.dropdate}}
                 </div>
                 <div class="location"></div>
               </div>
@@ -51,8 +58,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>$38.11</td>
-                  <td>FREE</td>
+                  <td>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</td>
+                  <td>{{cancellationInfo.cancellationCharge | currencyPipe: gs.currency}}</td>
                 </tr>
               </tbody>
             </table>
@@ -67,8 +74,8 @@
               <div class="row">
                 <div class="form-group col-md-8 text-start">
                   <label class="fw-bold">Cancellation Reason <span class="text-danger">*</span></label>
-                  <ng-select [items]="reasons" formControlName="reason" name="reason" bindLabel="Name"
-                    placeholder="-- Select Reason --" bindValue="Name" [autofocus]="false">
+                  <ng-select [items]="reasons" formControlName="reason" name="reason" bindLabel="description"
+                    placeholder="-- Select Reason --" bindValue="id" [autofocus]="false">
                   </ng-select>
                   <span class="text-danger"
                     *ngIf="(cancelFormControl.reason?.touched || submitted) && cancelFormControl.reason?.errors?.required">
@@ -110,25 +117,27 @@
             <div class="section-title">Booking Amount</div>
             <div class="d-flex justify-content-between mt-2">
               <div class="small">Total</div>
-              <div>$38.11</div>
+              <div>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</div>
             </div>
             <hr>
             <div class="d-flex justify-content-between fw-bold">
               <span>Total Amount</span>
-              <span>$38.11</span>
+              <span>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</span>
             </div>
           </div>
 
           <div class="breakdown-box mt-3">
             <div class="d-flex justify-content-between">
               <span class="text-muted">Deductions</span>
-              <span class="text-success fw-bold">$0</span>
+              <span class="text-success fw-bold">
+                {{cancellationInfo.cancellationCharge | currencyPipe: gs.currency}}
+              </span>
             </div>
           </div>
           <hr>
           <div class="refund-summary text-success mt-3 text-center">
             <div class="section-title">Estimated refunds</div>
-            <div class="fw-bold fs-5">$38.11</div>
+            <div class="fw-bold fs-5">{{cancellationInfo.refundAmount | currencyPipe: gs.currency}}</div>
             <small class="text-muted">
               Refunds are typically processed within 30 business days. The exact amount will be sent later via
               email.

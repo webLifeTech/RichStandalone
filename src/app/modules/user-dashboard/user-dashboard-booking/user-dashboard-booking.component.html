@@ -277,7 +277,8 @@
           </div>
         </div>
       </div>
-      <app-booking-cancellation [bookingRefNo]="selectedRefNo"></app-booking-cancellation>
+      <app-booking-cancellation [singleBookingDetail]="singleBookingDetail"
+        (onCancel)="backToBooking()"></app-booking-cancellation>
     </div>
   </ng-container>
 
@@ -295,8 +296,8 @@
           </div>
         </div>
       </div>
-      <app-booking-checklist (onCancel)="backToBooking()"
-        [bookingDetails]="singleBookingDetail"></app-booking-checklist>
+      <app-booking-checklist [bookingDetails]="singleBookingDetail"
+        (onCancel)="backToBooking()"></app-booking-checklist>
     </div>
   </ng-container>
 </div>

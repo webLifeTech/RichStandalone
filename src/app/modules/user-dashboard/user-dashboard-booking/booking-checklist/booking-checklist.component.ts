@@ -60,6 +60,8 @@ export class BookingChecklistComponent {
     // { "satisfactory": false, "defective": false, "na": false, description: 'Condition of tyres' },
   ];
 
+  inspectionTypes: any = [];
+
   constructor(
     public bf: FormBuilder,
     private toast: ToastService,
@@ -76,11 +78,21 @@ export class BookingChecklistComponent {
   }
 
   ngOnInit() {
+    this.GetMasterInspectiontypes();
     if (this.gs.loggedInUserInfo.role === 'user') {
       this.GetMasterInspectionLineItems();
     } else {
       this.GetPostMasterInspectionLineItems();
     }
+  }
+
+  GetMasterInspectiontypes() {
+    this.gs.isSpinnerShow = true;
+    this.bookingService.GetMasterInspectiontypes({}).subscribe((res: any) => {
+      console.log("GetMasterInspectiontypes >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      this.inspectionTypes = res;
+    });
   }
 
   GetMasterInspectionLineItems() {
@@ -98,6 +110,7 @@ export class BookingChecklistComponent {
       }
     });
   }
+
   GetPostMasterInspectionLineItems() {
     const body = {
       bookingId: this.bookingDetails.bookingId
@@ -170,7 +183,11 @@ export class BookingChecklistComponent {
     this.submitted = true;
     if (this.inspectionForm.valid) {
       let checkListItems: any = [];
-      let inspectionTypeId = this.checklist[0].inspectionTypeId;
+      const rentalType = this.gs.loggedInUserInfo.role === 'user' ? "PRE_RENTAL" : "POST_RENTAL"
+      const findIt = this.inspectionTypes.find((i: any) => i.code === rentalType);
+      console.log("findIt >>>>>>>", findIt);
+
+      let inspectionTypeId = findIt.id;
       const inspectionDate = this.transformDate(new Date(), 'MM/dd/yy');
 
       for (let i in this.checklist) {

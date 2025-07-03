@@ -61,7 +61,6 @@ export class UserDashboardBookingComponent {
   booktabs: any = []
   isShowCancellation: any = false;
   isShowChecklist: any = false;
-  selectedRefNo: any = "";
   tempTableData: any = [];
   singleBookingDetail: any = {};
 
@@ -158,39 +157,15 @@ export class UserDashboardBookingComponent {
   }
 
   bookingCancel(item: any) {
+    const todayDate = new Date();
+    const pickUpDate = new Date(item.pickUpDate);
+    if (pickUpDate > todayDate) {
+      this.toast.errorToastr("Booking is not allowed to cancel - Cancellation date exceeds Start Date date");
+      return;
+    }
+    this.singleBookingDetail = item;
     this.isShowCancellation = true;
-    this.selectedRefNo = item.bookingReferenceNumber;
     window.scrollTo({ top: 180, behavior: 'smooth' });
-    return;
-    const modalRef = this.modalService.open(BookingCancelModalComponent, {
-      // centered: true,
-      size: 'xl'
-    });
-    modalRef.componentInstance.bookingRefNo = item.bookingReferenceNumber;
-    modalRef.result.then((res: any) => {
-      if (res.confirmed) {
-        // item.reason = res.reason;
-        // item.status = "Cancelled";
-
-        const body = {
-          "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
-          "bookingRefNo": item.bookingReferenceNumber,
-          "cancellationReason": res.reason,
-        }
-        this.gs.isSpinnerShow = true;
-        this.bookingService.BookingCancellationRequest(body).subscribe((res: any) => {
-          console.log("BookingCancellationRequest >>>>>", res);
-          this.gs.isSpinnerShow = false;
-          if (res && res.statusCode == "200") {
-            this.toast.successToastr(res.message);
-            this.getTableData();
-          } else {
-            this.toast.errorToastr(res.message);
-          }
-        });
-      }
-    }, () => {
-    });
   }
 
   goToChecklist() {
@@ -259,6 +234,8 @@ export class UserDashboardBookingComponent {
   backToBooking() {
     this.isShowCancellation = false;
     this.isShowChecklist = false;
+    this.getTableData();
+    window.scrollTo({ top: 280, behavior: 'smooth' });
   }
 
   changeStatus(data: any, status: any) {

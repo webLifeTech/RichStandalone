@@ -144,6 +144,15 @@ export class BookingService {
   }
 
   // Master -> GetMasterInspectionLineItems
+  public GetMasterInspectiontypes(dataParams: any) {
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectiontypes').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Master -> GetMasterInspectionLineItems
   public GetMasterInspectionLineItems(dataParams: any) {
     const params = new HttpParams().set('inspectiontype', dataParams.inspectiontype);
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectionLineItems', { params }).pipe(
@@ -181,12 +190,6 @@ export class BookingService {
     );
   }
 
-  // http://209.10.88.76:2025/TLHUB_API_DEMO/TLHUB/COMMON/GetBookingAllDocuments?
-  // bookingId=42&
-  // userId=3e89dba8-792c-493e-a26d-562914d1da78&
-  // riskId=4610&
-  // riskType=Vehicle
-
   // Booking -> GetBookingAllDocuments
   public GetBookingAllDocuments(dataParams: any) {
     const params = new HttpParams()
@@ -195,6 +198,40 @@ export class BookingService {
       .set('riskId', dataParams.riskId)
       .set('riskType', dataParams.riskType);
     return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetBookingAllDocuments', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Booking -> GetMasterBookingCancellationReasons
+  public GetMasterBookingCancellationReasons(dataParams: any) {
+    const params = new HttpParams().set('riskType', dataParams.riskType);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterBookingCancellationReasons', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Cancellation -> GetCarBookingCancellationInfo
+  public GetCarBookingCancellationInfo(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingId', dataParams.bookingId)
+      .set('cancelDate', dataParams.cancelDate);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Cancellation/GetCarBookingCancellationInfo', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Cancellation -> GetDriverBookingCancellationInfo
+  public GetDriverBookingCancellationInfo(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingId', dataParams.bookingId)
+      .set('cancelDate', dataParams.cancelDate);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Cancellation/GetDriverBookingCancellationInfo', { params }).pipe(
       map((res: any) => {
         return res;
       })
