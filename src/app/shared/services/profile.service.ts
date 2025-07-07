@@ -488,11 +488,6 @@ export class ProfileService {
     );
   }
 
-  // http://209.10.88.76:2022/TLHUB_API/TLHUB/COMMON/UpdateDriverAndProviderStatus?
-  // userId=db9dd92d-de68-4810-9c19-9de4ab42cfec&
-  // status=false&
-  // risktype=Provider
-
   // COMMON -> UpdateDriverAndProviderStatus
   public UpdateDriverAndProviderStatus(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateDriverAndProviderStatus?userId=${data.userId}&status=${data.status}&risktype=${data.risktype}`, {}).pipe(
@@ -525,5 +520,35 @@ export class ProfileService {
     );
   }
 
-  // http://209.10.88.76:2022/TLHUB_API/TLHUB/COMMON/GetKycByUserId?userId=36b1aa9d-7d41-48ba-b44b-182b41876e07
+  // Master -> GetMasterCancellationFeeType
+  public GetMasterCancellationFeeType(dataParams: any) {
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterCancellationFeeType').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Master -> GetMasterCancellationFeeRules
+  public GetMasterCancellationFeeRules(dataParams: any) {
+    const params = new HttpParams()
+      .set('appliesto', dataParams.appliesto)
+      .set('riskId', dataParams.riskId);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterCancellationFeeRules', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  // Cancellation -> AddRiskCancellationFeeRules
+  public AddRiskCancellationFeeRules(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Cancellation/AddRiskCancellationFeeRules`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

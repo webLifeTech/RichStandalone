@@ -171,7 +171,7 @@ export class AddPaymentModalComponent {
       "walletId": this.walletId,
       "amount": this.amount,
       "remarks": null,
-      "paymentType": this.type, // CreditCard,ACH
+      "paymentMethod": this.type, // CreditCard,ACH
       "currency": "USD", // USD,INR,EUR
     }
 

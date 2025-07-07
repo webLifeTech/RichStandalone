@@ -84,6 +84,7 @@ export class DynamicFormComponent {
   profileUrl: any = "";
   workingHours: any = [];
   isPrivateBooking: boolean = false; //
+  cancellationFeeMasterDp: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -148,410 +149,60 @@ export class DynamicFormComponent {
     }
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
-      if (this.selectedTabObj.formName == "VEHICLE DETAILS") {
-        this.formArray = [...this.formArray, ...[
-          { // first
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_SHIFT",
-            "fieldId": 1001,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TIME",
-            "description": "CANCELLATION TIME",
-            "modalValue": "cancellationTime",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 1,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TIME",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTimeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE_INCLUDE",
-            "fieldId": 1002,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TYPE",
-            "description": "CANCELLATION TYPE",
-            "modalValue": "cancellationType",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 2,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TYPE",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": "Percentage",
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTypeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1003,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "AMOUNT",
-            "description": "AMOUNT",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 3,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1002,
-            "conditionValue": "Fixed", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1004,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "PERCENTAGE",
-            "description": "PERCENTAGE",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 3,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1002,
-            "conditionValue": "Percentage", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-          { // second
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_SHIFT",
-            "fieldId": 1005,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TIME",
-            "description": "CANCELLATION TIME",
-            "modalValue": "cancellationTime",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 4,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TIME",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTimeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE_INCLUDE",
-            "fieldId": 1006,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TYPE",
-            "description": "CANCELLATION TYPE",
-            "modalValue": "cancellationType",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 5,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TYPE",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": "Percentage",
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTypeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1007,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "AMOUNT",
-            "description": "AMOUNT",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 6,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1006,
-            "conditionValue": "Fixed", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1008,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "PERCENTAGE",
-            "description": "PERCENTAGE",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 6,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1006,
-            "conditionValue": "Percentage", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-          { // third
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_SHIFT",
-            "fieldId": 1009,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TIME",
-            "description": "CANCELLATION TIME",
-            "modalValue": "cancellationTime",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 7,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TIME",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTimeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE_INCLUDE",
-            "fieldId": 1010,
-            "fieldType": "DROPDOWN",
-            "sectionID": 100,
-            "fieldName": "CANCELLATION TYPE",
-            "description": "CANCELLATION TYPE",
-            "modalValue": "cancellationType",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 8,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": "CANCELLATION_TYPE",
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": null,
-            "conditionValue": null,
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": "Percentage",
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": "cancellationTypeCd",
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1011,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "AMOUNT",
-            "description": "AMOUNT",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 9,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1010,
-            "conditionValue": "Fixed", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-          {
-            "languageId": "1",
-            "formId": 14,
-            "formName": "VEHICLE DETAILS",
-            "fieldCode": "FLD_VIN_OTH_INSU_FEE",
-            "fieldId": 1012,
-            "fieldType": "TEXT",
-            "sectionID": 100,
-            "fieldName": "PERCENTAGE",
-            "description": "PERCENTAGE",
-            "modalValue": "insuranceFee",
-            "sectionName": "CANCELLATION POLICY",
-            "fieldOrder": 9,
-            "isVisible": true,
-            "isMandatory": false,
-            "transactionId": 2,
-            "isReadOnly": false,
-            "validationType": "",
-            "roles": null,
-            "isActive": false,
-            "dropdownValues": null,
-            "modalObject": "vehicleOtherDetails",
-            "dependentFields": null,
-            "condition": 1010,
-            "conditionValue": "Percentage", // "Percentage" "Fixed"
-            "fieldClass": "col-lg-4 col-md-4",
-            "defaultValue": null,
-            "staticValue": null,
-            "selectUnique": false,
-            "action": null,
-            "modalValueCode": null,
-            "relatedFields": null
-          },
-        ]];
-      }
 
       console.log("this.formArray >>>>>", this.formArray);
 
       this.configMasterDp = await this.profileService.getConfigMasterDropDown();
+      if (this.selectedTabObj.formName == "VEHICLE DETAILS") {
+        this.cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
+          "appliesto": "Risk",
+          "riskId": this.singleDetailInfo.vehicleInfo.vehicleId
+        });
+
+        let cancellationPolicy = this.formArray.filter((cnItem: any) => cnItem.sectionID === 32);
+        let newArray: any = [];
+
+        this.singleDetailInfo['riskCancellationFeeRulesRequest'] = {};
+        for (let cFeeItem in this.cancellationFeeMasterDp) {
+          for (let cItem in cancellationPolicy) {
+            if (cFeeItem == "0") {
+              if (cItem == "0") { // for cancellation time
+                cancellationPolicy[cItem].modalValueCode = "ruleCd";
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].Name;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
+              }
+              if (cItem == "1") { // for cancellation fee type
+                cancellationPolicy[cItem].modalValueCode = "feeTypeCd";
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeType;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
+              }
+              if (cItem == "2") { // for cancellation fee
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeValue;
+              }
+            } else if (cancellationPolicy[cItem].fieldType !== "BUTTON") {
+              let tempCanPlc: any = JSON.parse(JSON.stringify(cancellationPolicy[cItem]))
+              tempCanPlc.fieldOrder = cancellationPolicy.length + newArray.length + Number(cFeeItem);
+              tempCanPlc.modalValue = tempCanPlc.modalValue + cFeeItem;
+              if (cItem == "0") { // for cancellation time
+                tempCanPlc.modalValueCode = "ruleCd" + cFeeItem;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].Name;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
+              }
+              if (cItem == "1") { // for cancellation fee type
+                tempCanPlc.modalValueCode = "feeTypeCd" + cFeeItem;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeType;
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].FeeTypeCd;
+              }
+              if (cItem == "2") { // for cancellation fee
+                this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeValue;
+              }
+              newArray.push(tempCanPlc);
+            }
+          }
+        }
+
+        this.formArray = [...this.formArray, ...newArray];
+      }
 
       if (response && response.length) {
         for (let i in this.formArray) {
@@ -677,63 +328,63 @@ export class DynamicFormComponent {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
 
-        this.masterDropdwonList["CANCELLATION_TIME"] = [
-          {
-            "ID": "222",
-            "StateCode": 0,
-            "Code": "Before 12 Hours",
-            "Type": 26,
-            "TypeCode": "cancellationTime",
-            "Name": "Before 12 Hours",
-            "Description": "Before 12 Hours",
-            "IsActive": true
-          },
-          {
-            "ID": "220",
-            "StateCode": 0,
-            "Code": "Before 24 Hours",
-            "Type": 26,
-            "TypeCode": "SHIFT_STATUS",
-            "Name": "Before 24 Hours",
-            "Description": "Before 24 Hours",
-            "IsActive": true
-          },
-          {
-            "ID": "221",
-            "StateCode": 0,
-            "Code": "Before 48 Hours",
-            "Type": 26,
-            "TypeCode": "SHIFT_STATUS",
-            "Name": "Before 48 Hours",
-            "Description": "Before 48 Hours",
-            "IsActive": true
-          },
+        // this.masterDropdwonList["CANCELLATION_TIME"] = [
+        //   {
+        //     "ID": "222",
+        //     "StateCode": 0,
+        //     "Code": "Before 12 Hours",
+        //     "Type": 26,
+        //     "TypeCode": "cancellationTime",
+        //     "Name": "Before 12 Hours",
+        //     "Description": "Before 12 Hours",
+        //     "IsActive": true
+        //   },
+        //   {
+        //     "ID": "220",
+        //     "StateCode": 0,
+        //     "Code": "Before 24 Hours",
+        //     "Type": 26,
+        //     "TypeCode": "SHIFT_STATUS",
+        //     "Name": "Before 24 Hours",
+        //     "Description": "Before 24 Hours",
+        //     "IsActive": true
+        //   },
+        //   {
+        //     "ID": "221",
+        //     "StateCode": 0,
+        //     "Code": "Before 48 Hours",
+        //     "Type": 26,
+        //     "TypeCode": "SHIFT_STATUS",
+        //     "Name": "Before 48 Hours",
+        //     "Description": "Before 48 Hours",
+        //     "IsActive": true
+        //   },
 
-        ]
+        // ]
 
 
-        this.masterDropdwonList["CANCELLATION_TYPE"] = [
-          {
-            "ID": "2222",
-            "StateCode": 0,
-            "Code": "Percentage",
-            "Type": 26,
-            "TypeCode": "cancellationType",
-            "Name": "Percentage",
-            "Description": "Percentage",
-            "IsActive": true
-          },
-          {
-            "ID": "2223",
-            "StateCode": 0,
-            "Code": "Fixed",
-            "Type": 26,
-            "TypeCode": "cancellationType",
-            "Name": "Fixed",
-            "Description": "Fixed",
-            "IsActive": true
-          }
-        ]
+        // this.masterDropdwonList["CANCELLATION_TYPE"] = [
+        //   {
+        //     "ID": "2222",
+        //     "StateCode": 0,
+        //     "Code": "Percentage",
+        //     "Type": 26,
+        //     "TypeCode": "cancellationType",
+        //     "Name": "Percentage",
+        //     "Description": "Percentage",
+        //     "IsActive": true
+        //   },
+        //   {
+        //     "ID": "2223",
+        //     "StateCode": 0,
+        //     "Code": "Fixed",
+        //     "Type": 26,
+        //     "TypeCode": "cancellationType",
+        //     "Name": "Fixed",
+        //     "Description": "Fixed",
+        //     "IsActive": true
+        //   }
+        // ]
 
         this.createForm();
       } else {
@@ -761,6 +412,36 @@ export class DynamicFormComponent {
       this.toast.errorToastr(err || "Something went wrong");
     })
   }
+
+  // Get Countries
+  GetMasterCancellationFeeType(section: any, fieldId: any) {
+    this.profileService.GetMasterCancellationFeeType({}).subscribe((res: any) => {
+      if (res && res.length) {
+        this.updateValueByFieldId(section, fieldId, "dropdownList", res);
+      } else {
+        this.toast.errorToastr("Something went wrong");
+      }
+    }, (err: any) => {
+      this.toast.errorToastr(err || "Something went wrong");
+    })
+  }
+
+  // Get Countries
+  // GetMasterCancellationFeeRules() {
+  //   let body = {
+  //     "appliesto": "Risk",
+  //   }
+  //   this.profileService.GetMasterCancellationFeeRules(body).subscribe((res: any) => {
+  //     console.log("GetMasterCancellationFeeRules >>>", res);
+
+  //     if (res && res.length) {
+  //     } else {
+  //       this.toast.errorToastr("Something went wrong");
+  //     }
+  //   }, (err: any) => {
+  //     this.toast.errorToastr(err || "Something went wrong");
+  //   })
+  // }
 
   // Get Countries // addresses, emails, phoneNumbers
   async getAndSetMasterTypeIds() {
@@ -1033,6 +714,10 @@ export class DynamicFormComponent {
 
         if (fieldTwo.value.action === "SAVE") {
           this.bindTable(fieldTwo, section);
+        }
+
+        if (fieldTwo.value.fieldId === 345) {
+          this.GetMasterCancellationFeeType(section, fieldTwo.value.fieldId);
         }
       });
     });
@@ -1511,6 +1196,9 @@ export class DynamicFormComponent {
 
   // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
+
+    console.log("field >>>>>", field);
+    console.log("event >>>>>", event);
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
@@ -2641,6 +2329,10 @@ export class DynamicFormComponent {
       this.updateProviderDetails(finalBody, section);
     }
 
+    if (section.value.sectionID == "32") {
+      this.updateCancellationPolicy(finalBody, section);
+    }
+
   }
 
   // updateForeignDriverInfo
@@ -2792,10 +2484,7 @@ export class DynamicFormComponent {
   async updateDriverKycOtherInfo(finalBody: any, section: any) {
 
     if (finalBody["doYouHaveInsuranceCd"] == "true") {
-      console.log("finalBody['otherInfo'] >>>>>>", finalBody['otherInfo']);
       const checkOne = finalBody['otherInfo'].find((item: any) => item.isActive)
-      console.log("checkOne >>>>>>", checkOne);
-
       if (!checkOne || !finalBody['otherInfo'] || !(finalBody['otherInfo'] && finalBody['otherInfo'].length)) {
         this.toast.errorToastr("Please add insurance details.");
         return;
@@ -3022,6 +2711,45 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateVehicleInspection
+  async updateCancellationPolicy(finalBody: any, section: any) {
+    let Body: any = [];
+    for (let idx in this.cancellationFeeMasterDp) {
+      Body.push({
+        "id": this.cancellationFeeMasterDp[idx].ID,
+        "ruleId": this.cancellationFeeMasterDp[idx].RuleId,
+        "riskType": "Vehicle",
+        "userId": this.singleDetailInfo.vehicleInfo.userId,
+        "riskId": this.singleDetailInfo.vehicleInfo.vehicleId,
+        "feeType": idx == "0" ? finalBody.feeTypeCd : finalBody['feeTypeCd' + idx],
+        "feeValue": idx == "0" ? finalBody.feeValue : finalBody['feeValue' + idx],
+        "description": this.cancellationFeeMasterDp[idx].Description,
+        "effectiveDate": this.cancellationFeeMasterDp[idx].EffectiveDate,
+        "expirationDate": this.cancellationFeeMasterDp[idx].ExpirationDate
+      })
+    }
+    console.log("finalBody >>>>>", finalBody)
+    console.log("Body >>>>>", Body)
+    // return;
+    this.gs.isSpinnerShow = true;
+    this.profileService.AddRiskCancellationFeeRules(Body).subscribe(async (res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
+        this.cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
+          "appliesto": "Risk",
+          "riskId": this.singleDetailInfo.vehicleInfo.vehicleId
+        });
       } else {
         this.toast.errorToastr(res.message);
       }

@@ -28,9 +28,9 @@ export class BookingCancellationComponent {
 
   @Input() title: string;
   @Input() singleBookingDetail: any = {};
+  @Input() cancellationInfo: any = {};
   @Output() onCancel = new EventEmitter<any>();
 
-  cancellationInfo: any = {};
   reason: any = "";
   reasons: any = [];
   cancellationForm: FormGroup;
@@ -79,12 +79,12 @@ export class BookingCancellationComponent {
   ngOnInit() {
     console.log("singleBookingDetail >>>>>", this.singleBookingDetail);
     this.GetMasterBookingCancellationReasons();
-    if (this.singleBookingDetail.riskType == "Vehicle") {
-      this.GetCarBookingCancellationInfo();
-    }
-    if (this.singleBookingDetail.riskType == "Driver") {
-      this.GetDriverBookingCancellationInfo();
-    }
+    // if (this.singleBookingDetail.riskType == "Vehicle") {
+    //   this.GetCarBookingCancellationInfo();
+    // }
+    // if (this.singleBookingDetail.riskType == "Driver") {
+    //   this.GetDriverBookingCancellationInfo();
+    // }
     // this.GetBookingByBookingRefNo();
     // if (this.type == "driver") {
     //   this.reasons = this.driverRentCancellationReasons;
@@ -94,35 +94,35 @@ export class BookingCancellationComponent {
   }
 
 
-  GetCarBookingCancellationInfo() {
-    this.gs.isSpinnerShow = true;
-    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
-    this.bookingService.GetCarBookingCancellationInfo({
-      bookingId: this.singleBookingDetail.bookingId,
-      cancelDate: todayDate,
-    }).subscribe((response: any) => {
-      this.gs.isSpinnerShow = false;
-      console.log("GetCarBookingCancellationInfo >>>>>", response);
-      if (response && response.responseResult && response.responseResult.statusCode == "200") {
-        this.cancellationInfo = response;
-      }
-    })
-  }
+  // GetCarBookingCancellationInfo() {
+  //   this.gs.isSpinnerShow = true;
+  //   const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+  //   this.bookingService.GetCarBookingCancellationInfo({
+  //     bookingId: this.singleBookingDetail.bookingId,
+  //     cancelDate: todayDate,
+  //   }).subscribe((response: any) => {
+  //     this.gs.isSpinnerShow = false;
+  //     console.log("GetCarBookingCancellationInfo >>>>>", response);
+  //     if (response && response.responseResult && response.responseResult.statusCode == "200") {
+  //       this.cancellationInfo = response;
+  //     }
+  //   })
+  // }
 
-  GetDriverBookingCancellationInfo() {
-    this.gs.isSpinnerShow = true;
-    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
-    this.bookingService.GetDriverBookingCancellationInfo({
-      bookingId: this.singleBookingDetail.bookingId,
-      cancelDate: todayDate,
-    }).subscribe((response: any) => {
-      this.gs.isSpinnerShow = false;
-      console.log("GetDriverBookingCancellationInfo >>>>>", response);
-      if (response && response.responseResult && response.responseResult.statusCode == "200") {
-        this.cancellationInfo = response;
-      }
-    })
-  }
+  // GetDriverBookingCancellationInfo() {
+  //   this.gs.isSpinnerShow = true;
+  //   const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+  //   this.bookingService.GetDriverBookingCancellationInfo({
+  //     bookingId: this.singleBookingDetail.bookingId,
+  //     cancelDate: todayDate,
+  //   }).subscribe((response: any) => {
+  //     this.gs.isSpinnerShow = false;
+  //     console.log("GetDriverBookingCancellationInfo >>>>>", response);
+  //     if (response && response.responseResult && response.responseResult.statusCode == "200") {
+  //       this.cancellationInfo = response;
+  //     }
+  //   })
+  // }
 
   GetMasterBookingCancellationReasons() {
     this.gs.isSpinnerShow = true;

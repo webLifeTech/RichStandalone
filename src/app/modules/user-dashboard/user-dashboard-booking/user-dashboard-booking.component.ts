@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
@@ -43,12 +43,12 @@ import { ViewAllDocumentsModalComponent } from '../../../shared/components/comma
     MatButtonModule,
     CurrencySymbolPipe,
   ],
+  providers: [DatePipe],
   templateUrl: './user-dashboard-booking.component.html',
   styleUrl: './user-dashboard-booking.component.scss'
 })
 export class UserDashboardBookingComponent {
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
   public searchDataValue = '';
   sortColumn: any = "bookingReferenceNumber";
   sortOrder: any = "DESC";
@@ -63,6 +63,7 @@ export class UserDashboardBookingComponent {
   isShowChecklist: any = false;
   tempTableData: any = [];
   singleBookingDetail: any = {};
+  cancellationInfo: any = {};
 
 
   constructor(
@@ -72,6 +73,7 @@ export class UserDashboardBookingComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
+    private datePipe: DatePipe,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -157,15 +159,19 @@ export class UserDashboardBookingComponent {
   }
 
   bookingCancel(item: any) {
-    const todayDate = new Date();
-    const pickUpDate = new Date(item.pickUpDate);
-    if (pickUpDate > todayDate) {
-      this.toast.errorToastr("Booking is not allowed to cancel - Cancellation date exceeds Start Date date");
-      return;
-    }
+    // const todayDate = new Date();
+    // const pickUpDate = new Date(item.pickUpDate);
+    // if (pickUpDate > todayDate) {
+    //   this.toast.errorToastr("Booking is not allowed to cancel - Cancellation date exceeds Start Date date");
+    //   return;
+    // }
     this.singleBookingDetail = item;
-    this.isShowCancellation = true;
-    window.scrollTo({ top: 180, behavior: 'smooth' });
+    if (this.singleBookingDetail.riskType == "Vehicle") {
+      this.GetCarBookingCancellationInfo();
+    }
+    if (this.singleBookingDetail.riskType == "Driver") {
+      this.GetDriverBookingCancellationInfo();
+    }
   }
 
   goToChecklist() {
@@ -317,7 +323,47 @@ export class UserDashboardBookingComponent {
       size: 'lg'
     });
     modalRef.componentInstance.bookingDetails = item;
-
   }
 
+  GetCarBookingCancellationInfo() {
+    this.gs.isSpinnerShow = true;
+    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+    this.bookingService.GetCarBookingCancellationInfo({
+      bookingId: this.singleBookingDetail.bookingId,
+      cancelDate: todayDate,
+    }).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("GetCarBookingCancellationInfo >>>>>", response);
+      if (response && response.responseResult && response.responseResult.statusCode == "200") {
+        this.cancellationInfo = response;
+        this.isShowCancellation = true;
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      } else {
+        this.toast.errorToastr(response.responseResult.message);
+      }
+    })
+  }
+
+  GetDriverBookingCancellationInfo() {
+    this.gs.isSpinnerShow = true;
+    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+    this.bookingService.GetDriverBookingCancellationInfo({
+      bookingId: this.singleBookingDetail.bookingId,
+      cancelDate: todayDate,
+    }).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("GetDriverBookingCancellationInfo >>>>>", response);
+      if (response && response.responseResult && response.responseResult.statusCode == "200") {
+        this.cancellationInfo = response;
+        this.isShowCancellation = true;
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      } else {
+        this.toast.errorToastr(response.responseResult.message);
+      }
+    })
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
 }

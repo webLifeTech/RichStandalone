@@ -16,21 +16,33 @@
           <tbody>
             <tr *ngFor="let item of refundPolicy">
               <td class="p-3">
-                <span class="fw-bold">{{item.time_of_cancellation}}</span>
+                <span class="fw-bold">{{item.Description}}</span>
               </td>
               <td class="p-3">
-                <span *ngIf="item.cancellation_type === 'Percentage'" class="fw-bold">
-                  {{item.cancellation_charges}}
+                <span *ngIf="item.FeeType === 'Percentage'" class="fw-bold">
+                  {{item.FeeValue}}%
                 </span>
-                <span *ngIf="item.cancellation_type === 'Fixed'" class="fw-bold">
-                  {{item.cancellation_charges | currencyPipe: gs.currency}}
+                <span *ngIf="item.FeeType === 'Fixed'" class="fw-bold">
+                  {{item.FeeValue | currencyPipe: gs.currency}}
                 </span>
-                <small class="ms-2">({{item.cancellation_type}})</small>
+                <small class="ms-2">({{item.FeeType}})</small>
                 <!-- <div>
                 </div> -->
               </td>
               <td class="p-3">
-                <span class="fw-bold">{{item.refund_amount | currencyPipe: gs.currency}}</span>
+                <span *ngIf="item.FeeType === 'Percentage'" class="fw-bold">
+                  {{gs.bookingSummaryDetails.totalFare - (gs.bookingSummaryDetails.totalFare*item.FeeValue/100) |
+                  currencyPipe: gs.currency}}
+                </span>
+                <span *ngIf="item.FeeType === 'Fixed'" class="fw-bold">
+                  {{(gs.bookingSummaryDetails.totalFare-item.FeeValue) | currencyPipe: gs.currency}}
+                </span>
+                <span *ngIf="item.FeeType === 'Full'" class="fw-bold">
+                  {{0 | currencyPipe: gs.currency}}
+                </span>
+                <span *ngIf="item.FeeType === 'None'" class="fw-bold">
+                  {{gs.bookingSummaryDetails.totalFare | currencyPipe: gs.currency}}
+                </span>
               </td>
             </tr>
           </tbody>
