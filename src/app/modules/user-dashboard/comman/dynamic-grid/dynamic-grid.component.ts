@@ -110,7 +110,7 @@ export class DynamicGridComponent {
         if (response && response.length) {
           this.filteredData = response;
           this.totalData = response.length;
-          this.onEdit(this.filteredData[0]); // need to do
+          // this.onEdit(this.filteredData[1]); // need to do
         }
       })
     }

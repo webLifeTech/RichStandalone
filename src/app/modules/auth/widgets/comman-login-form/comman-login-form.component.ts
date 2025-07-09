@@ -220,8 +220,10 @@ export class CommanLoginFormComponent {
       }
 
       console.log("body >>>>>", body);
+      this.gs.isSpinnerShow = true;
       this.authService.register(body).subscribe((res: any) => {
         console.log("registerVendor --->", res);
+        this.gs.isSpinnerShow = false;
         if (res && res.statusCode == "200") {
           this.toast.successToastr(res.message);
           this.router.navigateByUrl('/auth/log-in');

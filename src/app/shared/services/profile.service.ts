@@ -531,11 +531,21 @@ export class ProfileService {
 
   // Master -> GetMasterCancellationFeeRules
   public GetMasterCancellationFeeRules(dataParams: any) {
-    const params = new HttpParams()
-      .set('appliesto', dataParams.appliesto)
-      .set('riskId', dataParams.riskId);
+    const params = new HttpParams().set('appliesto', dataParams.appliesto);
     return new Promise((resolve, reject) => {
       this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterCancellationFeeRules', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  // Cancellation -> GetCancellationFeeRules
+  public GetCancellationFeeRules(dataParams: any) {
+    const params = new HttpParams().set('riskId', dataParams.riskId);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Cancellation/GetCancellationFeeRules', { params }).subscribe((result) => {
         resolve(result)
       }, (err) => {
         reject(err)

@@ -143,7 +143,7 @@ export class BookingComponent {
           "transactionType": null,
           "remarks": null,
           "walletId": null,
-          "paymentType": this.type, // CreditCard,ACH,Wallet
+          "paymentMethod": this.type, // CreditCard,ACH,Wallet
           "currency": "USD", // USD,INR,EUR
         },
         "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,

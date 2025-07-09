@@ -211,7 +211,7 @@ export class PlanSubscribeComponent {
       "userId": this.gs.loggedInUserInfo.userId,
       "amount": this.packageSummaryObj.totalAmount,
       "remarks": "Package " + this.params.packageStatus,
-      "paymentType": this.type,
+      "paymentMethod": this.type, // CreditCard,ACH
       "currency": "USD",
       "subscrptionPackageDetails": {
         "packageId": this.packageSummaryObj.packageId,
