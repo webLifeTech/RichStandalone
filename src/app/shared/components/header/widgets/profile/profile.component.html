@@ -44,6 +44,10 @@
       <img src="assets/images/icon/dashboard/booking-icon.svg" width="24" alt="Settings" />
       Cars Status
     </a>
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goActivities()">
+      <img src="assets/images/icon/dashboard/activities.svg" width="24" alt="Settings" />
+      My Activities
+    </a>
     <a class="dropdown-item" (click)="logOut()">
       <img src="assets/images/icon/logout.svg" width="24" alt="Logout" />
       Logout

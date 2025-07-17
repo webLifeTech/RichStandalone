@@ -154,161 +154,6 @@ export class DynamicFormComponent {
 
       console.log("this.formArray >>>>>", this.formArray);
 
-      if (this.selectedTabObj.formName == "VEHICLE DETAILS") {
-        // this.formArray.push({
-        //   "languageId": "1",
-        //   "formId": 14,
-        //   "formName": "VEHICLE DETAILS",
-        //   "fieldId": 3470,
-        //   "fieldType": "BUTTON",
-        //   "sectionID": 32,
-        //   "modalValue": null,
-        //   "sectionName": "CANCELLATION POLICY",
-        //   "isVisible": true,
-        //   "transactionId": 3,
-        //   "isReadOnly": false,
-        //   "validationType": "",
-        //   "roles": null,
-        //   "isActive": false,
-        //   "dropdownValues": null,
-        //   "modalObject": "riskCancellationFeeRulesRequest",
-        //   "dependentFields": null,
-        //   "condition": null,
-        //   "conditionValue": null,
-        //   "fieldClass": "col-lg-12 col-md-12 text-end",
-        //   "defaultValue": null,
-        //   "staticValue": null,
-        //   "selectUnique": false,
-        //   "modalValueCode": null,
-        //   "relatedFields": null,
-        //   "fieldCode": "FLD_OTHERARRAY",
-        //   "fieldName": "ADD",
-        //   "description": "ADD",
-        //   "fieldOrder": 0,
-        //   "isMandatory": true,
-        //   "action": "ADD",
-        // },
-        //   {
-        //     "languageId": "1",
-        //     "formId": 14,
-        //     "formName": "VEHICLE DETAILS",
-        //     "fieldId": 3470,
-        //     "fieldCode": "FLD_OTHERARRAY",
-        //     "fieldType": "BUTTON",
-        //     "sectionID": 32,
-        //     "fieldName": "SAVE",
-        //     "description": "SAVE",
-        //     "modalValue": null,
-        //     "sectionName": "CANCELLATION POLICY",
-        //     "fieldOrder": 10,
-        //     "isVisible": true,
-        //     "isMandatory": true,
-        //     "transactionId": 3,
-        //     "isReadOnly": false,
-        //     "validationType": "",
-        //     "roles": null,
-        //     "isActive": false,
-        //     "dropdownValues": null,
-        //     "modalObject": "riskCancellationFeeRulesRequest",
-        //     "dependentFields": "[344,345,346]",
-        //     "condition": null,
-        //     "conditionValue": null,
-        //     "fieldClass": "col-lg-12 col-md-12 text-end",
-        //     "defaultValue": null,
-        //     "staticValue": null,
-        //     "selectUnique": false,
-        //     "action": "SAVE",
-        //     "modalValueCode": null,
-        //   }
-        //   // {
-        //   //   "languageId": "1",
-        //   //   "formId": 14,
-        //   //   "formName": "VEHICLE DETAILS",
-        //   //   "fieldId": 3471,
-        //   //   "fieldType": "BUTTON",
-        //   //   "sectionID": 32,
-        //   //   "modalValue": null,
-        //   //   "sectionName": "CANCELLATION POLICY",
-        //   //   "isVisible": true,
-        //   //   "transactionId": 3,
-        //   //   "isReadOnly": false,
-        //   //   "validationType": "",
-        //   //   "roles": null,
-        //   //   "isActive": false,
-        //   //   "dropdownValues": null,
-        //   //   "modalObject": "riskCancellationFeeRulesRequest",
-        //   //   "dependentFields": null,
-        //   //   "condition": null,
-        //   //   "conditionValue": null,
-        //   //   "fieldClass": "col-lg-1 col-md-1 text-end",
-        //   //   "defaultValue": null,
-        //   //   "staticValue": null,
-        //   //   "selectUnique": false,
-        //   //   "modalValueCode": null,
-        //   //   "relatedFields": null,
-        //   //   "fieldCode": "FLD_OTHERARRAY",
-        //   //   "fieldName": "ADD",
-        //   //   "description": "ADD",
-        //   //   "fieldOrder": 3,
-        //   //   "isMandatory": true,
-        //   //   "action": "MINUS",
-        //   // }
-        // )
-
-        this.cancellationPolicyInfo = await this.profileService.GetCancellationFeeRules({
-          "riskId": this.singleDetailInfo.vehicleInfo.vehicleId
-        });
-        console.log("this.cancellationPolicyInfo >>>>>", this.cancellationPolicyInfo);
-        this.singleDetailInfo['riskCancellationFeeRulesRequest'] = this.cancellationPolicyInfo;
-
-        // const vehicleModelArray = this.cancellationFeeMasterDp.map((item: any) => ({ ID: item.RuleId, Name: item.Name }));
-        // this.masterDropdwonList["FeeRules"] = this.cancellationFeeMasterDp;
-        // let cancellationPolicy = this.formArray.filter((cnItem: any) => cnItem.sectionID === 32);
-        // let newArray: any = [];
-
-        // for (let cFeeItem in this.cancellationFeeMasterDp) {
-        //   for (let cItem in cancellationPolicy) {
-        //     if (cFeeItem == "0") {
-        //       if (cItem == "0") { // for cancellation time
-        //         // cancellationPolicy[cItem].dropdownValues = "FeeRules";
-        //         // cancellationPolicy[cItem].modalValueCode = "ruleCd";
-        //         // this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].Name;
-        //         // this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       }
-        //       if (cItem == "1") { // for cancellation fee type
-        //         // cancellationPolicy[cItem].modalValueCode = "feeTypeCd";
-        //         //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeType;
-        //         //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       }
-        //       //       if (cItem == "2") { // for cancellation fee
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeValue;
-        //       //       }
-        //       //       //  || cancellationPolicy[cItem].action === "MINUS"
-        //     } else if ((this.cancellationFeeMasterDp[cFeeItem].ID && cancellationPolicy[cItem].fieldType !== "BUTTON")) {
-        //       //       let tempCanPlc: any = JSON.parse(JSON.stringify(cancellationPolicy[cItem]))
-        //       //       tempCanPlc.fieldOrder = cancellationPolicy.length + newArray.length + Number(cFeeItem);
-        //       //       tempCanPlc.modalValue = tempCanPlc.modalValue + cFeeItem;
-        //       //       if (cItem == "0") { // for cancellation time
-        //       //         tempCanPlc.modalValueCode = "ruleCd" + cFeeItem;
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].Name;
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       //       }
-        //       //       if (cItem == "1") { // for cancellation fee type
-        //       //         tempCanPlc.modalValueCode = "feeTypeCd" + cFeeItem;
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeType;
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = this.cancellationFeeMasterDp[cFeeItem].FeeTypeCd;
-        //       //       }
-        //       //       if (cItem == "2") { // for cancellation fee
-        //       //         this.singleDetailInfo['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = this.cancellationFeeMasterDp[cFeeItem].FeeValue;
-        //       //       }
-        //       //       newArray.push(tempCanPlc);
-        //     }
-        //   }
-        // }
-
-        // this.formArray = [...this.formArray, ...newArray];
-      }
-
       if (response && response.length) {
         for (let i in this.formArray) {
           this.formArray[i].isOpen = false;
@@ -318,19 +163,6 @@ export class DynamicFormComponent {
           }
           // if (this.formArray[i].fieldId == 222) {
           //   this.formArray[i].selectUnique = true;
-          // }
-          // if (this.formArray[i].fieldId == 156) {
-          //   this.formArray[i].defaultValue = null;
-          // }
-          // if (this.formArray[i].fieldId == 344) {
-          //   this.formArray[i].dropdownValues = "FeeRules";
-          //   this.formArray[i].modalValue = "cancellationTime";
-          //   this.formArray[i].modalValueCode = "ruleId";
-          //   // this.formArray[i].selectUnique = true;
-          //   // this.formArray[i].fieldClass = "col-lg-3 col-md-3"
-          // }
-          // if (this.formArray[i].fieldId == 345) {
-          //   this.formArray[i].modalValueCode = "feeTypeCd";
           // }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
@@ -444,12 +276,8 @@ export class DynamicFormComponent {
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
         this.cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
           "appliesto": "Risk",
-          // "riskId": this.singleDetailInfo.vehicleInfo.vehicleId
         });
-        console.log("cancellationFeeMasterDp >>>>>", this.cancellationFeeMasterDp);
-        // const ruleFeeMasterDp = this.cancellationFeeMasterDp.map((item: any) => ({ ID: item.RuleId, Name: item.Name }));
         this.masterDropdwonList["FeeRules"] = this.cancellationFeeMasterDp;
-
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -477,7 +305,7 @@ export class DynamicFormComponent {
     })
   }
 
-  // Get Countries
+  // Get CancellationFeeType
   GetMasterCancellationFeeType(section: any, fieldId: any) {
     this.profileService.GetMasterCancellationFeeType({}).subscribe((res: any) => {
       if (res && res.length) {
@@ -489,23 +317,6 @@ export class DynamicFormComponent {
       this.toast.errorToastr(err || "Something went wrong");
     })
   }
-
-  // Get Countries
-  // GetMasterCancellationFeeRules() {
-  //   let body = {
-  //     "appliesto": "Risk",
-  //   }
-  //   this.profileService.GetMasterCancellationFeeRules(body).subscribe((res: any) => {
-  //     console.log("GetMasterCancellationFeeRules >>>", res);
-
-  //     if (res && res.length) {
-  //     } else {
-  //       this.toast.errorToastr("Something went wrong");
-  //     }
-  //   }, (err: any) => {
-  //     this.toast.errorToastr(err || "Something went wrong");
-  //   })
-  // }
 
   // Get Countries // addresses, emails, phoneNumbers
   async getAndSetMasterTypeIds() {
@@ -2398,7 +2209,6 @@ export class DynamicFormComponent {
     if (section.value.sectionID == "27") {
       this.updateProviderDetails(finalBody, section);
     }
-
     if (section.value.sectionID == "32") {
       this.updateCancellationPolicy(finalBody, section);
     }
@@ -2792,20 +2602,23 @@ export class DynamicFormComponent {
 
   // updateVehicleInspection
   async updateCancellationPolicy(finalBody: any, section: any) {
+    if (!(finalBody['vehicleCancellationRules'] && finalBody['vehicleCancellationRules'].length)) {
+      this.toast.errorToastr("Please add cancellation policy");
+      return;
+    }
+
     let Body: any = [];
-    for (let idx in finalBody.riskCancellationFeeRulesRequest) {
-      const slctFeeMasterDp = this.cancellationPolicyInfo.find((item: any) => item.ruleId == finalBody.riskCancellationFeeRulesRequest[idx].ruleId) || {};
+    for (let idx in finalBody.vehicleCancellationRules) {
+      const slctFeeMasterDp = this.singleDetailInfo.vehicleCancellationRules.find((item: any) => item.ruleId == finalBody.vehicleCancellationRules[idx].ruleId) || {};
       Body.push({
-        "id": slctFeeMasterDp.id || null,
+        "id": slctFeeMasterDp.id || 0,
         "riskType": "Vehicle",
         "userId": this.singleDetailInfo.vehicleInfo.userId,
         "riskId": this.singleDetailInfo.vehicleInfo.vehicleId,
-        "ruleId": finalBody.riskCancellationFeeRulesRequest[idx].ruleId,
-        "feeType": finalBody.riskCancellationFeeRulesRequest[idx].feeTypeCd,// idx == "0" ? finalBody.feeTypeCd : finalBody['feeTypeCd' + idx],
-        "feeValue": finalBody.riskCancellationFeeRulesRequest[idx].feeValue || 0,// idx == "0" ? finalBody.feeValue : finalBody['feeValue' + idx],
+        "ruleId": finalBody.vehicleCancellationRules[idx].ruleId,
+        "feeTypeCd": finalBody.vehicleCancellationRules[idx].feeTypeCd,
+        "feeValue": finalBody.vehicleCancellationRules[idx].feeValue || 0,
         "description": slctFeeMasterDp.description || null,
-        "effectiveDate": slctFeeMasterDp.EffectiveDate || null,
-        "expirationDate": slctFeeMasterDp.ExpirationDate || null,
       })
     }
     // return;
@@ -2814,9 +2627,14 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
-        this.cancellationPolicyInfo = await this.profileService.GetCancellationFeeRules({
-          "riskId": this.singleDetailInfo.vehicleInfo.vehicleId
-        });
+        this.profileService.getVehicleDetails({
+          userId: this.gs.loggedInUserInfo.userId,
+          vehicleId: this.singleDetailInfo.vehicleInfo.vehicleId
+        }).subscribe(async (response: any) => {
+          if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+            this.singleDetailInfo = response;
+          }
+        })
       } else {
         this.toast.errorToastr(res.message);
       }
@@ -3094,8 +2912,6 @@ export class DynamicFormComponent {
   }
 
   async changeStatus(item: any) {
-    console.log("singleDetailInfo.driverWorkingHours >>>>", this.singleDetailInfo.driverWorkingHours);
-
     let newStatus = item.status === 'ON' ? 'OFF' : 'ON';
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
@@ -3108,64 +2924,4 @@ export class DynamicFormComponent {
       }
     }, () => { });
   }
-
-  // Add More // for CANCELLATION POLICY
-  // addMoreRow(section: any) {
-  //   const fields = section.get('fields') as FormArray;
-  //   const tempF: any = JSON.parse(JSON.stringify((fields.value)));
-  //   console.log("section >>>>>", section);
-  //   console.log("fields >>>>>", fields);
-  //   console.log("fields >>>>>", tempF);
-
-  //   const checkLength = tempF.filter((item: any) => item.fieldId === 344)?.length;
-  //   console.log("checkLength >>>>>", checkLength);
-
-  //   // if (this.cancellationFeeMasterDp.length <= checkLength) {
-  //   //   this.toast.errorToastr("You have added maximum cancellation policies"); return;
-  //   // }
-
-  //   fields.removeAt(fields.length - 1);
-  //   for (let i in tempF) {
-  //     if (tempF[i].isVisible === true && !tempF[i].duplicate && tempF[i].action !== "PLUS") {
-  //       console.log("tempF[i] >>>>>", tempF[i]);
-  //       fields.push(this.fb.group({
-  //         fieldName: [tempF[i].fieldName],
-  //         fieldCode: [tempF[i].fieldCode],
-  //         description: [tempF[i].description],
-  //         fieldType: [tempF[i].fieldType],
-  //         isVisible: [tempF[i].isVisible],
-  //         isActive: [tempF[i].isActive],
-  //         isMandatory: [tempF[i].isMandatory],
-  //         isReadOnly: [tempF[i].isReadOnly],
-  //         modalValue: [tempF[i].modalValue],
-  //         valueCode: [tempF[i].valueCode],
-  //         fieldClass: [tempF[i].fieldClass],
-  //         modalObject: [tempF[i].modalObject],
-  //         checkUnique: [tempF[i].checkUnique],
-  //         dependentFields: [tempF[i].dependentFields],
-  //         lineBreak: [tempF[i].lineBreak],
-  //         selectUnique: [tempF[i].selectUnique],
-  //         fieldId: [tempF[i].fieldId],
-  //         validationType: [tempF[i].validationType],
-  //         staticValue: [tempF[i].staticValue],
-  //         condition: [tempF[i].condition],
-  //         conditionValue: [tempF[i].conditionValue],
-  //         isConditionValid: [tempF[i].isConditionValid],
-  //         dropdownList: [tempF[i].dropdownList],
-  //         apiDropdownList: [tempF[i].apiDropdownList],
-  //         action: [tempF[i].action],
-  //         acceptedTypes: [tempF[i].acceptedTypes],
-  //         defaultValue: [tempF[i].defaultValue],
-  //         value: [null, this.getValidators(tempF[i])],
-  //         valueCd: [tempF[i].valueCd],
-  //         duplicate: [tempF[i].action === "UPDATE" ? false : true]
-  //       }));
-  //     }
-  //   };
-  // }
-
-  // removeRow(section: any) {
-
-  // }
-
 }

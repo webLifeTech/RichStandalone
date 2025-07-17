@@ -36,6 +36,8 @@ import { ToastService } from '../../../shared/services/toast.service';
 })
 export class UserDashboardPaymentsComponent {
 
+  sortColumn: any = "CreatedDate";
+  sortOrder: any = "DESC";
   public tableData: any = [];
   public searchDataValue = '';
   public pageSize = 10;
@@ -74,10 +76,21 @@ export class UserDashboardPaymentsComponent {
     //   this.tableData = apiRes.data;
     // });
 
-    this.paymentService.getUserPayment().subscribe((apiRes: apiResultFormat) => {
-      this.totalData = apiRes.totalData;
-      this.tableData = apiRes.data;
-      this.tempTableData = JSON.parse(JSON.stringify(apiRes.data)) || [];
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "paymentMethod": null,
+      "paymentType": null,
+      "transactionType": null,
+    };
+    this.gs.isSpinnerShow = true;
+    this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      this.tableData = response.bookingpaymentMatches;
+      this.totalData = response.viewModel?.totalCount;
 
       this.paymentService.getCryptoPaymentTxnByIds({
         arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
@@ -107,16 +120,28 @@ export class UserDashboardPaymentsComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData();
   }
 
   onView(item: any) {
-    const modalRef = this.modalService.open(InvoiceModalComponent, {
-      size: 'xl'
-    });
-    modalRef.result.then((res: any) => {
+    console.log("item >>>>>", item);
 
-    }, () => {
-    });
+    const body = {
+      "bookingRefNo": item.bookingReferenceNumber,
+      "loginUserId": this.gs.loggedInUserInfo.userId
+    }
+    this.gs.isSpinnerShow = true;
+    this.paymentService.GetBookingByBookingRefNo(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        const modalRef = this.modalService.open(InvoiceModalComponent, {
+          size: 'xl'
+        });
+        modalRef.componentInstance.invoiceDetails = response;
+        // modalRef.result.then((res: any) => {}, () => {
+        // });
+      }
+    })
   }
 
   changeBookTab(row: any) {

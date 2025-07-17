@@ -149,11 +149,12 @@
                       </td>
                       <td><a>{{data.bookingReferenceNumber}}</a></td>
                       <td>
-                        <span class="badge" [ngClass]="{
+                        <span class="badge"
+                          [ngClass]="{
                             'badge-light-secondary': data.bookingStatus === 'Confirmed',
-                            'badge-light-warning': data.bookingStatus === 'Delivered' || data.bookingStatus ===  'Pending Request',
+                            'badge-light-warning': data.bookingStatus === 'Delivered' || data.bookingStatus ===  'Pending Request' || data.bookingStatus ===  'Start Service',
                             'badge-light-danger': data.bookingStatus === 'Cancelled' || data.bookingStatus === 'Refund Started' || data.bookingStatus === 'Refund Received' || data.bookingStatus === 'Refund Rejected',
-                            'badge-light-success': data.bookingStatus === 'Received'}">
+                            'badge-light-success': data.bookingStatus === 'Received' || data.bookingStatus === 'End Service'}">
                           {{data.bookingStatus}}
                         </span>
                       </td>
@@ -212,12 +213,14 @@
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Delivered</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Delivered' && gs.loggedInUserInfo.role !== 'user'"
+                          <button
+                            *ngIf="(data.bookingStatus === 'Delivered' || data.bookingStatus === 'Start Service') && gs.loggedInUserInfo.role !== 'user'"
                             (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Delivered' && gs.loggedInUserInfo.role === 'user'"
+                          <button
+                            *ngIf="(data.bookingStatus === 'Delivered' || data.bookingStatus === 'Start Service') && gs.loggedInUserInfo.role === 'user'"
                             (click)="changeStatus(data,'Accept')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Accept</span>

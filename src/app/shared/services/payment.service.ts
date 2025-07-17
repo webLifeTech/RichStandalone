@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { cabClassic } from '../interface/cab-classic';
 import { cabMap } from '../interface/cab-map';
@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 export class PaymentService {
 
   baseUrl = environment.apiUrl;
+  baseUrl1 = environment.apiUrl1;
 
   constructor(private http: HttpClient) { }
 
@@ -64,6 +65,27 @@ export class PaymentService {
   // Crypto Coin
   public getCryptoPaymentTxnByIds(data: any) {
     return this.http.post(this.baseUrl + 'getTransactionByIds', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Booking -> GetAllBookingPayments
+  public GetAllBookingPayments(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Booking/GetAllBookingPayments', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Booking -> GetBookingByBookingRefNo
+  public GetBookingByBookingRefNo(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingRefNo', dataParams.bookingRefNo)
+      .set('loginUserId', dataParams.loginUserId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Booking/GetBookingByBookingRefNo', { params }).pipe(
       map((res: any) => {
         return res;
       })

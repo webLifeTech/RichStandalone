@@ -36,24 +36,13 @@ export class DynamicInfoModalComponent {
   }
 
   ngOnInit() {
-    console.log("1111111 groupedSectionsData >>>>>>>", this.groupedSectionsData);
-    console.log("1111111 viewInfoDetails >>>>>>>", this.viewInfoDetails);
-    console.log("1111111 formType >>>>>>>", this.formType);
-
     this.getConfigUIFields();
-    // if (this.formType !== 'my_vehicle') {
-    //   this.getMasterPolicyCodes();
-    // }
-    // if (this.formType === 'my_vehicle') {
-    //   this.getMasterVehicleCodes();
-    // }
     if (this.formType === 'driver_details') {
       this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours;
     }
     if (this.formType === 'vendor-profile') {
       this.workingHours = this.viewInfoDetails.providerRequest.workingHours;
     }
-    // this.createForm();
   }
 
   // Get Config UI Fields
@@ -73,68 +62,6 @@ export class DynamicInfoModalComponent {
 
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       console.log("aaaaaaaaaaaa >>>>>>>>", response);
-
-      let cancellationPolicy = response.filter((cnItem: any) => cnItem.sectionID === 32);
-      console.log("cancellationPolicy <<<<<<", cancellationPolicy);
-
-
-      // START CANCELLATION POLICY
-      if (cancellationPolicy && cancellationPolicy.length) {
-        const cancellationFeeMasterDp = await this.profileService.GetCancellationFeeRules({
-          "riskId": this.viewInfoDetails.vehicleInfo.vehicleId
-        });
-        console.log("cancellationFeeMasterDp >>>>>", cancellationFeeMasterDp);
-        this.viewInfoDetails['riskCancellationFeeRulesRequest'] = cancellationFeeMasterDp;
-        // let cancellationFeeMasterDp: any = await this.profileService.GetMasterCancellationFeeRules({
-        //   "appliesto": "Risk",
-        //   "riskId": this.viewInfoDetails.vehicleInfo.vehicleId
-        // });
-        // console.log("111 cancellationFeeMasterDp >>>", cancellationFeeMasterDp);
-
-        // let newArray: any = [];
-        // this.viewInfoDetails['riskCancellationFeeRulesRequest'] = {};
-        // for (let cFeeItem in cancellationFeeMasterDp) {
-        //   for (let cItem in cancellationPolicy) {
-        //     if (cFeeItem == "0") {
-        //       if (cItem == "0") { // for cancellation time
-        //         cancellationPolicy[cItem].modalValueCode = "ruleCd";
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = cancellationFeeMasterDp[cFeeItem].Name;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       }
-        //       if (cItem == "1") { // for cancellation fee type
-        //         cancellationPolicy[cItem].modalValueCode = "feeTypeCd";
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = cancellationFeeMasterDp[cFeeItem].FeeType;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValueCode] = cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       }
-        //       if (cItem == "2") { // for cancellation fee
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][cancellationPolicy[cItem].modalValue] = cancellationFeeMasterDp[cFeeItem].FeeValue;
-        //       }
-        //     } else if (cancellationPolicy[cItem].fieldType !== "BUTTON") {
-        //       let tempCanPlc: any = JSON.parse(JSON.stringify(cancellationPolicy[cItem]))
-        //       tempCanPlc.fieldOrder = cancellationPolicy.length + newArray.length + Number(cFeeItem);
-        //       tempCanPlc.modalValue = tempCanPlc.modalValue + cFeeItem;
-        //       if (cItem == "0") { // for cancellation time
-        //         tempCanPlc.modalValueCode = "ruleCd" + cFeeItem;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = cancellationFeeMasterDp[cFeeItem].Name;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = cancellationFeeMasterDp[cFeeItem].RuleId;
-        //       }
-        //       if (cItem == "1") { // for cancellation fee type
-        //         tempCanPlc.modalValueCode = "feeTypeCd" + cFeeItem;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = cancellationFeeMasterDp[cFeeItem].FeeType;
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][tempCanPlc.modalValueCode] = cancellationFeeMasterDp[cFeeItem].FeeTypeCd;
-        //       }
-        //       if (cItem == "2") { // for cancellation fee
-        //         this.viewInfoDetails['riskCancellationFeeRulesRequest'][tempCanPlc.modalValue] = cancellationFeeMasterDp[cFeeItem].FeeValue;
-        //       }
-        //       newArray.push(tempCanPlc);
-        //     }
-        //   }
-        // }
-        // response = [...response, ...newArray];
-        // console.log("111 response >>>", response);
-        // END CANCELLATION POLICY
-      }
-
       const groupedSections = this.groupBy(response, 'sectionID');
 
       Object.keys(groupedSections).forEach((sectionID, index) => {

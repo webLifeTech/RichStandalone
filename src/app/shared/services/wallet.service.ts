@@ -59,4 +59,13 @@ export class WalletService {
     })
   }
 
+  // Wallet -> GetAllWalletPayments
+  public GetAllWalletPayments(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/GetAllWalletPayments', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
 }

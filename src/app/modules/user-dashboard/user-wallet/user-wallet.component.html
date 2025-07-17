@@ -131,9 +131,7 @@
                   <div id="tablefilter" class="me-0">
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
-                          [ngModelOptions]="{standalone: true}" (ngModelChange)="searchData(searchDataValue)"
-                          type="search" class="form-control" placeholder="Search" />
+                        <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
@@ -147,37 +145,47 @@
                 <thead class="thead-light">
                   <tr>
                     <th>S#</th>
-                    <th>Ref Id</th>
+                    <th>Reference Number</th>
                     <th>Transaction Type</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
                     <th>Remarks</th>
                     <th>Date</th>
-                    <th>Total</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <ng-container
-                    *ngFor="let item of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+                    *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
                     <tr>
                       <td>{{idx+1}}</td>
-                      <td><a> {{item.tarnsactionId}}</a></td>
+                      <td><a> {{item.paymentReferenceNumber}}</a></td>
+
                       <td
-                        [ngClass]="{ 'text-danger': item.transactionType === 2, 'text-success-light': item.transactionType === 1}">
-                        Amount - {{item.transactionType === 1 ? 'Added' : 'Withdrawal'}}
+                        [ngClass]="{ 'text-danger': item.transactionType === 'DEBIT', 'text-success-light': item.transactionType === 'CREDIT'}">
+                        Amount - {{item.transactionType}}
+                        <!-- {{item.transactionType === 1 ? 'Added' : 'Withdrawal'}} -->
+                      </td>
+                      <td
+                        [ngClass]="{ 'text-danger': item.transactionType === 'DEBIT', 'text-success-light': item.transactionType === 'CREDIT'}">
+                        <span>{{item.transactionType === 'CREDIT' ? '+' : '-'}}</span>
+                        {{item.amount | currencyPipe: gs.currency}}
+                      </td>
+                      <td>
+                        {{item.paymentMethod || "-"}}
                       </td>
                       <td>
                         {{item.remarks || "-"}}
                       </td>
-                      <td>{{item.transactionDate}}</td>
-                      <td
-                        [ngClass]="{ 'text-danger': item.transactionType === 2, 'text-success-light': item.transactionType === 1}">
-                        <span>{{item.transactionType === 1 ? '+' : '-'}}</span>{{item.transactionAmount | currencyPipe:
-                        gs.currency}}
-                      </td>
+                      <td>{{item.createdDate}}</td>
                       <td>
-                        <span
-                          [ngClass]="{ 'badge-light-success': item.status === 'SUCCESS','badge-light-warning': item.status === 'Pending','badge-light-danger':item.status === 'Failed' }"
-                          class="badge">{{item.status}}</span>
+                        <span [ngClass]="{
+                            'badge-light-success': item.status === 'SUCCESS',
+                            'badge-light-warning': item.status === 'Pending',
+                            'badge-light-danger':item.status === 'Failed'
+                            }" class="badge">
+                          {{item.status || '-'}}
+                        </span>
                       </td>
                     </tr>
                   </ng-container>

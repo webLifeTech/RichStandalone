@@ -88,18 +88,18 @@
                       <span>{{idx+1}}</span>
                     </td>
                     <td>
-                      <a>{{data.paymentID}}</a>
+                      <a>{{data.paymentReferenceNumber}}</a>
                     </td>
                     <td>
-                      <a>{{data.bookingID}}</a>
+                      <a>{{data.bookingReferenceNumber}}</a>
                     </td>
                     <td class="text-start">
                       <div class="table-avatar">
-                        <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.img" alt="Booking">
+                        <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                          <img class="car-img" [src]="data.carimage" alt="Booking">
                         </a>
                         <div class="table-head-name flex-grow-1">
-                          <a>{{data.carName}}</a>
+                          <a>{{data.Make}} {{data.Model}}</a>
                         </div>
                       </div>
                     </td>
@@ -107,22 +107,22 @@
                       class="text-start">
                       <div class="table-avatar">
                         <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.driver_img" alt="Booking">
+                          <img class="avatar-img" [src]="data.driverprofilepath" alt="Booking">
                         </a>
                         <div class="table-head-name flex-grow-1">
-                          <a>{{data.driver_name}}</a>
+                          <a>{{data.driverName}}</a>
                         </div>
                       </div>
                     </td>
                     <td class="text-center">
-                      <span>{{data.paymentDate | date : 'dd, MMM, y'}}
+                      <span>{{data.createdDate}}
                       </span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.mode}}</span>
+                      <span>{{data.paymentMethod}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.total_amount | currencyPipe: gs.currency}}</span>
+                      <span>{{data.amount | currencyPipe: gs.currency}}</span>
                     </td>
                     <td *ngIf="gs.loggedInUserInfo['role'] !== 'admin'">
                       <span [ngClass]="{
@@ -132,11 +132,6 @@
                           'badge-light-secondary': data.status !== 'Completed' || data.status !== 'Pending' || data.status !== 'Failed'
                            }" class="badge">{{data.status}}</span>
                     </td>
-                    <!--
-                    Pending Confirm
-                    Pending Disburse
-                    Cleared
-                     -->
                     <td *ngIf="gs.loggedInUserInfo['role'] === 'admin'">
                       <span [ngClass]="{
                           'badge-light-success': data.admin_status === 'Cleared',

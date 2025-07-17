@@ -4,50 +4,54 @@
 <div class="flight_detail">
   <div class="row">
     <div class="col-md-12">
-      <div class="boxes d-flex ">
-        <table class="table border mb-0">
-          <thead>
-            <tr>
-              <th class="p-3" scope="col">Time of Cancellation</th>
-              <th class="p-3" scope="col">Refund Percentage/Fixed</th>
-              <th class="p-3" scope="col">Refund Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of refundPolicy">
-              <td class="p-3">
-                <span class="fw-bold">{{item.Description}}</span>
-              </td>
-              <td class="p-3">
-                <span *ngIf="item.FeeType === 'Percentage'" class="fw-bold">
-                  {{item.FeeValue}}%
-                </span>
-                <span *ngIf="item.FeeType === 'Fixed'" class="fw-bold">
-                  {{item.FeeValue | currencyPipe: gs.currency}}
-                </span>
-                <small class="ms-2">({{item.FeeType}})</small>
-                <!-- <div>
-                </div> -->
-              </td>
-              <td class="p-3">
-                <span *ngIf="item.FeeType === 'Percentage'" class="fw-bold">
-                  {{gs.bookingSummaryDetails.totalFare - (gs.bookingSummaryDetails.totalFare*item.FeeValue/100) |
-                  currencyPipe: gs.currency}}
-                </span>
-                <span *ngIf="item.FeeType === 'Fixed'" class="fw-bold">
-                  {{(gs.bookingSummaryDetails.totalFare-item.FeeValue) | currencyPipe: gs.currency}}
-                </span>
-                <span *ngIf="item.FeeType === 'Full'" class="fw-bold">
-                  {{0 | currencyPipe: gs.currency}}
-                </span>
-                <span *ngIf="item.FeeType === 'None'" class="fw-bold">
-                  {{gs.bookingSummaryDetails.totalFare | currencyPipe: gs.currency}}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <!-- <div class="boxes"> -->
+      <table *ngIf="gs.vehicleCancellationPolicy.length" class="table border mb-0">
+        <thead>
+          <tr>
+            <th class="p-3" scope="col">Cancellation Type</th>
+            <th class="p-3" scope="col">Cancellation Fee</th>
+            <th class="p-3" scope="col">Refund Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of gs.vehicleCancellationPolicy">
+            <td class="p-3">
+              <span class="fw-bold">{{item.cancellationTime}}</span>
+            </td>
+            <td class="p-3">
+              <span *ngIf="item.feeType === 'Percentage'" class="fw-bold">
+                {{item.feeValue}}%
+              </span>
+              <span *ngIf="item.feeType === 'Fixed'" class="fw-bold">
+                {{item.feeValue | currencyPipe: gs.currency}}
+              </span>
+              <small class="ms-2">{{item.feeType}}</small>
+            </td>
+            <td class="p-3">
+              <span class="fw-bold">
+                {{item.refundAmount | currencyPipe: gs.currency}}
+              </span>
+              <!-- <span *ngIf="item.feeType === 'Percentage'" class="fw-bold">
+                {{gs.bookingSummaryDetails.totalFare - (gs.bookingSummaryDetails.totalFare*item.feeValue/100) |
+                currencyPipe: gs.currency}}
+              </span>
+              <span *ngIf="item.feeType === 'Fixed'" class="fw-bold">
+                {{(gs.bookingSummaryDetails.totalFare-item.feeValue) | currencyPipe: gs.currency}}
+              </span>
+              <span *ngIf="item.feeType === 'Full'" class="fw-bold">
+                {{0 | currencyPipe: gs.currency}}
+              </span>
+              <span *ngIf="item.feeType === 'None'" class="fw-bold">
+                {{gs.bookingSummaryDetails.totalFare | currencyPipe: gs.currency}}
+              </span> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="!gs.vehicleCancellationPolicy.length" class="text-center">
+        <b>No Cancellation Policy</b>
+      </p>
+      <!-- </div> -->
     </div>
   </div>
 </div>

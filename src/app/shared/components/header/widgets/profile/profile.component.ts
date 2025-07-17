@@ -122,4 +122,8 @@ export class ProfileComponent {
   goConfiguration() {
     this.router.navigateByUrl('/user/configuration');
   }
+
+  goActivities() {
+    this.router.navigateByUrl('/user/recent-activity');
+  }
 }

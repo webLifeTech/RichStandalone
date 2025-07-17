@@ -36,28 +36,21 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 })
 export class UserRecentActivityComponent {
 
-  public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public showFilter = false;
   public searchDataValue = '';
-  public lastIndex = 0;
   public pageSize = 10;
   public totalData = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
   public totalPages = 0;
+  public tableData: any = [];
   filterObj: any = {};
   sortFilter: any = [
     { value: "This Week" },
     { value: "This Month" },
     { value: "Last 30 Days" },
-    { value: "Custom" },
+    { value: "Custom Date" },
   ]
+  sortColumn: any = "bookingReferenceNumber";
+  sortOrder: any = "DESC";
 
   constructor(
     private route: ActivatedRoute,
@@ -83,26 +76,14 @@ export class UserRecentActivityComponent {
     });
   }
 
-  public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
-  }
-  initChecked = false;
-
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
-    }
-  }
-
   pageChanged(event: any) {
     this.currentPage = event;
+  }
+
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getTableData();
   }
 
   onChange() {

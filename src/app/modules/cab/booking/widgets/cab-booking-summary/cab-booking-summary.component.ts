@@ -166,6 +166,7 @@ export class CabBookingSummaryComponent {
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.vehicleBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
+        this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
         console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
 
       } else {

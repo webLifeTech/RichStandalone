@@ -22,7 +22,7 @@
           <div class="col-md-6">
             <div class="invoice-info-text">
               <h4>Invoice</h4>
-              <p>Invoice Number : <span>In983248782</span></p>
+              <p>Invoice Number : <span>{{invoiceDetails.bookingDetails.bookingReferenceNumber}}</span></p>
             </div>
           </div>
         </div>
@@ -32,32 +32,36 @@
           <div class="col-lg-4 col-md-12">
             <div class="invoice-bill-info">
               <h6>Billed to</h6>
-              <p>
-                Customer Name <br>
-                9087484288 <br>
-                Address line 1, <br>
-                Address line 2 <br>
-                Zip code ,City - Country
+              <p class="mb-1">
+                {{invoiceDetails.driverPersonalDetails.name}}
+              </p>
+              <p class="mb-1">
+                {{invoiceDetails.driverPersonalDetails.phoneNumber}}
+              </p>
+              <p class="mb-1">
+                {{invoiceDetails.driverPersonalDetails.address}}
               </p>
             </div>
           </div>
           <div class="col-lg-4 col-md-12">
             <div class="invoice-bill-info">
               <h6>Invoice From</h6>
-              <p>
-                Company Name <br>
-                9087484288 <br>
-                Address line 1, <br>
-                Address line 2 <br>
-                Zip code ,City - Country
+              <p class="mb-1">
+                {{invoiceDetails.vehicleOwnerPersonalDetails.name}}
+              </p>
+              <p class="mb-1">
+                {{invoiceDetails.vehicleOwnerPersonalDetails.phoneNumber}}
+              </p>
+              <p class="mb-1">
+                {{invoiceDetails.vehicleOwnerPersonalDetails.address}}
               </p>
             </div>
           </div>
           <div class="col-lg-4 col-md-12">
             <div class="invoice-bill-info border-0">
-              <p>Booking Date : 27 Jul 2022</p>
-              <p>Total Amount : $1,54,22 </p>
-              <p class="mb-0">Booking Id : 54515454</p>
+              <p>Booking Date : {{invoiceDetails.bookingDetails.bookingDate}}</p>
+              <p>Total Amount : {{invoiceDetails.bookingDetails.totalAmount | currencyPipe: gs.currency}}</p>
+              <p class="mb-0">Reference Number : {{invoiceDetails.bookingDetails.bookingReferenceNumber}}</p>
             </div>
           </div>
         </div>
@@ -69,20 +73,20 @@
               <table class="invoice-table table table-center mb-0">
                 <thead>
                   <tr>
-                    <th>Car Type</th>
-                    <th>Number of Days</th>
-                    <th>Price Per Day</th>
-                    <th class="text-end">Total Amount</th>
+                    <th>Car type</th>
+                    <th>Time duration</th>
+                    <th>Price per {{invoiceDetails.bookingDetails.durationType}}</th>
+                    <th class="text-end">Total amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>
-                      <h6>Ferrari 458 MM Speciale</h6>
+                      <h6>{{invoiceDetails.rentaldetails.make}} ({{invoiceDetails.rentaldetails.model}})</h6>
                     </td>
-                    <td>1 Days</td>
-                    <td>$2000</td>
-                    <td class="text-end">$2000</td>
+                    <td>{{invoiceDetails.bookingDetails.duration}}</td>
+                    <td>{{invoiceDetails.bookingDetails.priceRange | currencyPipe: gs.currency}}</td>
+                    <td class="text-end">{{invoiceDetails.bookingDetails.baseAmount | currencyPipe: gs.currency}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -94,28 +98,43 @@
         <div class="row">
           <div class="col-lg-6 col-md-12">
             <div class="invoice-terms">
-              <h6>Payment Details</h6>
               <div class="invocie-note">
-                <p>Debit Card<br>
-                  XXXXXXXXXXXX-2541<br>
-                  HDFC Bank</p>
+                <h6>Payment Mode</h6>
+                <p>
+                  {{invoiceDetails.bookingDetails.paymentMethod}}<br>
+                </p>
               </div>
             </div>
           </div>
           <div class="col-lg-6 col-md-12">
             <div class="invoice-total-box">
               <div class="invoice-total-inner">
-                <p><b>Total Fare</b> <span>$2000</span></p>
-                <p>Insurance Fee <span>+ $90</span></p>
-                <p>Discount <span>- $25</span></p>
-                <p>Tax <span>+ $75</span></p>
+                <p>
+                  <b>Total Fare</b>
+                  <span>{{invoiceDetails.bookingDetails.baseAmount | currencyPipe: gs.currency}}</span>
+                </p>
+                <p>
+                  {{'booking_summary.insurance_fee' | translate}}
+                  <span>+ {{invoiceDetails.bookingDetails.insurnaceFee | currencyPipe: gs.currency}}</span>
+                </p>
+                <p>{{'booking_summary.other_fees' | translate}}
+                  <span>+ {{invoiceDetails.bookingDetails.otherFee | currencyPipe: gs.currency}}</span>
+                </p>
+                <p>{{'booking_summary.tax' | translate}}
+                  <span>+ {{invoiceDetails.bookingDetails.taxFee | currencyPipe: gs.currency}}</span>
+                </p>
+                <p>{{'booking_summary.discount' | translate}}
+                  <span>- {{invoiceDetails.bookingDetails.discountAmount | currencyPipe: gs.currency}}</span>
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="invoice-total">
-        <h4>Total <span>$2165.00</span></h4>
+        <h4>Total
+          <span>{{invoiceDetails.bookingDetails.totalAmount | currencyPipe: gs.currency}}</span>
+        </h4>
       </div>
     </div>
   </div>

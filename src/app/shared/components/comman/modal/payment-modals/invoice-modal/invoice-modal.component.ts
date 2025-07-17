@@ -4,12 +4,16 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '../../../../../services/global.service';
+import { CurrencySymbolPipe } from '../../../../../pipe/currency.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-modal',
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
+    CurrencySymbolPipe,
   ],
   providers: [
     NgbActiveModal,
@@ -19,12 +23,27 @@ import { GlobalService } from '../../../../../services/global.service';
   encapsulation: ViewEncapsulation.None
 })
 export class InvoiceModalComponent {
-  @Input() singleDetails: any = "";
+  @Input() invoiceDetails: any = {
+    bookingDetails: {},
+    driverPersonalDetails: {},
+    rentaldetails: {},
+    vehicleOwnerPersonalDetails: {},
+  };
 
   constructor(
     private modalService: NgbModal,
     public gs: GlobalService,
   ) { }
+
+  ngOnInit() {
+    console.log("invoiceDetails >>>>>>>>", this.invoiceDetails);
+    console.log("duration >>>>>>>>", this.invoiceDetails.bookingDetails.duration.split(" ")[0]);
+    if (this.invoiceDetails && this.invoiceDetails.bookingDetails) {
+      this.invoiceDetails.bookingDetails.priceRange = (this.invoiceDetails.bookingDetails.baseAmount / this.invoiceDetails.bookingDetails.duration.split(" ")[0]) || 0;
+    }
+
+
+  }
 
   closeModal() {
     this.modalService.dismissAll();

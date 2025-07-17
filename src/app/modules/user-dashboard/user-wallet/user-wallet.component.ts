@@ -39,13 +39,11 @@ import { WalletService } from '../../../shared/services/wallet.service';
 })
 export class UserWalletComponent {
 
+  sortColumn: any = "createdDate";
+  sortOrder: any = "DESC";
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public showFilter = false;
   public searchDataValue = '';
   public pageSize = 10;
-  public skip = 0;
-  public limit: number = this.pageSize;
   public totalRecord = 0;
   public currentPage = 1;
 
@@ -86,8 +84,6 @@ export class UserWalletComponent {
 
   constructor(
     private toast: ToastService,
-    private alert: AlertService,
-    private paymentService: PaymentService,
     public cabService: CabService,
     private dialog: MatDialog,
     private modalService: NgbModal,
@@ -95,7 +91,7 @@ export class UserWalletComponent {
     public walletService: WalletService,
 
   ) {
-    this.getTableData();
+    // this.getWalletDetails();
     this.getWalletDetails();
     this.getCards();
   }
@@ -108,48 +104,45 @@ export class UserWalletComponent {
     }
   }
 
+  // getWalletDetails() {
+  //   this.gs.isSpinnerShow = true;
+  //   this.walletService.getWalletDetails({
+  //     "userId": this.gs.loggedInUserInfo.userId
+  //   }).subscribe((response: any) => {
+  //     console.log("response >>>>", response);
+  //     this.gs.isSpinnerShow = false;
+  //     if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+  //       this.walletDetails = response.walletDetails;
+  //     }
+  //   })
+  // }
+
   getWalletDetails() {
-    this.gs.isSpinnerShow = true;
-    this.walletService.getWalletDetails({
-      "userId": this.gs.loggedInUserInfo.userId
-    }).subscribe((response: any) => {
-      console.log("response >>>>", response);
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.walletDetails = response.walletDetails;
-        this.tableData = response.walletTransactionDetails;
-        this.totalRecord = response.walletTransactionDetails.length;
-      }
-      this.gs.isSpinnerShow = false;
-    })
-  }
-
-  getTableData() {
-    // this.paymentService.getuserWallet().subscribe((apiRes: apiResultFormat) => {
-    //   this.totalRecord = apiRes.totalData;
-    //   this.tableData = apiRes.data;
-    // });
-  }
-
-  public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
-  }
-  initChecked = false;
-
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "paymentMethod": null,
+      "paymentType": null,
+      "transactionType": null,
     }
+    this.gs.isSpinnerShow = true;
+    this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
+      console.log("GetAllWalletPayments >>>>", response);
+      this.gs.isSpinnerShow = false;
+      this.tableData = response.walletPaymentDetails?.walletpaymentMatches;
+      this.totalRecord = response.viewModel?.totalCount;
+      this.walletDetails = response.walletPaymentDetails?.walletDetails;
+      // if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      // }
+    })
   }
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getWalletDetails()
   }
 
   openImportantNoticeDialog(): void {
@@ -175,6 +168,7 @@ export class UserWalletComponent {
     modalRef.result.then((res: any) => {
       console.log("res >>>>", res);
       if (res.confirmed) {
+        this.getWalletDetails();
         this.getWalletDetails();
       }
     }, () => {

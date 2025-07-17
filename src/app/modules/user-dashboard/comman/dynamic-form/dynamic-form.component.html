@@ -328,7 +328,8 @@
                               <span *ngIf="field.get('value')?.value"
                                 class="file-name">{{field.get('value')?.value}}</span>
                               <span *ngIf="!field.get('value')?.value" class="file-name">No file chosen</span>
-                              <span class="eye-icon" (click)="gs.viewDocumentFile(field.get('value')?.value)"
+                              <span class="eye-icon"
+                                (click)="gs.viewDocumentFile(field.get('value')?.value);$event.stopPropagation()"
                                 [title]="'View Document'">
                                 <i class="fas fa-eye"></i>
                               </span>
@@ -357,14 +358,6 @@
                           (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button">
                           {{ field.get('description')?.value }}
                         </button>
-                        <!-- <button *ngIf="field.get('action')?.value === 'PLUS'" (click)="addMoreRow(section)"
-                          class="btn btn-solid color2 no-text-transorm" type="button">
-                          <i class="feather icon-plus-circle"></i>
-                        </button>
-                        <button *ngIf="field.get('action')?.value === 'MINUS'" (click)="removeRow(section)"
-                          class="btn btn-theme no-text-transorm mt-4" type="button">
-                          <i class="feather icon-minus"></i>
-                        </button> -->
                         <button
                           *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'Save') && !isTableEdit"
                           (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"

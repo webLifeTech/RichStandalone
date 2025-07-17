@@ -113,6 +113,7 @@ export class AddPaymentModalComponent {
         this.toast.errorToastr("Invalid Credit Card Details");
         return;
       }
+      this.gs.isSpinnerShow = true;
       const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
       const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
       // return;
@@ -129,6 +130,7 @@ export class AddPaymentModalComponent {
         return;
       }
 
+      this.gs.isSpinnerShow = true;
       const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
       const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
       body["bankAccount"] = {

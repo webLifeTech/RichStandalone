@@ -52,9 +52,9 @@
                 <h6>Status</h6>
                 <span class="badge" [ngClass]="{
                   'badge-light-secondary': bookingDetails.bookingDetails.bookingStatus === 'Confirmed',
-                  'badge-light-warning': bookingDetails.bookingDetails.bookingStatus === 'Inprogress' || bookingDetails.bookingDetails.bookingStatus ===  'Pending Request',
+                  'badge-light-warning': bookingDetails.bookingDetails.bookingStatus === 'Inprogress' || bookingDetails.bookingDetails.bookingStatus ===  'Pending Request' || bookingDetails.bookingDetails.bookingStatus ===  'Start Service',
                   'badge-light-danger': bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed' || bookingDetails.bookingDetails.bookingStatus === 'Refund Rejected',
-                  'badge-light-success': bookingDetails.bookingDetails.bookingStatus === 'Completed'}
+                  'badge-light-success': bookingDetails.bookingDetails.bookingStatus === 'Completed' || bookingDetails.bookingDetails.bookingStatus === 'End Service'}
                 ">
                   {{bookingDetails.bookingDetails.bookingStatus}}
                 </span>
@@ -68,7 +68,7 @@
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
-                <h6>Booking Date</h6>
+                <h6>Booked On</h6>
                 <p>{{bookingDetails.bookingDetails.bookingDate}}</p>
               </div>
             </div>
@@ -134,20 +134,8 @@
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
-                <h6>Luggage</h6>
-                <p>{{bookingDetails.rentaldetails.luggage || "-"}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Unlimited Mileage</h6>
-                <p>{{bookingDetails.rentaldetails.mileage || "-"}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
                 <h6>AC</h6>
-                <p>{{bookingDetails.rentaldetails.transmission}}</p>
+                <p>{{bookingDetails.rentaldetails?.ac || 'Yes'}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">

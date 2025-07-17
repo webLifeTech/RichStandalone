@@ -1150,6 +1150,14 @@ header {
           height: 45px;
         }
       }
+
+      .car-img {
+        width: auto !important;
+        height: auto !important;
+        // height: 39px !important;
+        margin: auto !important;
+        max-width: 100%;
+      }
     }
   }
 }
@@ -1925,6 +1933,13 @@ header {
           transform: translateY(-50%);
           color: #737373;
         }
+      }
+
+      .datetimepicker-input {
+        height: 39px;
+        border: 1px solid #F4F4F4;
+        border-radius: 5px;
+        background-color: #f5f5f5;
       }
 
     }
@@ -3868,11 +3883,11 @@ footer {
     text-align: center;
     background: #fff;
     border-left: 1px solid #ccc;
-    z-index: 0;
+    z-index: 10;
+    cursor: pointer;
 
     i {
       color: #333;
-      cursor: pointer;
     }
   }
 }
