@@ -94,7 +94,8 @@
               <div class="booking-view">
                 <h6>Price</h6>
                 <p>
-                  {{bookingDetails.bookingDetails.pricePerBooking | currencyPipe: gs.currency}} per week
+                  {{bookingDetails.bookingDetails.pricePerBooking | currencyPipe: gs.currency}}
+                  per{{bookingDetails.bookingDetails.durationType}}
                 </p>
               </div>
             </div>

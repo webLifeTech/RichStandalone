@@ -17,7 +17,7 @@ import { PricingService } from '../../../services/pricing.service';
 import { DocumentSignModalComponent } from '../modal/document-sign-modal/document-sign-modal.component';
 import { WalletService } from '../../../services/wallet.service';
 import { ProfileService } from '../../../services/profile.service';
-import { VerificationSuccessModalComponent } from '../../../../modules/user-dashboard/user-settings/modals/verification-success-modal/verification-success-modal.component';
+import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-booking',
@@ -207,39 +207,51 @@ export class BookingComponent {
 
       // return;
 
-      this.gs.isSpinnerShow = true;
-      this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
-        if (res && res.statusCode == "200") {
-          this.toast.successToastr(res.message);
-          const modalRef = this.modalService.open(DocumentSignModalComponent, {
-            centered: true,
-            backdrop: 'static',
-            windowClass: 'document-modal',
-            size: 'xl'
-          });
-          modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
-          modalRef.result.then((signModalRes: any) => {
-            if (signModalRes.confirmed) {
-              this.router.navigate(['/cab/booking/booking-success', this.params.type]);
-            }
-          }, () => { });
+      const modalRef = this.modalService.open(ConfirmationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = `Are you sure you want to book this ${this.riskType} ?`;
+      modalRef.componentInstance.confirmButton = "Yes";
+      modalRef.componentInstance.cancelButton = "No";
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) {
+          this.gs.isSpinnerShow = true;
+          this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
+            if (res && res.statusCode == "200") {
+              this.toast.successToastr(res.message);
+              const modalRef = this.modalService.open(DocumentSignModalComponent, {
+                centered: true,
+                backdrop: 'static',
+                windowClass: 'document-modal',
+                size: 'xl'
+              });
+              modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
+              modalRef.result.then((signModalRes: any) => {
+                if (signModalRes.confirmed) {
+                  this.toast.successToastr("Booking successfully.");
+                  this.router.navigate(['/user/booking']);
+                  // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+                }
+              }, () => { });
 
-          // const infoRef = this.modalService.open(VerificationSuccessModalComponent, {
-          //   centered: true,
-          // });
-          // infoRef.componentInstance.title = "Payment successfully completed.";
-          // infoRef.componentInstance.buttonLabel = "OK";
-          // infoRef.result.then((infoRes: any) => {
-          //   if (infoRes.confirmed) {
-          //   }
-          // });
-        } else {
-          this.toast.errorToastr(res.message);
+              // const infoRef = this.modalService.open(VerificationSuccessModalComponent, {
+              //   centered: true,
+              // });
+              // infoRef.componentInstance.title = "Payment successfully completed.";
+              // infoRef.componentInstance.buttonLabel = "OK";
+              // infoRef.result.then((infoRes: any) => {
+              //   if (infoRes.confirmed) {
+              //   }
+              // });
+            } else {
+              this.toast.errorToastr(res.message);
+            }
+            this.gs.isSpinnerShow = false;
+          }, (err: any) => {
+            this.gs.isSpinnerShow = false;
+          })
         }
-        this.gs.isSpinnerShow = false;
-      }, (err: any) => {
-        this.gs.isSpinnerShow = false;
-      })
+      }, () => { });
 
       return;
     }

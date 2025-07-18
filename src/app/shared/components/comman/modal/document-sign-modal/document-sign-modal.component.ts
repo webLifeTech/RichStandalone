@@ -27,10 +27,11 @@ export class DocumentSignModalComponent {
   }
 
   confirmModal() {
-    // this.modal.dismiss();
     this.modal.close({ confirmed: true });
   }
+
   closeModal() {
-    this.modal.dismiss();
+    this.modal.close({ confirmed: true });
+    // this.modal.dismiss();
   }
 }

@@ -426,8 +426,6 @@ export class DynamicFormComponent {
             }
           });
         });
-      } else {
-        this.toast.errorToastr("Something went wrong");
       }
     }, (err: any) => {
       this.toast.errorToastr(err || "Something went wrong");
@@ -506,8 +504,8 @@ export class DynamicFormComponent {
               acceptedTypes: [field.acceptedTypes],
               defaultValue: [field.defaultValue],
               value: [
-                field.fieldType === "DATE" ? this.parseDate(this.isEditInfo ? field.fValue : field.defaultValue || null)
-                  : (this.isEditInfo ? (field.fValue || field.defaultValue) : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue || null)), this.getValidators(field)
+                field.fieldType === "DATE" ? this.parseDate(this.isEditInfo ? field.fValue : field.defaultValue ?? null)
+                  : (this.isEditInfo ? (field.fValue ?? field.defaultValue) : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue ?? null)), this.getValidators(field)
               ],
               valueCd: [
                 field.fieldType === "DROPDOWN" && this.isEditInfo ? field.fValueCode : null
@@ -765,6 +763,24 @@ export class DynamicFormComponent {
               });
             }
           })
+        } else {
+          fieldsFmArray.controls.forEach((fieldTwo: any) => {
+            if (fieldTwo.get('fieldName').value === "CITY") {
+              fieldTwo.get('value').setValue("");
+              if (fieldTwo.get('county')?.value) {
+                fieldTwo.get('county')?.setValue("");
+              } else {
+                fieldTwo.addControl("county", new FormControl(""));
+              }
+            }
+            if (fieldTwo.get('fieldName').value === "COUNTRY" || fieldTwo.get('fieldName').value === "STATE") {
+              fieldTwo.get('value').setValue(null);
+              fieldTwo.get('valueCd')?.setValue(null);
+            }
+          })
+          if (this.submitted) {
+            this.findInvalidControls();
+          }
         }
       }, (err: any) => {
         this.gs.isSpinnerShow = false;
