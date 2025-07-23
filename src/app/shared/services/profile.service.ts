@@ -500,6 +500,7 @@ export class ProfileService {
   // COMMON -> checkDriverVehicleExist
   public checkDriverVehicleExist(dataParams: any) {
     const params = new HttpParams()
+      .set('userId', dataParams.userId)
       .set('riskType', dataParams.riskType)
       .set('vin', dataParams.vin)
       .set('licenseNumber', dataParams.licenseNumber)
@@ -556,6 +557,15 @@ export class ProfileService {
   // Cancellation -> AddRiskCancellationFeeRules
   public AddRiskCancellationFeeRules(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB/Cancellation/AddRiskCancellationFeeRules`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // VehicleKYC -> GetMyCarListDetails
+  public GetMyCarListDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleKYC/GetMyCarListDetails`, data).pipe(
       map((res: any) => {
         return res;
       })

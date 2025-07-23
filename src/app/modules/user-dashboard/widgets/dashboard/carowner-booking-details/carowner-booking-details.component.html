@@ -14,7 +14,7 @@
             <div class="name">
               {{infoObj.title}}
             </div>
-            <div class="value view-link ms-3">{{infoObj.total | currencyPipe: gs.currency}}</div>
+            <div class="value view-link ms-3">{{infoObj.total}}</div>
           </div>
           <div class="progress">
             <div class="progress-bar" [ngClass]="infoObj['bg-color']" role="progressbar" [style.width.%]="100"
@@ -27,7 +27,7 @@
               <div class="name">
                 {{item.title}}
               </div>
-              <div class="value view-link ms-3">{{item.total| currencyPipe: gs.currency}}</div>
+              <div class="value view-link ms-3">{{item.total}}</div>
             </div>
             <div class="progress">
               <div class="progress-bar" [ngClass]="item['bg-color']" role="progressbar"

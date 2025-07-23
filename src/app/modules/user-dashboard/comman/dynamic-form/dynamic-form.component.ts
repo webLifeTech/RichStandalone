@@ -808,6 +808,7 @@ export class DynamicFormComponent {
     if (event.target.value.length === 17 && fieldRow.value.fieldId === 79) {
 
       this.profileService.checkDriverVehicleExist({
+        userId: this.gs.loggedInUserInfo.userId,
         riskType: 'Vehicle',
         vin: event.target.value,
         licenseNumber: null

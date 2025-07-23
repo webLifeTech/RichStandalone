@@ -10,8 +10,18 @@
       </div>
       <div class="card-body booking-history">
         <div class="row widget-box">
-
           <div class="col-md-12">
+            <div class="flex-fill">
+              <div class="widget-header text-center">
+                <app-user-apexcharts [data]="totalDrivers.data" [chartSize]="3"
+                  [name]="'Performance grade'"></app-user-apexcharts>
+                <div class="text-end">
+                  <a class="btn view-btn mb-2" (click)="viewBooking(null)">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-12">
             <div class="card-body">
               <div class="mb-3">
                 <div class="progress-head">
@@ -44,7 +54,7 @@
                 <a class="btn view-btn" (click)="viewBooking(null)">View</a>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

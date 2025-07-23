@@ -37,31 +37,51 @@ export class DocVehicleBookDetailsComponent {
   };
 
   carOwnersData: any = [
-    // {
-    //   "title": "Total Booking",
-    //   "total": 800,
-    //   "bg-color": "color-emerald-green",
-    // },
     {
-      "title": "Trip Booking for the Day",
-      "total": 25,
+      "title": "Pending Request",
+      "total": 140,
       "bg-color": "color-sunset-orange",
     },
     {
-      "title": "Trip Booking in last 1 Week",
-      "total": 140,
-      "bg-color": "color-red",
+      "title": "Confirmed",
+      "total": 125,
+      "bg-color": "color-turquoise-blue",
     },
     {
-      "title": "Trip Booking in last 1 Month",
-      "total": 600,
+      "title": "Start Service",
+      "total": 275,
       "bg-color": "color-amber",
     },
     {
-      "title": "Trip Booking in last 3 Month",
-      "total": 900,
-      "bg-color": "color-turquoise-blue",
+      "title": "End Service",
+      "total": 200,
+      "bg-color": "color-emerald-green",
     },
+    {
+      "title": "Cancelled",
+      "total": 50,
+      "bg-color": "color-red",
+    },
+    // {
+    //   "title": "Trip Booking for the Day",
+    //   "total": 25,
+    //   "bg-color": "color-sunset-orange",
+    // },
+    // {
+    //   "title": "Trip Booking in last 1 Week",
+    //   "total": 140,
+    //   "bg-color": "color-red",
+    // },
+    // {
+    //   "title": "Trip Booking in last 1 Month",
+    //   "total": 600,
+    //   "bg-color": "color-amber",
+    // },
+    // {
+    //   "title": "Trip Booking in last 3 Month",
+    //   "total": 900,
+    //   "bg-color": "color-turquoise-blue",
+    // },
   ];
 
   constructor(

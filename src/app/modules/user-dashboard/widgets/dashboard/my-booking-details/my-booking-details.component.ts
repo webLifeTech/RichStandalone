@@ -43,28 +43,33 @@ export class MyBookingDetailsComponent {
   carOwnersData: any = [
     {
       "title": "Total Booking",
-      "total": 800,
+      "total": 80,
       "bg-color": "color-emerald-green",
     },
     {
-      "title": "Upcoming",
-      "total": 140,
+      "title": "Pending Request",
+      "total": 10,
       "bg-color": "color-sunset-orange",
     },
     {
-      "title": "Inprogress Pending",
-      "total": 25,
-      "bg-color": "color-red",
+      "title": "Confirmed",
+      "total": 9,
+      "bg-color": "color-turquoise-blue",
     },
     {
-      "title": "Completed",
-      "total": 600,
+      "title": "Start Service",
+      "total": 1,
       "bg-color": "color-amber",
     },
     {
+      "title": "End Service",
+      "total": 70,
+      "bg-color": "color-emerald-green",
+    },
+    {
       "title": "Cancelled",
-      "total": 35,
-      "bg-color": "color-turquoise-blue",
+      "total": 10,
+      "bg-color": "color-red",
     },
   ];
 

@@ -18,6 +18,7 @@ import { BookingDetailsModalComponent } from '../../../shared/components/comman/
 import { GlobalService } from '../../../shared/services/global.service';
 import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/modal/my-car-modals/change-car-price-modal/change-car-price-modal.component';
+import { ProfileService } from '../../../shared/services/profile.service';
 
 @Component({
   selector: 'app-my-cars',
@@ -37,36 +38,28 @@ import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/
 })
 export class MyCarsComponent {
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public showFilter = false;
-  public searchDataValue = '';
-  public lastIndex = 0;
-  public pageSize = 10;
-  public totalData = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
-  public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
+  sortColumn: any = "vin";
+  sortOrder: any = "DESC";
+  pageSize: any = 10;
+  currentPage: any = 1;
+  totalData: any = 0;
 
   public searchFilter: any = {
     branch: 'all',
     status: 'all',
+    globalSearch: ''
   };
-  public activeTab = '';
+  public activeTab = 'All Cars';
   activeTabName: any = '';
   total_booking_amount: any = 1200;
   total_refunded_amount: any = 200;
   total_net_profit: any = 1000;
   editInfo: any = {};
-  booktabs = [
-    { title: "All Cars", value: "all_cars" },
-    { title: "Booked", value: "booked" },
-    { title: "Available", value: "available" },
-    { title: "KYC Pending", value: "kyc_pending" },
+  booktabs: any = [
+    // { title: "All Cars", value: "All Cars" },
+    // { title: "Booked", value: "booked" },
+    // { title: "Available", value: "available" },
+    // { title: "KYC Pending", value: "kyc_pending" },
     // { title: "Cancelled", value: "cancelled" }
   ];
 
@@ -91,109 +84,120 @@ export class MyCarsComponent {
     private mycarsService: MyCarsService,
     public cabService: CabService,
     public gs: GlobalService,
-    private dialog: MatDialog,
     private modalService: NgbModal,
     private toast: ToastService,
+    public profileService: ProfileService,
 
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "all_cars";
+      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Cars";
       this.searchFilter.status = params['status'] ? params['status'] : 'all';
-      this.getTableData(this.activeTab);
+      this.getTableData();
     })
   }
 
-  getTableData(type: any) {
-    let tabName = this.booktabs.find((item: any) => item.value === type)?.title;
-    this.activeTabName = tabName;
-    this.mycarsService.getMyCars().subscribe((apiRes: apiResultFormat) => {
-      let allCars = apiRes.data;
-      let filteredData = [];
-      // if (type === "all_cars") {
-      //   filteredData = allCars;
-      //   if (this.searchFilter.status !== 'all') {
-      //     filteredData = allCars.filter((item: any) => item.status === this.searchFilter.status);
-      //   }
-      // } else {
-      //   if (this.searchFilter.status === 'all') {
-      //     filteredData = allCars.filter((item: any) => item.vehicle_status === tabName);
-      //   } else {
-      //     filteredData = allCars.filter((item: any) => (item.vehicle_status === tabName && item.status === this.searchFilter.status));
-      //   }
-      // }
+  getTableData() {
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+      pageNumber: this.currentPage,
+      pagesize: this.pageSize,
+      globalSearch: this.searchFilter.globalSearch || "",
+      sortColumn: this.sortColumn,
+      sortOrder: this.sortOrder,
+      vin: null,
+      vehicleStatus: this.activeTab,
+    }
+    this.gs.isSpinnerShow = true;
+    this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {
+      this.gs.isSpinnerShow = false;
+      this.tableData = response.carDetails;
+      this.totalData = response?.viewModel?.totalCount;
+      this.booktabs = response.filterList ? JSON.parse(response.filterList) : [];
+      console.log("this.booktabs >>", this.booktabs);
 
-      filteredData = allCars.filter((item: any) => {
-        const matchesTab = type === 'all_cars' ? item : item.vehicle_status === tabName;
-        const matchesStatus = this.searchFilter.status === 'all' ? item : item.status === this.searchFilter.status;
-        const matchesBranch = this.searchFilter.branch === 'all' ? item : item.branch === this.searchFilter.branch;
+    })
+    // this.mycarsService.getMyCars().subscribe((apiRes: apiResultFormat) => {
+    //   let allCars = apiRes.data;
+    //   let filteredData = [];
 
-        return matchesTab && matchesStatus && matchesBranch;
-      });
+    //   filteredData = allCars.filter((item: any) => {
+    //     const matchesTab = type === 'All Cars' ? item : item.vehicle_status === tabName;
+    //     const matchesStatus = this.searchFilter.status === 'all' ? item : item.status === this.searchFilter.status;
+    //     const matchesBranch = this.searchFilter.branch === 'all' ? item : item.branch === this.searchFilter.branch;
 
-      this.totalData = filteredData.length;
-      this.tableData = filteredData;
+    //     return matchesTab && matchesStatus && matchesBranch;
+    //   });
 
-    });
+    //   this.totalData = filteredData.length;
+    //   this.tableData = filteredData;
+
+    // });
   }
 
   selectStatus() {
-    this.getTableData(this.activeTab);
+    this.getTableData();
   }
 
   selectBranch() {
-    this.getTableData(this.activeTab);
+    this.getTableData();
   }
 
-  public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
+  searchData() {
+    this.getTableData();
   }
-  initChecked = false;
 
   changeBookTab(item: any) {
-    this.activeTab = item.value;
-    let params = {
-      activeTab: this.activeTab,
-      status: "all"
-    }
-    this.getTableData(this.activeTab);
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: "merge"
-    });
-  }
-
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
-    }
+    this.activeTab = item.name;
+    this.getTableData();
   }
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData();
   }
 
-  async changeStatus(item: any) {
-    // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
-    const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
-      centered: true,
-    });
-    modalRef.componentInstance.singleDetails = item;
-    modalRef.componentInstance.title = 'Are sure you want to change status ?';
-    modalRef.result.then((res: any) => {
-      if (res.confirmed) {
-        item.status = res.status;
-        this.toast.successToastr("Status successfully");
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getTableData();
+  }
+
+  // async changeStatus(item: any) {
+  //   // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
+  //   const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
+  //     centered: true,
+  //   });
+  //   modalRef.componentInstance.singleDetails = item;
+  //   modalRef.componentInstance.title = 'Are sure you want to change status ?';
+  //   modalRef.result.then((res: any) => {
+  //     if (res.confirmed) {
+  //       item.status = res.status;
+  //       this.toast.successToastr("Status successfully");
+  //     }
+  //   }, () => { });
+  // }
+
+  async changeStatus(event: any, row: any) {
+    let Body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "vehicleId": row.vehicleId,
+      "vehicleStatus": event.target.checked,
+    };
+
+    this.gs.isSpinnerShow = true;
+    this.profileService.UpdateVehicleStatus(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr("Updated successfully");
+        this.getTableData();
+      } else {
+        this.toast.errorToastr(res.message);
       }
-    }, () => { });
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
 
@@ -215,29 +219,5 @@ export class MyCarsComponent {
     });
   }
 
-  onView(item: any) {
-    const modalRef = this.modalService.open(BookingDetailsModalComponent, {
-      size: 'lg'
-    });
-    modalRef.componentInstance.bookingDetails = item;
-    modalRef.result.then((res: any) => {
-
-    }, () => {
-    });
-  }
-
-  async onDelete(index: any) {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
-      centered: true,
-    });
-    modalRef.result.then((res: any) => {
-
-      if (res.confirmed) {
-        this.tableData.splice(index, 1);
-        this.toast.successToastr("Deleted successfully");
-      }
-    }, () => {
-    });
-  }
 
 }
