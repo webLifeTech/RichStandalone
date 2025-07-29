@@ -1816,7 +1816,9 @@ header {
     .view-link {
       color: #637381;
       font-weight: 700;
-      font-size: 12px
+      font-size: 12px;
+      display: flex;
+      align-items: center;
     }
 
     .view-link:hover {
@@ -2984,6 +2986,14 @@ header {
     font-size: 1rem;
     line-height: 1.5;
   }
+
+  .review-rating {
+    margin-left: 6px;
+
+    .br-unit {
+      font-size: 18px;
+    }
+  }
 }
 
 @media (max-width: 1199px) {
@@ -3888,6 +3898,16 @@ footer {
 
     i {
       color: #333;
+    }
+  }
+}
+
+.promo-section {
+  .promos {
+    .remove-btn {
+      position: absolute;
+      right: 0;
+      font-weight: 700;
     }
   }
 }

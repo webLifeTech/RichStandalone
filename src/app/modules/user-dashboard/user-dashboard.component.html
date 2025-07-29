@@ -1,8 +1,9 @@
-<ng-container *ngIf="gs.loggedInUserInfo['role'] === 'user_4'">
+<!-- <ng-container *ngIf="gs.loggedInUserInfo['role'] === 'user_4'">
   <app-dash-driver-owned-car></app-dash-driver-owned-car>
-</ng-container>
+</ng-container> -->
+<!-- *ngIf="gs.loggedInUserInfo['role'] !== 'user_4'" -->
 
-<div *ngIf="gs.loggedInUserInfo['role'] !== 'user_4'" class="content dashboard-content">
+<div class="content dashboard-content">
   <div class="container">
 
     <div *ngIf="gs.loggedInUserInfo['role'] === 'admin'" class="row mb-4">
@@ -64,10 +65,20 @@
     </div>
 
     <div class="row mb-4">
-      <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
-        class="col-lg-4">
-        <app-vehicles-details></app-vehicles-details>
+      <div
+        *ngIf="dashboardAllDetails.vehicleOverView && (gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3')"
+        class="col-lg-4 mb-3">
+        <app-vehicles-details [details]="dashboardAllDetails.vehicleOverView"></app-vehicles-details>
       </div>
+      <!-- <div class="col-lg-4 mb-3" *ngFor="let item of sectionInfo[gs.loggedInUserInfo['role']]">
+        <ng-container *ngIf="item.isDriverBookingOverviewShow">
+          <app-driver-booking-overview [details]="item"></app-driver-booking-overview>
+        </ng-container>
+        <ng-container *ngIf="item.isCarBookingOverviewShow">
+          <app-car-booking-overview [details]="item"></app-car-booking-overview>
+        </ng-container>
+      </div> -->
+      <!--
       <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
         class="col-lg-4">
         <app-carowner-booking-details></app-carowner-booking-details>
@@ -80,9 +91,18 @@
       </div>
       <div *ngIf="gs.loggedInUserInfo['role'] === 'user_4' " class=" col-lg-4">
         <app-doc-vehicle-book-details></app-doc-vehicle-book-details>
+      </div> -->
+
+      <div class="col-lg-4 mb-3" *ngFor="let item of dashboardDataArray">
+        <ng-container *ngIf="item.isDriverBookingOverviewShow">
+          <app-driver-booking-overview [details]="item"></app-driver-booking-overview>
+        </ng-container>
+        <ng-container *ngIf="item.isCarBookingOverviewShow">
+          <app-car-booking-overview [details]="item"></app-car-booking-overview>
+        </ng-container>
       </div>
 
-      <div class="col-lg-4">
+      <div class="col-lg-4 mb-3">
         <div class="card dash-box-card flex-fill mb-0 py-2">
           <div class="card-body overview-box">
             <div class="row">
@@ -93,7 +113,7 @@
                       <h3>Wallet Balance</h3>
                       <div class="widget-icon">
                         <span class="total-count">
-                          {{dashboardDetails.totalWalletBalance | currencyPipe: gs.currency}}
+                          {{dashboardAllDetails.walletBalance | currencyPipe: gs.currency}}
                         </span>
                       </div>
                     </div>
@@ -111,7 +131,7 @@
                       <h3>Favourite</h3>
                       <div class="widget-icon">
                         <span class="total-count">
-                          {{dashboardDetails.totalFavourite}}
+                          {{dashboardAllDetails.totalFavourite}}
                         </span>
                       </div>
                       <div class="text-center">
@@ -122,7 +142,8 @@
                   <div class="css-jlkw74"></div>
                 </div>
               </div>
-              <div *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4'"
+              <div
+                *ngIf="dashboardAllDetails.driverRiskScore && (gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4')"
                 class="col-md-6 p-0">
                 <div class="widget-box  flex-fill px-0">
                   <div class="widget-header">
@@ -130,7 +151,7 @@
                       <h3>Driver Risk Score</h3>
                     </div>
                   </div>
-                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="160"
+                  <app-user-apexcharts [data]="dashboardAllDetails.driverRiskScore" [chartSize]="1" [chartHeight]="160"
                     [name]="'Performance grade'"></app-user-apexcharts>
                   <div class="css-jlkw74"></div>
                 </div>
@@ -144,48 +165,7 @@
                     </div>
                   </div>
                   <div class="review-rating d-flex align-items-center mt-5 text-center">
-                    <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
-                  </div>
-                  <div class="css-jlkw74"></div>
-                </div>
-              </div>
-              <div
-                *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || gs.loggedInUserInfo['role'] === 'user_4'"
-                class="col-md-6 p-0">
-                <div class="widget-box  flex-fill px-0">
-                  <div class="widget-header">
-                    <div class="widget-content text-center">
-                      <h3>Vehicle Risk Score</h3>
-                    </div>
-                  </div>
-                  <app-user-apexcharts [data]="dashboardDetails.driverRiskScore" [chartSize]="1" [chartHeight]="160"
-                    [name]="'Performance grade'"></app-user-apexcharts>
-                  <div class="css-jlkw74"></div>
-                </div>
-              </div>
-              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_4'"
-                class="col-md-6 p-0 d-flex">
-                <div class="widget-box  flex-fill">
-                  <div class="widget-header">
-                    <div class="widget-content text-center">
-                      <h3>Vehicle Average Star Rating</h3>
-                      <div class="review-rating d-flex align-items-center mt-4 text-center">
-                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="css-jlkw74"></div>
-                </div>
-              </div>
-              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_3'" class="col-md-6 p-0 d-flex">
-                <div class="widget-box  flex-fill">
-                  <div class="widget-header">
-                    <div class="widget-content text-center">
-                      <h3>Customer Average Star Rating</h3>
-                      <div class="review-rating d-flex align-items-center mt-4 text-center">
-                        <bar-rating [(rate)]="dashboardDetails.averageStartRating" readonly></bar-rating>
-                      </div>
-                    </div>
+                    <bar-rating [(rate)]="dashboardAllDetails.averageStartRating" readonly></bar-rating>
                   </div>
                   <div class="css-jlkw74"></div>
                 </div>

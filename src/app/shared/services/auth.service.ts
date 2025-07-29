@@ -59,11 +59,26 @@ export class AuthService {
   }
 
   logOut() {
-    this.isLoggedIn = false;
-    this.gs.loggedInUserInfo = {};
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('loggedInUser');
-    this.router.navigateByUrl('/home');
+    let body = {
+      "userId": "sample string 1",
+      "userName": this.gs.loggedInUserInfo.userNameId,
+      // "clientId": "sample string 3",
+      "userUniqueId": null,
+      // "ipAddress": "sample string 5",
+      // "ipLocationAddress": "sample string 6",
+      // "ipDescription": "sample string 7",
+      "Source": "Web"
+    }
+    this.SignOut(body).subscribe((res: any) => {
+      console.log("res >>>", res);
+      if (res && res.statusCode == "200") {
+        this.isLoggedIn = false;
+        this.gs.loggedInUserInfo = {};
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('loggedInUser');
+        this.router.navigateByUrl('/home');
+      }
+    })
   }
 
   // User Login
@@ -163,6 +178,15 @@ export class AuthService {
   public ReSendEmailVerificationCodeAsync(dataParams: any) {
     const params = new HttpParams().set('emailId', dataParams.emailId).set('userId', dataParams.userId);
     return this.http.get(this.baseUrl1 + 'TLHUB/Communication/ReSendEmailVerificationCodeAsync', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // User -> SignOut
+  public SignOut(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/User/SignOut`, data).pipe(
       map((res: any) => {
         return res;
       })

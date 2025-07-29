@@ -121,7 +121,7 @@ export class UserApexchartsComponent implements OnInit {
               },
               value: {
                 formatter: (val: any) => {
-                  return parseInt(val.toString(), 10).toString() + '%';
+                  return this.data.chartLabel ? this.data.chartLabel : parseInt(val.toString(), 10).toString() + '%';
                 },
                 // marginTop: '10px',
                 offsetY: 8,

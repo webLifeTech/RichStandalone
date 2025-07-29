@@ -25,11 +25,17 @@ import { DashDriverOwnedCarComponent } from './dash-driver-owned-car/dash-driver
 import { AdBookingDetailsComponent } from '../admin-dashboard/widgets/ad-booking-details/ad-booking-details.component';
 import { ApexchartsComponent } from '../admin-dashboard/widgets/apexcharts/apexcharts.component';
 import { AdVehiclesDetailsComponent } from '../admin-dashboard/widgets/ad-vehicles-details/ad-vehicles-details.component';
+import { CarBookingOverviewComponent } from './widgets/dashboard/car-booking-overview/car-booking-overview.component';
+import { DriverBookingOverviewComponent } from './widgets/dashboard/driver-booking-overview/driver-booking-overview.component';
+import { ProfileService } from '../../shared/services/profile.service';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   imports: [
+    CarBookingOverviewComponent,
+    DriverBookingOverviewComponent,
+
     MyBookingDetailsComponent,
     UserApexchartsComponent,
     VehiclesDetailsComponent,
@@ -65,24 +71,18 @@ export class UserDashboardComponent {
   public activeTab: string = 'My Profile'; //dashboard
   active = 1;
   public tableData: any = [];
-  public showFilter = false;
-  public searchDataValue = '';
-  public lastIndex = 0;
   public pageSize = 10;
   public totalData = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
 
-  public isStuck: boolean = false;
-  public isNotStuck: boolean = false;
-  public isShowApproved: boolean = true;
-  public isShowRefundRequest: boolean = true;
+  sortColumn: any = "vin";
+  sortOrder: any = "DESC";
+  dashboardAllDetails: any = {};
+
+
+  sectionInfo: any = {}
+
+  dashboardDataArray: any = [];
 
   dashboardDetails: any = {
     allBookings: 450,
@@ -144,12 +144,6 @@ export class UserDashboardComponent {
     "img": "assets/images/cab/car/24.jpg"
   }
 
-  bookingData = {
-    upcomingList: [],
-    inprogressList: [],
-    completedList: [],
-    cancelledList: [],
-  }
 
   userDetails: any = {
     "data": {
@@ -172,62 +166,221 @@ export class UserDashboardComponent {
     }
   };
 
-  @HostListener('window: scroll', [])
-  onWindowScroll() {
-    let number = window.pageYOffset || 0;
-
-    if (number > 595) {
-      this.isStuck = true;
-      this.isNotStuck = false;
-    } else {
-      this.isStuck = false
-    }
-    if (number > 805) {
-      this.isNotStuck = true;
-      this.isStuck = false;
-    }
-  }
-
   constructor(
     private pageService: PagesService,
     public gs: GlobalService,
     private bookingService: BookingService,
     private router: Router,
     private modalService: NgbModal,
+    public profileService: ProfileService,
   ) {
-    this.getTableData("");
+    // this.getTableData();
+    this.getUserDashboardDetails();
   }
 
-  getTableData(type: any) {
-    // let tabName = this.booktabs.find((item: any) => item.value === type)?.title;
-    // this.activeTabName = tabName;
+  getUserDashboardDetails() {
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+    }
+    this.gs.isSpinnerShow = true;
+    this.gs.GetUserDashboardDetails(body).subscribe(async (response: any) => {
+      if (response && response.statusCode == "200") {
+        this.dashboardAllDetails = JSON.parse(response.userDashboardDetails);
+        console.log("response >>>", this.dashboardAllDetails);
+        if (this.dashboardAllDetails?.driverRiskDetails) {
+          this.dashboardAllDetails.driverRiskDetails = JSON.parse(this.dashboardAllDetails.driverRiskDetails);
+        }
+        if (this.dashboardAllDetails?.myBookingOverView) {
+          this.dashboardAllDetails.myBookingOverView = JSON.parse(this.dashboardAllDetails.myBookingOverView);
+        }
+        if (this.dashboardAllDetails?.myTripsBookingOverView) {
+          this.dashboardAllDetails.myTripsBookingOverView = JSON.parse(this.dashboardAllDetails.myTripsBookingOverView);
+        }
+        if (this.dashboardAllDetails?.myDriverBookingOverView) {
+          this.dashboardAllDetails.myDriverBookingOverView = JSON.parse(this.dashboardAllDetails.myDriverBookingOverView);
+        }
+        if (this.dashboardAllDetails?.myDriverTripsBookingOverView) {
+          this.dashboardAllDetails.myDriverTripsBookingOverView = JSON.parse(this.dashboardAllDetails.myDriverTripsBookingOverView);
+        }
+        if (this.dashboardAllDetails?.myVehicleBookingOverView) {
+          this.dashboardAllDetails.myVehicleBookingOverView = JSON.parse(this.dashboardAllDetails.myVehicleBookingOverView);
+        }
+        if (this.dashboardAllDetails?.myVehicleTripsBookingOverView) {
+          this.dashboardAllDetails.myVehicleTripsBookingOverView = JSON.parse(this.dashboardAllDetails.myVehicleTripsBookingOverView);
+        }
+        if (this.dashboardAllDetails?.vehicleOverView) {
+          this.dashboardAllDetails.vehicleOverView = JSON.parse(this.dashboardAllDetails.vehicleOverView);
+        }
+        if (this.dashboardAllDetails?.vehicleRiskRatings) {
+          // this.dashboardAllDetails.vehicleRiskRatings = JSON.parse(this.dashboardAllDetails.vehicleRiskRatings);
+        }
 
-    // if (type === "all_bookings") {
-    //   this.bookingService.getUserBookings().subscribe((apiRes: apiResultFormat) => {
-    //     this.totalData = apiRes.totalData;
-    //     this.tableData = apiRes.data;
-    //   });
-    // }
+        this.dashboardAllDetails.totalFavourite = this.dashboardAllDetails.favouriteCars + this.dashboardAllDetails.favouriteDrivers;
 
-    // if (type === "inprogress") {
-    this.bookingService.getUserBookingInprogress().subscribe((apiRes: apiResultFormat) => {
-      this.tableData = apiRes.data;
-      this.totalData = apiRes.totalData;
-      this.bookingData.inprogressList = apiRes.data;
-    });
-    // }
-    // if (type === "upcoming") {
-    this.bookingService.getUserBookingUpcoming().subscribe((apiRes: apiResultFormat) => {
-      this.totalData = apiRes.totalData;
-      this.bookingData.upcomingList = apiRes.data;
-    });
-    // }
-    // if (type === "cancelled") {
-    this.bookingService.getUserBookingCancelled().subscribe((apiRes: apiResultFormat) => {
-      this.totalData = apiRes.totalData;
-      this.bookingData.cancelledList = apiRes.data;
-    });
-    // }
+        if (this.dashboardAllDetails?.driverRiskDetails) {
+          this.dashboardAllDetails.averageStartRating = this.dashboardAllDetails.driverRiskDetails.customerAverageStarRating;
+          this.dashboardAllDetails.driverRiskScore = {
+            "series": [parseFloat(this.dashboardAllDetails.driverRiskDetails.riskScorePercentage)],
+            "chartLabel": this.dashboardAllDetails.driverRiskDetails.riskScorePercentage,
+            "chartColors": ["#22c55e", "#77ed8b"],
+          };
+        }
+        console.log("dashboardAllDetails >>>", this.dashboardAllDetails);
+      }
+
+      let tempArray: any = [];
+
+      if (this.gs.loggedInUserInfo['role'] === 'user') {
+        // myBookingOverView
+        this.dashboardAllDetails.myBookingOverView.title = "Car owner booked for me";
+        this.dashboardAllDetails.myBookingOverView.isDriverBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myBookingOverView);
+
+        // myTripsBookingOverView
+        this.dashboardAllDetails.myTripsBookingOverView.title = "I Booked Car";
+        this.dashboardAllDetails.myTripsBookingOverView.isCarBookingOverviewShow = true;
+        this.dashboardAllDetails.myTripsBookingOverView.view = true
+        tempArray.push(this.dashboardAllDetails.myTripsBookingOverView);
+      }
+
+      if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3') {
+        // myBookingOverView
+        this.dashboardAllDetails.myBookingOverView.title = "I Booked Driver";
+        this.dashboardAllDetails.myBookingOverView.isDriverBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myBookingOverView);
+
+        // myTripsBookingOverView
+        this.dashboardAllDetails.myTripsBookingOverView.title = "Driver Booked My Cars";
+        this.dashboardAllDetails.myTripsBookingOverView.isCarBookingOverviewShow = true;
+        this.dashboardAllDetails.myTripsBookingOverView.view = true
+        tempArray.push(this.dashboardAllDetails.myTripsBookingOverView);
+      }
+
+      if (this.gs.loggedInUserInfo['role'] === 'user_4') {
+        // myDriverBookingOverView
+        this.dashboardAllDetails.myDriverBookingOverView.title = "I Booked Driver For My Car";
+        this.dashboardAllDetails.myDriverBookingOverView.isDriverBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myDriverBookingOverView);
+
+        // myVehicleBookingOverView
+        this.dashboardAllDetails.myVehicleBookingOverView.title = "I Booked Car";
+        this.dashboardAllDetails.myVehicleBookingOverView.isCarBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myVehicleBookingOverView);
+
+        // myDriverTripsBookingOverView
+        this.dashboardAllDetails.myDriverTripsBookingOverView.title = "Car owner booked for me";
+        this.dashboardAllDetails.myDriverTripsBookingOverView.isDriverBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myDriverTripsBookingOverView);
+
+        // myVehicleTripsBookingOverView
+        this.dashboardAllDetails.myVehicleTripsBookingOverView.title = "Driver Booked My Cars";
+        this.dashboardAllDetails.myVehicleTripsBookingOverView.isCarBookingOverviewShow = true;
+        tempArray.push(this.dashboardAllDetails.myVehicleTripsBookingOverView);
+
+      }
+
+
+      let newArray: any = [];
+      for (let i in tempArray) {
+        let data = [{
+          "title": "Pending Request",
+          "total": tempArray[i].pendingRequest,
+          "bg-color": "color-sunset-orange",
+        },
+        {
+          "title": "Confirmed",
+          "total": tempArray[i].confirmed,
+          "bg-color": "color-turquoise-blue",
+        },
+        {
+          "title": "Start Service",
+          "total": tempArray[i].startService,
+          "bg-color": "color-amber",
+        },
+        {
+          "title": "End Service",
+          "total": tempArray[i].endService,
+          "bg-color": "color-emerald-green",
+        },
+        {
+          "title": "Cancelled",
+          "total": tempArray[i].upComing,
+          "bg-color": "color-red",
+        },
+        ]
+
+        if (tempArray[i].isDriverBookingOverviewShow) {
+          data.unshift({
+            "title": "Total Booking",
+            "total": tempArray[i].totalBookings,
+            "bg-color": "color-emerald-green",
+          });
+        }
+
+        newArray.push(
+          {
+            title: tempArray[i].title,
+            isCarBookingOverviewShow: tempArray[i].isCarBookingOverviewShow || false,
+            isDriverBookingOverviewShow: tempArray[i].isDriverBookingOverviewShow || false,
+            isDataLoaded: true, // need to do - false
+            view: tempArray[i].view || false,
+            countType: tempArray[i].countType,
+            totalBooked: {
+              "title": "Total",
+              "total": tempArray[i].totalBookings,
+              "bg-color": "color-electric-purple",
+              "data": {
+                "series": [],
+                "chartLabels": [],
+                "chartColors": ["#dcc7fa", "#8e33ff"],
+              }
+            },
+            bookedData: tempArray[i].totalBookings ? data : []
+          }
+        )
+      }
+      console.log("newArray >>>>", newArray);
+
+      if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3' || this.gs.loggedInUserInfo['role'] === 'user_4') {
+        // if (this.dashboardAllDetails?.vehicleRiskRatings && this.dashboardAllDetails?.vehicleRiskRatings?.length) {
+        let vehicleRiskScore: any = []
+        let vehicleStarRating: any = []
+        for (let i in this.dashboardAllDetails.vehicleRiskRatings) {
+          vehicleRiskScore.push({
+            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin,
+            "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].riskScorePercentage) || 0,
+            "bg-color": "color-sunset-orange",
+          })
+          vehicleStarRating.push({
+            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin,
+            "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].customerAverageStarRatinge) || 0,
+          })
+        }
+
+        newArray.push(
+          {
+            title: "Vehicle Risk Score",
+            isCarBookingOverviewShow: true,
+            view: false,
+            countType: "percentage",
+            totalBooked: null,
+            bookedData: vehicleRiskScore
+          },
+          {
+            title: "Vehicle Average Star Rating",
+            isCarBookingOverviewShow: true,
+            view: false,
+            countType: "star",
+            totalBooked: null,
+            bookedData: vehicleStarRating
+          },
+        )
+      }
+
+
+      this.dashboardDataArray = newArray;
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   viewBooking(type: any) {

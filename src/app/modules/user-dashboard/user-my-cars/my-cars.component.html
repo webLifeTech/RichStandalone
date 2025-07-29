@@ -208,8 +208,7 @@
                       </span>
                       <span class="custom-toggle">
                         <input [id]="data.vehicleId+'_status'" class="check" type="checkbox"
-                          [checked]="data.status == 'Active'"
-                          [disabled]="!data.status || data.vehicleStatus === 'Kyc Pending'"
+                          [checked]="data.status == 'Active'" [disabled]="!data.status || data.status === 'Pending'"
                           (change)="changeStatus($event, data)" />
                         <label [for]="data.vehicleId+'_status'" class="checktoggle">checkbox</label>
                       </span>

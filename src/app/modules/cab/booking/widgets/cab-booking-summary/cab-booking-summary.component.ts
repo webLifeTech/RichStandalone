@@ -10,6 +10,8 @@ import { ProfileService } from '../../../../../shared/services/profile.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { addDays, addWeeks, addMonths, addYears, getDay, differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CabPromoCodeComponent } from '../cab-promo-code/cab-promo-code.component';
+import { ToastService } from '../../../../../shared/services/toast.service';
 
 
 @Component({
@@ -23,6 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     OwlNativeDateTimeModule,
     FormsModule,
     NgSelectModule,
+    CabPromoCodeComponent,
   ],
   providers: [DatePipe],
   templateUrl: './cab-booking-summary.component.html',
@@ -30,7 +33,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class CabBookingSummaryComponent {
 
-  @Input() singleItem: any = {}
+  @Input() singleItem: any = {};
+  @Input() bookingStep: any = 1;
   public params: Params;
   public type: any = "";
   public searchObj: any = {};
@@ -44,13 +48,16 @@ export class CabBookingSummaryComponent {
   };
   bookingSummaryDetails: any = {};
   todayDate = new Date();
+  appliedCouponCode: any = "";
+  isCouponApplied: boolean = false;
 
   constructor(
     public cabService: CabService,
     private route: ActivatedRoute,
     public gs: GlobalService,
     private profileService: ProfileService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private toast: ToastService,
   ) {
     this.searchObj = this.gs.getLastSearch();
     this.searchObj.vehicleId = route.snapshot.params['vehicleId'];
@@ -105,14 +112,19 @@ export class CabBookingSummaryComponent {
       }
 
       this.calculateDropTime(null);
-      if (this.type === 'car') {
-        this.getVehicleBookingSummaryDetails();
-      }
-      if (this.type === 'driver') {
-        this.getDriverBookingSummary();
-      }
     })
     this.getRentType();
+  }
+
+  ngOnInit() {
+    console.log("CouponCode 111111111 >>>>", this.appliedCouponCode);
+
+    if (this.type === 'car') {
+      this.getVehicleBookingSummaryDetails();
+    }
+    if (this.type === 'driver') {
+      this.getDriverBookingSummary();
+    }
   }
 
   // Get All Dropdwon List
@@ -145,6 +157,10 @@ export class CabBookingSummaryComponent {
 
   onChange(value: any) {
     this.calculateDropTime(value);
+    if (value == 'coupon') {
+      this.isCouponApplied = true;
+      this.toast.successToastr("Coupon Applied!");
+    }
   }
 
   // Get Booking VehicleDetails
@@ -157,7 +173,7 @@ export class CabBookingSummaryComponent {
       "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yy'),
       "vehicleId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
-      "couponCode": this.searchObj.couponCode,
+      "couponCode": this.appliedCouponCode || "",
       "userId": this.gs.loggedInUserInfo.userId
     }
 
@@ -167,6 +183,7 @@ export class CabBookingSummaryComponent {
         this.bookingSummaryDetails = res.vehicleBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
+        this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
         console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
 
       } else {
@@ -186,7 +203,7 @@ export class CabBookingSummaryComponent {
       "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yy'),
       "driverId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
-      "couponCode": this.searchObj.couponCode,
+      "couponCode": this.appliedCouponCode || "",
       "userId": this.gs.loggedInUserInfo.userId
     }
 
@@ -195,6 +212,7 @@ export class CabBookingSummaryComponent {
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
+        this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
         console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
 
       } else {
@@ -269,5 +287,23 @@ export class CabBookingSummaryComponent {
       this.getDriverBookingSummary();
     }
     // this.getVehicleBookingSummaryDetails();
+  }
+
+  applyCoupon(event: any) {
+    this.appliedCouponCode = (event && event.couponCode) ? event.couponCode : "";
+    if (this.appliedCouponCode) {
+      this.isCouponApplied = true;
+    } else {
+      this.isCouponApplied = false;
+      for (let i in this.gs.couponList) {
+        this.gs.couponList[i].checked = false;
+      }
+    }
+    if (this.type === 'car') {
+      this.getVehicleBookingSummaryDetails();
+    }
+    if (this.type === 'driver') {
+      this.getDriverBookingSummary();
+    }
   }
 }

@@ -3,32 +3,28 @@
 </div>
 <div class="flight_detail">
   <div class="promo-section">
-    <div class="form-group mb-0">
+    <!-- <div class="form-group mb-0">
       <div class="input-group">
         <input type="text" class="form-control" [placeholder]="'have_coupon.input_plchold' | translate">
         <div class="input-group-prepend">
           <span class="input-group-text">{{'have_coupon.apply' | translate}}</span>
         </div>
       </div>
-    </div>
-    <div class="promos">
-      <form>
-        @for(details of cabPromoCode; track details){
-        <div class="form-check">
-          <!-- radio_animated -->
-          <input class="form-check-input " type="radio" name="exampleRadios2" id="{{ details.radioId }}"
-            value="{{ details.radioValue }}" [checked]="details.checked" (change)="selectCode()">
-          <div>
-            <label class="form-check-label title" for="{{ details.radioId }}">
-              {{ details.title }}
-            </label>
-            <label class="form-check-label" for="{{ details.radioId }}">
-              {{ details.description }}
-            </label>
-          </div>
+    </div> -->
+    <div class="promos mt-0">
+      <div class="form-check position-relative" *ngFor="let item of gs.couponList">
+        <input class="form-check-input radio_animated" type="radio" name="exampleRadios2" id="{{ item.couponId }}"
+          (change)="applyCouponCode(item)" [(ngModel)]="item.checked" [value]="true">
+        <div>
+          <label class="form-check-label title" for="{{ item.couponId }}">
+            {{ item.couponCode }}
+          </label>
+          <label class="form-check-label" for="{{ item.couponId }}">
+            {{ item.couponDescription }}
+          </label>
         </div>
-        }
-      </form>
+        <a *ngIf="item.checked" class="remove-btn" (click)="removeCoupon(item)">Remove</a>
+      </div>
     </div>
   </div>
 </div>

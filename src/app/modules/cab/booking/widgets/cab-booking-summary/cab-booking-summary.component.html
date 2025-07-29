@@ -1,99 +1,122 @@
-<div class="title-top">
-  <h5>{{'booking_summary.title' | translate}}</h5>
-</div>
-<div class="flight_detail p-3">
-  <div class="summery_box">
-    <table class="table table-borderless">
-      <tbody>
-        <tr>
-          <td>{{'booking_summary.location' | translate}}</td>
-          <td>{{searchObj.same_location}}</td>
-        </tr>
-        <tr>
-          <td>{{ 'global.type' | translate }}</td>
-          <td>
-            <ng-select [items]="rentTypeList['RENT_TYPE']" (change)="onChange('type')" bindLabel="Description"
-              bindValue="Code" placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
-              [(ngModel)]="searchObj.timeType" name="timeType" clearable="false">
-            </ng-select>
-          </td>
-        </tr>
-        <tr *ngIf="searchObj.timeType">
-          <td>{{ labels[searchObj.timeType] }}</td>
-          <td>
-            <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange('duration')"
-              placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
-              [(ngModel)]="searchObj.timeDuration" name="timeDuration" clearable="false">
-            </ng-select>
-          </td>
-        </tr>
-        <tr>
-          <td>{{'booking_summary.pickup_date' | translate}}</td>
-          <td>
-            <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
-              class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
-              value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
-              [min]="todayDate">
-            <owl-date-time #pick_up></owl-date-time>
-          </td>
-        </tr>
-        <tr>
-          <td>{{'booking_summary.return_date' | translate}}</td>
-          <td>
-            <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
-              placeholder="{{ 'Choose Peturn Date' | translate }}" value="02:05 12/13/2019" type="text"
-              [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time" [disabled]="true">
-            <owl-date-time #drop></owl-date-time>
-          </td>
-        </tr>
-        <tr *ngIf="type === 'car'">
-          <td>{{'booking_summary.car_type' | translate}}</td>
-          <td>{{singleItem.make}} ({{singleItem.model}})</td>
-        </tr>
-        <tr *ngIf="type === 'driver'">
-          <td>{{'booking_summary.driver_name' | translate}}</td>
-          <td>{{singleItem.contactName}}</td>
-        </tr>
-        <tr>
-          <td>{{bookingSummaryDetails.priceRangeDesc}}</td>
-          <td>{{ bookingSummaryDetails.priceRange | currencyPipe: cabService.currency || "-" }}</td>
-        </tr>
-        <tr>
-          <td>{{'booking_summary.insurance_fee' | translate}}</td>
-          <td>{{ bookingSummaryDetails.insuranceFee | currencyPipe: cabService.currency }}</td>
-        </tr>
-        <tr>
-          <td>{{'booking_summary.other_fees' | translate}}</td>
-          <td>{{ bookingSummaryDetails.otherFee | currencyPipe: cabService.currency || "-" }}</td>
-        </tr>
-        <tr>
-          <td>{{'booking_summary.discount' | translate}}</td>
-          <td>- {{ bookingSummaryDetails.discount | currencyPipe: cabService.currency }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="promo-section">
-      <div class="form-group mb-0">
-        <div class="input-group">
-          <input type="text" class="form-control" [(ngModel)]="searchObj.couponCode"
-            [placeholder]="'have_coupon.input_plchold' | translate">
-          <div class="input-group-prepend">
-            <span class="input-group-text" (click)="onChange(null)">{{'have_coupon.apply' | translate}}</span>
+<div class="review_box">
+
+  <div class="title-top">
+    <h5>{{'booking_summary.title' | translate}}</h5>
+  </div>
+  <div class="flight_detail p-3">
+    <div class="summery_box">
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td>{{'booking_summary.location' | translate}}</td>
+            <td>{{searchObj.same_location}}</td>
+          </tr>
+          <tr>
+            <td>{{ 'global.type' | translate }}</td>
+            <td>
+              <ng-select [items]="rentTypeList['RENT_TYPE']" (change)="onChange('type')" bindLabel="Description"
+                bindValue="Code" placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+                [(ngModel)]="searchObj.timeType" name="timeType" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="searchObj.timeType">
+            <td>{{ labels[searchObj.timeType] }}</td>
+            <td>
+              <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange('duration')"
+                placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
+                [(ngModel)]="searchObj.timeDuration" name="timeDuration" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'booking_summary.pickup_date' | translate}}</td>
+            <td>
+              <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
+                class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
+                value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
+                [min]="todayDate">
+              <owl-date-time #pick_up></owl-date-time>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'booking_summary.return_date' | translate}}</td>
+            <td>
+              <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
+                placeholder="{{ 'Choose Peturn Date' | translate }}" value="02:05 12/13/2019" type="text"
+                [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time" [disabled]="true">
+              <owl-date-time #drop></owl-date-time>
+            </td>
+          </tr>
+          <tr *ngIf="type === 'car'">
+            <td>{{'booking_summary.car_type' | translate}}</td>
+            <td>{{singleItem.make}} ({{singleItem.model}})</td>
+          </tr>
+          <tr *ngIf="type === 'driver'">
+            <td>{{'booking_summary.driver_name' | translate}}</td>
+            <td>{{singleItem.contactName}}</td>
+          </tr>
+          <tr>
+            <td>{{bookingSummaryDetails.priceRangeDesc}}</td>
+            <td>{{ bookingSummaryDetails.priceRange | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
+            <td>{{'booking_summary.insurance_fee' | translate}}</td>
+            <td>{{ bookingSummaryDetails.insuranceFee | currencyPipe: cabService.currency }}</td>
+          </tr>
+          <tr>
+            <td>{{'booking_summary.other_fees' | translate}}</td>
+            <td>{{ bookingSummaryDetails.otherFee | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
+            <td>{{'booking_summary.discount' | translate}}</td>
+            <td>- {{ bookingSummaryDetails.discount | currencyPipe: cabService.currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="promo-section">
+        <div class="form-group mb-0">
+          <div class="input-group mb-0">
+            <input type="text" class="form-control" [(ngModel)]="appliedCouponCode"
+              [placeholder]="'have_coupon.input_plchold' | translate"
+              [disabled]="isCouponApplied || gs.bookingSummaryDetails.bookingStep ==  2">
+            <div *ngIf="!isCouponApplied && gs.bookingSummaryDetails.bookingStep ==  1"
+              class="input-group-prepend pointer">
+              <button [disabled]="!appliedCouponCode " class="input-group-text"
+                (click)="onChange('coupon')">{{'have_coupon.apply' |
+                translate}}
+              </button>
+            </div>
+            <div *ngIf="isCouponApplied && gs.bookingSummaryDetails.bookingStep ==  1"
+              class="input-group-prepend pointer">
+              <span class="input-group-text" (click)="applyCoupon(null)">
+                {{'have_coupon.remove' | translate}}
+              </span>
+            </div>
           </div>
         </div>
+        <div *ngIf="isCouponApplied" class="text-green fw-bold">
+          Coupon Applied!
+        </div>
+      </div>
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td>{{'booking_summary.tax' | translate}}</td>
+            <td>{{ bookingSummaryDetails.tax | currencyPipe: cabService.currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="grand_total">
+        <h5>
+          {{'booking_summary.total_fare' | translate}}
+          <span>{{ bookingSummaryDetails.totalFare | currencyPipe: cabService.currency }}</span>
+        </h5>
       </div>
     </div>
-    <table class="table table-borderless">
-      <tbody>
-        <tr>
-          <td>{{'booking_summary.tax' | translate}}</td>
-          <td>{{ bookingSummaryDetails.tax | currencyPipe: cabService.currency }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="grand_total">
-      <h5>{{'booking_summary.total_fare' | translate}} <span>{{ bookingSummaryDetails.totalFare | currencyPipe:
-          cabService.currency }}</span></h5>
-    </div>
+
   </div>
+</div>
+<div *ngIf="gs.bookingSummaryDetails.bookingStep == 1" class="review_box">
+  <app-cab-promo-code (applyCoupon)="applyCoupon($event)"></app-cab-promo-code>
 </div>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { usaStates } from '../interface/common';
@@ -8,12 +8,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PdfViewerModalComponent } from '../components/comman/modal/pdf-viewer-modal/pdf-viewer-modal.component';
 import { ToastService } from './toast.service';
 import * as XLSX from 'xlsx';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalService {
 
+  baseUrl1 = environment.apiUrl1;
   isLicenseVerified: boolean = false;
   isModificationOn: boolean = false;
 
@@ -30,6 +32,7 @@ export class GlobalService {
   };
   bookingSummaryDetails: any = {};
   vehicleCancellationPolicy: any = [];
+  couponList: any = [];
 
   // Get Currency
   public currencyItem = localStorage.getItem("currency");
@@ -111,6 +114,16 @@ export class GlobalService {
 
   getMyWishlistData() {
     return localStorage.getItem('MyWishlistStore') ? JSON.parse(localStorage.getItem('MyWishlistStore') || '[]') : [];
+  }
+
+  // COMMON -> GetUserDashboardDetails
+  public GetUserDashboardDetails(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetUserDashboardDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
 
 

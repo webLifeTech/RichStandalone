@@ -329,9 +329,6 @@ export class CommanLoginFormComponent {
     this.authService.ReSendPhoneVerificationCodeAsync(body).subscribe((res: any) => {
       console.log("ReSendPhoneVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
-      if (res && res.statusCode == "200") {
-
-      }
     })
   }
 
@@ -344,9 +341,6 @@ export class CommanLoginFormComponent {
     this.authService.ReSendEmailVerificationCodeAsync(body).subscribe((res: any) => {
       console.log("ReSendEmailVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
-      if (res && res.statusCode == "200") {
-
-      }
     })
   }
 

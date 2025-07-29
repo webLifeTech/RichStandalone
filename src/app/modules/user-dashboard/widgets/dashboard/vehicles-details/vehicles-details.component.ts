@@ -19,18 +19,11 @@ import { GlobalService } from '../../../../../shared/services/global.service';
 })
 export class VehiclesDetailsComponent {
 
-  performanceGrade: any = [44];
-
-  bookingDetails: any = {
-    totalUpcoming: 14,
-    totalInprogress: 1,
-    totalCompleted: 152,
-    totalCancelled: 29,
-  }
+  @Input() details: any = {};
 
   totalDrivers: any = {
     "title": "Total",
-    "total": 1000,
+    "total": 0,
     "bg-color": "color-electric-purple",
     "data": {
       "series": [],
@@ -39,33 +32,7 @@ export class VehiclesDetailsComponent {
     }
   };
 
-  carOwnersData: any = [
-    {
-      "title": "Active",
-      "total": 500,
-      "bg-color": "color-emerald-green",
-    },
-    {
-      "title": "Inactive",
-      "total": 200,
-      "bg-color": "color-sunset-orange",
-    },
-    {
-      "title": "KYC Pending",
-      "total": 300,
-      "bg-color": "color-red",
-    },
-    {
-      "title": "Booked",
-      "total": 300,
-      "bg-color": "color-amber",
-    },
-    {
-      "title": "Availble",
-      "total": 700,
-      "bg-color": "color-turquoise-blue",
-    },
-  ];
+
 
   constructor(
     public gs: GlobalService,
@@ -74,12 +41,41 @@ export class VehiclesDetailsComponent {
   }
 
   ngOnInit() {
+    console.log("details >>>>", this.details);
+    this.totalDrivers.total = this.details.totalVehicles;
+    const carOwnersData: any = [
+      {
+        "title": "Active",
+        "total": this.details.active,
+        "bg-color": "color-emerald-green",
+      },
+      {
+        "title": "Inactive",
+        "total": this.details.inActive,
+        "bg-color": "color-sunset-orange",
+      },
+      {
+        "title": "KYC Pending",
+        "total": this.details.KycPending,
+        "bg-color": "color-red",
+      },
+      {
+        "title": "Booked",
+        "total": this.details.booked,
+        "bg-color": "color-amber",
+      },
+      {
+        "title": "Availble",
+        "total": this.details.available,
+        "bg-color": "color-turquoise-blue",
+      },
+    ];
     // for
     // Calculate the total value
-    const totalValue = this.carOwnersData.reduce((sum: any, item: any) => sum + item.total, 0);
+    const totalValue = carOwnersData.reduce((sum: any, item: any) => sum + item.total, 0);
 
     // Add percentage key to each object
-    const carOwnersDataWithPercentage = this.carOwnersData.map((item: any) => {
+    const carOwnersDataWithPercentage = carOwnersData.map((item: any) => {
       let pr: any = ((item.total / totalValue) * 100).toFixed(0);
 
       this.totalDrivers.data.chartLabels.push(item.title + ' : ' + item.total)
@@ -95,7 +91,7 @@ export class VehiclesDetailsComponent {
 
 
 
-    this.carOwnersData = carOwnersDataWithPercentage;
+    // this.carOwnersData = carOwnersDataWithPercentage;
 
 
   }

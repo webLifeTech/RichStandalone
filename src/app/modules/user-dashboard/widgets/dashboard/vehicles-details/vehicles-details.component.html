@@ -17,7 +17,7 @@
       </div>
       <div class="col-md-12">
         <div class="flex-fill">
-          <div class="widget-header text-center">
+          <div *ngIf="totalDrivers.total" class="widget-header text-center">
             <app-user-apexcharts [data]="totalDrivers.data" [chartSize]="5"
               [name]="'Performance grade'"></app-user-apexcharts>
           </div>

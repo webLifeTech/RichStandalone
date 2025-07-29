@@ -1,0 +1,30 @@
+<div class="card dash-box-card flex-fill mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center">
+        <h4>{{details.title}}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-history">
+    <div class="row widget-box p-0">
+
+      <div *ngIf="!this.details.bookedData.length" class="col-md-12">
+        <p class="text-center mt-5">
+          <b>Data Not Found</b>
+        </p>
+      </div>
+      <div *ngIf="this.details.bookedData.length" class="col-md-12">
+        <div class="flex-fill">
+          <div class="widget-header text-center">
+            <app-user-apexcharts [data]="details.totalBooked.data" [chartSize]="3"
+              [name]="'Performance grade'"></app-user-apexcharts>
+            <div *ngIf="details.view" class="text-end">
+              <a class="btn view-btn mb-2" (click)="viewBooking(null)">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

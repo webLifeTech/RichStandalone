@@ -214,13 +214,13 @@
                             <span class="ms-2">Delivered</span>
                           </button>
                           <button
-                            *ngIf="(data.bookingStatus === 'Delivered' || data.bookingStatus === 'Start Service') && gs.loggedInUserInfo.role !== 'user'"
+                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatus === 'Start Service' && gs.loggedInUserInfo.role !== 'user'"
                             (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>
                           </button>
                           <button
-                            *ngIf="(data.bookingStatus === 'Delivered' || data.bookingStatus === 'Start Service') && gs.loggedInUserInfo.role === 'user'"
+                            *ngIf="data.bookingStatusRemarksCd == '5' && data.bookingStatus === 'Start Service' && gs.loggedInUserInfo.role === 'user'"
                             (click)="changeStatus(data,'Accept')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Accept</span>

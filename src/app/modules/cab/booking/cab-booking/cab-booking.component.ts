@@ -42,6 +42,9 @@ export class CabBookingComponent {
   public searchObj: any = {};
   public bookingDetails: any = {};
   bookingStep: number = 1;
+  couponDetails: any = [];
+  appliedCouponCode: any = "";
+  loadSummary: boolean = false;
 
   constructor(
     public cabService: CabService,
@@ -88,9 +91,12 @@ export class CabBookingComponent {
       "userId": this.gs.loggedInUserInfo.userId
     }
 
+    this.loadSummary = false;
     this.cabService.getBookingVehicleDetails(body).subscribe((res: any) => {
+      this.loadSummary = true;
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingDetails = res.vehicleBookingInfoDetails;
+        this.gs.couponList = this.bookingDetails.couponDetails;
       } else {
         this.gs.isSpinnerShow = false;
       }
@@ -114,6 +120,7 @@ export class CabBookingComponent {
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingDetails = res.driverBookingInfoDetails;
         this.bookingDetails.vehicleDetails = this.bookingDetails.driverDetails;
+        this.gs.couponList = this.bookingDetails.couponDetails;
       } else {
         this.gs.isSpinnerShow = false;
       }
@@ -130,6 +137,7 @@ export class CabBookingComponent {
   }
   continueToBook() {
     this.bookingStep = 2;
+    this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
     window.scrollTo({ top: 300, behavior: 'smooth' });
     // this.router.navigate(['/cab/booking/booking-payment', this.searchObj.vehicleId, this.searchObj.summaryId], {
     //   queryParams: this.params,
@@ -139,5 +147,30 @@ export class CabBookingComponent {
 
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
+  }
+
+  applyCoupon(event: any) {
+    console.log("Yes", event);
+    // this.loadSummary = false;
+    // this.appliedCouponCode = event.couponCode;
+    // // this.searchObj.couponCode = event.couponCode;
+    // // this.gs.lastSearch = this.searchObj;
+    // // localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
+    // setTimeout(() => {
+    //   this.loadSummary = true;
+    // }, 500);
+    // this.params.couponApply = 0
+    // this.params = { ...this.params, ...{ couponCode: event.couponCode } };
+    // console.log("this.params >>>", this.params);
+
+    // this.router.navigate(['/cab/booking/booking', this.searchObj.vehicleId, this.searchObj.summaryId], {
+    //   queryParams: this.params,
+    //   queryParamsHandling: "merge"
+    // });
+  }
+
+  backStep() {
+    this.bookingStep = 1;
+    this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
   }
 }

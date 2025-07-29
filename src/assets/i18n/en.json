@@ -258,7 +258,8 @@
   "have_coupon": {
     "title": "Have a coupon code?",
     "input_plchold": "Promo Code",
-    "apply": "Apply"
+    "apply": "Apply",
+    "remove": "Remove"
   },
   "great_choice": {
     "title": "Great Choice!",

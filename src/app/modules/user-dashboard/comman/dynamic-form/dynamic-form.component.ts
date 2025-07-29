@@ -827,7 +827,9 @@ export class DynamicFormComponent {
           "userId": this.gs.loggedInUserInfo.userId,
           "vinNumber": event.target.value, // "KMUMADTB9NU073089"
         }
+        this.gs.isSpinnerShow = true;
         this.profileService.getVinQuery(dataParams).subscribe((res: any) => {
+          this.gs.isSpinnerShow = false;
           if (res && res.responseDtos && res.responseDtos.statusCode == "200") {
             let resObj = res.vinMasterResponseDtos;
 
@@ -1638,13 +1640,17 @@ export class DynamicFormComponent {
     }
     let fileFormData: any = new FormData();
     fileFormData.append('Doc', file, file.name);
+    this.gs.isSpinnerShow = true;
     this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
       if (res) {
         field.get('value').setValue(res);
       }
       if (this.submitted) {
         this.findInvalidControls();
       }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
     })
   }
 
@@ -2006,7 +2012,7 @@ export class DynamicFormComponent {
           }
           if (field.fieldType === "DROPDOWN") { // Dropdown set Cd
             if (field.valueCd || field.valueCd == false || field.valueCd == 0) {
-              sectionData[field.valueCode] = field.valueCd || "";
+              sectionData[field.valueCode] = field.valueCd;
             }
           }
 

@@ -1,0 +1,63 @@
+<div class="card dash-box-card flex-fill mb-0">
+  <div class="card-header">
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center">
+        <h4>{{details.title}}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body booking-history">
+    <div class="widget-box">
+      <div class="card-body">
+        <div *ngIf="!this.details.bookedData.length">
+          <p class="text-center mt-5">
+            <b>Data Not Found</b>
+          </p>
+        </div>
+        <div *ngIf="this.details.bookedData.length">
+          <div *ngIf="details.totalBooked" class="mb-3">
+            <div class="progress-head">
+              <div class="name">
+                {{details.totalBooked.title}}
+              </div>
+              <div class="value view-link ms-3">{{details.totalBooked.total}}</div>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" [ngClass]="details.totalBooked['bg-color']" role="progressbar"
+                [style.width.%]="100" style="height: 8px;" [attr.aria-valuenow]="100" aria-valuemin="0"
+                aria-valuemax="100"></div>
+            </div>
+          </div>
+          <ng-container *ngFor="let item of details.bookedData">
+            <div class="mb-3">
+              <div class="progress-head">
+                <div class="name">
+                  {{item.title}}
+                </div>
+                <div class="value view-link ms-3">
+                  {{item.total}}
+                  <span *ngIf="details.countType == 'percentage'">%</span>
+                  <span *ngIf="details.countType == 'star'" class="review-rating">
+                    <bar-rating [(rate)]="item.total" readonly></bar-rating>
+                  </span>
+                  <span *ngIf="details.countType == ''"></span>
+                </div>
+              </div>
+              <div *ngIf="details.countType !== 'star'" class="progress">
+                <div class="progress-bar" [ngClass]="item['bg-color']" role="progressbar"
+                  [style.width.%]="item.percentage" style="height: 8px;" [attr.aria-valuenow]="item.percentage"
+                  aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div *ngIf="details.countType == 'star'">
+                <hr />
+              </div>
+            </div>
+          </ng-container>
+          <div *ngIf="details.view" class="text-end">
+            <a class="btn view-btn mt-2" (click)="viewBooking(null)">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
