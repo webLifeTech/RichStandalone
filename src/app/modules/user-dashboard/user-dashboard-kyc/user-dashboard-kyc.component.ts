@@ -11,8 +11,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 
-import { FleetOwnerDetailsComponent } from '../widgets/fleet-owner-details/fleet-owner-details.component';
-import { DriverInfoDetailsComponent } from '../widgets/driver-info-details/driver-info-details.component';
 import { DriverDetailsFormComponent } from '../comman/driver-details-form/driver-details-form.component';
 import { PaymentOptionListComponent } from '../comman/account-info/payment-option-list/payment-option-list.component';
 import { BranchbranchListComponent } from '../comman/branch-info/branch-list/branch-list.component';
@@ -24,9 +22,6 @@ import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.compon
 import { NftsInfoComponent } from '../comman/nfts-info/nfts-info.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SecurityComponent } from '../user-settings/security/security.component';
-import { PreferencesComponent } from '../user-settings/preferences/preferences.component';
-import { NotificationsComponent } from '../user-settings/notifications/notifications.component';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
 import { AuthService } from '../../../shared/services/auth.service';
 
@@ -34,12 +29,7 @@ import { AuthService } from '../../../shared/services/auth.service';
   selector: 'app-user-dashboard-kyc',
   standalone: true,
   imports: [
-    DriverInfoDetailsComponent,
-    FleetOwnerDetailsComponent,
     NftsInfoComponent,
-    SecurityComponent,
-    PreferencesComponent,
-    NotificationsComponent,
 
     // Common
     DriverDetailsFormComponent,
@@ -275,8 +265,6 @@ export class UserDashboardKycComponent {
       this.kycForm.state = null;
     }
     this.sidebarTabs = [];
-    // this.kycForm.state = 42; // need to do for direct
-    // this.onSelectState() // // need to do for direct
     if (this.gs.loggedInUserInfo.role == 'admin') {
       this.gs.isLicenseVerified = true;
       this.kycForm.state = 42;
@@ -310,7 +298,7 @@ export class UserDashboardKycComponent {
       if (response && response.length) {
         this.driverInfoData = response;
         this.gs.isLicenseVerified = true;
-        this.kycForm.state = 42;
+        this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || 42;
         this.onSelectState();
       }
       console.log("getAllDrivers >>>>>", response);
@@ -327,7 +315,7 @@ export class UserDashboardKycComponent {
         this.driverInfoData = response;
         console.log(" >>>>>", this.driverInfoData);
         this.gs.isLicenseVerified = true;
-        this.kycForm.state = 42;
+        this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || 42;
       }
       this.onSelectState();
       console.log("getAllDrivers >>>>>", response);
@@ -356,10 +344,8 @@ export class UserDashboardKycComponent {
 
 
   getConfigUIForms() {
-    const findRoleObj = this.iAmArray.find((item: any) => item.id == this.kycForm.i_am) || {};
-
     let body = {
-      "stateCode": this.kycForm.state, // || "42"
+      "stateCode": this.kycForm.state,
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName || null, // findRoleObj.roleName
       "countryId": 230,

@@ -60,13 +60,9 @@ export class AuthService {
 
   logOut() {
     let body = {
-      "userId": "sample string 1",
+      "userId": this.gs.loggedInUserInfo.userId,
       "userName": this.gs.loggedInUserInfo.userNameId,
-      // "clientId": "sample string 3",
       "userUniqueId": null,
-      // "ipAddress": "sample string 5",
-      // "ipLocationAddress": "sample string 6",
-      // "ipDescription": "sample string 7",
       "Source": "Web"
     }
     this.SignOut(body).subscribe((res: any) => {

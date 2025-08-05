@@ -10,7 +10,7 @@ import { CurrencySymbolPipe } from '../../../../shared/pipe/currency.pipe';
 import { GlobalService } from '../../../../shared/services/global.service';
 import { PickDropInstructionsComponent } from '../widgets/pick-drop-instructions/pick-drop-instructions.component';
 import { BookingComponent } from '../../../../shared/components/comman/booking/booking.component';
-import { CabPromoCodeComponent } from '../widgets/cab-promo-code/cab-promo-code.component';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-cab-booking',
@@ -21,7 +21,6 @@ import { CabPromoCodeComponent } from '../widgets/cab-promo-code/cab-promo-code.
     CabBookingSummaryComponent,
     PickDropInstructionsComponent,
     BookingComponent,
-    CabPromoCodeComponent,
 
     CommonModule,
     TranslateModule,
@@ -51,7 +50,8 @@ export class CabBookingComponent {
     private router: Router,
     private route: ActivatedRoute,
     public gs: GlobalService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private toast: ToastService,
   ) {
     this.searchObj = this.gs.getLastSearch();
     this.gs.lastSearch = this.searchObj;
@@ -136,6 +136,11 @@ export class CabBookingComponent {
     });
   }
   continueToBook() {
+    if (this.gs.bookingSummaryDetails.isRestrict) {
+      this.toast.errorToastr(this.gs.bookingSummaryDetails.restrictMessage);
+      return;
+    }
+
     this.bookingStep = 2;
     this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
     window.scrollTo({ top: 300, behavior: 'smooth' });

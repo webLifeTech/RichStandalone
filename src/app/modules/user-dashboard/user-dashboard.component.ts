@@ -98,32 +98,6 @@ export class UserDashboardComponent {
       "chartColors": ["#22c55e", "#77ed8b"],
     },
   }
-  myCarDetails: any = {
-    totalUpcoming: 14,
-    totalInprogress: 1,
-    totalCompleted: 152,
-    totalCancelled: 29,
-  }
-  bookingDetails: any = {
-    totalUpcoming: 14,
-    totalInprogress: 1,
-    totalCompleted: 152,
-    totalCancelled: 29,
-  }
-  overviewDetails: any = {
-    dayTotalBooking: 2,
-    oneWeekTotalBooking: 39,
-    oneMonthTotalBooking: 60,
-    threeMonthTotalBooking: 108,
-    sixMonthTotalBooking: 152,
-    oneYearTotalBooking: 467,
-  }
-  earningDetails: any = {
-    dayTotalEarning: 100,
-    oneWeekTotalEarning: 800,
-    oneMonthTotalEarning: 3200,
-    threeMonthTotalEarning: 9600,
-  }
 
   approvedBookDetails: any = {
     "bookingId": "#1001",
@@ -211,9 +185,6 @@ export class UserDashboardComponent {
         if (this.dashboardAllDetails?.vehicleOverView) {
           this.dashboardAllDetails.vehicleOverView = JSON.parse(this.dashboardAllDetails.vehicleOverView);
         }
-        if (this.dashboardAllDetails?.vehicleRiskRatings) {
-          // this.dashboardAllDetails.vehicleRiskRatings = JSON.parse(this.dashboardAllDetails.vehicleRiskRatings);
-        }
 
         this.dashboardAllDetails.totalFavourite = this.dashboardAllDetails.favouriteCars + this.dashboardAllDetails.favouriteDrivers;
 
@@ -225,22 +196,21 @@ export class UserDashboardComponent {
             "chartColors": ["#22c55e", "#77ed8b"],
           };
         }
-        console.log("dashboardAllDetails >>>", this.dashboardAllDetails);
       }
 
       let tempArray: any = [];
 
       if (this.gs.loggedInUserInfo['role'] === 'user') {
-        // myBookingOverView
-        this.dashboardAllDetails.myBookingOverView.title = "Car owner booked for me";
-        this.dashboardAllDetails.myBookingOverView.isDriverBookingOverviewShow = true;
-        tempArray.push(this.dashboardAllDetails.myBookingOverView);
-
         // myTripsBookingOverView
-        this.dashboardAllDetails.myTripsBookingOverView.title = "I Booked Car";
-        this.dashboardAllDetails.myTripsBookingOverView.isCarBookingOverviewShow = true;
-        this.dashboardAllDetails.myTripsBookingOverView.view = true
+        this.dashboardAllDetails.myTripsBookingOverView.title = "Car owner booked for me";
+        this.dashboardAllDetails.myTripsBookingOverView.isDriverBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myTripsBookingOverView);
+
+        // myBookingOverView
+        this.dashboardAllDetails.myBookingOverView.title = "I Booked Car";
+        this.dashboardAllDetails.myBookingOverView.isCarBookingOverviewShow = true;
+        this.dashboardAllDetails.myBookingOverView.view = true
+        tempArray.push(this.dashboardAllDetails.myBookingOverView);
       }
 
       if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3') {
@@ -276,7 +246,6 @@ export class UserDashboardComponent {
         this.dashboardAllDetails.myVehicleTripsBookingOverView.title = "Driver Booked My Cars";
         this.dashboardAllDetails.myVehicleTripsBookingOverView.isCarBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myVehicleTripsBookingOverView);
-
       }
 
 
@@ -304,7 +273,7 @@ export class UserDashboardComponent {
         },
         {
           "title": "Cancelled",
-          "total": tempArray[i].upComing,
+          "total": tempArray[i].cancelled,
           "bg-color": "color-red",
         },
         ]
@@ -347,12 +316,13 @@ export class UserDashboardComponent {
         let vehicleStarRating: any = []
         for (let i in this.dashboardAllDetails.vehicleRiskRatings) {
           vehicleRiskScore.push({
-            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin,
+            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
+            // this.dashboardAllDetails.driverRiskDetails.riskScorePercentage + this.dashboardAllDetails.driverRiskDetails.Make + this.dashboardAllDetails.driverRiskDetails.Modelyear
             "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].riskScorePercentage) || 0,
             "bg-color": "color-sunset-orange",
           })
           vehicleStarRating.push({
-            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin,
+            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
             "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].customerAverageStarRatinge) || 0,
           })
         }
@@ -376,8 +346,6 @@ export class UserDashboardComponent {
           },
         )
       }
-
-
       this.dashboardDataArray = newArray;
       this.gs.isSpinnerShow = false;
     })

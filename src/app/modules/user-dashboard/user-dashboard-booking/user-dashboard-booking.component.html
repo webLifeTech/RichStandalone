@@ -31,21 +31,6 @@
                   <option value="3">Custom</option>
                 </select>
               </div>
-              <!-- <div class="offset-md-8 col-md-4 col-12 justify-content-end mt-2">
-                <div class="filter-group d-md-flex">
-                  <select class="form-select me-2">
-                    <option selected>This Week</option>
-                    <option value="1">This Month</option>
-                    <option value="2">Last 30 Days</option>
-                    <option value="3">Custom</option>
-                  </select>
-                  <select class="form-select" [(ngModel)]="sortOrder" (change)="searchData()">
-                    <option value="ASC">Sort By Ascending</option>
-                    <option value="DESC">Sort By Descending</option>
-                  </select>
-                </div>
-              </div> -->
-
             </div>
           </div>
         </div>
@@ -231,8 +216,8 @@
                             <i class="feather icon-x-square"></i>
                             <span class="ms-2">Cancel Booking</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Received'" (click)="writeReview(data)" type="button"
-                            mat-menu-item>
+                          <button *ngIf="data.bookingStatus === 'End Service' && data.isBooker && !data.isReviewAdded"
+                            (click)="writeReview(data)" type="button" mat-menu-item>
                             <i class="feather icon-star"></i>
                             <span class="ms-2">Write Review</span>
                           </button>

@@ -14,8 +14,9 @@
       <div class="col-lg-12">
         <div class="sorting-info">
           <div class="row d-flex align-items-center">
-            <div class="col-lg-8 col-sm-12 col-12">
-              <div *ngIf="gs.loggedInUserInfo['role'] === 'user_4'" class="booking-lists">
+            <div class="col-lg-10 col-sm-12 col-12">
+              <!-- *ngIf="gs.loggedInUserInfo['role'] === 'user_4'" -->
+              <div class="booking-lists">
                 <ul class="nav">
                   <li *ngFor="let item of booktabs">
                     <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
@@ -31,17 +32,6 @@
                 <option value="3">Custom</option>
               </select>
             </div>
-            <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <div class="filter-group">
-                <select class="form-select">
-                  <option selected>Sort By Relevance</option>
-                  <option value="1">Sort By Ascending</option>
-                  <option value="2">Sort By Descending</option>
-                  <option value="3">Sort By Alphabet</option>
-                </select>
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
@@ -59,15 +49,15 @@
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
                   <div id="tablefilter">
-
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
-                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
-                          placeholder="Search" />
+                        <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
+                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                    Search
+                  </a>
                 </div>
               </div>
             </div>
@@ -80,68 +70,111 @@
                     <th>
                       <span>S#</span>
                     </th>
-                    <th>Booking ID</th>
-                    <th class="text-start"
-                      *ngIf="gs.loggedInUserInfo['role'] === 'user' || (gs.loggedInUserInfo['role'] === 'user_4' && activeTab === 'car_reviews')">
+                    <th class="text-start pointer" (click)="onSort('bookingReferenceNumber')">
+                      Reference Number
+                      <span *ngIf="sortColumn === 'bookingReferenceNumber'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+
+                    <th class="text-start pointer" (click)="onSort('vin')"
+                      *ngIf="((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')">
+                      Vin Number
+                    </th>
+                    <th class="text-start pointer" (click)="onSort('carName')"
+                      *ngIf="((gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4') && activeTab === 'i_gave') || ((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')">
                       Car Name
+                      <span *ngIf="sortColumn === 'carName'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
                     </th>
-                    <th class="text-start"
-                      *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || (gs.loggedInUserInfo['role'] === 'user_4' && activeTab === 'driver_reviews')">
+                    <th class="text-start pointer" (click)="onSort('driverName')"
+                      *ngIf="(gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') &&( activeTab === 'i_gave' || activeTab === 'my_car')">
                       Driver Name
+                      <span *ngIf="sortColumn === 'driverName'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
                     </th>
-                    <th *ngIf="gs.loggedInUserInfo['role'] === 'user'">Days</th>
-                    <th class="text-start">Review</th>
-                    <th class="text-start">Ratings</th>
-                    <th>Action</th>
+                    <th class="text-start pointer" (click)="onSort('vehicleOwnerName')"
+                      *ngIf="(gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4') && activeTab === 'my_driver'">
+                      Car Owner Name
+                      <span *ngIf="sortColumn === 'vehicleOwnerName'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-start pointer" (click)="onSort('ratingText')">
+                      Review
+                      <span *ngIf="sortColumn === 'ratingText'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-start pointer" (click)="onSort('rating')">
+                      Ratings
+                      <span *ngIf="sortColumn === 'rating'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <!-- <th *ngIf="activeTab === 'i_gave'">Action</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                    *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index;">
                     <td>
                       <span>{{idx+1}}</span>
                     </td>
-                    <td>
-                      <a>{{data.bookingId}}</a>
+                    <td class="text-start">
+                      <a>{{data.bookingReferenceNumber}}</a>
+                    </td>
+                    <td class="text-start"
+                      *ngIf="((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')">
+                      <a>{{data.vin || "-"}}</a>
                     </td>
                     <td
-                      *ngIf="gs.loggedInUserInfo['role'] === 'user' || (gs.loggedInUserInfo['role'] === 'user_4' && activeTab === 'car_reviews')"
+                      *ngIf="((gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4') && activeTab === 'i_gave') || ((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')"
                       class="text-start">
                       <div class="table-avatar">
-                        <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.img" alt="Booking">
+                        <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                          <img class="car-img" [src]="data.carImage" alt="Booking">
                         </a>
                         <div class="table-head-name flex-grow-1">
                           <a>{{data.carName}}</a>
-                          <p>{{data.deliveryStatus}}</p>
                         </div>
                       </div>
                     </td>
                     <td
-                      *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || (gs.loggedInUserInfo['role'] === 'user_4' && activeTab === 'driver_reviews')"
+                      *ngIf="(gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') &&( activeTab === 'i_gave' || activeTab === 'my_car')"
                       class="text-start">
                       <div class="table-avatar">
                         <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.driver_img" alt="Booking">
+                          <img class="avatar-img" [src]="data.driverProfilepath" alt="Booking">
                         </a>
                         <div class="table-head-name flex-grow-1">
-                          <a>{{data.driver_name}}</a>
+                          <a>{{data.driverName}}</a>
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="gs.loggedInUserInfo['role'] === 'user'">
-                      <p>{{data.number_of_days}}</p>
+                    <td class="text-start"
+                      *ngIf="(gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4') && activeTab === 'my_driver'">
+                      <p class="mb-0">{{data.vehicleOwnerName}}</p>
                     </td>
                     <td class="text-start">
-                      <p>{{data.review}}</p>
+                      <p class="mb-0">{{data.ratingText}}</p>
                     </td>
                     <td class="text-start">
                       <div class="review-rating d-flex align-items-center ">
-                        <bar-rating [(rate)]="data.rating" readonly></bar-rating> <span class="ms-2">({{ data.rating
-                          }})</span>
+                        <bar-rating [(rate)]="data.rating" readonly></bar-rating>
+                        <span class="ms-2">{{data.rating}}</span>
+                        <span class="ms-1">{{data.rating == 1 ? 'star' : 'stars'}}</span>
                       </div>
                     </td>
-                    <td class="text-center">
+                    <!-- <td *ngIf="activeTab === 'i_gave'" class="text-center">
                       <button type="button" mat-icon-button [matMenuTriggerFor]="menu"
                         aria-label="Example icon-button with a menu">
                         <i class="feather icon-more-vertical"></i>
@@ -151,15 +184,17 @@
                           <i class="feather icon-edit"></i>
                           <span class="ms-2">Edit</span>
                         </button>
-                        <button type="button" (click)="onDelete(idx)" mat-menu-item>
-                          <i class="feather icon-trash"></i>
-                          <span class="ms-2">Delete</span>
-                        </button>
                       </mat-menu>
-                    </td>
+                    </td> -->
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div *ngIf="!tableData.length" class="col-md-12">
+              <p class="text-center">
+                <b>No Review Found</b>
+              </p>
             </div>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
           </div>

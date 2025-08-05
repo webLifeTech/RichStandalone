@@ -12,16 +12,17 @@
           </div>
           <div class="form-group col-12 text-start">
             <label>Write Review</label>
-            <textarea type="text" [(ngModel)]="form.review" name="review" class="form-control open-select"></textarea>
+            <textarea type="text" [(ngModel)]="form.ratingText" name="review"
+              class="form-control open-select"></textarea>
           </div>
         </div>
       </form>
       <div class="modal-btn">
         <div class="row">
           <div class="col-6">
-            <a (click)="onConfirm()" class="btn btn-theme w-100">
+            <button [disabled]="!form.rating || !form.ratingText" (click)="onConfirm()" class="btn btn-theme w-100">
               Submit
-            </a>
+            </button>
           </div>
           <div class="col-6">
             <a (click)="closeModal()" class="btn btn-primary w-100">

@@ -212,16 +212,14 @@ export class UserDashboardBookingComponent {
     const modalRef = this.modalService.open(WriteReviewModalComponent, {
       // centered: true,
     });
-    modalRef.componentInstance.bookingDetails = item;
+    modalRef.componentInstance.singleDetails = item;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        this.toast.successToastr("Review & Rating added successfully");
+        this.getTableData();
       }
-
     }, () => {
     });
   }
-
 
   viewDocument(document: any) {
     const modalRef = this.modalService.open(DocumentSignModalComponent, {
@@ -307,7 +305,6 @@ export class UserDashboardBookingComponent {
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.InitiateDeliverVehicleToDriver(body).subscribe((res: any) => {
-      console.log("BookingCancellationRequest >>>>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr(res.message);

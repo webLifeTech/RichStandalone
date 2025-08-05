@@ -111,6 +111,7 @@ export class UserMasterConfigurationComponent {
     private branchService: BranchService,
     private modalService: NgbModal,
   ) {
+    this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || "42";
     this.route.queryParams.subscribe((params: any) => {
       this.selectedPackage = params.packageId;
       if (this.selectedPackage) {
@@ -124,7 +125,7 @@ export class UserMasterConfigurationComponent {
   getConfigUIForms() {
 
     let body = {
-      "stateCode": "42",
+      "stateCode": this.kycForm.state,
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName || null,
       "countryId": 230,

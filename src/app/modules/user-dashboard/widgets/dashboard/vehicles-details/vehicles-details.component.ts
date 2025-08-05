@@ -55,6 +55,11 @@ export class VehiclesDetailsComponent {
         "bg-color": "color-sunset-orange",
       },
       {
+        "title": "Pending",
+        "total": this.details.pending,
+        "bg-color": "color-sunset-orange",
+      },
+      {
         "title": "KYC Pending",
         "total": this.details.KycPending,
         "bg-color": "color-red",

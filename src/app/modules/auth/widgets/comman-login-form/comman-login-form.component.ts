@@ -176,6 +176,7 @@ export class CommanLoginFormComponent {
           "contactId": res.personNum,
           "activeStatus": res.activeStatus || false,
           "isKYCCompleted": res.isKYCCompleted == "false" ? false : true,
+          "driveInCity": res.driveInCity || null,
         };
 
         this.authService.login(this.loginForm);

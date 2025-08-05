@@ -188,6 +188,9 @@ export class CabBookingSummaryComponent {
 
       } else {
         this.gs.isSpinnerShow = false;
+        this.gs.bookingSummaryDetails.isRestrict = true;
+        this.gs.bookingSummaryDetails.restrictMessage = res.responseResultDtos.message;
+        this.toast.errorToastr(res.responseResultDtos.message);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
@@ -214,8 +217,11 @@ export class CabBookingSummaryComponent {
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
         console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
-
       } else {
+        this.gs.bookingSummaryDetails.isRestrict = true;
+        this.gs.bookingSummaryDetails.restrictMessage = res.responseResultDtos.message;
+        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
+        this.toast.errorToastr(res.responseResultDtos.message);
         this.gs.isSpinnerShow = false;
       }
     }, (err: any) => {

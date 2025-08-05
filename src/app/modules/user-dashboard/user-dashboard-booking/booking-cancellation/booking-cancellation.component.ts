@@ -170,8 +170,12 @@ export class BookingCancellationComponent {
         if (res.confirmed) {
           const body = {
             "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
-            "bookingRefNo": this.singleBookingDetail.bookingReferenceNumber,
-            "cancellationReason": this.cancellationForm.value.reason || null,
+            // "bookingRefNo": this.singleBookingDetail.bookingReferenceNumber,
+            "cancellationReason": this.cancellationForm.value.remarks || null,
+            "bookingId": this.singleBookingDetail.bookingId,
+            "riskId": this.singleBookingDetail.riskId,
+            "riskType": this.singleBookingDetail.riskType,
+            "remarks": this.cancellationForm.value.remarks
           }
           this.gs.isSpinnerShow = true;
           this.bookingService.BookingCancellationRequest(body).subscribe((res: any) => {

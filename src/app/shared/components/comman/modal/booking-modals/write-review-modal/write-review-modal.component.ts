@@ -3,6 +3,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BarRating } from 'ngx-bar-rating';
+import { GlobalService } from '../../../../../services/global.service';
+import { ToastService } from '../../../../../services/toast.service';
+import { ReviewService } from '../../../../../services/review.service';
 
 @Component({
   selector: 'app-write-review-modal',
@@ -22,18 +25,23 @@ export class WriteReviewModalComponent {
   reason: any = "";
   form: any = {
     rating: 0,
-    review: ""
+    ratingText: ""
   };
 
   constructor(
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
+    public gs: GlobalService,
+    private toast: ToastService,
+    private reviewService: ReviewService,
   ) { }
 
   ngOnInit() {
+    console.log("this.singleDetails >>>>>", this.singleDetails);
+
     if (this.singleDetails && this.singleDetails.id) {
       this.form.rating = this.singleDetails.rating;
-      this.form.review = this.singleDetails.review;
+      this.form.ratingText = this.singleDetails.ratingText;
     }
   }
 
@@ -41,7 +49,30 @@ export class WriteReviewModalComponent {
     this.modalService.dismissAll();
   }
   onConfirm() {
-    this.activeModal.close({ confirmed: true, form: this.form });
+    let Body = {
+      "id": this.singleDetails.id || 0,
+      "bookingReferenceNumber": this.singleDetails.bookingReferenceNumber,
+      "userId": this.gs.loggedInUserInfo.userId,
+      "rating": this.form.rating,
+      "ratingText": this.form.ratingText
+    };
+
+    console.log("Body >>>", Body);
+    // return;
+
+    this.gs.isSpinnerShow = true;
+    this.reviewService.InsertAndUpdateRiskReviews(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.activeModal.close({ confirmed: true });
+        this.toast.successToastr(res.message);
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr("Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
 }

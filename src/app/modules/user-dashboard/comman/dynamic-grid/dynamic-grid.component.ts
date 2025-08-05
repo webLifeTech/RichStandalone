@@ -122,7 +122,7 @@ export class DynamicGridComponent {
 
     let body = {
       "clientID": null,
-      "stateCode": 42,
+      "stateCode": this.gs.loggedInUserInfo.driveInCity || 42,
       "languageId": 1,
       "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
       "countryId": 230,
