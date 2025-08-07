@@ -40,6 +40,7 @@ import { NotificationViewComponent } from './shared/components/header/widgets/no
 import { AdminMyProfileComponent } from './modules/admin-dashboard/admin-my-profile/admin-my-profile.component';
 import { ServiceDetailsComponent } from './modules/services/service-details/service-details.component';
 import { ForgotPasswordComponent } from './modules/auth/forgot-password/forgot-password.component';
+import { UserVehicleRiskRatingComponent } from './modules/user-dashboard/user-vehicle-risk-rating/user-vehicle-risk-rating.component';
 
 export const routes: Routes = [
   {
@@ -177,6 +178,10 @@ export const routes: Routes = [
       {
         path: 'enquiries',
         component: EnquiriesComponent
+      },
+      {
+        path: 'vehicle-risk-rating',
+        component: UserVehicleRiskRatingComponent
       },
 
       { // admin

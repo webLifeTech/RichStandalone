@@ -110,11 +110,11 @@ export class CarBookingOverviewComponent {
     }
   }
 
-  viewBooking(type: any) {
+  viewBooking(details: any) {
     let params = {
-      activeTab: type
+      activeTab: details.type
     }
-    this.router.navigate(['/user/booking'], {
+    this.router.navigate([details.route], {
       queryParams: params,
     });
   }

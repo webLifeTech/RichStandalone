@@ -47,7 +47,8 @@
                         }
 
                         @if(details.type == 'Crypto'){
-                        <app-booking-crypto [coinList]="coinList"></app-booking-crypto>
+                        <app-booking-crypto [coinList]="coinList"
+                          (onSelectCoin)="onSelectCoin($event)"></app-booking-crypto>
                         }
                       </ng-template>
                     </div>

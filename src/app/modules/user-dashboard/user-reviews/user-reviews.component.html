@@ -68,7 +68,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th>
-                      <span>S#</span>
+                      <span>SL</span>
                     </th>
                     <th class="text-start pointer" (click)="onSort('bookingReferenceNumber')">
                       Reference Number
@@ -81,6 +81,10 @@
                     <th class="text-start pointer" (click)="onSort('vin')"
                       *ngIf="((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')">
                       Vin Number
+                      <span *ngIf="sortColumn === 'vin'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
                     </th>
                     <th class="text-start pointer" (click)="onSort('carName')"
                       *ngIf="((gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4') && activeTab === 'i_gave') || ((gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && activeTab === 'my_car')">

@@ -256,7 +256,7 @@
     "cancel": "Cancel"
   },
   "have_coupon": {
-    "title": "Have a coupon code?",
+    "title": "Enter Promo Code",
     "input_plchold": "Promo Code",
     "apply": "Apply",
     "remove": "Remove"
@@ -543,7 +543,7 @@
         "user_name": "User name",
         "login_id": "Login ID",
         "mobile_number": "Mobile Number",
-        "sn": "S#",
+        "sn": "SL",
         "status": "Status",
         "action": "Action"
       },
@@ -645,7 +645,7 @@
       "search": "Search",
       "add_menu": "Add New Menu",
       "add_sub_menu": "Add New Sub Menu",
-      "sn": "S#",
+      "sn": "SL",
       "menu_name": "Menu Name",
       "status": "Status",
       "action": "Action",

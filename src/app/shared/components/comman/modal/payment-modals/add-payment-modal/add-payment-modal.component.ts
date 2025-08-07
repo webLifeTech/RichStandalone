@@ -15,6 +15,7 @@ import { GlobalService } from '../../../../../services/global.service';
 import { OnlynumberDirective } from '../../../../../directives/number-only.directive';
 import { ToastService } from '../../../../../services/toast.service';
 import { ProfileService } from '../../../../../services/profile.service';
+import { WebViewUrlModalComponent } from '../../webview-url-modal/webview-url-modal.component';
 
 @Component({
   selector: 'app-add-payment-modal',
@@ -44,6 +45,7 @@ export class AddPaymentModalComponent {
   coinList: any = [];
   paymentOptions: any = [];
   firstPayOpt: any = {};
+  selectedCoin = "";
 
   constructor(
     private modalService: NgbModal,
@@ -95,6 +97,65 @@ export class AddPaymentModalComponent {
 
   async addFunds() {
 
+    if (!this.amount) {
+      this.toast.errorToastr("Please Enter Amount");
+      return;
+    }
+
+    if (this.type == 'Crypto') {
+      this.makeCryptoPayment();
+    } else {
+      this.callAddFunds();
+    }
+  }
+
+  makeCryptoPayment() {
+    if (!this.selectedCoin) {
+      this.toast.errorToastr("Please select crypto coin");
+      return;
+    }
+
+    let cryptoBody = {
+      "price": this.amount,
+      "currency": this.selectedCoin, //
+      "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username
+      "customOrderId": this.gs.loggedInUserInfo.contactId || "1",
+      "notificationURL": "https://webhook.site/12d25089-5eae-4954-8f41-cfa39961a4db"
+    }
+    this.gs.isSpinnerShow = true;
+    this.paymentService.createTransaction(cryptoBody).subscribe(response => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>", response);
+
+      if (response.status == 201) {
+        let responseData = response.data;
+        if (responseData && responseData.url) {
+          this.toast.successToastr("Transaction created successfully");
+          const modalRef = this.modalService.open(WebViewUrlModalComponent, {
+            centered: true,
+            backdrop: 'static',
+            windowClass: 'document-modal',
+            size: 'lg'
+          });
+          modalRef.componentInstance.documentIframe = responseData.url;
+          modalRef.result.then((signModalRes: any) => {
+            if (signModalRes.confirmed) {
+              this.callAddFunds();
+            }
+          }, () => { });
+        } else {
+          this.toast.errorToastr("Something went wrong");
+        }
+      } else {
+        this.toast.errorToastr("Something went wrong");
+      }
+    }, err => {
+      this.toast.errorToastr("Something went wrong");
+      // this.isLoader = false;
+    })
+  }
+
+  async callAddFunds() {
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
       "walletId": this.walletId,
@@ -104,10 +165,6 @@ export class AddPaymentModalComponent {
       "currency": "USD", // USD,INR,EUR
     }
 
-    if (!this.amount) {
-      this.toast.errorToastr("Please Enter Amount");
-      return;
-    }
     if (this.type === 'CreditCard') {
       if (!this.gs.paymentDetails.creditCard.valid) {
         this.toast.errorToastr("Invalid Credit Card Details");
@@ -116,7 +173,6 @@ export class AddPaymentModalComponent {
       this.gs.isSpinnerShow = true;
       const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
       const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
-      // return;
       body["creditCardInfo"] = {
         "cardNumber": cardNumber,
         "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
@@ -159,7 +215,6 @@ export class AddPaymentModalComponent {
         this.toast.errorToastr(response.message);
       }
     })
-    // this.activeModal.close({ confirmed: true, reason: this.reason });
   }
 
   withdrawFunds() {
@@ -209,6 +264,11 @@ export class AddPaymentModalComponent {
       this.paymentOptions[i].checked = false;
     }
     details.checked = true;
+  }
+
+  onSelectCoin(event: any) {
+    console.log("event >>>>>>>>", event);
+    this.selectedCoin = event;
   }
 
 }

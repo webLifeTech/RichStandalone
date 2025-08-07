@@ -39,8 +39,8 @@ import { WalletService } from '../../../shared/services/wallet.service';
 })
 export class UserWalletComponent {
 
-  sortColumn: any = "createdDate";
-  sortOrder: any = "DESC";
+  sortColumn: any = "";
+  sortOrder: any = "DESC"; // ASC
   public tableData: any = [];
   public searchDataValue = '';
   public pageSize = 10;

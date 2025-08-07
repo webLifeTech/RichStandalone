@@ -18,6 +18,7 @@ import { DocumentSignModalComponent } from '../modal/document-sign-modal/documen
 import { WalletService } from '../../../services/wallet.service';
 import { ProfileService } from '../../../services/profile.service';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
+import { WebViewUrlModalComponent } from '../modal/webview-url-modal/webview-url-modal.component';
 
 @Component({
   selector: 'app-booking',
@@ -129,155 +130,115 @@ export class BookingComponent {
   }
 
   async bookNow() {
-    if (this.type === "Crypto") {
-      this.makePayment();
-    } else {
-      let body: any = {
-        "bookingId": null,
+
+    let body: any = {
+      "bookingId": null,
+      "userId": this.gs.loggedInUserInfo.userId,
+      "BookingPaymentRequest": {
         "userId": this.gs.loggedInUserInfo.userId,
-        "BookingPaymentRequest": {
-          "userId": this.gs.loggedInUserInfo.userId,
-          "amount": this.gs.bookingSummaryDetails.totalFare,
-          "bankAccount": null,
-          "creditCardInfo": null,
-          "transactionType": null,
-          "remarks": null,
-          "walletId": null,
-          "paymentMethod": this.type, // CreditCard,ACH,Wallet
-          "currency": "USD", // USD,INR,EUR
-        },
-        "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,
-        "riskType": this.riskType === 'car' ? 'Vehicle' : 'Driver',
-        "bookingRefNumber": null,
-        "pickupLocation": this.gs.bookingSummaryDetails.location,
-        "dropLocation": this.gs.bookingSummaryDetails.location,
-        "pickupDate": this.gs.bookingSummaryDetails.pickUpTime,
-        "dropDate": this.gs.bookingSummaryDetails.dropTime,
-        "duration": parseInt(this.gs.lastSearch.timeDuration),
-        "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
-        "discountId": this.gs.bookingSummaryDetails.discountId,
-        "totalAmount": this.gs.bookingSummaryDetails.totalFare,
-        "basePrice": this.gs.bookingSummaryDetails.basePrice,
-        "discountAmount": this.gs.bookingSummaryDetails.discount,
-        "taxFee": this.gs.bookingSummaryDetails.tax,
-        "insuranceFee": this.gs.bookingSummaryDetails.insuranceFee,
-        "siteFee": 0,
-        "otherFee": this.gs.bookingSummaryDetails.otherFee,
-        "bookingStatus": null,
-        "bookingStatusRemarks": null,
-        "remarks": null
-      }
-
-      if (this.type === 'CreditCard') {
-        if (!this.gs.paymentDetails.creditCard.valid) {
-          this.toast.errorToastr("Invalid Credit Card Details");
-          return;
-        }
-        const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
-        const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
-        body["BookingPaymentRequest"]["creditCardInfo"] = {
-          "cardNumber": cardNumber,
-          "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
-          "cvv": encryptCvv,
-          "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
-        }
-      }
-      if (this.type === 'ACH') {
-        if (!this.gs.paymentDetails.ach.valid) {
-          this.toast.errorToastr("Invalid ACH Details");
-          return;
-        }
-
-        const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
-        const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
-        body["BookingPaymentRequest"]["bankAccount"] = {
-          "bank": this.gs.paymentDetails.ach.value?.bank,
-          "rountingNo": rountingNo,
-          "accountNo": accountNo,
-          "accountType": this.gs.paymentDetails.ach.value?.accountType,
-          "accountName": this.gs.paymentDetails.ach.value?.accountName,
-          "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
-        }
-      }
-      if (this.type === 'Wallet') {
-        body["BookingPaymentRequest"]["walletId"] = this.gs.paymentDetails.wallet.walletId;
-      }
-
-      console.log("body >>>>>>", body);
-
-      // return;
-
-      const modalRef = this.modalService.open(ConfirmationModalComponent, {
-        centered: true,
-      });
-      modalRef.componentInstance.title = `Are you sure you want to book this ${this.riskType} ?`;
-      modalRef.componentInstance.confirmButton = "Yes";
-      modalRef.componentInstance.cancelButton = "No";
-      modalRef.result.then((res: any) => {
-        if (res.confirmed) {
-          this.gs.isSpinnerShow = true;
-          this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
-            if (res && res.statusCode == "200") {
-              this.toast.successToastr(res.message);
-              const modalRef = this.modalService.open(DocumentSignModalComponent, {
-                centered: true,
-                backdrop: 'static',
-                windowClass: 'document-modal',
-                size: 'xl'
-              });
-              modalRef.componentInstance.documentIframe = res.AgreementLink// "https://usdgosign.usdtest.com/Home/Client?tid=89278dc0-ca3e-4318-9346-5b07c1d68e44&cnt=1&cl=1&E=YW5pbEBlbHBpc3N5c3RlbS5jb20=";
-              modalRef.result.then((signModalRes: any) => {
-                if (signModalRes.confirmed) {
-                  this.toast.successToastr("Booking successfully.");
-                  this.router.navigate(['/user/booking']);
-                  // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
-                }
-              }, () => { });
-
-              // const infoRef = this.modalService.open(VerificationSuccessModalComponent, {
-              //   centered: true,
-              // });
-              // infoRef.componentInstance.title = "Payment successfully completed.";
-              // infoRef.componentInstance.buttonLabel = "OK";
-              // infoRef.result.then((infoRes: any) => {
-              //   if (infoRes.confirmed) {
-              //   }
-              // });
-            } else {
-              this.toast.errorToastr(res.message);
-            }
-            this.gs.isSpinnerShow = false;
-          }, (err: any) => {
-            this.gs.isSpinnerShow = false;
-          })
-        }
-      }, () => { });
-
-      return;
+        "amount": this.gs.bookingSummaryDetails.totalFare,
+        "bankAccount": null,
+        "creditCardInfo": null,
+        "transactionType": null,
+        "remarks": null,
+        "walletId": null,
+        "paymentMethod": this.type, // CreditCard,ACH,Wallet
+        "currency": "USD", // USD,INR,EUR
+      },
+      "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,
+      "riskType": this.riskType === 'car' ? 'Vehicle' : 'Driver',
+      "bookingRefNumber": null,
+      "pickupLocation": this.gs.bookingSummaryDetails.location,
+      "dropLocation": this.gs.bookingSummaryDetails.location,
+      "pickupDate": this.gs.bookingSummaryDetails.pickUpTime,
+      "dropDate": this.gs.bookingSummaryDetails.dropTime,
+      "duration": parseInt(this.gs.lastSearch.timeDuration),
+      "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
+      "discountId": this.gs.bookingSummaryDetails.discountId,
+      "totalAmount": this.gs.bookingSummaryDetails.totalFare,
+      "basePrice": this.gs.bookingSummaryDetails.basePrice,
+      "discountAmount": this.gs.bookingSummaryDetails.discount,
+      "taxFee": this.gs.bookingSummaryDetails.tax,
+      "insuranceFee": this.gs.bookingSummaryDetails.insuranceFee,
+      "siteFee": 0,
+      "otherFee": this.gs.bookingSummaryDetails.otherFee,
+      "bookingStatus": null,
+      "bookingStatusRemarks": null,
+      "remarks": null
     }
+
+    if (this.type === 'CreditCard') {
+      if (!this.gs.paymentDetails.creditCard.valid) {
+        this.toast.errorToastr("Invalid Credit Card Details");
+        return;
+      }
+      const cardNumber = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, '') })
+      const encryptCvv = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.creditCard?.value.cvc })
+      body["BookingPaymentRequest"]["creditCardInfo"] = {
+        "cardNumber": cardNumber,
+        "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
+        "cvv": encryptCvv,
+        "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
+      }
+    }
+    if (this.type === 'ACH') {
+      if (!this.gs.paymentDetails.ach.valid) {
+        this.toast.errorToastr("Invalid ACH Details");
+        return;
+      }
+
+      const rountingNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.rountingNo })
+      const accountNo = await this.walletService.GetPaymentEncryptvalue({ inputValue: this.gs.paymentDetails.ach.value?.accountNo })
+      body["BookingPaymentRequest"]["bankAccount"] = {
+        "bank": this.gs.paymentDetails.ach.value?.bank,
+        "rountingNo": rountingNo,
+        "accountNo": accountNo,
+        "accountType": this.gs.paymentDetails.ach.value?.accountType,
+        "accountName": this.gs.paymentDetails.ach.value?.accountName,
+        "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
+      }
+    }
+    if (this.type === 'Wallet') {
+      body["BookingPaymentRequest"]["walletId"] = this.gs.paymentDetails.wallet.walletId;
+    }
+    if (this.type === 'Crypto') {
+      if (!this.selectedCoin) {
+        this.toast.errorToastr("Please select crypto coin");
+        return;
+      }
+    }
+
+    console.log("body >>>>>>", body);
+    // return;
+
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = `Are you sure you want to book this ${this.riskType} ?`;
+    modalRef.componentInstance.confirmButton = "Yes";
+    modalRef.componentInstance.cancelButton = "No";
+    modalRef.result.then(async (res: any) => {
+      if (res.confirmed) {
+        if (this.type == 'Crypto') {
+          this.makeCryptoPayment(body);
+        } else {
+          this.bookingAgreement(body);
+        }
+      }
+    }, () => { });
   }
 
-  makePayment() {
+  makeCryptoPayment(bodyObj: any) {
 
     if (!this.selectedCoin) {
       this.toast.errorToastr("Please select crypto coin");
       return;
     }
     this.isLoader = true;
-    // let body = { // old
-    //   "amount": 1,
-    //   "currency1": "USD",
-    //   "currency2": this.selectedCoin,
-    //   "buyerEmail": this.gs.loggedInUserInfo.username || "customer_email@gmail.com",
-    //   "customOrderId": this.gs.loggedInUserInfo.id || "1"
-    // }
-
-    console.log("this.gs.bookingSummaryDetails >>>>>", this.gs.bookingSummaryDetails);
-
-    let body = { // new
+    let body = {
       "price": this.gs.bookingSummaryDetails.totalFare,
       "currency": this.selectedCoin, //
-      "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username ||
+      "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username
       "customOrderId": this.gs.loggedInUserInfo.contactId || "1",
       "notificationURL": "https://webhook.site/12d25089-5eae-4954-8f41-cfa39961a4db"
     }
@@ -289,20 +250,25 @@ export class BookingComponent {
         let responseData = response.data;
         if (responseData && responseData.url) {
           this.toast.successToastr("Transaction created successfully");
-          // localStorage.setItem("cryptoTransaction", JSON.stringify(responseData));
-          // if (!this.gs.loggedInUserInfo.cryptoTransactions) {
-          //   this.gs.loggedInUserInfo.cryptoTransactions = [];
-          // }
-          // this.gs.loggedInUserInfo.cryptoTransactions.push(responseData.txn_id);
-          // localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
-          setTimeout(() => {
-            // window.open(responseData.status_url, "_blank");
-            window.open(responseData.url, "_blank");
-            this.router.navigate(['/cab/booking/booking-success', this.params.type], {
-              queryParams: { paymentType: 'crypto' },
-              queryParamsHandling: "merge"
-            });
-          }, 1000);
+          const modalRef = this.modalService.open(WebViewUrlModalComponent, {
+            centered: true,
+            backdrop: 'static',
+            windowClass: 'document-modal',
+            size: 'lg'
+          });
+          modalRef.componentInstance.documentIframe = responseData.url;
+          modalRef.result.then((signModalRes: any) => {
+            if (signModalRes.confirmed) {
+              this.bookingAgreement(bodyObj);
+            }
+          }, () => { });
+          // setTimeout(() => {
+          //   window.open(responseData.url, "_blank");
+          //   this.router.navigate(['/cab/booking/booking-success', this.params.type], {
+          //     queryParams: { paymentType: 'crypto' },
+          //     queryParamsHandling: "merge"
+          //   });
+          // }, 1000);
         } else {
           this.toast.errorToastr("Something went wrong");
         }
@@ -313,6 +279,36 @@ export class BookingComponent {
       this.isLoader = false;
     })
   }
+
+  bookingAgreement(body: any) {
+    this.gs.isSpinnerShow = true;
+    this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(res.message);
+        const modalRef = this.modalService.open(DocumentSignModalComponent, {
+          centered: true,
+          backdrop: 'static',
+          windowClass: 'document-modal',
+          size: 'xl'
+        });
+        modalRef.componentInstance.documentIframe = res.AgreementLink;
+        modalRef.result.then((signModalRes: any) => {
+          if (signModalRes.confirmed) {
+            this.toast.successToastr("Booking successfully.");
+            this.router.navigate(['/user/booking']);
+            // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
+          }
+        }, () => { });
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+
 
   bookCancel() {
     const itemId = this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId;

@@ -202,49 +202,53 @@ export class UserDashboardComponent {
 
       if (this.gs.loggedInUserInfo['role'] === 'user') {
         // myTripsBookingOverView
-        this.dashboardAllDetails.myTripsBookingOverView.title = "Car owner booked for me";
+        this.dashboardAllDetails.myTripsBookingOverView.title = "Bookings by Car Owner";
         this.dashboardAllDetails.myTripsBookingOverView.isDriverBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myTripsBookingOverView);
 
         // myBookingOverView
-        this.dashboardAllDetails.myBookingOverView.title = "I Booked Car";
+        this.dashboardAllDetails.myBookingOverView.title = "My Bookings";
         this.dashboardAllDetails.myBookingOverView.isCarBookingOverviewShow = true;
-        this.dashboardAllDetails.myBookingOverView.view = true
+        this.dashboardAllDetails.myBookingOverView.view = true;
+        this.dashboardAllDetails.myBookingOverView.route = '/user/booking';
         tempArray.push(this.dashboardAllDetails.myBookingOverView);
       }
 
       if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3') {
         // myBookingOverView
-        this.dashboardAllDetails.myBookingOverView.title = "I Booked Driver";
+        this.dashboardAllDetails.myBookingOverView.title = "Driver Assigned by Me";
         this.dashboardAllDetails.myBookingOverView.isDriverBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myBookingOverView);
 
         // myTripsBookingOverView
-        this.dashboardAllDetails.myTripsBookingOverView.title = "Driver Booked My Cars";
+        this.dashboardAllDetails.myTripsBookingOverView.title = "Bookings by Driver";
         this.dashboardAllDetails.myTripsBookingOverView.isCarBookingOverviewShow = true;
-        this.dashboardAllDetails.myTripsBookingOverView.view = true
+        this.dashboardAllDetails.myTripsBookingOverView.view = true;
+        this.dashboardAllDetails.myTripsBookingOverView.route = '/user/booking';
         tempArray.push(this.dashboardAllDetails.myTripsBookingOverView);
       }
 
       if (this.gs.loggedInUserInfo['role'] === 'user_4') {
         // myDriverBookingOverView
-        this.dashboardAllDetails.myDriverBookingOverView.title = "I Booked Driver For My Car";
+        this.dashboardAllDetails.myDriverBookingOverView.title = "Driver Assigned by Me";
         this.dashboardAllDetails.myDriverBookingOverView.isDriverBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myDriverBookingOverView);
 
         // myVehicleBookingOverView
-        this.dashboardAllDetails.myVehicleBookingOverView.title = "I Booked Car";
+        this.dashboardAllDetails.myVehicleBookingOverView.title = "My Bookings";
         this.dashboardAllDetails.myVehicleBookingOverView.isCarBookingOverviewShow = true;
+        this.dashboardAllDetails.myVehicleBookingOverView.route = '/user/booking';
         tempArray.push(this.dashboardAllDetails.myVehicleBookingOverView);
 
         // myDriverTripsBookingOverView
-        this.dashboardAllDetails.myDriverTripsBookingOverView.title = "Car owner booked for me";
+        this.dashboardAllDetails.myDriverTripsBookingOverView.title = "Bookings by Car Owner";
         this.dashboardAllDetails.myDriverTripsBookingOverView.isDriverBookingOverviewShow = true;
         tempArray.push(this.dashboardAllDetails.myDriverTripsBookingOverView);
 
         // myVehicleTripsBookingOverView
-        this.dashboardAllDetails.myVehicleTripsBookingOverView.title = "Driver Booked My Cars";
+        this.dashboardAllDetails.myVehicleTripsBookingOverView.title = "Bookings by Driver";
         this.dashboardAllDetails.myVehicleTripsBookingOverView.isCarBookingOverviewShow = true;
+        this.dashboardAllDetails.myVehicleTripsBookingOverView.route = '/user/booking';
         tempArray.push(this.dashboardAllDetails.myVehicleTripsBookingOverView);
       }
 
@@ -293,6 +297,7 @@ export class UserDashboardComponent {
             isDriverBookingOverviewShow: tempArray[i].isDriverBookingOverviewShow || false,
             isDataLoaded: true, // need to do - false
             view: tempArray[i].view || false,
+            route: tempArray[i].route,
             countType: tempArray[i].countType,
             totalBooked: {
               "title": "Total",
@@ -312,34 +317,38 @@ export class UserDashboardComponent {
 
       if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3' || this.gs.loggedInUserInfo['role'] === 'user_4') {
         // if (this.dashboardAllDetails?.vehicleRiskRatings && this.dashboardAllDetails?.vehicleRiskRatings?.length) {
-        let vehicleRiskScore: any = []
-        let vehicleStarRating: any = []
+        let vehicleRiskScore: any = [];
+        let vehicleStarRating: any = [];
+        const maxShowDataInGrid = "3";
         for (let i in this.dashboardAllDetails.vehicleRiskRatings) {
-          vehicleRiskScore.push({
-            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
-            // this.dashboardAllDetails.driverRiskDetails.riskScorePercentage + this.dashboardAllDetails.driverRiskDetails.Make + this.dashboardAllDetails.driverRiskDetails.Modelyear
-            "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].riskScorePercentage) || 0,
-            "bg-color": "color-sunset-orange",
-          })
-          vehicleStarRating.push({
-            "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
-            "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].customerAverageStarRatinge) || 0,
-          })
+          if (maxShowDataInGrid > i) {
+            vehicleRiskScore.push({
+              "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
+              "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].riskScorePercentage) || 0,
+              "bg-color": "color-sunset-orange",
+            })
+            vehicleStarRating.push({
+              "title": this.dashboardAllDetails.vehicleRiskRatings[i].vin + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + this.dashboardAllDetails.vehicleRiskRatings[i].Make + '-' + this.dashboardAllDetails.vehicleRiskRatings[i].Modelyear,
+              "total": parseFloat(this.dashboardAllDetails.vehicleRiskRatings[i].customerAverageStarRating) || 0,
+            })
+          }
         }
 
         newArray.push(
           {
-            title: "Vehicle Risk Score",
+            title: "Vehicle Risk Assessment",
             isCarBookingOverviewShow: true,
-            view: false,
+            view: this.dashboardAllDetails?.vehicleRiskRatings?.length >= maxShowDataInGrid ? true : false,
+            route: "/user/vehicle-risk-rating",
             countType: "percentage",
             totalBooked: null,
             bookedData: vehicleRiskScore
           },
           {
-            title: "Vehicle Average Star Rating",
+            title: "Overall Vehicle Rating",
             isCarBookingOverviewShow: true,
-            view: false,
+            view: this.dashboardAllDetails?.vehicleRiskRatings?.length >= maxShowDataInGrid ? true : false,
+            route: "/user/vehicle-risk-rating",
             countType: "star",
             totalBooked: null,
             bookedData: vehicleStarRating
