@@ -12,6 +12,8 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../../modal/confirmation-modal/confirmation-modal.component';
 import { FavoriteService } from '../../../../services/favorite.service';
 import { AuthService } from '../../../../services/auth.service';
+import { InformationModalComponent } from '../../modal/information-modal/information-modal.component';
+import { EmailQuoteModalComponent } from '../../modal/email-quote-modal/email-quote-modal.component';
 
 @Component({
   selector: 'app-cab-card-view',
@@ -92,7 +94,7 @@ export class CabCardViewComponent {
   }
 
 
-  onBook() {
+  checkAvailability() {
     if (!this.gs.isLicenseVerified) {
       const modalRef = this.modalService.open(ConfirmationModalComponent, {
         centered: true,
@@ -106,5 +108,42 @@ export class CabCardViewComponent {
       return;
     }
     this.onCheckAvailability.emit(null);
+  }
+
+  async bookNow(details: any) {
+    if (details.isBooked) {
+      const modalRef = this.modalService.open(InformationModalComponent, {
+        centered: true,
+      });
+      modalRef.componentInstance.title = `${this.type === 'car' ? 'Vehicle' : 'Driver'} is already booked, cannot book now.`;
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) { }
+      });
+      return;
+    }
+
+
+    let params = {
+      type: "car",
+    }
+    this.router.navigate(['/cab/booking/booking', this.type === 'car' ? details.vehicleId : details.driverId, details.summaryId], {
+      queryParams: params,
+      queryParamsHandling: "merge"
+    });
+  }
+
+  openEmailQuoteDialog(item: any): void {
+    const modalRef = this.modalService.open(EmailQuoteModalComponent, {
+      centered: true,
+      size: 'md',
+      windowClass: "car-enquiry-modal"
+    });
+    modalRef.componentInstance.type = "car";
+    modalRef.componentInstance.details = item;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        // this.router.navigateByUrl('/auth/log-in');
+      }
+    });
   }
 }

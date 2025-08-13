@@ -22,15 +22,57 @@
       </div>
 
       <div *ngIf="!isLoader" class="row">
-        <div *ngFor="let item of myWishlist" class="col-md-12">
-          <app-cab-card-view [from]="'wishlist'" [type]="activeTab" [singleItem]="item"
-            (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
-        </div>
-        <div *ngIf="!myWishlist.length" class="col-md-12">
-          <p class="text-center">
-            <b>No Favourite</b>
-          </p>
-        </div>
+        <ng-container *ngIf="activeTab === 'car' || activeTab === 'driver'">
+          <div *ngFor="let item of myWishlist" class="col-md-12">
+            <app-cab-card-view [from]="'wishlist'" [type]="activeTab" [singleItem]="item"
+              (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
+          </div>
+          <div *ngIf="!myWishlist.length" class="col-md-12">
+            <p class="text-center">
+              <b>No Favourite</b>
+            </p>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="activeTab === 'car_owner_interest'">
+          <mat-accordion *ngIf="carOwnerTabs.length" class="accordion-align">
+            <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
+              (closed)="onToggle(false, section)" *ngFor="let section of carOwnerTabs; let i = index">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="justify-content-between me-5">
+                  <span>
+                    {{ section.roleName | translate }}
+                  </span>
+                  <span>
+                    {{ section.contactName | translate }}
+                  </span>
+                  <span>
+                    {{ section.createdDate | translate }}
+                  </span>
+                </mat-panel-title>
+                <mat-panel-description>
+                  <i class="feather " [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div
+                *ngFor="let item of section.ownerVehicles | paginate: { id: section.ownerId, itemsPerPage: pageSize, currentPage: currentPage, totalItems: section.viewModel?.totalCount }; let idx = index;"
+                class="col-md-12 mt-4">
+                <app-cab-card-view [from]="'owner_interest'" [type]="'car'" [singleItem]="item"
+                  (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
+              </div>
+              <div class="col-md-12 text-end">
+                <pagination-controls [id]="section.ownerId" (pageChange)="pageChanged($event)"></pagination-controls>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+
+          <div *ngIf="!carOwnerTabs.length" class="col-md-12">
+            <p class="text-center">
+              <b>No One Interested</b>
+            </p>
+          </div>
+        </ng-container>
+
       </div>
 
     </div>

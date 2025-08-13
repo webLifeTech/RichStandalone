@@ -246,6 +246,26 @@
     "tax": "Tax",
     "total_fare": "total fare"
   },
+  "driver_booking_summary": {
+    "title": "booking summary",
+    "pickup": "pick up",
+    "dropoff": "drop",
+    "location": "location",
+    "timing": "When is driver needed ?",
+    "pickup_date": "pickup date & time",
+    "return_date": "return date",
+    "car_type": "car type",
+    "car_category": "car category",
+    "trip_type": "trip type",
+    "estimated_usage": "estimated usage",
+    "package_hours": "package hours",
+    "driver_name": "Driver Name",
+    "insurance_fee": "Insurance Premium",
+    "other_fees": "Other Fees",
+    "discount": "Discount",
+    "tax": "Tax",
+    "total_fare": "total fare"
+  },
   "pricing_summary": {
     "title": "Package Summary",
     "package_name": "Package Name",

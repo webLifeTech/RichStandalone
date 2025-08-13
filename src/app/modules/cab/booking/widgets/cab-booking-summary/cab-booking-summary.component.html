@@ -1,4 +1,4 @@
-<div class="review_box">
+<div class="review_box" *ngIf="!searchObj.isDriverHireSearch">
 
   <div class="title-top">
     <h5>{{'booking_summary.title' | translate}}</h5>
@@ -110,6 +110,153 @@
       <div class="grand_total">
         <h5>
           {{'booking_summary.total_fare' | translate}}
+          <span>{{ bookingSummaryDetails.totalFare | currencyPipe: cabService.currency }}</span>
+        </h5>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="review_box" *ngIf="searchObj.isDriverHireSearch">
+
+  <div class="title-top">
+    <h5>{{'driver_booking_summary.title' | translate}}</h5>
+  </div>
+  <div class="flight_detail p-3">
+    <div class="summery_box">
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td>{{'driver_booking_summary.pickup' | translate}} {{'driver_booking_summary.location' | translate}}</td>
+            <td>{{searchObj.same_location}}</td>
+          </tr>
+          <tr *ngIf="searchObj.mainTripType == 'one_way' || searchObj.mainTripType == 'outstation'">
+            <td>{{'driver_booking_summary.dropoff' | translate}} {{'driver_booking_summary.location' | translate}}</td>
+            <td>{{searchObj.drop_location}}</td>
+          </tr>
+          <tr *ngIf="searchObj.mainTripType == 'one_way' || searchObj.mainTripType == 'round_trip'">
+            <td>{{ 'driver_booking_summary.timing' | translate }}</td>
+            <td>
+              <ng-select [items]="timeTypeList" bindLabel="Description" bindValue="Code" placeholder="Select timing"
+                [(ngModel)]="searchObj.timeSchedule" name="timeSchedule" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="searchObj.mainTripType == 'round_trip'">
+            <td>{{ 'driver_booking_summary.package_hours' | translate }}</td>
+            <td>
+              <ng-select [items]="packageList" bindLabel="Description" bindValue="Code" placeholder="Select Package"
+                [(ngModel)]="searchObj.package" name="package" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="searchObj.mainTripType == 'outstation'">
+            <td>{{ 'driver_booking_summary.trip_type' | translate }}</td>
+            <td>
+              <ng-select [items]="tripTypeList" bindLabel="Description" bindValue="Code" placeholder="Select trip type"
+                [(ngModel)]="searchObj.tripType" name="tripType" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="searchObj.mainTripType == 'outstation'">
+            <td>{{ 'driver_booking_summary.estimated_usage' | translate }}</td>
+            <td>
+              <ng-select [items]="usageList" bindLabel="Description" bindValue="Code"
+                placeholder="Select Estimated Usage" [(ngModel)]="searchObj.estimatedUsage" name="estimatedUsage"
+                clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="searchObj.timeSchedule != 'Now'">
+            <td>{{'driver_booking_summary.pickup_date' | translate}}</td>
+            <td>
+              <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
+                class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
+                value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
+                [min]="todayDate">
+              <owl-date-time #pick_up></owl-date-time>
+            </td>
+          </tr>
+          <tr>
+            <td>{{ 'driver_booking_summary.car_type' | translate }}</td>
+            <td>
+              <ng-select [items]="carTypeList" bindLabel="Description" bindValue="Code"
+                placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+                [(ngModel)]="searchObj.carType" name="carType" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{ 'driver_booking_summary.car_category' | translate }}</td>
+            <td>
+              <ng-select [items]="carCatTypeList" bindLabel="Description" bindValue="Code"
+                placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+                [(ngModel)]="searchObj.carCatType" name="carCatType" clearable="false">
+              </ng-select>
+            </td>
+          </tr>
+          <tr *ngIf="type === 'car'">
+            <td>{{'driver_booking_summary.car_type' | translate}}</td>
+            <td>{{singleItem.make}} ({{singleItem.model}})</td>
+          </tr>
+          <tr *ngIf="type === 'driver'">
+            <td>{{'driver_booking_summary.driver_name' | translate}}</td>
+            <td>{{singleItem.contactName}}</td>
+          </tr>
+          <tr>
+            <td>{{bookingSummaryDetails.priceRangeDesc}}</td>
+            <td>{{ bookingSummaryDetails.priceRange | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
+            <td>{{'driver_booking_summary.insurance_fee' | translate}}</td>
+            <td>{{ bookingSummaryDetails.insuranceFee | currencyPipe: cabService.currency }}</td>
+          </tr>
+          <tr>
+            <td>{{'driver_booking_summary.other_fees' | translate}}</td>
+            <td>{{ bookingSummaryDetails.otherFee | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
+            <td>{{'driver_booking_summary.discount' | translate}}</td>
+            <td>- {{ bookingSummaryDetails.discount | currencyPipe: cabService.currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="promo-section">
+        <div class="form-group mb-0">
+          <div class="input-group mb-0">
+            <input type="text" class="form-control" [(ngModel)]="appliedCouponCode"
+              [placeholder]="'have_coupon.input_plchold' | translate"
+              [disabled]="isCouponApplied || gs.bookingSummaryDetails.bookingStep ==  2">
+            <div *ngIf="!isCouponApplied && gs.bookingSummaryDetails.bookingStep ==  1"
+              class="input-group-prepend pointer">
+              <button [disabled]="!appliedCouponCode " class="input-group-text"
+                (click)="onChange('coupon')">{{'have_coupon.apply' |
+                translate}}
+              </button>
+            </div>
+            <div *ngIf="isCouponApplied && gs.bookingSummaryDetails.bookingStep ==  1"
+              class="input-group-prepend pointer">
+              <span class="input-group-text" (click)="applyCoupon(null)">
+                {{'have_coupon.remove' | translate}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isCouponApplied" class="text-green fw-bold">
+          Coupon Applied!
+        </div>
+      </div>
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td>{{'driver_booking_summary.tax' | translate}}</td>
+            <td>{{ bookingSummaryDetails.tax | currencyPipe: cabService.currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="grand_total">
+        <h5>
+          {{'driver_booking_summary.total_fare' | translate}}
           <span>{{ bookingSummaryDetails.totalFare | currencyPipe: cabService.currency }}</span>
         </h5>
       </div>

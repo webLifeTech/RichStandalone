@@ -140,6 +140,10 @@ export class UserWalletComponent {
     })
   }
 
+  searchData() {
+    this.getWalletDetails();
+  }
+
   pageChanged(event: any) {
     this.currentPage = event;
     this.getWalletDetails()
@@ -168,7 +172,6 @@ export class UserWalletComponent {
     modalRef.result.then((res: any) => {
       console.log("res >>>>", res);
       if (res.confirmed) {
-        this.getWalletDetails();
         this.getWalletDetails();
       }
     }, () => {
@@ -213,8 +216,10 @@ export class UserWalletComponent {
     });
   }
 
-  // async onDelete(index: any, content: any) {
-  //   this.modalService.open(content, { centered: true });
-  // }
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getWalletDetails();
+  }
 
 }

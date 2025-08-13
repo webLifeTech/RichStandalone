@@ -130,6 +130,13 @@ export class CabBookingComponent {
   }
 
   backtoResult() {
+    if (this.searchObj.isDriverHireSearch) {
+      this.router.navigate(['/cab/hire-drivers/list-view'], {
+        queryParams: this.params,
+        queryParamsHandling: "merge"
+      });
+      return;
+    }
     this.router.navigate(['/cab/listing/list-view'], {
       queryParams: this.params,
       queryParamsHandling: "merge"

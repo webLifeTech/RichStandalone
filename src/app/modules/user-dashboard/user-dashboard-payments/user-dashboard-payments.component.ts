@@ -5,14 +5,10 @@ import { CommonModule } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
-import { apiResultFormat, pageSelection, userBookings } from '../../../shared/services/model/model';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { DeleteModalComponent } from '../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
-import { MatDialog } from '@angular/material/dialog';
-import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { PaymentService } from '../../../shared/services/payment.service';
 import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
@@ -36,7 +32,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 })
 export class UserDashboardPaymentsComponent {
 
-  sortColumn: any = "CreatedDate";
+  sortColumn: any = "";
   sortOrder: any = "DESC";
   public tableData: any = [];
   public searchDataValue = '';
@@ -58,7 +54,6 @@ export class UserDashboardPaymentsComponent {
     private paymentService: PaymentService,
     public cabService: CabService,
     public gs: GlobalService,
-    private dialog: MatDialog,
     private modalService: NgbModal,
     private toast: ToastService,
 
@@ -71,11 +66,6 @@ export class UserDashboardPaymentsComponent {
   }
 
   getTableData() {
-    // this.paymentService.getUserPayment().subscribe((apiRes: apiResultFormat) => {
-    //   this.totalData = apiRes.totalData;
-    //   this.tableData = apiRes.data;
-    // });
-
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": this.currentPage,
@@ -92,30 +82,30 @@ export class UserDashboardPaymentsComponent {
       this.tableData = response.bookingpaymentMatches;
       this.totalData = response.viewModel?.totalCount;
 
-      this.paymentService.getCryptoPaymentTxnByIds({
-        arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
-      }).subscribe((pRes: any) => {
-        this.gs.isSpinnerShow = false;
-        if (pRes.status == 200) {
-          let cryptoPaymentTxn = pRes.data;
-          for (let i in cryptoPaymentTxn) {
-            if (this.gs.loggedInUserInfo?.cryptoTransactions && this.gs.loggedInUserInfo.cryptoTransactions.indexOf(cryptoPaymentTxn[i].id) !== -1) {
-              let tempObj = JSON.parse(JSON.stringify(this.tableData[0]));
-              tempObj.paymentID = cryptoPaymentTxn[i].id;
-              tempObj.total_amount = cryptoPaymentTxn[i].amountf;
-              tempObj.status = cryptoPaymentTxn[i].status_text;
-              tempObj.mode = `Crypto ${cryptoPaymentTxn[i].type} (${cryptoPaymentTxn[i].coin})`;
-              this.tableData.unshift(tempObj);
-            }
-          }
-          this.totalData = this.tableData.length;
-        }
-      });
+      // this.paymentService.getCryptoPaymentTxnByIds({
+      //   arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
+      // }).subscribe((pRes: any) => {
+      //   this.gs.isSpinnerShow = false;
+      //   if (pRes.status == 200) {
+      //     let cryptoPaymentTxn = pRes.data;
+      //     for (let i in cryptoPaymentTxn) {
+      //       if (this.gs.loggedInUserInfo?.cryptoTransactions && this.gs.loggedInUserInfo.cryptoTransactions.indexOf(cryptoPaymentTxn[i].id) !== -1) {
+      //         let tempObj = JSON.parse(JSON.stringify(this.tableData[0]));
+      //         tempObj.paymentID = cryptoPaymentTxn[i].id;
+      //         tempObj.total_amount = cryptoPaymentTxn[i].amountf;
+      //         tempObj.status = cryptoPaymentTxn[i].status_text;
+      //         tempObj.mode = `Crypto ${cryptoPaymentTxn[i].type} (${cryptoPaymentTxn[i].coin})`;
+      //         this.tableData.unshift(tempObj);
+      //       }
+      //     }
+      //     this.totalData = this.tableData.length;
+      //   }
+      // });
     });
   }
 
-  public searchData(value: string): void {
-
+  searchData() {
+    this.getTableData();
   }
 
   pageChanged(event: any) {
@@ -172,5 +162,11 @@ export class UserDashboardPaymentsComponent {
       }
     }, () => { });
     return;
+  }
+
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getTableData();
   }
 }

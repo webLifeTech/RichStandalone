@@ -1,4 +1,5 @@
-<div *ngIf="isSearchVisible" class="flight-search-detail position-relative" [class.show]="isShow">
+<div *ngIf="isSearchVisible && !isDriverHireSearch" class="flight-search-detail position-relative"
+  [class.show]="isShow">
   <form class="row m-0">
     <!-- <div class="col"
       [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
@@ -85,6 +86,141 @@
         </a>
       </div>
     </div>
+    <div class="responsive-close" (click)="closeSearchBox()">
+      <i class="far fa-times-circle"></i>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="isSearchVisible && isDriverHireSearch" class="flight-search-detail position-relative" [class.show]="isShow">
+  <div class="row d-flex align-items-center">
+    <div class="col-12">
+      <div class="tabs-list">
+        <ul class="nav mb-4">
+          <li *ngFor="let item of tabs">
+            <a [class.active]="activeTab == item.value" (click)="changeTab(item)">
+              <i class={{item.icon}}></i> {{item.title | translate}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <form>
+    <!-- <div class="col"
+      [ngClass]="{ 'd-none': searchObj.location_type == 'option2', 'd-block': searchObj.location_type == 'option1' }">
+      <div class="form-group">
+        <label>{{ 'global.pick_up' | translate }} {{ 'global.location' | translate }}</label>
+        <input [(ngModel)]="searchObj.pick_up_location" name="pick_up_location" type="text" value="Paris"
+          class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
+        <img src="assets/images/icon/from.png" class="img-fluid blur-up lazyload" alt="pickup-icon">
+      </div>
+    </div>
+     -->
+    <div class="row m-0">
+      <div class="col-md-3  d-block">
+        <div class="form-group position-relative">
+          <label class="font-xs-white">
+            {{ 'global.pick_up' | translate }} {{ 'global.location' | translate }}
+          </label>
+          <input [(ngModel)]="searchObj.same_location" (keyup)="onSearchLocation()" name="same_location" type="text"
+            class="form-control open-select"
+            placeholder="{{ 'global.pick_up' | translate }} {{ 'global.location' | translate }}">
+          <img src=" assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+
+          <ul class="location-dropdown" *ngIf="locationArray.length > 0">
+            <li *ngFor="let location of locationArray" (click)="selectLocation(location.address)">
+              {{ location.address }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="activeTab == 'tab1' || activeTab == 'tab3'">
+        <div class="form-group">
+          <label>{{ 'global.drop_off' | translate }} {{ 'global.location' | translate }}</label>
+          <input [(ngModel)]="searchObj.drop_location" name="drop_location" type="text" value="Toulouse"
+            class="form-control open-select"
+            placeholder="{{ 'global.drop_off' | translate }} {{ 'global.location' | translate }}">
+          <img src="assets/images/icon/location.png" class="img-fluid blur-up lazyload" alt="location-icon">
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="activeTab == 'tab1' || activeTab == 'tab2'">
+        <div class="form-group">
+          <label>{{ 'When is driver needed ?' | translate }}</label>
+          <ng-select [items]="timeTypeList" bindLabel="Description" bindValue="Code" placeholder="Select timing"
+            [(ngModel)]="searchObj.timeSchedule" name="timeSchedule" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="activeTab == 'tab2'">
+        <div class="form-group">
+          <label>{{ 'Package Hours' | translate }}</label>
+          <ng-select [items]="packageList" bindLabel="Description" bindValue="Code" placeholder="Select Package"
+            [(ngModel)]="searchObj.package" name="package" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-2" *ngIf="activeTab == 'tab3'">
+        <div class="form-group">
+          <label>{{ 'Trip Type' | translate }}</label>
+          <ng-select [items]="tripTypeList" bindLabel="Description" bindValue="Code" placeholder="Select trip type"
+            [(ngModel)]="searchObj.tripType" name="tripType" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-2" *ngIf="activeTab == 'tab3'">
+        <div class="form-group">
+          <label>{{ 'Estimated Usage' | translate }}</label>
+          <ng-select [items]="usageList" bindLabel="Description" bindValue="Code" placeholder="Select Estimated Usage"
+            [(ngModel)]="searchObj.estimatedUsage" name="estimatedUsage" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+      <div [ngClass]="{ 'col-md-3': activeTab != 'tab3', 'col-md-2': activeTab == 'tab3' }"
+        *ngIf="searchObj.timeSchedule != 'Now'">
+        <div class="form-group">
+          <label>{{ 'Date & Time' | translate }}</label>
+          <input [(ngModel)]="searchObj.pick_time" name="pick_time" class="form-control datetimepicker-input digits"
+            placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
+            [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup" [min]="todayDate"
+            (ngModelChange)="onChangePickUpTime()">
+          <!-- value="02:05 11/13/2019" -->
+          <owl-date-time #pickup></owl-date-time>
+        </div>
+      </div>
+    </div>
+    <div class="row m-0 mt-3">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>{{ 'Car Type' | translate }}</label>
+          <ng-select [items]="carTypeList" bindLabel="Description" bindValue="Code"
+            placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+            [(ngModel)]="searchObj.carType" name="carType" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>{{ 'Car Category' | translate }}</label>
+          <ng-select [items]="carCatTypeList" bindLabel="Description" bindValue="Code"
+            placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
+            [(ngModel)]="searchObj.carCatType" name="carCatType" clearable="false">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="search-btn">
+          <a class="btn btn-theme" (click)="serachCarDetails()">
+            {{ 'global.search' | translate }}
+          </a>
+          <a class="btn btn-solid color3 ms-2" (click)="resetFilter()">
+            {{ 'global.reset' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+
     <div class="responsive-close" (click)="closeSearchBox()">
       <i class="far fa-times-circle"></i>
     </div>

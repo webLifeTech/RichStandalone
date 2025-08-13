@@ -108,7 +108,7 @@
             <div class="col-md-4 text-end price-top">
               <div class="price">
                 <!-- *ngIf="searchInfo.timeType == 'ALL'" -->
-                <table class="table table-borderless">
+                <table *ngIf="!isDriverHireSearch" class="table table-borderless">
                   <tbody class="price-table">
                     <tr *ngIf="details.perDayPrice">
                       <td class="price-title">Price per Day:</td>
@@ -125,6 +125,15 @@
                     <tr *ngIf="details.perYearRentPrice">
                       <td class="price-title">Price per Year:</td>
                       <td class="price-value">{{ details.perYearRentPrice | currencyPipe: cabService.currency }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table *ngIf="isDriverHireSearch" class="table table-borderless">
+                  <tbody class="price-table">
+                    <tr *ngIf="details.perDayPrice">
+                      <td class="price-title">Price of {{this.searchInfo.package || this.searchInfo.estimatedUsage}}:
+                      </td>
+                      <td class="price-value">{{ details.perDayPrice | currencyPipe: cabService.currency }}</td>
                     </tr>
                   </tbody>
                 </table>

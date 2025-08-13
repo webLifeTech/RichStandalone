@@ -47,6 +47,32 @@ export class MenuComponent {
         this.menuItems[i].path = pathObj.path;
         this.menuItems[i].queryParams = pathObj.queryParams;
       }
+      if (this.authService.isLoggedIn && this.gs.loggedInUserInfo.role !== 'user') {
+        this.menuItems.push({
+          path: "/cab/hire-drivers/list-view",
+          queryParams: { type: 'driver' },
+          "menuID": 8,
+          "menuName": "Hire Drivers",
+          "menuUrl": "/public/services",
+          "parentMenuId": 1,
+          "isParentMenuId": 0,
+          "sortPriority": 7,
+          "name": "Hire Drivers",
+          "actionName": null,
+          "controllerName": null,
+          "menuIcon": null,
+          "menuClass": null,
+          "isActive": true,
+          "carrierId": 1,
+          "systemId": "tlcHubAuthApp",
+          "createdBy": "Narendrababu",
+          "createdDate": "10/16/2024",
+          "modifiedBy": "Narendrababu",
+          "modifiedDate": "10/16/2024",
+        })
+      }
+      console.log("this.menuItems >>>>>", this.menuItems);
+
       this.roleService.menuItems = this.menuItems;
     })
   }

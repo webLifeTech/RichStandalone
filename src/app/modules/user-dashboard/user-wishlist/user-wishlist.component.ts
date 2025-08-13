@@ -17,6 +17,8 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { CheckAvailabilityModalComponent } from '../../../shared/components/comman/modal/wishlist-modals/check-availability-modal/check-availability-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { FavoriteService } from '../../../shared/services/favorite.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-wishlist',
@@ -35,6 +37,10 @@ import { FavoriteService } from '../../../shared/services/favorite.service';
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+
+    // NgSelectModule,
+    MatExpansionModule,
+    TranslateModule,
   ],
   templateUrl: './user-wishlist.component.html',
   styleUrl: './user-wishlist.component.scss'
@@ -43,18 +49,9 @@ export class UserWishlistComponent {
 
   public tableData: any = [];
   dataSource!: MatTableDataSource<userBookings>;
-  public searchDataValue = '';
-  public lastIndex = 0;
-  public pageSize = 10;
+  public pageSize = 3;
   public totalRecord = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
 
   editInfo: any = {};
   activeTab: any = "car";
@@ -63,10 +60,8 @@ export class UserWishlistComponent {
   cardLists: any = [];
   myWishlist: any = [];
 
-  tabs = [
-    { title: "Car", value: "car" },
-    { title: "Driver", value: "driver" },
-  ];
+  tabs: any = [];
+  carOwnerTabs: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -76,6 +71,32 @@ export class UserWishlistComponent {
     private favoriteService: FavoriteService,
 
   ) {
+    if (this.gs.loggedInUserInfo['role'] === 'user') {
+      this.tabs = [
+        { title: "My favourite car", value: "car" },
+        { title: "Car owner show interest", value: "car_owner_interest" },
+      ];
+    }
+    if (this.gs.loggedInUserInfo['role'] === 'user_2') {
+      this.tabs = [
+        { title: "My favourite driver", value: "driver" },
+        // { title: "Car owner show interest", value: "driver" },
+      ];
+      this.activeTab = "driver";
+    }
+    if (this.gs.loggedInUserInfo['role'] === 'user_3') {
+      this.tabs = [
+        { title: "My favourite driver", value: "driver" },
+      ];
+      this.activeTab = "driver";
+    }
+    if (this.gs.loggedInUserInfo['role'] === 'user_4') {
+      this.tabs = [
+        { title: "My favourite car", value: "car" },
+        { title: "Car owner show interest", value: "car_owner_interest" },
+        { title: "My favourite driver", value: "driver" },
+      ];
+    }
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
     })
@@ -85,17 +106,48 @@ export class UserWishlistComponent {
     // this.myWishlist = this.gs.getMyWishlistData();
     this.gs.isSpinnerShow = true;
     this.isLoader = true;
-    this.favoriteService.getAllFavourite({
-      "userId": this.gs.loggedInUserInfo.userId,
-      "riskType": this.activeTab === 'car' ? 'Vehicle' : 'Driver',
-    }).subscribe((response: any) => {
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.myWishlist = response.favoriteList;
-        console.log("myWishlist >>>", this.myWishlist);
-      }
-      this.gs.isSpinnerShow = false;
-      this.isLoader = false;
-    })
+    if (this.activeTab === 'car' || this.activeTab === 'driver') {
+      this.favoriteService.getAllFavourite({
+        "userId": this.gs.loggedInUserInfo.userId,
+        "riskType": this.activeTab === 'car' ? 'Vehicle' : 'Driver',
+      }).subscribe((response: any) => {
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+          this.myWishlist = response.favoriteList;
+          console.log("myWishlist >>>", this.myWishlist);
+        }
+        this.gs.isSpinnerShow = false;
+        this.isLoader = false;
+      })
+    }
+    if (this.activeTab === 'car_owner_interest') {
+      this.favoriteService.GetInterestOnDriverFavourites({
+        "userId": this.gs.loggedInUserInfo.userId
+      }).subscribe((response: any) => {
+        this.gs.isSpinnerShow = false;
+        this.isLoader = false;
+        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+          this.carOwnerTabs = [];
+          response.carOwners[0].isOpen = true;
+          // response.carOwners[i].isOpen = (Number(i) ? false : true);
+          for (let i in response.carOwners) {
+            console.log("iiiiii >>>>>", i + response.carOwners[i].isOpen);
+            this.carOwnerTabs.push(response.carOwners[i]);
+          }
+
+          console.log("this.carOwnerTabs >>>>>", this.carOwnerTabs);
+
+          // carOwnerTabs: any = [
+          //   {
+          //     title: "userDashboard.kyc.driverInfo.title",
+          //     tab: "driver_info",
+          //     isOpen: true,
+          //   },
+          // ]
+          // this.myWishlist = response.carOwners;
+          // console.log("myWishlist >>>", this.myWishlist);
+        }
+      })
+    }
   }
 
   pageChanged(event: any) {
@@ -119,6 +171,11 @@ export class UserWishlistComponent {
     this.activeTab = item.value;
     this.myWishlist = [];
     this.getTableData();
+  }
+
+  onToggle(value: any, section: any) {
+    section.isOpen = value;
+    // section.get('isOpen').setValue(value);
   }
 
 }

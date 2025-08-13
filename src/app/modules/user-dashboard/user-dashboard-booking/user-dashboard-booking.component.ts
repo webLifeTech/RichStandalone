@@ -107,8 +107,6 @@ export class UserDashboardBookingComponent {
   }
 
   public searchData(): void {
-    // this.dataSource.filter = value.trim().toLowerCase();
-    // this.tableData = this.dataSource.filteredData;
     this.getTableData();
   }
 

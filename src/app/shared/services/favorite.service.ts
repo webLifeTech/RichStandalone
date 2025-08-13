@@ -25,6 +25,16 @@ export class FavoriteService {
     );
   }
 
+  // Favorite -> GetInterestOnDriverFavourites
+  public GetInterestOnDriverFavourites(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetInterestOnDriverFavourites', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
   // Favorite -> insertUpdateFavourite
   public insertUpdateFavourite(data: any) {
     return this.http.post(this.baseUrl1 + 'TLHUB/Favorite/InsertAndUpdateFavourite', data).pipe(

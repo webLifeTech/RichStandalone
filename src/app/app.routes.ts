@@ -101,6 +101,15 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'hire-drivers',
+        children: [
+          {
+            path: 'list-view',
+            component: CabListLeftSidebarComponent
+          },
+        ],
+      },
+      {
         path: 'booking',
         children: [
           {

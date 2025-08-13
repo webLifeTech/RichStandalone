@@ -96,6 +96,7 @@ export class CabListDetailsComponent {
     series: [],
     chartLabels: []
   };
+  isDriverHireSearch: boolean = false;
 
   constructor(
     public cabService: CabService,
@@ -118,6 +119,10 @@ export class CabListDetailsComponent {
       this.pageNo = params['page'] ? params['page'] : 0;
       this.selectedCarType = this.getCarTypeParams;
     })
+
+    if (this.router.url.includes('hire-drivers')) {
+      this.isDriverHireSearch = true;
+    }
   }
 
   ngOnInit() {
@@ -189,6 +194,8 @@ export class CabListDetailsComponent {
       let params = {
         car_type: this.getCarTypeParams.length ? this.getCarTypeParams.join(',') : null,
       }
+      console.log("params >>>>>", params);
+
       this.router.navigate(['/cab/booking/booking', this.type === 'car' ? details.vehicleId : details.driverId, details.summaryId], {
         queryParams: params,
         queryParamsHandling: "merge"

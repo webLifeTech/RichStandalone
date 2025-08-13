@@ -1,0 +1,19 @@
+.tabs-list {
+  a {
+    padding: 10px;
+    color: #000000;
+    border-radius: 100px;
+    font-weight: 700;
+    margin: 0px 10px;
+    border: 1px solid #c1c1c1;
+    font-size: 16px;
+  }
+
+  .active {
+    background-color: rgba(var(--theme-color), 1);
+    color: #ffffff;
+    // box-shadow: 1px 11px 20px 0px rgba(var(--theme-color), 0.12);
+    box-shadow: 1px 1px 12px 0px rgba(var(--theme-color), 0.12);
+    border: 1px solid #001940;
+  }
+}
