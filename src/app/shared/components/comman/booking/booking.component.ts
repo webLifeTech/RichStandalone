@@ -228,23 +228,50 @@ export class BookingComponent {
     }, () => { });
   }
 
-  makeCryptoPayment(bodyObj: any) {
+  async makeCryptoPayment(bodyObj: any) {
 
     if (!this.selectedCoin) {
       this.toast.errorToastr("Please select crypto coin");
       return;
     }
+
+    const customOrderId = await this.paymentService.GetCryptoPaymentOrderId();
+
+    if (!customOrderId) {
+      this.toast.errorToastr("Something went wrong");
+      return;
+    }
+
     this.isLoader = true;
     let body = {
       "price": this.gs.bookingSummaryDetails.totalFare,
       "currency": this.selectedCoin, //
       "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username
-      "customOrderId": this.gs.loggedInUserInfo.contactId || "1",
-      "notificationURL": "https://webhook.site/12d25089-5eae-4954-8f41-cfa39961a4db"
+      "customOrderId": customOrderId || null,
+      "notificationURL": "https://uat.maya-avante.com/PostData/IsoSearch/PostMatchResponseData"
     }
+
+    this.paymentService.CryptoPaymentRequestResponse({
+      "userId": this.gs.loggedInUserInfo.userId,
+      "orderId": customOrderId,
+      "paymentReqResData": JSON.stringify(body),
+      "paymentReqResType": "Payment Initiated Request",
+      "source": "Web",
+      "paymentType": "1",
+    }).subscribe(res => { });
+
     this.paymentService.createTransaction(body).subscribe(response => {
       this.isLoader = false;
       console.log("response >>>>>", response);
+
+      this.paymentService.CryptoPaymentRequestResponse({
+        "userId": this.gs.loggedInUserInfo.userId,
+        "orderId": customOrderId,
+        "paymentReqResData": JSON.stringify(response.data),
+        "paymentReqResType": "Payment Initiated Response",
+        "source": "Web",
+        "paymentType": "1",
+      }).subscribe(res => { });
 
       if (response.status == 201) {
         let responseData = response.data;

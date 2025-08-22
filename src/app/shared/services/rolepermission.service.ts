@@ -38,14 +38,4 @@ export class RolePermissionService {
       })
     );
   }
-
-  // Wallet -> AddWalletFunds
-  public addWalletFunds(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/AddWalletFunds', data).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
 }

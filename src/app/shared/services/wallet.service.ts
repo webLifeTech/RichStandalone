@@ -16,7 +16,7 @@ export class WalletService {
   // Wallet -> GetWalletDetails
   public getWalletDetails(dataParams: any) {
     const params = new HttpParams().set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB/Wallet/GetWalletDetails', { params }).pipe(
+    return this.http.get(this.baseUrl1 + 'TLHUB/Paymentgateway/GetWalletDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })
@@ -25,7 +25,7 @@ export class WalletService {
 
   // Wallet -> AddWalletFunds
   public addWalletFunds(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/AddWalletFunds', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Paymentgateway/AddWalletFunds', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -34,7 +34,7 @@ export class WalletService {
 
   // Wallet -> WithDrawWalletFunds
   public withDrawWalletFunds(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/WithDrawWalletFunds', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Paymentgateway/WithDrawWalletFunds', data).pipe(
       map((res: any) => {
         return res;
       })
@@ -61,7 +61,7 @@ export class WalletService {
 
   // Wallet -> GetAllWalletPayments
   public GetAllWalletPayments(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Wallet/GetAllWalletPayments', data).pipe(
+    return this.http.post(this.baseUrl1 + 'TLHUB/Paymentgateway/GetAllWalletPayments', data).pipe(
       map((res: any) => {
         return res;
       })

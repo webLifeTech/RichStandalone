@@ -91,4 +91,24 @@ export class PaymentService {
       })
     );
   }
+
+  // Paymentgateway -> GetCryptoPaymentOrderId
+  public GetCryptoPaymentOrderId() {
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Paymentgateway/GetCryptoPaymentOrderId', {}).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  // Paymentgateway -> CryptoPaymentRequestResponse
+  public CryptoPaymentRequestResponse(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Paymentgateway/CryptoPaymentRequestResponse', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }
