@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from './shared/services/auth.service';
 import { GlobalService } from './shared/services/global.service';
 import { CommonModule } from '@angular/common';
 
@@ -20,7 +19,6 @@ export class AppComponent {
   private defaultLang = 'en';
   constructor(
     private translate: TranslateService,
-    private auths: AuthService,
     public gs: GlobalService,
   ) {
     this.gs.loggedInUserInfo = localStorage.getItem('loggedInUser') ? JSON.parse(localStorage.getItem('loggedInUser') || "") : {};

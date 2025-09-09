@@ -16,8 +16,8 @@
             <div class="col-lg-10 col-sm-12 col-12">
               <div class="booking-lists">
                 <ul class="nav">
-                  <li *ngFor="let item of booktabs">
-                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                  <li *ngFor="let item of tabs">
+                    <a [class.active]="activeTab == item.name" (click)="changeBookTab(item)">{{item.name}}</a>
                   </li>
                 </ul>
               </div>
@@ -43,20 +43,20 @@
           <div class="card-header">
             <div class="row align-items-center">
               <div class="col-md-5">
-                <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+                <h4>{{activeTab}}</h4>
               </div>
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
                   <div id="tablefilter">
-
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
-                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
-                          placeholder="Search" />
+                        <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
+                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                    Search
+                  </a>
                   <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
                     class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
                     Booking</a>
@@ -65,89 +65,132 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="table-responsive dashboard-table mb-4">
-              <table class="table datatable">
-                <thead class="thead-light">
-                  <tr>
-                    <th>
-                      <span>SL</span>
-                    </th>
-                    <th class="text-center">Vin Number</th>
-                    <th class="text-start">Car Name</th>
-                    <th *ngIf="activeTab !== 'Fleet Company'" class="text-start">Owner Name</th>
-                    <th *ngIf="activeTab === 'Fleet Company'" class="text-center">Company/Branch Name</th>
-                    <th class="text-center">Plate Number</th>
-                    <th class="text-center">Price Per Day</th>
-                    <th class="text-center">Vehicle status</th>
-                    <th class="text-center">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
-                    <td>
-                      <span>{{idx+1}}</span>
-                    </td>
-                    <td>{{data.vin_number}}</td>
-                    <td class="text-start">
-                      <div class="table-avatar">
-                        <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.img" alt="Booking">
-                        </a>
-                        <div class="table-head-name flex-grow-1">
-                          <a>{{data.car_name}}</a>
-                        </div>
-                      </div>
-                    </td>
-                    <td *ngIf="activeTab !== 'Fleet Company'" class="text-start">
-                      <div class="table-avatar">
-                        <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.owner_img" alt="Booking">
-                        </a>
-                        <div class="table-head-name flex-grow-1">
-                          <a>{{data.owner_name}}</a>
-                        </div>
-                      </div>
-                    </td>
-                    <td *ngIf="activeTab === 'Fleet Company'" class="text-center">
-                      <span>{{data.branch}}</span>
-                    </td>
-                    <td class="text-center">
-                      <span>{{data.plate_number}}</span>
-                    </td>
-                    <td class="text-center text-red">
-                      <span>{{data.price_per_day | currencyPipe: gs.currency}}</span>
-                    </td>
-                    <td>
-                      <span class="badge" [ngClass]="{
-                          'badge-light-warning': data.vehicle_status === 'Booked',
-                          'badge-light-danger': data.vehicle_status === 'KYC Pending',
-                          'badge-light-success': data.vehicle_status === 'Available'}">
-                        {{data.vehicle_status}}
+            <mat-accordion *ngIf="carOwnerTabs.length" class="accordion-align">
+              <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
+                (closed)="onToggle(false, section)"
+                *ngFor="let section of carOwnerTabs | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="justify-content-between me-5">
+                    <span>
+                      {{ section.ownerName }} :
+                      <span
+                        [ngClass]="{'text-green': section.userStatus == 'Active', 'text-red': section.userStatus != 'Active'}">
+                        {{ section.userStatus }}
                       </span>
-                    </td>
-                    <td class="text-center">
-                      <a *ngIf="data.status === 'Active'" (click)="changeStatus(data)">
-                        <span class="badge badge-success">
-                          {{data.status}}
-                        </span>
-                      </a>
-                      <a *ngIf="data.status === 'Repair'" (click)="changeStatus(data)">
-                        <span class="badge badge-warning">
-                          {{data.status}}
-                        </span>
-                      </a>
-                      <a *ngIf="data.status === 'Inactive'" (click)="changeStatus(data)">
-                        <span class="badge badge-danger">
-                          {{data.status}}
-                        </span>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </span>
+                    <span>
+                      {{ section.roleName }}
+                    </span>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <i class="feather " [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="col-md-12 mt-4">
+                  <div class="table-responsive dashboard-table mb-4">
+                    <table class="table datatable">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>
+                            <span>SL</span>
+                          </th>
+                          <th class="text-center">Vin Number</th>
+                          <th class="text-start">Car Name</th>
+                          <th *ngIf="activeTab !== 'Fleet Company'" class="text-start">Owner Name</th>
+                          <th *ngIf="activeTab === 'Fleet Company'" class="text-center">Company/Branch Name</th>
+                          <th class="text-center">Plate Number</th>
+                          <th class="text-center">Price Per Day</th>
+                          <th class="text-center">Vehicle status</th>
+                          <th class="text-center">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="let data of section.allVehicles | paginate: { id: section.userId, itemsPerPage: 5, currentPage: currentPageSecond, totalItems: section.viewModel?.totalCount }; let idx = index;">
+                          <td>
+                            <span>{{idx+1}}</span>
+                          </td>
+                          <td>{{data.vin}}</td>
+                          <td class="text-start">
+                            <div class="table-avatar">
+                              <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                                <img class="car-img" [src]="data.carImage" alt="Booking">
+                              </a>
+                              <div class="table-head-name flex-grow-1">
+                                <a>{{data.carName}}</a>
+                              </div>
+                            </div>
+                          </td>
+                          <td *ngIf="activeTab !== 'Fleet Company'" class="text-start">
+                            <div class="table-avatar">
+                              <!-- <a class="avatar avatar-lg flex-shrink-0">
+                                <img class="avatar-img" [src]="data.owner_img" alt="Booking">
+                              </a> -->
+                              <div class="table-head-name flex-grow-1">
+                                <a>{{data.ownerName}}</a>
+                              </div>
+                            </div>
+                          </td>
+                          <td *ngIf="activeTab === 'Fleet Company'" class="text-center">
+                            <span>{{data.branch}}</span>
+                          </td>
+                          <td class="text-center">
+                            <span>{{data.plateNumber || "-"}}</span>
+                          </td>
+                          <td class="text-center text-red">
+                            <span>{{data.perDayPrice | currencyPipe: gs.currency}}</span>
+                          </td>
+                          <td>
+                            <span class="badge" [ngClass]="{
+                          'badge-light-warning': data.vehicleStatus === 'Booked',
+                          'badge-light-danger': data.vehicleStatus === 'KYC Pending',
+                          'badge-light-success': data.vehicleStatus === 'Available'}">
+                              {{data.vehicleStatus}}
+                            </span>
+                          </td>
+                          <td class="text-center">
+                            <!-- (click)="changeStatus(data)" -->
+                            <a *ngIf="data.status === 'Active'">
+                              <span class="badge badge-success">
+                                {{data.status}}
+                              </span>
+                            </a>
+                            <a *ngIf="data.status === 'Repair' || data.status === 'Pending'">
+                              <span class="badge badge-warning">
+                                {{data.status}}
+                              </span>
+                            </a>
+                            <a *ngIf="data.status === 'InActive'">
+                              <span class="badge badge-danger">
+                                {{data.status}}
+                              </span>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div *ngIf="!section.allVehicles.length" class="col-md-12">
+                    <p class="text-center">
+                      <b>Vehicle Not Found</b>
+                    </p>
+                  </div>
+                  <pagination-controls [id]="section.userId"
+                    (pageChange)="pageChangedSecond($event)"></pagination-controls>
+                </div>
+              </mat-expansion-panel>
+
+              <pagination-controls [id]="'first'" (pageChange)="pageChanged($event)"></pagination-controls>
+            </mat-accordion>
+
+            <div *ngIf="!carOwnerTabs.length" class="col-md-12">
+              <p class="text-center">
+                <b>Data Not Found</b>
+              </p>
             </div>
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+
           </div>
         </div>
       </div>

@@ -122,6 +122,17 @@ export class CabCardViewComponent {
       return;
     }
 
+    let searchObj = this.gs.getLastSearch();
+    let today = new Date();
+    let tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    searchObj.type = "driver";
+    searchObj.timeType = "Daily";
+    searchObj.pick_time = today.toISOString();
+    searchObj.drop_time = tomorrow.toISOString();
+    searchObj.same_location = details.location;
+    localStorage.setItem('lastSearch', JSON.stringify(searchObj));
+    this.gs.lastSearch = searchObj;
 
     let params = {
       type: "car",

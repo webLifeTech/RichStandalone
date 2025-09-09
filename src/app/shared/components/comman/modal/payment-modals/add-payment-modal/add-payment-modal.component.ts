@@ -165,7 +165,8 @@ export class AddPaymentModalComponent {
           modalRef.componentInstance.documentIframe = responseData.url;
           modalRef.result.then((signModalRes: any) => {
             if (signModalRes.confirmed) {
-              this.callAddFunds();
+              this.activeModal.close({ confirmed: true });
+              // this.callAddFunds(); // No need to call endpoint only in Crypto payment. //2-9-25
             }
           }, () => { });
         } else {

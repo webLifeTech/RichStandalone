@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="card-body booking-history">
-            <div class="widget-box p-0">
+            <div *ngIf="userDetails['data']['series'].length" class="widget-box p-0">
               <app-apexcharts [data]="userDetails.data" [chartType]="'column_charts'"
                 [name]="'Performance grade'"></app-apexcharts>
               <div class="text-end">
@@ -27,11 +27,11 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <app-ad-vehicles-details></app-ad-vehicles-details>
+      <div *ngIf="dashboardAllDetails.vehiclesOverView" class="col-lg-4">
+        <app-ad-vehicles-details [data]="dashboardAllDetails.vehiclesOverView"></app-ad-vehicles-details>
       </div>
-      <div class="col-lg-8">
-        <app-ad-booking-details></app-ad-booking-details>
+      <div *ngIf="dashboardAllDetails.bookingOverview" class="col-lg-8">
+        <app-ad-booking-details [data]="dashboardAllDetails.bookingOverview"></app-ad-booking-details>
       </div>
     </div>
 
@@ -102,7 +102,7 @@
         </ng-container>
       </div>
 
-      <div class="col-lg-4 mb-3">
+      <div *ngIf="gs.loggedInUserInfo['role'] !== 'admin'" class="col-lg-4 mb-3">
         <div class="card dash-box-card flex-fill mb-0 py-2">
           <div class="card-body overview-box">
             <div class="row">

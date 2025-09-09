@@ -172,27 +172,48 @@
             </div>
           </div>
         </div>
-        <div class="booking-wrapper">
+        <div *ngIf="isShowOwnerDetails" class="booking-wrapper">
           <div class="booking-title">
-            <h6 *ngIf="isShowOwnerDetails">
+            <h6>
               Owner Details
             </h6>
-            <h6 *ngIf="isShowDriverDetails">
-              Driver Personal Details</h6>
           </div>
           <div class="row container mt-3">
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Details</h6>
-                <p>{{bookingDetails.personalDetails.name}}</p>
-                <p>{{bookingDetails.personalDetails.phoneNumber}}</p>
-                <p>{{bookingDetails.personalDetails.emailId}}</p>
+                <p>{{bookingDetails.vehicleOwnerPersonalDetails.name}}</p>
+                <p>{{bookingDetails.vehicleOwnerPersonalDetails.phoneNumber}}</p>
+                <p>{{bookingDetails.vehicleOwnerPersonalDetails.emailId}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Address</h6>
-                <p>{{bookingDetails.personalDetails.address}}</p>
+                <p>{{bookingDetails.vehicleOwnerPersonalDetails.address}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isShowDriverDetails" class="booking-wrapper">
+          <div class="booking-title">
+            <h6>
+              Driver Personal Details
+            </h6>
+          </div>
+          <div class="row container mt-3">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Details</h6>
+                <p>{{bookingDetails.driverPersonalDetails.name}}</p>
+                <p>{{bookingDetails.driverPersonalDetails.phoneNumber}}</p>
+                <p>{{bookingDetails.driverPersonalDetails.emailId}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Address</h6>
+                <p>{{bookingDetails.driverPersonalDetails.address}}</p>
               </div>
             </div>
           </div>

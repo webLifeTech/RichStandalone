@@ -71,8 +71,6 @@ export class MenuComponent {
           "modifiedDate": "10/16/2024",
         })
       }
-      console.log("this.menuItems >>>>>", this.menuItems);
-
       this.roleService.menuItems = this.menuItems;
     })
   }

@@ -4,11 +4,9 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { CurrencySymbolPipe } from '../../../../shared/pipe/currency.pipe';
-import { CabPromoCodeComponent } from '../../../cab/booking/widgets/cab-promo-code/cab-promo-code.component';
 import { BookingCreditCardComponent } from '../../../../shared/components/comman/booking/booking-credit-card/booking-credit-card.component';
 import { BookingMyWalletComponent } from '../../../../shared/components/comman/booking/booking-my-wallet/booking-my-wallet.component';
 import { BookingNetBankingComponent } from '../../../../shared/components/comman/booking/booking-net-banking/booking-net-banking.component';
-import { cabDetails } from '../../../../shared/interface/cab';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '../../../../shared/services/global.service';
 import { PricingService } from '../../../../shared/services/pricing.service';
@@ -20,6 +18,9 @@ import { addMonths, addYears } from 'date-fns';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { WalletService } from '../../../../shared/services/wallet.service';
+import { BookingCryptoComponent } from '../../../../shared/components/comman/booking/booking-crypto/booking-crypto.component';
+import { PaymentService } from '../../../../shared/services/payment.service';
+import { WebViewUrlModalComponent } from '../../../../shared/components/comman/modal/webview-url-modal/webview-url-modal.component';
 
 @Component({
   selector: 'app-plan-subscribe',
@@ -28,6 +29,7 @@ import { WalletService } from '../../../../shared/services/wallet.service';
     BookingCreditCardComponent,
     BookingMyWalletComponent,
     BookingNetBankingComponent,
+    BookingCryptoComponent,
     CommonModule,
     TranslateModule,
     NgbModule,
@@ -75,6 +77,9 @@ export class PlanSubscribeComponent {
     packageDetails: []
   };
   type: any = "CreditCard";
+  coinList: any = [];
+  selectedCoin = ""; // LTCT
+  customOrderId: any = null;
 
   constructor(
     public cabService: CabService,
@@ -87,6 +92,7 @@ export class PlanSubscribeComponent {
     private datePipe: DatePipe,
     private toast: ToastService,
     public walletService: WalletService,
+    private paymentService: PaymentService,
   ) {
     // this.payckageStatus = route.snapshot.params['payckageStatus'];
     this.route.queryParams.subscribe((params) => {
@@ -104,6 +110,7 @@ export class PlanSubscribeComponent {
     this.getConfigUIForms();
     this.getPackageType();
     this.calculateDropTime();
+    this.getCrypto();
   }
 
   getConfigUIForms() {
@@ -192,6 +199,17 @@ export class PlanSubscribeComponent {
     })
   }
 
+  getCrypto() {
+    this.paymentService.getSupportedCoins().subscribe((response: any) => {
+      if (response.status == 200) {
+        for (const property in response.data) {
+          response.data[property]['coin'] = property;
+          this.coinList.push(response.data[property])
+        }
+      }
+    })
+  }
+
   viewTermsConditions() {
     const modalRef = this.modalService.open(TermsAndCModalComponent, {
       size: 'lg',
@@ -206,6 +224,85 @@ export class PlanSubscribeComponent {
     });
   }
 
+  async goPayment() {
+    if (this.type == 'Crypto') {
+      this.makeCryptoPayment();
+    } else {
+      this.payNow();
+    }
+  }
+
+  async makeCryptoPayment() {
+    if (!this.selectedCoin) {
+      this.toast.errorToastr("Please select crypto coin");
+      return;
+    }
+
+    this.customOrderId = await this.paymentService.GetCryptoPaymentOrderId();
+    if (!this.customOrderId) {
+      this.toast.errorToastr("Something went wrong");
+      return;
+    }
+
+    let cryptoBody = {
+      "price": this.packageSummaryObj.totalAmount,
+      "currency": this.selectedCoin, //
+      "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username
+      "customOrderId": this.customOrderId || null,
+      "notificationURL": "https://uat.maya-avante.com/PostData/IsoSearch/PostMatchResponseData"
+    }
+    this.gs.isSpinnerShow = true;
+
+    this.paymentService.CryptoPaymentRequestResponse({
+      "userId": this.gs.loggedInUserInfo.userId,
+      "orderId": this.customOrderId,
+      "paymentReqResData": JSON.stringify(cryptoBody),
+      "paymentReqResType": "Payment Initiated Request",
+      "source": "Web",
+      "paymentType": "4",
+    }).subscribe(res => { });
+
+    this.paymentService.createTransaction(cryptoBody).subscribe(response => {
+      this.gs.isSpinnerShow = false;
+      console.log("response >>>>>", response);
+
+      this.paymentService.CryptoPaymentRequestResponse({
+        "userId": this.gs.loggedInUserInfo.userId,
+        "orderId": this.customOrderId,
+        "paymentReqResData": JSON.stringify(response.data),
+        "paymentReqResType": "Payment Initiated Response",
+        "source": "Web",
+        "paymentType": "4",
+      }).subscribe(res => { });
+
+      if (response.status == 201) {
+        let responseData = response.data;
+        if (responseData && responseData.url) {
+          this.toast.successToastr("Transaction created successfully");
+          const modalRef = this.modalService.open(WebViewUrlModalComponent, {
+            centered: true,
+            backdrop: 'static',
+            windowClass: 'document-modal',
+            size: 'lg'
+          });
+          modalRef.componentInstance.documentIframe = responseData.url;
+          modalRef.result.then((signModalRes: any) => {
+            if (signModalRes.confirmed) {
+              this.payNow();
+            }
+          }, () => { });
+        } else {
+          this.toast.errorToastr("Something went wrong");
+        }
+      } else {
+        this.toast.errorToastr("Something went wrong");
+      }
+    }, err => {
+      this.toast.errorToastr("Something went wrong");
+      // this.isLoader = false;
+    })
+  }
+
   async payNow() {
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
@@ -213,6 +310,7 @@ export class PlanSubscribeComponent {
       "remarks": "Package " + this.params.packageStatus,
       "paymentMethod": this.type, // CreditCard,ACH
       "currency": "USD",
+      "customOrderId": this.customOrderId,
       "subscrptionPackageDetails": {
         "packageId": this.packageSummaryObj.packageId,
         "startDate": this.packageSummaryObj.startDate,
@@ -235,12 +333,6 @@ export class PlanSubscribeComponent {
         "cvv": encryptCvv,
         "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
       }
-      // body["creditCardInfo"] = {
-      //   "cardNumber": this.gs.paymentDetails.creditCard?.value?.cardNumber?.replaceAll(/\s/g, ''),
-      //   "expirationDate": this.gs.paymentDetails.creditCard?.value?.expirationDate?.replaceAll(/\s/g, ''),
-      //   "cvv": this.gs.paymentDetails.creditCard?.value.cvc,
-      //   "cardHolderName": this.gs.paymentDetails.creditCard?.value.holderName
-      // }
     }
     if (this.type === 'ACH') {
       if (!this.gs.paymentDetails.ach.valid) {
@@ -257,14 +349,6 @@ export class PlanSubscribeComponent {
         "accountName": this.gs.paymentDetails.ach.value?.accountName,
         "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
       }
-      // body["bankAccount"] = {
-      //   "bank": this.gs.paymentDetails.ach.value?.bank,
-      //   "rountingNo": this.gs.paymentDetails.ach.value?.rountingNo,
-      //   "accountNo": this.gs.paymentDetails.ach.value?.accountNo,
-      //   "accountType": this.gs.paymentDetails.ach.value?.accountType,
-      //   "accountName": this.gs.paymentDetails.ach.value?.accountName,
-      //   "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
-      // }
     }
     console.log("body >>>", body);
 
@@ -330,5 +414,10 @@ export class PlanSubscribeComponent {
       this.paymentOptions[i].checked = false;
     }
     details.checked = true;
+  }
+
+  onSelectCoin(event: any) {
+    console.log("event >>>>>>>>", event);
+    this.selectedCoin = event;
   }
 }

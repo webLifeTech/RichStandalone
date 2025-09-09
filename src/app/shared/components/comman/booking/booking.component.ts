@@ -144,6 +144,7 @@ export class BookingComponent {
         "walletId": null,
         "paymentMethod": this.type, // CreditCard,ACH,Wallet
         "currency": "USD", // USD,INR,EUR
+        "customOrderId": null,
       },
       "riskId": this.riskType === 'car' ? this.singleItem.vehicleId : this.singleItem.driverId,
       "riskType": this.riskType === 'car' ? 'Vehicle' : 'Driver',
@@ -286,6 +287,7 @@ export class BookingComponent {
           modalRef.componentInstance.documentIframe = responseData.url;
           modalRef.result.then((signModalRes: any) => {
             if (signModalRes.confirmed) {
+              bodyObj.BookingPaymentRequest.customOrderId = customOrderId || null;
               this.bookingAgreement(bodyObj);
             }
           }, () => { });

@@ -13,16 +13,16 @@
       <div class="col-lg-12">
         <div class="sorting-info">
           <div class="row d-flex align-items-center">
-            <div *ngIf="activeTypes === 'cars'" class="col-lg-8 col-sm-12 col-12">
+            <div class="col-lg-8 col-sm-12 col-12">
               <div class="booking-lists">
                 <ul class="nav">
-                  <li *ngFor="let item of booktabs">
-                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                  <li *ngFor="let item of tabs">
+                    <a [class.active]="activeTab == item.name" (click)="changeBookTab(item)">{{item.name}}</a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div *ngIf="activeTypes === 'drivers'" class="col-lg-10 col-sm-12 col-12">
+            <!-- <div *ngIf="activeTypes === 'Driver'" class="col-lg-10 col-sm-12 col-12">
               <div class="booking-lists">
                 <ul class="nav">
                   <li *ngFor="let item of driverBooktabs">
@@ -30,8 +30,8 @@
                   </li>
                 </ul>
               </div>
-            </div>
-            <div *ngIf="activeTypes === 'cars'" class="col-lg-2 col-sm-12 col-12 text-end">
+            </div> -->
+            <div *ngIf="activeTypes === 'Vehicle'" class="col-lg-2 col-sm-12 col-12 text-end">
               <div class="filter-group">
                 <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
                   <ng-container *ngFor="let item of vehicleStatusList">
@@ -61,20 +61,20 @@
           <div class="card-header">
             <div class="row align-items-center">
               <div class="col-md-5">
-                <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+                <h4>{{activeTab}} <span>{{totalData}}</span></h4>
               </div>
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
                   <div id="tablefilter">
-
                     <div class="dataTables_filter">
                       <label>
-                        <input [(ngModel)]="searchDataValue" [ngModelOptions]="{standalone: true}"
-                          (ngModelChange)="searchData(searchDataValue)" type="search" class="form-control"
-                          placeholder="Search" />
+                        <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
+                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                    Search
+                  </a>
                   <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
                     class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
                     Booking</a>
@@ -90,17 +90,83 @@
                     <th>
                       <span>SL</span>
                     </th>
-                    <th class="text-center">Booking ID</th>
-                    <th *ngIf="activeTypes === 'cars'" class="text-start">Car Name</th>
-                    <th *ngIf="activeTypes === 'drivers'" class="text-start">Driver Name</th>
-                    <th class="text-center">Location</th>
-                    <th class="text-center">Booking Date</th>
-                    <th class="text-center">Pickup Date</th>
-                    <th class="text-center">End Date</th>
-                    <th class="text-center">Days</th>
-                    <th class="text-center">Price Per Day</th>
-                    <th class="text-center">Total Amount</th>
-                    <th class="text-center">Status</th>
+                    <th class="text-center pointer" (click)="onSort('bookingReferenceNumber')">
+                      Booking ID
+                      <span *ngIf="sortColumn === 'bookingReferenceNumber'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTypes === 'Vehicle'" class="text-start pointer" (click)="onSort('carName')">
+                      Car Name
+                      <span *ngIf="sortColumn === 'carName'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTypes === 'Driver'" class="text-start pointer" (click)="onSort('driver_name')">
+                      Driver Name
+                      <span *ngIf="sortColumn === 'driver_name'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <!-- <th class="text-start pointer" (click)="onSort('location')">
+                      Location
+                      <span *ngIf="sortColumn === 'location'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th> -->
+                    <th class="text-center pointer" (click)="onSort('bookingDate')">
+                      Booked On
+                      <span *ngIf="sortColumn === 'bookingDate'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('pickUpDate')">
+                      Pickup Date
+                      <span *ngIf="sortColumn === 'pickUpDate'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('endDate')">
+                      End Date
+                      <span *ngIf="sortColumn === 'endDate'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('bookingDuration')">
+                      Duration
+                      <span *ngIf="sortColumn === 'bookingDuration'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('pricePerBooking')">
+                      Price
+                      <span *ngIf="sortColumn === 'pricePerBooking'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('totalAmount')">
+                      Total Amount
+                      <span *ngIf="sortColumn === 'totalAmount'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th class="text-center pointer" (click)="onSort('bookingStatus')">
+                      Status
+                      <span *ngIf="sortColumn === 'bookingStatus'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
                     <th class="text-center">Action</th>
                   </tr>
                 </thead>
@@ -110,11 +176,11 @@
                     <td>
                       <span>{{idx+1}}</span>
                     </td>
-                    <td><a>{{data.bookingId}}</a></td>
-                    <td *ngIf="activeTypes === 'cars'" class="text-start">
+                    <td><a>{{data.bookingReferenceNumber}}</a></td>
+                    <td *ngIf="activeTypes === 'Vehicle'" class="text-start">
                       <div class="table-avatar">
-                        <a class="avatar avatar-lg flex-shrink-0">
-                          <img class="avatar-img" [src]="data.img" alt="Booking">
+                        <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                          <img class="car-img" [src]="data.carImage" alt="Booking">
                         </a>
                         <div class="table-head-name flex-grow-1">
                           <a>{{data.carName}}</a>
@@ -122,7 +188,7 @@
                       </div>
                     </td>
 
-                    <td *ngIf="activeTypes === 'drivers'" class="text-start">
+                    <td *ngIf="activeTypes === 'Driver'" class="text-start">
                       <div class="table-avatar">
                         <a class="avatar avatar-lg flex-shrink-0">
                           <img class="avatar-img" [src]="data.driver_img" alt="Booking">
@@ -132,35 +198,35 @@
                         </div>
                       </div>
                     </td>
+                    <!-- <td class="text-start">
+                      <span>{{data.location}}</span>
+                    </td> -->
                     <td class="text-center">
-                      <span>{{data.pickupDeliveryLocation1}}
-                      </span>
+                      <span>{{data.bookingDate}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.bookedOn}}</span>
+                      <span>{{data.pickUpDate}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.pickup_date_time}}</span>
+                      <span>{{data.endDate}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.end_date_time}}</span>
+                      <span>{{data.bookingDuration}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.number_of_days}}</span>
+                      <span>{{data.pricePerBooking | currencyPipe: gs.currency}} per {{data.durationType}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{data.price_per_day | currencyPipe: gs.currency}}</span>
-                    </td>
-                    <td class="text-center">
-                      <span class="text-red">{{data.total_amount | currencyPipe: gs.currency}}</span>
+                      <span class="text-red">{{data.totalAmount | currencyPipe: gs.currency}}</span>
                     </td>
                     <td>
                       <span class="badge" [ngClass]="{
-                          'badge-light-secondary': data.status === 'Upcoming',
-                          'badge-light-warning': data.status === 'Inprogress' ,
-                          'badge-light-danger': data.status === 'Cancelled' || data.status === 'Refund Started' || data.status === 'Refund Completed' || data.status === 'Refund Rejected',
-                          'badge-light-success': data.status === 'Completed'}">
-                        {{data.status}}
+                            'badge-light-secondary': data.bookingStatus === 'Confirmed',
+                            'badge-light-warning': data.bookingStatus === 'Delivered' || data.bookingStatus ===  'Pending Request' || data.bookingStatus ===  'Start Service',
+                            'badge-light-danger': data.bookingStatus === 'Cancelled' || data.bookingStatus === 'Refund Started' || data.bookingStatus === 'Refund Received' || data.bookingStatus === 'Refund Rejected',
+                            'badge-light-success': data.bookingStatus === 'Received' || data.bookingStatus === 'End Service'
+                            }">
+                        {{data.bookingStatus}}
                       </span>
                     </td>
                     <td class="text-end">
@@ -168,11 +234,11 @@
                         <i class="feather icon-more-vertical"></i>
                       </button>
                       <mat-menu #menu="matMenu" xPosition="before">
-                        <button *ngIf="activeTypes === 'cars'" (click)="onView(data)" type="button" mat-menu-item>
+                        <button *ngIf="activeTypes === 'Vehicle'" (click)="onView(data)" type="button" mat-menu-item>
                           <i class="feather icon-eye"></i>
                           <span class="ms-2">View</span>
                         </button>
-                        <button *ngIf="activeTypes === 'drivers'" (click)="onViewDriversBooking(data)" type="button"
+                        <button *ngIf="activeTypes === 'Driver'" (click)="onViewDriversBooking(data)" type="button"
                           mat-menu-item>
                           <i class="feather icon-eye"></i>
                           <span class="ms-2">View</span>

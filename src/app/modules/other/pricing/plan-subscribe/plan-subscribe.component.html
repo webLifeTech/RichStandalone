@@ -90,6 +90,11 @@
                           @if(details.type == 'Wallet'){
                           <app-booking-my-wallet></app-booking-my-wallet>
                           }
+
+                          @if(details.type == 'Crypto'){
+                          <app-booking-crypto [coinList]="coinList"
+                            (onSelectCoin)="onSelectCoin($event)"></app-booking-crypto>
+                          }
                         </ng-template>
                       </div>
                     </div>
@@ -109,7 +114,8 @@
               </div>
 
               <div class="payment-btn text-end mt-3">
-                <button (click)="payNow()" [disabled]="!isAgreeTerms" type="button" class="btn btn-theme color1 me-3">
+                <button (click)="goPayment()" [disabled]="!isAgreeTerms" type="button"
+                  class="btn btn-theme color1 me-3">
                   {{'pricing_summary.pay_now' | translate}}
                 </button>
                 <button (click)="backToPackage()" type="button" class="btn btn-solid ">

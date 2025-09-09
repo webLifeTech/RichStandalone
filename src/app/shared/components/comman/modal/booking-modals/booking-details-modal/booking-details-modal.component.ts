@@ -39,21 +39,20 @@ export class BookingDetailsModalComponent {
   }
 
   GetBookingByBookingRefNo() {
-    console.log("bookingRefNo >>>>", this.bookingRefNo);
-
+    this.gs.isSpinnerShow = true;
     this.bookingService.GetBookingByBookingRefNo({
       bookingRefNo: this.bookingRefNo,
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      console.log("GetBookingByBookingRefNo >>>>>", response);
+      this.gs.isSpinnerShow = false;
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
         this.bookingDetails = response;
-        if (!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver' || this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle') {
+        if ((!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver') || (this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle') || this.gs.loggedInUserInfo['role'] === 'admin') {
           this.isShowOwnerDetails = true;
           this.bookingDetails.personalDetails = this.bookingDetails.vehicleOwnerPersonalDetails;
         }
 
-        if (!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle' || this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver') {
+        if ((!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle') || (this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver') || this.gs.loggedInUserInfo['role'] === 'admin') {
           this.isShowDriverDetails = true;
           this.bookingDetails.personalDetails = this.bookingDetails.driverPersonalDetails;
         }

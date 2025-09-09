@@ -28,6 +28,7 @@ import { AdVehiclesDetailsComponent } from '../admin-dashboard/widgets/ad-vehicl
 import { CarBookingOverviewComponent } from './widgets/dashboard/car-booking-overview/car-booking-overview.component';
 import { DriverBookingOverviewComponent } from './widgets/dashboard/driver-booking-overview/driver-booking-overview.component';
 import { ProfileService } from '../../shared/services/profile.service';
+import { AdminService } from '../../shared/services/admin.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -122,34 +123,36 @@ export class UserDashboardComponent {
   userDetails: any = {
     "data": {
       "series": [
-        {
-          name: "Active",
-          data: [44, 55, 57, 56]
-        },
-        {
-          name: "Inactive",
-          data: [76, 85, 101, 98]
-        },
-        {
-          name: "KYC Pending",
-          data: [35, 41, 36, 26]
-        },
+        // {
+        //   name: "Active",
+        //   data: [44, 55, 57, 56]
+        // },
+        // {
+        //   name: "Inactive",
+        //   data: [76, 85, 101, 98]
+        // },
+        // {
+        //   name: "KYC Pending",
+        //   data: [35, 41, 36, 26]
+        // },
       ],
-      "chartLabels": ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
+      "chartLabels": [], // ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"]
       "chartColors": ["#dcc7fa", "#8e33ff"],
     }
   };
 
   constructor(
-    private pageService: PagesService,
     public gs: GlobalService,
-    private bookingService: BookingService,
     private router: Router,
     private modalService: NgbModal,
     public profileService: ProfileService,
+    private adminService: AdminService,
   ) {
-    // this.getTableData();
-    this.getUserDashboardDetails();
+    if (this.gs.loggedInUserInfo['role'] === 'admin') {
+      this.getAdminDashboardDetails();
+    } else {
+      this.getUserDashboardDetails();
+    }
   }
 
   getUserDashboardDetails() {
@@ -313,7 +316,6 @@ export class UserDashboardComponent {
           }
         )
       }
-      console.log("newArray >>>>", newArray);
 
       if (this.gs.loggedInUserInfo['role'] === 'user_2' || this.gs.loggedInUserInfo['role'] === 'user_3' || this.gs.loggedInUserInfo['role'] === 'user_4') {
         // if (this.dashboardAllDetails?.vehicleRiskRatings && this.dashboardAllDetails?.vehicleRiskRatings?.length) {
@@ -358,6 +360,40 @@ export class UserDashboardComponent {
       this.dashboardDataArray = newArray;
       this.gs.isSpinnerShow = false;
     })
+  }
+
+  getAdminDashboardDetails() {
+    this.gs.isSpinnerShow = true;
+
+    this.adminService.GetAdminDashboardDetails().subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("GetAdminDashboardDetails >>>>>", response);
+
+      if (response && response.statusCode == "200") {
+        this.dashboardAllDetails = JSON.parse(response.userDashboardDetails);
+        this.dashboardAllDetails.vehiclesOverView = JSON.parse(this.dashboardAllDetails.vehiclesOverView);
+        this.dashboardAllDetails.bookingOverview = JSON.parse(this.dashboardAllDetails.bookingOverview);
+        console.log("dashboardAllDetails >>>>>", this.dashboardAllDetails);
+        this.userDetails['data']['series'] = [
+          {
+            name: "Active",
+            data: this.dashboardAllDetails.customerStatus.map((item: any) => item.active)
+          },
+          {
+            name: "Inactive",
+            data: this.dashboardAllDetails.customerStatus.map((item: any) => item.inActive)
+          },
+          {
+            name: "KYC Pending",
+            data: this.dashboardAllDetails.customerStatus.map((item: any) => item.kycPending)
+          },
+        ]
+        for (let i in this.dashboardAllDetails.customerStatus) {
+          this.userDetails['data']['chartLabels'].push(this.dashboardAllDetails.customerStatus[i].roleName + ' (' + this.dashboardAllDetails.customerStatus[i].total + ')')// ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
+        }
+        console.log("this.userDetails >>>>", this.userDetails);
+      }
+    });
   }
 
   viewBooking(type: any) {

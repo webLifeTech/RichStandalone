@@ -398,10 +398,6 @@ export class CabSearchComponent {
     if (this.isDriverHireSearch) { // need to do
       this.searchObj.isDriverHireSearch = true;
       this.searchObj.type = "driver";
-      // this.searchObj.carType = "Manual";
-      // this.searchObj.carCatType = "Hatchback";
-      // this.searchObj.package = "2 Hours";
-      // this.searchObj.same_location = "Surat";
       this.searchObj.timeType = "Daily";
       this.searchObj.pick_time = this.searchObj.timeSchedule == 'Now' ? this.todayDate.toISOString() : this.searchObj.pick_time;
       this.searchObj.drop_time = "2025-08-19T12:53:24.000Z";
