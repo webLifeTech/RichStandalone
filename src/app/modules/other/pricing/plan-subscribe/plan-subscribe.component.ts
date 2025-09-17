@@ -308,9 +308,15 @@ export class PlanSubscribeComponent {
       "userId": this.gs.loggedInUserInfo.userId,
       "amount": this.packageSummaryObj.totalAmount,
       "remarks": "Package " + this.params.packageStatus,
-      "paymentMethod": this.type, // CreditCard,ACH
+      "paymentMethod": this.type, // CreditCard, ACH
       "currency": "USD",
       "customOrderId": this.customOrderId,
+      "discountId": this.packageSummaryObj.discountId || 0,
+      "discountAmount": this.packageSummaryObj.discount,
+      "baseAmount": this.packageSummaryObj.packagePrice,
+      "taxFee": this.packageSummaryObj.tax,
+      "siteFee": this.packageSummaryObj.siteFee || 0,
+      "otherFee": this.packageSummaryObj.otherFee,
       "subscrptionPackageDetails": {
         "packageId": this.packageSummaryObj.packageId,
         "startDate": this.packageSummaryObj.startDate,
@@ -318,7 +324,7 @@ export class PlanSubscribeComponent {
         "noOfMonths": this.packageSummaryObj.noOfMonths,
         "payckageStatus": this.params.packageStatus
       }
-    }
+    };
 
     if (this.type === 'CreditCard') {
       if (!this.gs.paymentDetails.creditCard.valid) {
@@ -352,7 +358,6 @@ export class PlanSubscribeComponent {
     }
     console.log("body >>>", body);
 
-    // return;
     this.gs.isSpinnerShow = true;
     this.pricingS.payForSubscribePackage(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
@@ -388,8 +393,6 @@ export class PlanSubscribeComponent {
     const { start_time, timeType, timeDuration } = this.summaryObj;
     if (!start_time || !timeType || !timeDuration) return;
 
-    console.log("timeType >>>>>>", timeType);
-
     let dropTime = new Date(start_time);
     switch (timeType) {
       case "Monthly":
@@ -399,8 +402,6 @@ export class PlanSubscribeComponent {
         this.summaryObj.end_time = addYears(dropTime, timeDuration);
         break;
     }
-
-
     this.getPackageSummaryDetails();
   }
 
@@ -417,7 +418,6 @@ export class PlanSubscribeComponent {
   }
 
   onSelectCoin(event: any) {
-    console.log("event >>>>>>>>", event);
     this.selectedCoin = event;
   }
 }

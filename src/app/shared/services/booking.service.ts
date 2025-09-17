@@ -218,7 +218,8 @@ export class BookingService {
   public GetCarBookingCancellationInfo(dataParams: any) {
     const params = new HttpParams()
       .set('bookingId', dataParams.bookingId)
-      .set('cancelDate', dataParams.cancelDate);
+      .set('cancelDate', dataParams.cancelDate)
+      .set('loginUserId', dataParams.loginUserId);
     return this.http.get(this.baseUrl1 + 'TLHUB/Cancellation/GetCarBookingCancellationInfo', { params }).pipe(
       map((res: any) => {
         return res;
@@ -230,7 +231,8 @@ export class BookingService {
   public GetDriverBookingCancellationInfo(dataParams: any) {
     const params = new HttpParams()
       .set('bookingId', dataParams.bookingId)
-      .set('cancelDate', dataParams.cancelDate);
+      .set('cancelDate', dataParams.cancelDate)
+      .set('loginUserId', dataParams.loginUserId);
     return this.http.get(this.baseUrl1 + 'TLHUB/Cancellation/GetDriverBookingCancellationInfo', { params }).pipe(
       map((res: any) => {
         return res;

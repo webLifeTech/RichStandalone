@@ -1,22 +1,26 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { Router } from '@angular/router';
-import { ApexchartsComponent } from '../apexcharts/apexcharts.component';
 import { GlobalService } from '../../../../shared/services/global.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { AdminService } from '../../../../shared/services/admin.service';
 
 @Component({
   selector: 'app-ad-booking-details',
   standalone: true,
   imports: [
     CommonModule,
-    CarouselModule
+    FormsModule,
+    NgSelectModule,
   ],
   templateUrl: './ad-booking-details.component.html',
   styleUrls: ['./ad-booking-details.component.scss']
 })
 export class AdBookingDetailsComponent {
   @Input() data: any = {};
+  @Input() timeTypeList: any = [];
+
   totalDrivers: any = {
     "title": "Total",
     "total": 1000,
@@ -28,45 +32,37 @@ export class AdBookingDetailsComponent {
     }
   };
 
-  carOwnersData: any = [
-    // {
-    //   "title": "Today Vehicle Booked",
-    //   "total": 800,
-    //   "bg-color": "color-emerald-green",
-    // },
-    // {
-    //   "title": "Vehicle Booking Inprogres",
-    //   "total": 140,
-    //   "bg-color": "color-sunset-orange",
-    // },
-    // {
-    //   "title": "Vehicle Trip Completed",
-    //   "total": 325,
-    //   "bg-color": "color-red",
-    // },
-    // {
-    //   "title": "Today Driver Booked",
-    //   "total": 600,
-    //   "bg-color": "color-amber",
-    // },
-    // {
-    //   "title": "Today Driver Booking InProgress",
-    //   "total": 135,
-    //   "bg-color": "color-turquoise-blue",
-    // },
-    // {
-    //   "title": "Today Driver Trip completed",
-    //   "total": 335,
-    //   "bg-color": "color-electric-purple",
-    // },
-  ];
+  carOwnersData: any = [];
+  timeType: any = "All Time";
+  isDataLoading: any = false;
 
   constructor(
     public gs: GlobalService,
     private router: Router,
+    private adminService: AdminService,
   ) { }
 
   ngOnInit() {
+    this.setData();
+  }
+
+  filterData() {
+    this.gs.isSpinnerShow = true;
+    this.isDataLoading = true;
+    const body = {
+      filter: this.timeType
+    }
+    this.adminService.GetAdminDashboardDetails(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.statusCode == "200") {
+        const dashboardAllDetails = JSON.parse(response.userDashboardDetails);
+        this.data = JSON.parse(dashboardAllDetails.bookingOverview);
+        this.setData();
+      }
+    });
+  }
+
+  setData() {
     this.carOwnersData = [
       {
         "title": "Total Vehicle Booked",
@@ -130,5 +126,9 @@ export class AdBookingDetailsComponent {
     this.router.navigate(['/user/bookingOverview'], {
       queryParams: params,
     });
+  }
+
+  onChangeTime() {
+    this.filterData();
   }
 }

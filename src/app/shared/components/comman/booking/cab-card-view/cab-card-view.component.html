@@ -3,7 +3,8 @@
   <div class="flight-detail-sec cab-detail-sec">
     <div class="detail-bar">
       <div class="container-fluid detail-wrap wow fadeInUp">
-        <a [ngClass]="{'btn-available': !details.isBooked, 'btn-booked' :details.isBooked}" class="btn">
+        <a *ngIf="from === 'wishlist' || from === 'owner_interest'"
+          [ngClass]="{'btn-available': !details.isBooked, 'btn-booked' :details.isBooked}" class="btn">
           {{details.availability | translate}}
         </a>
         <div class="row">

@@ -112,7 +112,8 @@
                 <tr>
                   <th>SL</th>
                   <th>Package Name</th>
-                  <th>Price</th>
+                  <th>Package Price</th>
+                  <th>Paid Amount</th>
                   <th>Start Date</th>
                   <th>Expiry Date</th>
                   <th>Status</th>
@@ -131,13 +132,18 @@
                       </div>
                     </td>
                     <td class="text-success-light">
-                      {{item.packagePrice | currencyPipe: gs.currency}}
+                      {{item.baseAmount | currencyPipe: gs.currency}}
+                    </td>
+                    <td class="text-success-light">
+                      {{item.paidAmount | currencyPipe: gs.currency}}
                     </td>
                     <td>{{item.startDate}}</td>
                     <td>{{item.endDate}}</td>
                     <td>
                       <span
-                        [ngClass]="{ 'badge-light-success': item.status === 'Active','badge-light-danger':(item.status === 'Expired' || item.status === 'Canceled') }"
+                        [ngClass]="{
+                          'badge-light-success': item.status === 'Active',
+                          'badge-light-danger':(item.status === 'Expired' || item.status === 'Canceled' || item.status === 'Failed') }"
                         class="badge">{{item.status}}</span>
                     </td>
                   </tr>

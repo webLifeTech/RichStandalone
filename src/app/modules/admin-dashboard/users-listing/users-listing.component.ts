@@ -3,16 +3,13 @@ import { CabService } from '../../../shared/services/cab.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { apiResultFormat } from '../../../shared/services/model/model';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
-import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
 import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
-import { UsersService } from '../../../shared/services/users.service';
 import { AdminService } from '../../../shared/services/admin.service';
 
 @Component({
@@ -26,7 +23,6 @@ import { AdminService } from '../../../shared/services/admin.service';
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
-    // CurrencySymbolPipe,
   ],
   templateUrl: './users-listing.component.html',
   styleUrl: './users-listing.component.scss'
@@ -52,15 +48,12 @@ export class UsersListingComponent {
     { id: 1, name: 'Active', value: 'Active' },
     { id: 3, name: 'Inactive', value: 'Inactive' },
     { id: 3, name: "KYC Pending", value: "KYC Pending" },
-    // { id: 3, name: 'Repair', value: 'Repair' },
   ]
 
 
   constructor(
-    // private data: DataService,
     private router: Router,
     private route: ActivatedRoute,
-    private usersService: UsersService,
     private adminService: AdminService,
     public cabService: CabService,
     public gs: GlobalService,
@@ -137,7 +130,6 @@ export class UsersListingComponent {
   }
 
   async changeStatus(item: any) {
-    // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
     const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
       centered: true,
     });
@@ -146,8 +138,21 @@ export class UsersListingComponent {
     modalRef.componentInstance.title = 'Are sure you want to change status ?';
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        item.status = res.status;
-        this.toast.successToastr("Status successfully");
+        const body = {
+          userId: item.userId,
+          userStatus: res.status == "Active" ? true : false,
+          reason: "",
+        }
+        this.gs.isSpinnerShow = true;
+        this.adminService.UpdateUserStatus(body).subscribe((response) => {
+          this.gs.isSpinnerShow = false;
+          if (response && response.statusCode == "200") {
+            this.toast.successToastr("Status successfully");
+            this.getTableData();
+          } else {
+            this.toast.errorToastr(response.message);
+          }
+        })
       }
     }, () => { });
   }

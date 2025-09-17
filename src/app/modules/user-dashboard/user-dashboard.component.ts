@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { PagesService } from '../../shared/services/pages.service';
 import { Router } from '@angular/router';
 import { routes } from '../../shared/routes/routes';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgbModal, NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatMenuModule } from '@angular/material/menu';
@@ -10,8 +10,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CurrencySymbolPipe } from '../../shared/pipe/currency.pipe';
 import { FormsModule } from '@angular/forms';
 import { GlobalService } from '../../shared/services/global.service';
-import { BookingService } from '../../shared/services/booking.service';
-import { apiResultFormat } from '../../shared/services/model/model';
 import { RefundStatusModalComponent } from '../../shared/components/comman/modal/booking-modals/refund-status-modal/refund-status-modal.component';
 import { BookingStatusModalComponent } from '../../shared/components/comman/modal/booking-modals/booking-status-modal/booking-status-modal.component';
 import { UserApexchartsComponent } from './widgets/user-apexcharts/user-apexcharts.component';
@@ -29,6 +27,7 @@ import { CarBookingOverviewComponent } from './widgets/dashboard/car-booking-ove
 import { DriverBookingOverviewComponent } from './widgets/dashboard/driver-booking-overview/driver-booking-overview.component';
 import { ProfileService } from '../../shared/services/profile.service';
 import { AdminService } from '../../shared/services/admin.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -56,8 +55,10 @@ import { AdminService } from '../../shared/services/admin.service';
     MatButtonModule,
     CurrencySymbolPipe,
     NgbNavModule,
-    BarRating
+    BarRating,
+    NgSelectModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss'
 })
@@ -122,24 +123,14 @@ export class UserDashboardComponent {
 
   userDetails: any = {
     "data": {
-      "series": [
-        // {
-        //   name: "Active",
-        //   data: [44, 55, 57, 56]
-        // },
-        // {
-        //   name: "Inactive",
-        //   data: [76, 85, 101, 98]
-        // },
-        // {
-        //   name: "KYC Pending",
-        //   data: [35, 41, 36, 26]
-        // },
-      ],
-      "chartLabels": [], // ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"]
+      "series": [],
+      "chartLabels": [],
       "chartColors": ["#dcc7fa", "#8e33ff"],
     }
   };
+
+  timeType: any = "All Time";
+  timeTypeList: any = [];
 
   constructor(
     public gs: GlobalService,
@@ -147,12 +138,34 @@ export class UserDashboardComponent {
     private modalService: NgbModal,
     public profileService: ProfileService,
     private adminService: AdminService,
+    private datePipe: DatePipe,
   ) {
+    this.getPackageType();
     if (this.gs.loggedInUserInfo['role'] === 'admin') {
       this.getAdminDashboardDetails();
     } else {
       this.getUserDashboardDetails();
     }
+  }
+
+  // Get Dropdwon List
+  getPackageType() {
+    let todayDate = new Date();
+    const effectiveDate = this.transformDate(todayDate, 'MM/dd/yy');
+
+    let body = {
+      "stateCode": "42",
+      "typeCode": "31",
+      "effectiveDate": effectiveDate,
+    }
+    this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
+      if (res && res.length) {
+        const masterDropdown = this.gs.groupByMasterDropdown(res, 'TypeCode');
+        this.timeTypeList = masterDropdown['Filter_Type'];
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   getUserDashboardDetails() {
@@ -163,7 +176,6 @@ export class UserDashboardComponent {
     this.gs.GetUserDashboardDetails(body).subscribe(async (response: any) => {
       if (response && response.statusCode == "200") {
         this.dashboardAllDetails = JSON.parse(response.userDashboardDetails);
-        console.log("response >>>", this.dashboardAllDetails);
         if (this.dashboardAllDetails?.driverRiskDetails) {
           this.dashboardAllDetails.driverRiskDetails = JSON.parse(this.dashboardAllDetails.driverRiskDetails);
         }
@@ -188,6 +200,9 @@ export class UserDashboardComponent {
         if (this.dashboardAllDetails?.vehicleOverView) {
           this.dashboardAllDetails.vehicleOverView = JSON.parse(this.dashboardAllDetails.vehicleOverView);
         }
+        if (this.dashboardAllDetails?.vehicleRiskRatings) {
+          this.dashboardAllDetails.vehicleRiskRatings = JSON.parse(this.dashboardAllDetails.vehicleRiskRatings);
+        }
 
         this.dashboardAllDetails.totalFavourite = this.dashboardAllDetails.favouriteCars + this.dashboardAllDetails.favouriteDrivers;
 
@@ -200,6 +215,9 @@ export class UserDashboardComponent {
           };
         }
       }
+
+      console.log("this.dashboardAllDetails >>>>>>>", this.dashboardAllDetails);
+
 
       let tempArray: any = [];
 
@@ -364,16 +382,18 @@ export class UserDashboardComponent {
 
   getAdminDashboardDetails() {
     this.gs.isSpinnerShow = true;
-
-    this.adminService.GetAdminDashboardDetails().subscribe((response: any) => {
+    const body = {
+      filter: this.timeType
+    }
+    this.userDetails['data']['series'] = [];
+    this.userDetails['data']['chartLabels'] = [];
+    this.adminService.GetAdminDashboardDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetAdminDashboardDetails >>>>>", response);
-
       if (response && response.statusCode == "200") {
         this.dashboardAllDetails = JSON.parse(response.userDashboardDetails);
         this.dashboardAllDetails.vehiclesOverView = JSON.parse(this.dashboardAllDetails.vehiclesOverView);
         this.dashboardAllDetails.bookingOverview = JSON.parse(this.dashboardAllDetails.bookingOverview);
-        console.log("dashboardAllDetails >>>>>", this.dashboardAllDetails);
+
         this.userDetails['data']['series'] = [
           {
             name: "Active",
@@ -391,7 +411,6 @@ export class UserDashboardComponent {
         for (let i in this.dashboardAllDetails.customerStatus) {
           this.userDetails['data']['chartLabels'].push(this.dashboardAllDetails.customerStatus[i].roleName + ' (' + this.dashboardAllDetails.customerStatus[i].total + ')')// ["Car Owners (155)", "Drivers (181)", "Fleet Company (194)", "Driver Owned Cars (180)"],
         }
-        console.log("this.userDetails >>>>", this.userDetails);
       }
     });
   }
@@ -460,5 +479,13 @@ export class UserDashboardComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+  }
+
+  onChangeTime() {
+    this.getAdminDashboardDetails();
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
   }
 }

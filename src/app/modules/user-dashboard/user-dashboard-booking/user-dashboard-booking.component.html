@@ -97,6 +97,13 @@
                       <th class="text-center">Document</th>
                       <!-- <th class="text-center">Location</th> -->
                       <!-- <th class="text-center">Booking Date</th> -->
+                      <th class="text-center pointer" (click)="onSort('riskType')">
+                        Booking Type
+                        <span *ngIf="sortColumn === 'riskType'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <th class="text-center pointer" (click)="onSort('pickUpDate')">
                         Pickup Date
                         <span *ngIf="sortColumn === 'pickUpDate'">
@@ -158,6 +165,9 @@
                       <!-- <td class="text-center">
                         <span>{{data.bookingDate}}</span>
                       </td> -->
+                      <td class="text-center">
+                        <span>{{data.riskType}}</span>
+                      </td>
                       <td class="text-center">
                         <span>{{data.pickUpDate | date : 'mediumDate'}}</span>
                       </td>

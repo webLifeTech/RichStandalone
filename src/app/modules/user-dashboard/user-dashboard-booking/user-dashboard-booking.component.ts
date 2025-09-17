@@ -89,7 +89,7 @@ export class UserDashboardBookingComponent {
       "bookingStatus": JSON.stringify([this.activeTab]),
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
-      "globalSearch": this.searchDataValue || "",
+      "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder
     }
@@ -326,6 +326,7 @@ export class UserDashboardBookingComponent {
     this.bookingService.GetCarBookingCancellationInfo({
       bookingId: this.singleBookingDetail.bookingId,
       cancelDate: todayDate,
+      loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       console.log("GetCarBookingCancellationInfo >>>>>", response);
@@ -345,6 +346,7 @@ export class UserDashboardBookingComponent {
     this.bookingService.GetDriverBookingCancellationInfo({
       bookingId: this.singleBookingDetail.bookingId,
       cancelDate: todayDate,
+      loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       console.log("GetDriverBookingCancellationInfo >>>>>", response);

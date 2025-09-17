@@ -27,7 +27,7 @@ export class CarStatusChangeModalComponent {
 
   vehicleStatusList: any = [
     { id: 1, name: 'Active', value: 'Active' },
-    { id: 2, name: 'Inactive', value: 'Inactive' },
+    { id: 2, name: 'Inactive', value: 'InActive' },
     // { id: 3, name: 'Repair', value: 'Repair' },
   ]
   form: any = {

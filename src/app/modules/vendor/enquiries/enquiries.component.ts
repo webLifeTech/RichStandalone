@@ -109,7 +109,7 @@ export class EnquiriesComponent {
         "userId": this.gs.loggedInUserInfo.userId,
         "pageNumber": this.currentPage,
         "pagesize": 10,
-        "globalSearch": this.searchFilter.globalSearch || null
+        "globalSearch": this.searchFilter.globalSearch?.trim() || null
       },
       "filterCriteria": {
         "category": this.searchFilter.category || null, // "Mortgage brokers"

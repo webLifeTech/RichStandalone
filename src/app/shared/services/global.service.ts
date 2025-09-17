@@ -126,6 +126,15 @@ export class GlobalService {
     );
   }
 
+  // COMMON -> GetUserActivityLogs
+  public GetUserActivityLogs(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/COMMON/GetUserActivityLogs', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
 
   viewDocumentFile(documentFile?: any): void {
 

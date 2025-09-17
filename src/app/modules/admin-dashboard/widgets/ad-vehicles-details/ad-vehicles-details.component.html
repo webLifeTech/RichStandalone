@@ -8,6 +8,13 @@
   </div>
   <div class="card-body booking-history">
     <div class="row widget-box">
+      <!-- <div class="row justify-content-end"> -->
+      <div class="col-md-7 offset-md-5">
+        <ng-select [items]="timeTypeList" bindLabel="Description" bindValue="Code" placeholder="" [(ngModel)]="timeType"
+          name="timeType" clearable="false" searchable="false" (change)="onChangeTime()">
+        </ng-select>
+      </div>
+      <!-- </div> -->
 
       <div class="col-md-12">
         <div class="d-flex align-items-center">
@@ -17,7 +24,7 @@
       </div>
       <div class="col-md-12">
         <div class="flex-fill">
-          <div class="widget-header text-center">
+          <div *ngIf="!isDataLoading" class="widget-header text-center">
             <app-apexcharts [data]="totalDrivers.data" [chartSize]="5" [name]="'Performance grade'"></app-apexcharts>
           </div>
         </div>

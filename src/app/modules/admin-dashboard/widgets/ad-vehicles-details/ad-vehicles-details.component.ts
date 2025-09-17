@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { brand } from '../../../../shared/interface/cab-modern';
 import { CommonModule } from '@angular/common';
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { GlobalService } from '../../../../shared/services/global.service';
 import { Router } from '@angular/router';
 import { ApexchartsComponent } from '../apexcharts/apexcharts.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { AdminService } from '../../../../shared/services/admin.service';
 
 @Component({
   selector: 'app-ad-vehicles-details',
@@ -13,7 +14,8 @@ import { ApexchartsComponent } from '../apexcharts/apexcharts.component';
     ApexchartsComponent,
 
     CommonModule,
-    CarouselModule
+    FormsModule,
+    NgSelectModule,
   ],
   templateUrl: './ad-vehicles-details.component.html',
   styleUrls: ['./ad-vehicles-details.component.scss']
@@ -21,6 +23,7 @@ import { ApexchartsComponent } from '../apexcharts/apexcharts.component';
 export class AdVehiclesDetailsComponent {
 
   @Input() data: any = {};
+  @Input() timeTypeList: any = [];
 
 
   totalDrivers: any = {
@@ -34,33 +37,37 @@ export class AdVehiclesDetailsComponent {
     }
   };
 
-  carOwnersData: any = [
-    // {
-    //   "title": "Active",
-    //   "total": 500,
-    //   "bg-color": "color-emerald-green",
-    // },
-    // {
-    //   "title": "Inactive",
-    //   "total": 200,
-    //   "bg-color": "color-sunset-orange",
-    // },
-    // {
-    //   "title": "KYC Pending",
-    //   "total": 300,
-    //   "bg-color": "color-red",
-    // },
-  ];
+  carOwnersData: any = [];
+  timeType: any = "All Time";
+  isDataLoading: any = false;
 
   constructor(
     public gs: GlobalService,
     private router: Router,
-  ) {
-  }
+    private adminService: AdminService,
+  ) { }
 
   ngOnInit() {
-    console.log("data >>>>>", this.data);
+    this.setData();
+  }
 
+  filterData() {
+    this.gs.isSpinnerShow = true;
+    this.isDataLoading = true;
+    const body = {
+      filter: this.timeType
+    }
+    this.adminService.GetAdminDashboardDetails(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.statusCode == "200") {
+        const dashboardAllDetails = JSON.parse(response.userDashboardDetails);
+        this.data = JSON.parse(dashboardAllDetails.vehiclesOverView);
+        this.setData();
+      }
+    });
+  }
+
+  setData() {
     this.carOwnersData = [
       {
         "title": "Active",
@@ -80,6 +87,8 @@ export class AdVehiclesDetailsComponent {
     ];
     this.totalDrivers.total = this.data.totalVehicles;
     const totalValue = this.carOwnersData.reduce((sum: any, item: any) => sum + item.total, 0);
+    this.totalDrivers.data.chartLabels = [];
+    this.totalDrivers.data.series = [];
     const carOwnersDataWithPercentage = this.carOwnersData.map((item: any) => {
       let pr: any = ((item.total / totalValue) * 100).toFixed(0);
       this.totalDrivers.data.chartLabels.push(item.title + ' : ' + item.total)
@@ -89,13 +98,10 @@ export class AdVehiclesDetailsComponent {
         percentage: pr
       };
     });
-
-
-
     this.carOwnersData = carOwnersDataWithPercentage;
-
-
+    this.isDataLoading = false;
   }
+
 
   viewVehicles(type: any) {
     let params = {
@@ -104,5 +110,9 @@ export class AdVehiclesDetailsComponent {
     this.router.navigate(['/user/allVehicles'], {
       queryParams: params,
     });
+  }
+
+  onChangeTime() {
+    this.filterData();
   }
 }

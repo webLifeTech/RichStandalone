@@ -23,7 +23,7 @@
                 <div *ngIf="filterObj.sortFilter == 'Custom Date'">
                   <input placeholder="Date Range:" class="form-control datetimepicker-input digits"
                     [(ngModel)]="filterObj.dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
-                    [owlDateTime]="dtRange1" />
+                    [owlDateTime]="dtRange1" (ngModelChange)="onChange()" />
                   <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
                 </div>
               </div>
@@ -35,14 +35,14 @@
               </div>
               <div class="col-md-4 text-end">
                 <div class="table-search">
-                  <div id="tablefilter" class="m-0">
+                  <div id="tablefilter">
                     <div class="dataTables_filter">
                       <label>
                         <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
                       </label>
                     </div>
                   </div>
-                  <a class="btn btn-theme btn-add me-2">
+                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                     Search
                   </a>
                 </div>
@@ -64,16 +64,16 @@
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
                     </th>
-                    <th class="text-start pointer" (click)="onSort('description')">
+                    <th class="text-start pointer" (click)="onSort('summary')">
                       Description
-                      <span *ngIf="sortColumn === 'description'">
+                      <span *ngIf="sortColumn === 'summary'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
                     </th>
-                    <th class="text-start pointer" (click)="onSort('updated_date')">
+                    <th class="text-start pointer" (click)="onSort('timestamp')">
                       Date
-                      <span *ngIf="sortColumn === 'updated_date'">
+                      <span *ngIf="sortColumn === 'timestamp'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
@@ -87,13 +87,13 @@
                       <span>{{idx+1}}</span>
                     </td>
                     <td class="text-center">
-                      <p>{{idx+1}}</p>
+                      {{data.activityId}}
                     </td>
                     <td class="text-start">
-                      <p>{{data.activity}}</p>
+                      {{data.summary}}
                     </td>
                     <td class="text-start">
-                      <p>{{data.updated_date | date : 'medium'}}</p>
+                      {{data.timestamp | date : 'medium'}}
                     </td>
                   </tr>
                 </tbody>

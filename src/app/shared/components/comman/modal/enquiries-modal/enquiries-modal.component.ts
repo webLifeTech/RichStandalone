@@ -51,7 +51,8 @@ export class EnquiriesModalComponent {
     console.log("providerDetails >>>", this.providerDetails);
 
     this.enquiryForm = this.bf.group({
-      "userId": this.providerDetails.userId,
+      "providerUserId": this.providerDetails.userId,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
       "id": 0,
       "providerId": this.providerDetails.providerId,
       "name": ["", Validators.required],

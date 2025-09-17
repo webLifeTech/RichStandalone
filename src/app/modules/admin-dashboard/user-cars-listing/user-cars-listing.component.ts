@@ -90,7 +90,7 @@ export class UserCarsListingComponent {
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
-      "globalSearch": this.searchDataValue || "",
+      "globalSearch": this.searchDataValue?.trim() || "",
       "userType": JSON.stringify([this.activeTab]),
       "status": (!this.searchFilter.status || this.searchFilter.status === 'all') ? null : JSON.stringify([this.searchFilter.status]),
     }

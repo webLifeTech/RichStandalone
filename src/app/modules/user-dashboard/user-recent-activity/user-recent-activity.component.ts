@@ -1,18 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { CabService } from '../../../shared/services/cab.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { apiResultFormat, userBookings } from '../../../shared/services/model/model';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { GlobalService } from '../../../shared/services/global.service';
-import { ReviewService } from '../../../shared/services/review.service';
-import { RolePermissionService } from '../../../shared/services/rolepermission.service';
-import { SortDirective } from '../../../shared/directives/sort.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
@@ -26,11 +19,11 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
-    SortDirective,
     NgSelectModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-recent-activity.component.html',
   styleUrl: './user-recent-activity.component.scss'
 })
@@ -49,35 +42,48 @@ export class UserRecentActivityComponent {
     { value: "Last 30 Days" },
     { value: "Custom Date" },
   ]
-  sortColumn: any = "bookingReferenceNumber";
+  sortColumn: any = "activityId";
   sortOrder: any = "DESC";
 
   constructor(
-    private route: ActivatedRoute,
-    private reviewService: ReviewService,
-    public getPer: RolePermissionService,
-    public cabService: CabService,
+    private datePipe: DatePipe,
     public gs: GlobalService,
-
   ) {
-    this.route.queryParams.subscribe((params) => {
-      this.getTableData();
-    })
-
-    this.getPer.actionPermissions = {
-
-    }
+    this.getTableData();
   }
 
   getTableData() {
-    this.reviewService.getUserActivities().subscribe((apiRes: apiResultFormat) => {
-      this.totalData = apiRes.totalData;
-      this.tableData = apiRes.data;
-    });
+
+    const startDate = this.filterObj.dateTimeRange ? this.transformDate(this.filterObj.dateTimeRange[0], 'MM/dd/yy') : null;
+    const endDate = this.filterObj.dateTimeRange ? this.transformDate(this.filterObj.dateTimeRange[1], 'MM/dd/yy') : null;
+
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "startDate": startDate,
+      "endDate": endDate,
+    }
+    this.gs.isSpinnerShow = true;
+    this.gs.GetUserActivityLogs(body).subscribe(async (response: any) => {
+      console.log("response >>>", response);
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.tableData = response.userActivityLog;
+        console.log("this.totalData >>>", this.totalData);
+        this.totalData = response.viewModel.totalCount;
+      }
+    })
+    // this.reviewService.getUserActivities().subscribe((apiRes: any) => {
+    // });
   }
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData();
   }
 
   onSort(column: any) {
@@ -86,6 +92,17 @@ export class UserRecentActivityComponent {
     this.getTableData();
   }
 
+  searchData() {
+    this.currentPage = 1;
+    this.getTableData();
+  }
+
   onChange() {
+    console.log("filterObj >>>", this.filterObj);
+    this.getTableData();
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
   }
 }

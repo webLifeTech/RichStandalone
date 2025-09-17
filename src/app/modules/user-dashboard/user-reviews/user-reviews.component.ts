@@ -99,7 +99,7 @@ export class UserReviewsComponent {
       "reviewType": this.activeTab == 'i_gave' ? "Given" : "Received",
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
-      "globalSearch": this.searchDataValue || "",
+      "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
     };

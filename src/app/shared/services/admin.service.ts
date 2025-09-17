@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 import { apiResultFormat } from './model/model';
 import { environment } from '../../../environments/environment';
@@ -41,8 +41,17 @@ export class AdminService {
   }
 
   // Admin -> GetAdminDashboardDetails
-  public GetAdminDashboardDetails() {
-    return this.http.get(this.baseUrl1 + `TLHUB/Admin/GetAdminDashboardDetails`).pipe(
+  public GetAdminDashboardDetails(dataParams: any) {
+    const params = new HttpParams().set('filter', dataParams.filter)
+    return this.http.get(this.baseUrl1 + `TLHUB/Admin/GetAdminDashboardDetails`, { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+  // Admin -> UpdateUserStatus
+  public UpdateUserStatus(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateUserStatus`, data).pipe(
       map((res: any) => {
         return res;
       })
