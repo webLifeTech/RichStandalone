@@ -16,11 +16,12 @@ import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 export class RefundStatusModalComponent {
 
   @Input() title: string;
+  @Input() details: any = {};
   reason: any = "Refund request";
-  details: any = {
-    status: "Rejected",
-    reason: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias aperiam at, aut commodi corporis dolorum ducimus labore magnam mollitia natus porro possimus quae sit tenetur veniam veritatis voluptate voluptatem!",
-  };
+  // details: any = {
+  //   status: "Rejected",
+  //   reason: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias aperiam at, aut commodi corporis dolorum ducimus labore magnam mollitia natus porro possimus quae sit tenetur veniam veritatis voluptate voluptatem!",
+  // };
 
   constructor(
     private modalService: NgbModal,

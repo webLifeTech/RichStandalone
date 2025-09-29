@@ -1,5 +1,6 @@
 <div class="left-sidebar pt-3"
-  [ngStyle]="{ 'left' : cabService.isOpenResponsiveFilter == true || cabService.isOpenHorizontalFilter == true  ? '-1px' : '' }">
+  [ngStyle]="{ 'left' : cabService.isOpenResponsiveFilter == true || cabService.isOpenHorizontalFilter == true  ? '-1px' : '' }"
+  data-aos="fade-right">
   <div class="back-btn mt-5 pb-2 text-end" (click)="closeResponsiveFilter()">
     <a class="back_search">
       {{'car_list_page.close_filter' |translate}}

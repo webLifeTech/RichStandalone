@@ -28,6 +28,7 @@ import { DriverBookingOverviewComponent } from './widgets/dashboard/driver-booki
 import { ProfileService } from '../../shared/services/profile.service';
 import { AdminService } from '../../shared/services/admin.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { BookingDetailsModalComponent } from '../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -202,6 +203,9 @@ export class UserDashboardComponent {
         }
         if (this.dashboardAllDetails?.vehicleRiskRatings) {
           this.dashboardAllDetails.vehicleRiskRatings = JSON.parse(this.dashboardAllDetails.vehicleRiskRatings);
+        }
+        if (this.dashboardAllDetails?.alertMessages) {
+          this.dashboardAllDetails.alertMessages = JSON.parse(this.dashboardAllDetails.alertMessages);
         }
 
         this.dashboardAllDetails.totalFavourite = this.dashboardAllDetails.favouriteCars + this.dashboardAllDetails.favouriteDrivers;
@@ -443,25 +447,37 @@ export class UserDashboardComponent {
     });
   }
 
-  onViewRefundStatus(item: any) {
+  onViewRefundStatus() {
+    this.dashboardAllDetails.alertMessages.status = "Rejected";
     const modalRef = this.modalService.open(RefundStatusModalComponent, {
     });
-    modalRef.componentInstance.title = "Your Refund request has been rejected by Car Owner";
-    modalRef.componentInstance.bookingDetails = item;
+    modalRef.componentInstance.title = this.dashboardAllDetails.alertMessages.alertMessage;
+    modalRef.componentInstance.details = this.dashboardAllDetails.alertMessages;
     modalRef.result.then((res: any) => {
     }, () => {
     });
   }
 
-  onView(item: any) {
-    const modalRef = this.modalService.open(BookingStatusModalComponent, {
+  onView() {
+    const modalRef = this.modalService.open(BookingDetailsModalComponent, {
       size: 'lg'
     });
-    modalRef.componentInstance.bookingDetails = item;
+    modalRef.componentInstance.bookingRefNo = this.dashboardAllDetails.alertMessages.bookingReferenceNumber;
+    modalRef.componentInstance.alertMessages = this.dashboardAllDetails.alertMessages;
     modalRef.result.then((res: any) => {
     }, () => {
     });
   }
+
+  // onView(item: any) {
+  //   const modalRef = this.modalService.open(BookingStatusModalComponent, {
+  //     size: 'lg'
+  //   });
+  //   modalRef.componentInstance.bookingDetails = item;
+  //   modalRef.result.then((res: any) => {
+  //   }, () => {
+  //   });
+  // }
 
   goWallet() {
     this.router.navigate(['/user/wallet']);

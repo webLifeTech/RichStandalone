@@ -20,6 +20,7 @@ import { BookingService } from '../../../../../services/booking.service';
 })
 export class BookingDetailsModalComponent {
   @Input() bookingRefNo: any = "";
+  @Input() alertMessages: any = {};
   isShowOwnerDetails: any = false;
   isShowDriverDetails: any = false;
   bookingDetails: any = {

@@ -114,6 +114,7 @@
                   <th>Package Name</th>
                   <th>Package Price</th>
                   <th>Paid Amount</th>
+                  <th>Payment Mode</th>
                   <th>Start Date</th>
                   <th>Expiry Date</th>
                   <th>Status</th>
@@ -137,6 +138,7 @@
                     <td class="text-success-light">
                       {{item.paidAmount | currencyPipe: gs.currency}}
                     </td>
+                    <td>{{item.paymentMethod}}</td>
                     <td>{{item.startDate}}</td>
                     <td>{{item.endDate}}</td>
                     <td>

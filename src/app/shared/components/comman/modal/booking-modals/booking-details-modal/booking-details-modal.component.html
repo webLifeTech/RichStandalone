@@ -27,7 +27,38 @@
           </h6>
         </div>
       </div>
+
       <div class="booking-group">
+        <div *ngIf="bookingDetails.bookingDetails.bookingStatus !== 'Cancelled'" class="alert-msg">
+          <div class="alert alert-success py-2 alert-dismissible fade show" role="alert">
+            <b>{{alertMessages.alertMessage}}</b>
+            <!-- <br />
+            <span>Approved By Johna Melinda on 17 Sep 2024</span> -->
+          </div>
+        </div>
+
+        <ng-container
+          *ngIf="bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed'">
+          <div class="cancel-box mb-3">
+            <div class="cancel-reason">
+              <h6>Cancel Reason</h6>
+              <p class="text-red">
+                {{bookingDetails.cancellationRefundDetails.cancellationReason}}
+              </p>
+              <h6>Cancel Remark</h6>
+              <p class="text-red">
+                {{bookingDetails.cancellationRefundDetails.remarks}}
+              </p>
+            </div>
+          </div>
+          <div class="cancel-box mb-3">
+            <p>
+              Cancelled By {{bookingDetails.cancellationRefundDetails.driverPersonalDetails}} on
+              {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
+              Refund will deposited in user account on 19 Sep 2023
+            </p>
+          </div>
+        </ng-container>
         <div class="booking-wrapper">
           <div class="booking-title">
             <h6>Booking Details</h6>
@@ -218,21 +249,7 @@
             </div>
           </div>
         </div>
-        <ng-container
-          *ngIf="bookingDetails.status === 'Cancelled' || bookingDetails.status === 'Refund Started' || bookingDetails.status === 'Refund Completed'">
-          <div class="cancel-reason">
-            <h6>Cancel Reason</h6>
-            <p>
-              {{bookingDetails.reason}}
-            </p>
-          </div>
-          <div class="cancel-box">
-            <p>
-              Cancelled By {{bookingDetails.cancelledBy}} on 17 Sep 2023, Refund will deposited in user account on 19
-              Sep 2023
-            </p>
-          </div>
-        </ng-container>
+
       </div>
     </div>
   </div>

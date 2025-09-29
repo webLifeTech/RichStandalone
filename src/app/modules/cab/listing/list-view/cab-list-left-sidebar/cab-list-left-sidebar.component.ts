@@ -62,6 +62,8 @@ export class CabListLeftSidebarComponent {
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
+      console.log("this.gs.lastSearch.type >>>>>", this.gs.lastSearch);
+
       if (this.gs.lastSearch.searchFrom == "home") {
         this.gs.lastSearch.searchFrom = null;
       } else if (this.gs.lastSearch.type === this.params.type) {

@@ -403,7 +403,7 @@
                           {{'#' | translate}}
                         </th>
                         <ng-container *ngFor="let field of section.value?.tableGrid; let j = index">
-                          <th class="text-center">
+                          <th [ngClass]="{'text-start': !j,'text-center': j}">
                             {{ field.fieldName }}
                           </th>
                         </ng-container>
@@ -415,9 +415,11 @@
                     <tbody>
                       <tr *ngFor="let item of section?.get('tableGridValueList')?.value; let tgIdx = index">
                         <td class="text-center">{{tgIdx+1}}</td>
-                        <ng-container *ngFor="let row of section.value?.tableGrid">
-                          <td *ngIf="row.modalValue !== 'status'" class="text-center">
-                            {{item[row.modalValue] || '-'}}
+                        <ng-container *ngFor="let row of section.value?.tableGrid; let subIdx = index">
+                          <td *ngIf="row.modalValue !== 'status'"
+                            [ngClass]="{'text-start': !subIdx,'text-center': subIdx}">
+                            {{getPrefix(item, row)}} {{item[row.modalValue] || '-'}} {{getSuffix(item, row)}}
+                            <!-- {{(item['suffixKey'] == row.modalValue) ? item['suffix'] : null}} -->
                           </td>
                           <td *ngIf="row.modalValue === 'status'" class="text-center">
                             <span class="badge" [ngClass]="{

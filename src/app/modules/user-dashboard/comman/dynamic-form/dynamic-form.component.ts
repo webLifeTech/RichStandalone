@@ -84,8 +84,6 @@ export class DynamicFormComponent {
   profileUrl: any = "";
   workingHours: any = [];
   isPrivateBooking: boolean = false; //
-  cancellationFeeMasterDp: any = [];
-  cancellationPolicyInfo: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -274,10 +272,10 @@ export class DynamicFormComponent {
 
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
-        this.cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
+        const cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
           "appliesto": "Risk",
         });
-        this.masterDropdwonList["FeeRules"] = this.cancellationFeeMasterDp;
+        this.masterDropdwonList["FeeRules"] = cancellationFeeMasterDp;
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -287,6 +285,24 @@ export class DynamicFormComponent {
       this.gs.isSpinnerShow = false;
       this.toast.errorToastr(err || "Something went wrong");
     })
+  }
+
+  getSuffix(tglItem: any, row: any) {
+    if (row.fieldId == "344") {
+      const slctFeeMasterDp = this.masterDropdwonList["FeeRules"].find((i: any) => i.Description == tglItem[row.modalValue]) || {};
+      return "(Between " + slctFeeMasterDp['AdvanceHoursMin'] + " to " + slctFeeMasterDp['AdvanceHoursMax'] + ' Hours)';
+    }
+    return null;
+    // for (let idx in this.singleDetailInfo.vehicleCancellationRules) {
+    //   const slctFeeMasterDp = this.cancellationFeeMasterDp.find((item: any) => item.ID == this.singleDetailInfo.vehicleCancellationRules[idx].ruleId) || {};
+    //   this.singleDetailInfo.vehicleCancellationRules[idx].prefix = null;
+    //   this.singleDetailInfo.vehicleCancellationRules[idx].suffix = "(Between " + slctFeeMasterDp['AdvanceHoursMin'] + " to " + slctFeeMasterDp['AdvanceHoursMax'] + ' Hours)';
+    //   this.singleDetailInfo.vehicleCancellationRules[idx].suffixKey = "cancellationTime";
+    // }
+  }
+
+  getPrefix(tglItem: any, row: any) {
+    return null;
   }
 
   // Get Countries
@@ -692,6 +708,8 @@ export class DynamicFormComponent {
 
     section.get('tableGrid').setValue(tableGridBySort);
     section.get('tableGridValueList').setValue(tempTableGridValueList);
+    console.log("section >>>>", section);
+
   }
 
   groupBy(array: any[], key: string) {
@@ -1091,9 +1109,6 @@ export class DynamicFormComponent {
 
   // On Change Dropdwon
   onChangeDrop(event: any, field: any, section: any) {
-
-    console.log("field >>>>>", field);
-    console.log("event >>>>>", event);
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);

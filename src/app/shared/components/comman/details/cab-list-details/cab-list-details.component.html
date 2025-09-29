@@ -38,7 +38,7 @@
           </div>
           <div class="row">
             <div class="col-md-3 align-self-center">
-              <div class="logo-sec">
+              <div class="logo-sec" data-aos="zoom-in" data-aos-once="false">
                 <img *ngIf="type === 'car'" [src]="details.carImage" class="img-fluid blur-up lazyload" alt="CarImage">
                 <img *ngIf="type === 'driver'" [src]="details.profilepath" class="img-fluid blur-up lazyload"
                   alt="DriverImage">
@@ -95,8 +95,8 @@
               </div>
               <div class="d-flex">
                 <div *ngFor="let disItem of details.discountInfo" class="offer-box">
-                  <img src="assets/images/cab/icon/gift-svgrepo-com.svg" width="30px" class="img-fluid blur-up lazyload"
-                    alt="seat-icon">
+                  <!-- assets/images/cab/icon/gift-svgrepo-com.svg -->
+                  <img src="assets/images/gift.gif" width="32px" class="img-fluid blur-up lazyload" alt="seat-icon">
                   {{disItem.discountName | translate}} <br />
                   <span>
                     {{disItem.discountDescription}}
@@ -256,7 +256,7 @@
               <!-- triggers="mouseenter:mouseleave" -->
               <!-- [autoClose]="'inside'" -->
               <!-- (mouseenter)='onHover(details)' -->
-              <div class="rating-section" [ngbPopover]="popContent" popoverClass="my-custom-class"
+              <div class="rating-section pointer" [ngbPopover]="popContent" popoverClass="my-custom-class"
                 triggers="mouseenter:mouseleave" (mouseenter)='onHover(details)'
                 [disablePopover]="checkDisabled(details)">
                 <div class="rating-star" *ngIf="details.ratingAverage || details.driverRating || details.riskRating">

@@ -16,7 +16,6 @@ import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 export class RefundApproveRejectModalComponent {
 
   @Input() title: string;
-  @Input() bookingDetails: string;
   reason: any = "";
 
   constructor(

@@ -1,0 +1,186 @@
+<div class="row">
+
+  <div class="col-lg-12 d-flex">
+    <div class="card book-card flex-fill mb-0">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col-md-5">
+            <h4>{{activeTab}} <span>{{totalData}}</span></h4>
+          </div>
+          <div class="col-md-7 text-md-end">
+            <div class="table-search">
+              <div id="tablefilter">
+                <div class="dataTables_filter">
+                  <label>
+                    <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
+                  </label>
+                </div>
+              </div>
+              <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                Search
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive dashboard-table mb-4">
+          <table class="table datatable">
+            <thead class="thead-light">
+              <tr>
+                <th>
+                  <span>SL</span>
+                </th>
+                <!-- <th class="pointer" (click)="onSort('paymentReferenceNumber')">
+                  Payment ID
+                  <span *ngIf="sortColumn === 'paymentReferenceNumber'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th> -->
+                <th class="pointer" (click)="onSort('bookingReferenceNumber')">
+                  Reference Number
+                  <span *ngIf="sortColumn === 'bookingReferenceNumber'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <!-- <th class="text-start pointer" (click)="onSort('Make')">
+                  Car Name
+                  <span *ngIf="sortColumn === 'Make'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-start pointer" (click)="onSort('driverName')"
+                  *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'">
+                  Driver Name
+                  <span *ngIf="sortColumn === 'driverName'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th> -->
+                <th class="text-start pointer" (click)="onSort('cancellationReason')">
+                  Reason
+                  <span *ngIf="sortColumn === 'cancellationReason'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-start pointer" (click)="onSort('refundReason')">
+                  Remark
+                  <span *ngIf="sortColumn === 'refundReason'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="pointer" (click)="onSort('createdDate')">
+                  Requested Date
+                  <span *ngIf="sortColumn === 'createdDate'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-center pointer" (click)="onSort('amount')">
+                  Refund Amount
+                  <span *ngIf="sortColumn === 'amount'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-center pointer" (click)="onSort('status')">
+                  Status
+                  <span *ngIf="sortColumn === 'status'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                <td>
+                  <span>{{idx+1}}</span>
+                </td>
+                <!-- <td class="text-start">
+                  <a>{{data.paymentReferenceNumber}}</a>
+                </td> -->
+                <td>
+                  <a>{{data.bookingReferenceNumber || "-"}}</a>
+                </td>
+                <!-- <td class="text-start">
+                  <div class="table-avatar">
+                    <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                      <img class="car-img" [src]="data.carimage" alt="Booking">
+                    </a>
+                    <div class="table-head-name flex-grow-1">
+                      <a>{{data.Make}} {{data.Model}}</a>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
+                  class="text-start">
+                  <div class="table-avatar">
+                    <a class="avatar avatar-lg flex-shrink-0">
+                      <img class="avatar-img" [src]="data.driverprofilepath" alt="Booking">
+                    </a>
+                    <div class="table-head-name flex-grow-1">
+                      <a>{{data.driverName}}</a>
+                    </div>
+                  </div>
+                </td> -->
+                <td class="text-start">
+                  <span>{{data.cancellationReason}}</span>
+                </td>
+                <td class="text-start">
+                  <span>{{data.refundReason}}</span>
+                </td>
+                <td class="text-center">
+                  <span>{{data.requestedDate}}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span>{{data.refundAmount | currencyPipe: gs.currency}}</span>
+                </td>
+                <td *ngIf="gs.loggedInUserInfo['role'] === 'admin'">
+                  <span [ngClass]="{
+                          'badge-light-success': data.refundStatus === 'Approved',
+                          'badge-light-warning': data.refundStatus === 'Pending',
+                          'badge-light-danger':data.refundStatus === 'Rejected',
+                          'badge-light-secondary': data.refundStatus === 'Pending Disburse'
+                           }" class="badge">{{data.refundStatus}}</span>
+                </td>
+                <td class="text-end">
+                  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <i class="feather icon-more-vertical"></i>
+                  </button>
+                  <mat-menu #menu="matMenu" xPosition="before">
+                    <button (click)="onView(data)" type="button" mat-menu-item>
+                      <i class="feather icon-eye"></i>
+                      <span class="ms-2">View</span>
+                    </button>
+                    <ng-container *ngFor="let item of statusList">
+                      <button *ngIf="item.id == 2 || item.id == 3" (click)="changeStatus(data,item)" type="button"
+                        mat-menu-item>
+                        <i class="feather icon-send"></i>
+                        <span class="ms-2">{{item.name}}</span>
+                      </button>
+                    </ng-container>
+                    <!-- <button *ngIf="data.admin_status === 'Pending Disburse'" (click)="changeStatus(data,'Disburse')"
+                      type="button" mat-menu-item>
+                      <i class="feather icon-send"></i>
+                      <span class="ms-2">Rejected</span>
+                    </button> -->
+                  </mat-menu>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>

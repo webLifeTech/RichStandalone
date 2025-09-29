@@ -133,9 +133,13 @@ export class DynamicInfoModalComponent {
       "typeCode": null,
       "effectiveDate": effectiveDate,
     }
-    this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
+    this.profileService.getMasterVehicleCodes(body).subscribe(async (res: any) => {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
+        const cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
+          "appliesto": "Risk",
+        });
+        this.masterDropdwonList["FeeRules"] = cancellationFeeMasterDp;
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
 
         this.createForm();
@@ -253,6 +257,23 @@ export class DynamicInfoModalComponent {
 
   closeModal() {
     this.modalService.dismissAll();
+  }
+
+  getSuffix(tblItem: any, row: any) {
+    // console.log("field ======>", row);
+    // console.log("FeeRules ======>", this.masterDropdwonList["FeeRules"]);
+
+    if (row.fieldId == "344") {
+      const slctFeeMasterDp = this.masterDropdwonList["FeeRules"].find((i: any) => i.Description == tblItem[row.modalValue]) || {};
+      console.log("row.value >>>>>>", row.defaultValue);
+
+      return "(Between " + slctFeeMasterDp['AdvanceHoursMin'] + " to " + slctFeeMasterDp['AdvanceHoursMax'] + ' Hours)';
+    }
+    return null;
+  }
+
+  getPrefix(tblItem: any, row: any) {
+    return null;
   }
 
 }

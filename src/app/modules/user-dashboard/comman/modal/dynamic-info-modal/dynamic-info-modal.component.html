@@ -47,7 +47,7 @@
                             <ng-container *ngFor="let field of item.fields; let j = index">
                               <th
                                 *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
-                                class="text-center">
+                                [ngClass]="{'text-start': !j,'text-center': j}">
                                 {{ field.description }}
                               </th>
                             </ng-container>
@@ -59,8 +59,8 @@
                             <ng-container *ngFor="let field of item.fields; let j = index">
                               <td
                                 *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
-                                class="text-center">
-                                {{tblItem[field.modalValue] }}
+                                [ngClass]="{'text-start': !j,'text-center': j}">
+                                {{getPrefix(tblItem, field)}} {{tblItem[field.modalValue]}} {{getSuffix(tblItem,field)}}
                               </td>
                             </ng-container>
                           </tr>

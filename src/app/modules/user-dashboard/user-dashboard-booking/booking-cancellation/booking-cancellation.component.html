@@ -75,7 +75,7 @@
                 <div class="form-group col-md-8 text-start">
                   <label class="fw-bold">Cancellation Reason <span class="text-danger">*</span></label>
                   <ng-select [items]="reasons" formControlName="reason" name="reason" bindLabel="description"
-                    placeholder="-- Select Reason --" bindValue="id" [autofocus]="false">
+                    placeholder="-- Select Reason --" bindValue="description" [autofocus]="false">
                   </ng-select>
                   <span class="text-danger"
                     *ngIf="(cancelFormControl.reason?.touched || submitted) && cancelFormControl.reason?.errors?.required">

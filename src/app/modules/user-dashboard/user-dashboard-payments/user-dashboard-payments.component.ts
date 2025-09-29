@@ -14,11 +14,14 @@ import { InvoiceModalComponent } from '../../../shared/components/comman/modal/p
 import { GlobalService } from '../../../shared/services/global.service';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AdminService } from '../../../shared/services/admin.service';
+import { UserCancellationRefundComponent } from '../user-cancellation-refund/user-cancellation-refund.component';
 
 @Component({
   selector: 'app-user-dashboard-payments',
   standalone: true,
   imports: [
+    UserCancellationRefundComponent,
     CommonModule,
     FormsModule,
     NgbModule,
@@ -43,15 +46,19 @@ export class UserDashboardPaymentsComponent {
   tabs: any = [
     { "name": "All Payments", "value": "All Payments" },
     { "name": "Pending Confirmation", "value": "Pending Confirm" },
-    { "name": "Pending Disbursement", "value": "Pending Disburse" },
-    { "name": "Cleared", "value": "Cleared" },
+    // { "name": "Pending Disbursement", "value": "Pending Disburse" },
+    // { "name": "Cleared", "value": "Cleared" },
+    { "name": "Refund", "value": "Refund" },
   ]
   activeTab: any = "";
   tempTableData: any = [];
+  isRefundTab: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private paymentService: PaymentService,
+    private adminService: AdminService,
     public cabService: CabService,
     public gs: GlobalService,
     private modalService: NgbModal,
@@ -61,7 +68,14 @@ export class UserDashboardPaymentsComponent {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Payments";
-      this.getTableData();
+      console.log("this.activeTab >>>>>", this.activeTab);
+
+      if (this.activeTab == "Refund") {
+        this.isRefundTab = true;
+      } else {
+        this.isRefundTab = false;
+        this.getTableData();
+      }
     })
   }
 
@@ -82,26 +96,32 @@ export class UserDashboardPaymentsComponent {
       this.tableData = response.bookingpaymentMatches;
       this.totalData = response.viewModel?.totalCount;
 
-      // this.paymentService.getCryptoPaymentTxnByIds({
-      //   arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
-      // }).subscribe((pRes: any) => {
-      //   this.gs.isSpinnerShow = false;
-      //   if (pRes.status == 200) {
-      //     let cryptoPaymentTxn = pRes.data;
-      //     for (let i in cryptoPaymentTxn) {
-      //       if (this.gs.loggedInUserInfo?.cryptoTransactions && this.gs.loggedInUserInfo.cryptoTransactions.indexOf(cryptoPaymentTxn[i].id) !== -1) {
-      //         let tempObj = JSON.parse(JSON.stringify(this.tableData[0]));
-      //         tempObj.paymentID = cryptoPaymentTxn[i].id;
-      //         tempObj.total_amount = cryptoPaymentTxn[i].amountf;
-      //         tempObj.status = cryptoPaymentTxn[i].status_text;
-      //         tempObj.mode = `Crypto ${cryptoPaymentTxn[i].type} (${cryptoPaymentTxn[i].coin})`;
-      //         this.tableData.unshift(tempObj);
-      //       }
-      //     }
-      //     this.totalData = this.tableData.length;
-      //   }
-      // });
     });
+
+    // this.paymentService.getUserPayment().subscribe((response: any) => {
+    //   this.gs.isSpinnerShow = false;
+    //   this.tableData = response.data;
+    //   this.totalData = response.totalData;
+    // });
+    // this.paymentService.getCryptoPaymentTxnByIds({
+    //   arrTxn: this.gs.loggedInUserInfo?.cryptoTransactions
+    // }).subscribe((pRes: any) => {
+    //   this.gs.isSpinnerShow = false;
+    //   if (pRes.status == 200) {
+    //     let cryptoPaymentTxn = pRes.data;
+    //     for (let i in cryptoPaymentTxn) {
+    //       if (this.gs.loggedInUserInfo?.cryptoTransactions && this.gs.loggedInUserInfo.cryptoTransactions.indexOf(cryptoPaymentTxn[i].id) !== -1) {
+    //         let tempObj = JSON.parse(JSON.stringify(this.tableData[0]));
+    //         tempObj.paymentID = cryptoPaymentTxn[i].id;
+    //         tempObj.total_amount = cryptoPaymentTxn[i].amountf;
+    //         tempObj.status = cryptoPaymentTxn[i].status_text;
+    //         tempObj.mode = `Crypto ${cryptoPaymentTxn[i].type} (${cryptoPaymentTxn[i].coin})`;
+    //         this.tableData.unshift(tempObj);
+    //       }
+    //     }
+    //     this.totalData = this.tableData.length;
+    //   }
+    // });
   }
 
   searchData() {
@@ -136,14 +156,30 @@ export class UserDashboardPaymentsComponent {
 
   changeBookTab(row: any) {
     this.activeTab = row.name;
-
-    if (this.activeTab == "All Payments") {
-      this.tableData = this.tempTableData;
-      this.totalData = this.tableData.length;
-    } else {
-      this.tableData = this.tempTableData.filter((item: any) => item.admin_status == row.value);
-      this.totalData = this.tableData.length;
+    this.currentPage = 1;
+    // if (this.activeTab == "Refund") {
+    //   this.isRefundTab = true;
+    //   // this.getTableRefundData();
+    // } else {
+    //   this.isRefundTab = false;
+    //   this.getTableData();
+    // }
+    let params = {
+      activeTab: this.activeTab,
     }
+    this.getTableData();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: "merge"
+    });
+    // if (this.activeTab == "All Payments") {
+    //   this.tableData = this.tempTableData;
+    //   this.totalData = this.tableData.length;
+    // } else {
+    //   this.tableData = this.tempTableData.filter((item: any) => item.admin_status == row.value);
+    //   this.totalData = this.tableData.length;
+    // }
   }
 
   changeStatus(data: any, status: any) {

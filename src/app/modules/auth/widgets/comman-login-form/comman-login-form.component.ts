@@ -177,6 +177,9 @@ export class CommanLoginFormComponent {
           "activeStatus": res.activeStatus || false,
           "isKYCCompleted": res.isKYCCompleted == "false" ? false : true,
           "driveInCity": res.driveInCity || null,
+          "token_type": res.token_type || null,
+          "refresh_token": res.refresh_token || null,
+          "access_token": res.access_token || null,
         };
 
         this.authService.login(this.loginForm);

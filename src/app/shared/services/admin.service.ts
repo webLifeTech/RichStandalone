@@ -57,4 +57,31 @@ export class AdminService {
       })
     );
   }
+
+  // Master -> GetMasterRefundStatus
+  public GetMasterRefundStatus() {
+    return this.http.get(this.baseUrl1 + `TLHUB/Master/GetMasterRefundStatus`).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Admin -> GetBookingRefundDetailsForAdmin
+  public GetBookingRefundDetailsForAdmin(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetBookingRefundDetailsForAdmin`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Refund -> UpdateBookingRefundStatus
+  public UpdateBookingRefundStatus(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Refund/UpdateBookingRefundStatus`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

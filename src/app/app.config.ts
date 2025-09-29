@@ -1,7 +1,7 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsModule } from '@ngxs/store';
@@ -12,6 +12,7 @@ import { cabState } from './shared/store/state/cab.state';
 import { driverState } from './shared/store/state/driver.state';
 import { routes } from './app.routes';
 import { DatePipe } from '@angular/common';
+import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -42,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       AngularSvgIconModule.forRoot(),
       NgxsModule.forRoot([cabState, driverState]),
       DatePipe
-    ])
+    ]),
+    provideHttpClient(withInterceptors([AuthInterceptor]))
   ]
 };

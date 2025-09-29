@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalService } from './shared/services/global.service';
 import { CommonModule } from '@angular/common';
+import * as AOS from 'aos'; // Import AOS
 
 @Component({
   selector: 'app-root',
@@ -28,5 +29,12 @@ export class AppComponent {
     const lang = savedLang || browserLang || this.defaultLang;
     this.translate.setDefaultLang(this.defaultLang);
     this.translate.use(lang);
+  }
+
+  ngOnInit() {
+    AOS.init({
+      duration: 800,  // animation duration
+      once: true,     // whether animation should happen only once
+    }); // Initialize AOS
   }
 }

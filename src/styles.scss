@@ -266,6 +266,11 @@ a {
   max-width: 150px;
 }
 
+.width-300 {
+  white-space: break-spaces;
+  max-width: 300px !important;
+}
+
 .font-b {
   font-weight: 700;
 }
@@ -1002,6 +1007,8 @@ header {
       color: #e9b30e;
       background: #fff;
       border-color: #e9b30e;
+      margin-top: -6px;
+      box-shadow: 0px 1px 12px 0px rgba(228, 228, 228, 0.81);
     }
   }
 
@@ -1601,14 +1608,18 @@ header {
 
       a {
         padding: 10px 10px;
-        border-radius: 5px;
+        border-radius: 50px;
         font-weight: 700;
         background: #ffffff;
         color: #111;
         font-size: 17px;
-        border: 1px solid #DBDBDB;
-
+        // border: 1px solid #DBDBDB;
+        // background: rgba(64, 25, 0, 0.0392156863);
+        // border: 1px solid rgba(160, 104, 68, 0.4196078431);
+        background: #f2f7f6;
+        border: 2px solid rgba(224, 224, 224, 0.568627451)
       }
+
 
       .active {
         background: rgba(var(--theme-color), 1) !important;
@@ -1616,10 +1627,29 @@ header {
       }
     }
 
+
     li+li {
       margin-left: 15px;
     }
   }
+}
+
+.booking-lists ul li a:hover {
+
+  transform: scale(1.03);
+  //  {
+  color: rgba(var(--theme-color), 1);
+  background: #fff;
+  border-color: rgba(var(--theme-color), 1);
+  // margin-top: -6px;
+  box-shadow: 0px 1px 12px 0px rgba(228, 228, 228, 0.81);
+  // }
+
+  // box-shadow: 0px 1px 12px 0px rgba(228, 228, 228, 0.81);
+  // a {
+  //   background: red;
+  //   margin-top: -6px;
+  // }
 }
 
 .booking-header {
@@ -3393,6 +3423,7 @@ header {
   .card {
     border-radius: 8px;
     border: 1px solid #e7e7e7;
+    box-shadow: 0px 1px 9px 3px rgba(228, 228, 228, 0.81);
   }
 
 }
@@ -3921,4 +3952,54 @@ footer {
     padding-left: 6px;
     padding-right: 6px;
   }
+}
+
+.flight-detail-sec .detail-bar .detail-wrap .logo-sec:hover {
+  transform: scale(1.30);
+}
+
+.rental-section {
+  .flight-search {
+    border-color: #a068446b;
+
+    .flight-search-detail {
+      background: #4019000a;
+    }
+  }
+}
+
+.left-sidebar {
+  background: #4019000a;
+  border: 2px solid #a068446b;
+  box-shadow: none
+}
+
+
+header.light_header .main-navbar .nav-menu>li>a:before {
+  content: "";
+  position: absolute;
+  height: 2px;
+  bottom: -6px;
+  left: 0;
+  background-color: #069243;
+  visibility: hidden;
+  width: 0px;
+  transition: all 0.5s ease-in-out 0s;
+}
+
+header.light_header .main-navbar .nav-menu>li>a:hover:before {
+  visibility: visible;
+  width: 36px;
+}
+
+header.light_header .main-navbar .nav-menu>li>a:hover {
+  color: #069243;
+}
+
+header.light_header .main-navbar .menubar .nav-menu>li {
+  margin-right: 32px !important;
+}
+
+header.light_header .main-navbar .menubar .nav-menu>li>a {
+  padding: 0 !important;
 }
