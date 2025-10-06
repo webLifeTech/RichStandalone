@@ -77,8 +77,13 @@
                     Search
                   </a>
                   <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
-                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
-                    Booking</a>
+                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>
+                    Add Booking
+                  </a>
+                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                    Export
+                  </button>
                 </div>
               </div>
             </div>

@@ -91,7 +91,13 @@ export class UserDashboardBookingComponent {
       "pagesize": this.pageSize,
       "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder
+      "sortOrder": this.sortOrder,
+      "bookingRefNumber": null,
+      "bookingType": null,
+      "pickUpDate": null,
+      "dropDate": null,
+      "bookingDate": null,
+      "duration": null,
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.GetAllBookings(body).subscribe((res: any) => {
@@ -362,5 +368,88 @@ export class UserDashboardBookingComponent {
 
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
+  }
+
+  exportToExcel() {
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "bookingStatus": JSON.stringify([this.activeTab]),
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "bookingRefNumber": null,
+      "bookingType": null,
+      "pickUpDate": null,
+      "dropDate": null,
+      "bookingDate": null,
+      "duration": null,
+    }
+    this.gs.isSpinnerShow = true;
+    this.bookingService.GetAllBookings(body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      let tableData = res?.bookingMatches;
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+      }
+      const status: any = {
+        "Confirmed": "127384", // secondary
+        "Delivered": "FF9307", // warning
+        "Pending Request": "FF9307", // warning
+        "Start Service": "FF9307", // warning
+        "Cancelled": "FF0000", // danger
+        "Refund Started": "FF0000", // danger
+        "Refund Received": "FF0000", // danger
+        "Refund Rejected": "FF0000", // danger
+        "Received": "1FBC2F", // success
+        "End Service": "1FBC2F", // success
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Reference Number": {
+            ...style,
+            value: tableData[i].bookingReferenceNumber || '-',
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].bookingStatus || '-',
+            font: { bold: true, color: { argb: status[tableData[i].bookingStatus] } },
+          },
+          "Status Remarks": {
+            ...style,
+            value: tableData[i].bookingStatusRemarks || '-',
+          },
+          "Booking Type": {
+            ...style,
+            value: tableData[i].riskType || '-',
+          },
+          "Pickup Date": {
+            ...style,
+            value: tableData[i].pickUpDate || '-',
+          },
+          "Duration": {
+            ...style,
+            value: tableData[i].bookingDuration || '-',
+          },
+          "Total Amount": {
+            ...style,
+            value: tableData[i].totalAmount || '-'
+          },
+        });
+      }
+      this.gs.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTabName)
+    });
   }
 }

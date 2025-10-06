@@ -131,7 +131,6 @@ export class MyCarsComponent {
 
     //   this.totalData = filteredData.length;
     //   this.tableData = filteredData;
-
     // });
   }
 
@@ -217,6 +216,83 @@ export class MyCarsComponent {
       }, () => { });
     }, () => {
     });
+  }
+
+  exportToExcel() {
+
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+      pageNumber: 1,
+      pagesize: this.totalData,
+      globalSearch: this.searchFilter.globalSearch || "",
+      sortColumn: this.sortColumn,
+      sortOrder: this.sortOrder,
+      vin: null,
+      vehicleStatus: this.activeTab,
+    }
+    this.gs.isSpinnerShow = true;
+    this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {
+      this.gs.isSpinnerShow = false;
+      let tableData = response.carDetails;
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+      }
+      const status: any = {
+        "Booked": "FF0000", // warning
+        "Kyc Pending": "FF9307", // danger
+        "Available": "1FBC2F", // success
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Vin Number": {
+            ...style,
+            value: tableData[i].vin || '-',
+          },
+          "Car Name": {
+            ...style,
+            value: tableData[i].make + ' (' + tableData[i].model + ')',
+          },
+          "Price Per Day": {
+            ...style,
+            value: tableData[i].perDayRentPrice || '-',
+          },
+          "Price Per Week": {
+            ...style,
+            value: tableData[i].perWeekRentPrice || '-',
+          },
+          "Price Per Month": {
+            ...style,
+            value: tableData[i].perMonthRentPrice || '-',
+          },
+          "Price Per Year": {
+            ...style,
+            value: tableData[i].perYearRentPrice || '-',
+          },
+          "Vehicle status": {
+            ...style,
+            value: tableData[i].vehicleStatus || '-',
+            font: { bold: true, color: { argb: status[tableData[i].vehicleStatus] } },
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].status || '-',
+          },
+        });
+      }
+      this.gs.exportToExcelCustom(finalData, "MyCars", "My Cars - " + this.activeTab)
+
+    })
   }
 
 

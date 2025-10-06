@@ -44,7 +44,7 @@ export class UserWalletComponent {
   public tableData: any = [];
   public searchDataValue = '';
   public pageSize = 10;
-  public totalRecord = 0;
+  public totalData = 0;
   public currentPage = 1;
 
   walletDetails: any = {};
@@ -104,19 +104,6 @@ export class UserWalletComponent {
     }
   }
 
-  // getWalletDetails() {
-  //   this.gs.isSpinnerShow = true;
-  //   this.walletService.getWalletDetails({
-  //     "userId": this.gs.loggedInUserInfo.userId
-  //   }).subscribe((response: any) => {
-  //     console.log("response >>>>", response);
-  //     this.gs.isSpinnerShow = false;
-  //     if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-  //       this.walletDetails = response.walletDetails;
-  //     }
-  //   })
-  // }
-
   getWalletDetails() {
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
@@ -124,19 +111,23 @@ export class UserWalletComponent {
       "pagesize": this.pageSize,
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || "",
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,
+      "paymentRefNumber": null,
+      "paymentStatus": null,
+      "paymentDate": null,
     }
     this.gs.isSpinnerShow = true;
     this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
       console.log("GetAllWalletPayments >>>>", response);
       this.gs.isSpinnerShow = false;
-      this.tableData = response.walletPaymentDetails?.walletpaymentMatches;
-      this.totalRecord = response.viewModel?.totalCount;
-      this.walletDetails = response.walletPaymentDetails?.walletDetails;
-      // if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-      // }
+      if (response && response.response && response.response.statusCode == "200") {
+        this.tableData = response.walletPaymentDetails?.walletpaymentMatches;
+        this.totalData = response.viewModel?.totalCount;
+        this.walletDetails = response.walletPaymentDetails?.walletDetails;
+      }
     })
   }
 
@@ -222,4 +213,118 @@ export class UserWalletComponent {
     this.getWalletDetails();
   }
 
+  exportToExcel() {
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "paymentMethod": null,
+      "paymentType": null,
+      "transactionType": null,
+      "paymentRefNumber": null,
+      "paymentStatus": null,
+      "paymentDate": null,
+    }
+    this.gs.isSpinnerShow = true;
+    this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      let tableData = response.walletPaymentDetails?.walletpaymentMatches;
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Reference Number": {
+            ...style,
+            value: tableData[i].paymentReferenceNumber || '-',
+          },
+          "Transaction Type": {
+            ...style,
+            value: 'Amount - ' + tableData[i].transactionType || '-',
+            font: { bold: true, color: { argb: tableData[i].transactionType === 'CREDIT' ? "008000" : "FF0000" } },
+          },
+          "Amount": {
+            ...style,
+            value: (tableData[i].transactionType === 'CREDIT' ? '+' : '-') + tableData[i].amount || '-',
+            font: { bold: true, color: { argb: tableData[i].transactionType === 'CREDIT' ? "008000" : "FF0000" } },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+            isTotal: true,
+          },
+          "Payment Mode": {
+            ...style,
+            value: tableData[i].paymentMethod || '-',
+          },
+          "Remarks": {
+            ...style,
+            value: tableData[i].remarks || '-',
+          },
+          "Date": {
+            ...style,
+            value: tableData[i].createdDate || '-',
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].status || '-',
+          },
+        });
+      }
+
+      this.gs.exportToExcelCustom(finalData, "WalletHistory", "Wallet Usage History");
+      // this.gs.exportToExcel(finalData, "WalletHistory", "Wallet Usage History");
+
+      // const data = [
+      //   {
+      //     SL: { value: 1 },
+      //     "Reference Number": { value: "WT00000023" },
+      //     "Transaction Type": {
+      //       value: "Amount - DEBIT",
+      //       font: { bold: true, color: { argb: "FF0000" } },
+      //     },
+      //     Amount: {
+      //       value: "-36.7",
+      //       font: { bold: true, color: { argb: "FF0000" } },
+      //       isTotal: true,
+      //     },
+      //     "Payment Mode": { value: "Wallet" },
+      //     Remarks: { value: "Booking Payment" },
+      //     Date: { value: "09/26/2025" },
+      //     Status: {
+      //       value: "Active",
+      //       font: { bold: true, color: { argb: "008000" } },
+      //     },
+      //   },
+      //   {
+      //     SL: { value: 2 },
+      //     "Reference Number": { value: "12743" },
+      //     "Transaction Type": {
+      //       value: "Amount - CREDIT",
+      //       font: { bold: true, color: { argb: "008000" } },
+      //     },
+      //     Amount: {
+      //       value: "+29",
+      //       font: { bold: true, color: { argb: "008000" } },
+      //       isTotal: true,
+      //     },
+      //     "Payment Mode": { value: "ACH" },
+      //     Remarks: { value: "Booking Payment" },
+      //     Date: { value: "09/25/2025" },
+      //     Status: { value: "Active" },
+      //   },
+      // ];
+    });
+  }
 }

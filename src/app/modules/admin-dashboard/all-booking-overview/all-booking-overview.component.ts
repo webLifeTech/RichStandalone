@@ -44,7 +44,7 @@ export class AllBookingOverviewComponent {
 
   public searchFilter: any = {
     // user_type: 'all',
-    status: 'all_bookings',
+    status: 'All Bookings',
   };
   tabs: any = []
   bookTypes = [
@@ -52,7 +52,7 @@ export class AllBookingOverviewComponent {
     { title: "Drivers", value: "Driver" },
   ]
   vehicleStatusList: any = [
-    { name: "All Bookings", value: "all_bookings" },
+    { name: "All Bookings", value: "All Bookings" },
     { name: "Confirmed", value: "Confirmed" },
     { name: "Pending Request", value: "Pending Request" },
     { name: "Start Service", value: "Start Service" },
@@ -92,7 +92,7 @@ export class AllBookingOverviewComponent {
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
-      "bookingStatus": this.searchFilter.status == 'all_bookings' ? null : JSON.stringify([this.searchFilter.status]),
+      "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
       "riskType": this.activeTypes,
     }
     this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
@@ -182,6 +182,112 @@ export class AllBookingOverviewComponent {
   searchData() {
     this.currentPage = 1;
     this.getTableData();
+  }
+
+  exportToExcel() {
+    const body = {
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "userType": JSON.stringify([this.activeTab]),
+      "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
+      "riskType": this.activeTypes,
+    }
+    this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+
+        let tableData = response.bookingOverviews;
+        let finalData: any = [];
+        const style = {
+          border: {
+            top: { style: "medium" },
+            left: { style: "medium" },
+            bottom: { style: "medium" },
+            right: { style: "medium" }
+          },
+          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+        }
+        const status: any = {
+          "Confirmed": "127384", // secondary
+          "Delivered": "FF9307", // warning
+          "Pending Request": "FF9307", // warning
+          "Start Service": "FF9307", // warning
+          "Cancelled": "FF0000", // danger
+          "Refund Started": "FF0000", // danger
+          "Refund Received": "FF0000", // danger
+          "Refund Rejected": "FF0000", // danger
+          "Received": "1FBC2F", // success
+          "End Service": "1FBC2F", // success
+        }
+
+        for (let i in tableData) {
+          finalData.push({
+            "SL": {
+              ...style,
+              value: Number(i) + 1,
+            },
+            "Booking ID": {
+              ...style,
+              value: tableData[i].bookingReferenceNumber || '-',
+            },
+            "Car Name": {
+              ...style,
+              value: tableData[i].carName || '-',
+            },
+            "Driver Name": {
+              ...style,
+              value: tableData[i].driver_name || '-',
+            },
+            "Booked On": {
+              ...style,
+              value: tableData[i].bookingDate || '-',
+            },
+            "Pickup Date": {
+              ...style,
+              value: tableData[i].pickUpDate || '-',
+            },
+            "End Date": {
+              ...style,
+              value: tableData[i].endDate || '-',
+            },
+            "Duration": {
+              ...style,
+              value: tableData[i].bookingDuration || '-',
+            },
+            "Price": {
+              ...style,
+              value: (tableData[i].pricePerBooking + ' per ' + tableData[i].durationType) || '-',
+            },
+            "Total Amount": {
+              ...style,
+              value: tableData[i].totalAmount || '-',
+              font: { bold: true },
+              alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+              isTotal: true,
+            },
+            "Status": {
+              ...style,
+              value: tableData[i].bookingStatus || '-',
+              font: { bold: true, color: { argb: status[tableData[i].bookingStatus] } },
+            },
+          });
+
+          if (this.activeTypes === 'Vehicle') {
+            delete finalData[i]['Driver Name'];
+          }
+          if (this.activeTypes === 'Driver') {
+            delete finalData[i]['Car Name'];
+          }
+        }
+        let title = this.activeTypes + ' Bookings - ' + this.activeTab + ' - ' + this.searchFilter.status;
+        this.gs.exportToExcelCustom(finalData, "VehiclesBookings", title);
+      } else {
+        this.toast.errorToastr(response.message);
+      }
+    });
   }
 
 }

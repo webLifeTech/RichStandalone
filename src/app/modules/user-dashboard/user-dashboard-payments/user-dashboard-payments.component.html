@@ -58,6 +58,11 @@
                     <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                       Search
                     </a>
+                    <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel"
+                      [disabled]="!totalData">
+                      <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                      Export
+                    </button>
                   </div>
                 </div>
               </div>
@@ -132,7 +137,7 @@
                   </thead>
                   <tbody>
                     <tr
-                      *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                      *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData };; let idx = index;">
                       <td>
                         <span>{{idx+1}}</span>
                       </td>

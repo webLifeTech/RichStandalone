@@ -128,7 +128,7 @@
               </div>
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
-                  <div id="tablefilter" class="me-0">
+                  <div id="tablefilter">
                     <div class="dataTables_filter">
                       <label>
                         <input [(ngModel)]="searchDataValue" type="search" class="form-control" placeholder="Search" />
@@ -138,6 +138,10 @@
                   <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                     Search
                   </a>
+                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                    Export
+                  </button>
                 </div>
               </div>
             </div>
@@ -148,9 +152,9 @@
                 <thead class="thead-light">
                   <tr>
                     <th>SL</th>
-                    <th class="pointer" (click)="onSort('bookingReferenceNumber')">
+                    <th class="pointer" (click)="onSort('paymentReferenceNumber')">
                       Reference Number
-                      <span *ngIf="sortColumn === 'bookingReferenceNumber'">
+                      <span *ngIf="sortColumn === 'paymentReferenceNumber'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
@@ -201,7 +205,7 @@
                 </thead>
                 <tbody>
                   <ng-container
-                    *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalRecord }; let idx = index">
+                    *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index">
                     <tr>
                       <td>{{idx+1}}</td>
                       <td><a> {{item.paymentReferenceNumber}}</a></td>

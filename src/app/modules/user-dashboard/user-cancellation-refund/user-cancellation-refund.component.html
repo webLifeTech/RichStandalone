@@ -19,6 +19,10 @@
               <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                 Search
               </a>
+              <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                Export
+              </button>
             </div>
           </div>
         </div>
@@ -74,23 +78,23 @@
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
                 </th>
-                <th class="pointer" (click)="onSort('createdDate')">
+                <th class="pointer" (click)="onSort('requestedDate')">
                   Requested Date
-                  <span *ngIf="sortColumn === 'createdDate'">
+                  <span *ngIf="sortColumn === 'requestedDate'">
                     <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
                 </th>
-                <th class="text-center pointer" (click)="onSort('amount')">
+                <th class="text-center pointer" (click)="onSort('refundAmount')">
                   Refund Amount
-                  <span *ngIf="sortColumn === 'amount'">
+                  <span *ngIf="sortColumn === 'refundAmount'">
                     <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
                 </th>
-                <th class="text-center pointer" (click)="onSort('status')">
+                <th class="text-center pointer" (click)="onSort('refundStatus')">
                   Status
-                  <span *ngIf="sortColumn === 'status'">
+                  <span *ngIf="sortColumn === 'refundStatus'">
                     <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
@@ -132,10 +136,10 @@
                   </div>
                 </td> -->
                 <td class="text-start">
-                  <span>{{data.cancellationReason}}</span>
+                  <span>{{data.cancellationReason || "-"}}</span>
                 </td>
                 <td class="text-start">
-                  <span>{{data.refundReason}}</span>
+                  <span>{{data.refundReason || "-"}}</span>
                 </td>
                 <td class="text-center">
                   <span>{{data.requestedDate}}
@@ -150,7 +154,9 @@
                           'badge-light-warning': data.refundStatus === 'Pending',
                           'badge-light-danger':data.refundStatus === 'Rejected',
                           'badge-light-secondary': data.refundStatus === 'Pending Disburse'
-                           }" class="badge">{{data.refundStatus}}</span>
+                           }" class="badge">
+                    {{data.refundStatus}}
+                  </span>
                 </td>
                 <td class="text-end">
                   <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">

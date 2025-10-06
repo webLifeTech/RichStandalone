@@ -15,7 +15,7 @@
         <div class="card book-card flex-fill mb-0">
           <div class="card-header">
             <div class="row align-items-center">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <!-- <h4>{{'All Activities'}} <span>{{totalData}}</span></h4> -->
               </div>
 
@@ -28,12 +28,11 @@
                 </div>
               </div>
               <div id="tablefilter" class="col-md-2 ">
-                <ng-select [items]="sortFilter" bindLabel="value" bindValue="value" (change)="onChange()"
-                  placeholder="Select Date Duration" [(ngModel)]="filterObj.sortFilter" name="sortFilter"
-                  clearable="false">
+                <ng-select [items]="sortFilter" bindLabel="value" bindValue="value" placeholder="Select Date Duration"
+                  [(ngModel)]="filterObj.sortFilter" name="sortFilter" clearable="false" (ngModelChange)="onChange()">
                 </ng-select>
               </div>
-              <div class="col-md-4 text-end">
+              <div class="col-md-5 text-end">
                 <div class="table-search">
                   <div id="tablefilter">
                     <div class="dataTables_filter">
@@ -45,6 +44,10 @@
                   <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                     Search
                   </a>
+                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                    Export
+                  </button>
                 </div>
               </div>
             </div>

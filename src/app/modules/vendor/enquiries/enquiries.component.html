@@ -18,7 +18,7 @@
                 <mat-label>Select Date Rang</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
                   <input [(ngModel)]="searchFilter.startDate" name="startDate" matStartDate placeholder="Start date" />
-                  <input (ngModelChange)="onChangeFilter()" [(ngModel)]="searchFilter.endDate" name="endDate" matEndDate
+                  <input (ngModelChange)="searchData()" [(ngModel)]="searchFilter.endDate" name="endDate" matEndDate
                     placeholder="End date" />
                 </mat-date-range-input>
                 <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
@@ -29,7 +29,7 @@
             <div class="col-lg-2 col-sm-12 col-12" *ngIf="gs.loggedInUserInfo.role == 'admin'">
               <ng-select clearable="false" [items]="providerList" bindLabel="CompanyName" bindValue="CompanyName"
                 placeholder="-- Filter Provider --" [(ngModel)]="searchFilter.providerName" name="providername"
-                (change)="onChangeFilter(); selectProvider($event)">
+                (change)="searchData(); selectProvider($event)">
               </ng-select>
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
@@ -41,7 +41,7 @@
             <div class="col-lg-2 col-sm-12 col-12">
               <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="Name" bindValue="Name"
                 placeholder="-- Filter Sub Category --" [(ngModel)]="searchFilter.subCategory" name="subCategory"
-                (change)="onChangeFilter()">
+                (change)="searchData()">
               </ng-select>
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
@@ -73,11 +73,32 @@
                         <input [(ngModel)]="searchFilter.globalSearch" type="search" class="form-control"
                           placeholder="Search" />
                       </label>
-                      <a class="btn btn-theme ms-2" (click)="onChangeFilter()">
-                        {{ 'global.search' | translate }}
-                      </a>
                     </div>
                   </div>
+                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                    Search
+                  </a>
+                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                    Export
+                  </button>
+
+                  <!-- <div id="tablefilter">
+                    <div class="dataTables_filter">
+                      <label>
+                        <input [(ngModel)]="searchFilter.globalSearch" type="search" class="form-control"
+                          placeholder="Search" />
+                      </label>
+                      <a class="btn btn-theme ms-2 me-2" (click)="searchData()">
+                        {{ 'global.search' | translate }}
+                      </a>
+                      <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel"
+                        [disabled]="!totalData">
+                        <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                        Export
+                      </button>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -99,7 +120,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData }; let idx = index;">
+                    *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index;">
                     <td>
                       <a>{{data.id}}</a>
                     </td>

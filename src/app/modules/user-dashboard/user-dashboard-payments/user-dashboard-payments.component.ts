@@ -89,6 +89,11 @@ export class UserDashboardPaymentsComponent {
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "paymentRefNumber": null,
+      "paymentDate": null,
+      "paymentStatus": null,
+      "bookingRefNumber": null,
     };
     this.gs.isSpinnerShow = true;
     this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
@@ -204,5 +209,86 @@ export class UserDashboardPaymentsComponent {
     this.sortColumn = column;
     this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
     this.getTableData();
+  }
+
+  exportToExcel() {
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "paymentMethod": null,
+      "paymentType": null,
+      "transactionType": null,
+      "paymentRefNumber": null,
+      "paymentDate": null,
+      "paymentStatus": null,
+      "bookingRefNumber": null,
+    };
+    this.gs.isSpinnerShow = true;
+    this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      let tableData = response.bookingpaymentMatches;
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Payment ID": {
+            ...style,
+            value: tableData[i].paymentReferenceNumber || '-',
+          },
+          "Reference Number": {
+            ...style,
+            value: tableData[i].bookingReferenceNumber || '-',
+          },
+          "Car Name": {
+            ...style,
+            value: tableData[i].Make + ' ' + tableData[i].Model || '-',
+          },
+          "Driver Name": {
+            ...style,
+            value: tableData[i].driverName || '-',
+          },
+          "Payment Date": {
+            ...style,
+            value: tableData[i].createdDate || '-',
+          },
+          "Payment Mode": {
+            ...style,
+            value: tableData[i].paymentMethod || '-',
+          },
+          "Total Amount": {
+            ...style,
+            value: tableData[i].amount || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+            isTotal: true,
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].status || '-'
+          },
+        });
+        if (this.gs.loggedInUserInfo['role'] === 'user') {
+          delete finalData[i]['Driver Name'];
+        }
+      }
+
+      this.gs.exportToExcelCustom(finalData, "MyPayments", "My Payments");
+    });
   }
 }

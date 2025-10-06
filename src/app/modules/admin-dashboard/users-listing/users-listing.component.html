@@ -58,8 +58,14 @@
                     Search
                   </a>
                   <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
-                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>Add
-                    Booking</a>
+                    class="btn btn-theme btn-add">
+                    <i class="feather icon-plus-circle"></i>
+                    Add Booking
+                  </a>
+                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
+                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
+                    Export
+                  </button>
                 </div>
               </div>
             </div>
@@ -79,23 +85,51 @@
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
                     </th>
-                    <th class="text-start pointer" (click)="onSort('rolename')">
+                    <th *ngIf="activeTab != 'Vendor'" class="text-start pointer" (click)="onSort('rolename')">
                       User Type
                       <span *ngIf="sortColumn === 'rolename'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
                     </th>
-                    <th class="text-center pointer" (click)="onSort('licenseNumber')">
+                    <th *ngIf="activeTab != 'Vendor'" class="text-center pointer" (click)="onSort('licenseNumber')">
                       License Number
                       <span *ngIf="sortColumn === 'licenseNumber'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
                     </th>
-                    <th class="text-center pointer" (click)="onSort('kycStatus')">
+                    <th *ngIf="activeTab != 'Vendor'" class="text-center pointer" (click)="onSort('kycStatus')">
                       KYC status
                       <span *ngIf="sortColumn === 'kycStatus'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTab == 'Vendor'" class="text-start pointer" (click)="onSort('emailId')">
+                      Email
+                      <span *ngIf="sortColumn === 'emailId'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTab == 'Vendor'" class="text-start pointer" (click)="onSort('phoneNumber')">
+                      Phone Number
+                      <span *ngIf="sortColumn === 'phoneNumber'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTab == 'Vendor'" class="text-start pointer" (click)="onSort('categoryName')">
+                      Category Name
+                      <span *ngIf="sortColumn === 'categoryName'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th>
+                    <th *ngIf="activeTab == 'Vendor'" class="text-start pointer" (click)="onSort('subCategoryName')">
+                      Sub Category
+                      <span *ngIf="sortColumn === 'subCategoryName'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                         <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                       </span>
@@ -126,21 +160,32 @@
                         </div>
                       </div>
                     </td>
-                    <td class="text-start">
+                    <td *ngIf="activeTab != 'Vendor'" class="text-start">
                       <span>{{data.rolename}}</span>
                     </td>
-                    <td class="text-center">
-                      <span>{{data.licenseNumber}}</span>
+                    <td *ngIf="activeTab != 'Vendor'" class="text-center">
+                      <span>{{data.licenseNumber || '-'}}</span>
                     </td>
-                    <td>
+                    <td *ngIf="activeTab != 'Vendor'">
                       <span class="badge" [ngClass]="{
                           'badge-light-danger': data.kycStatus === 'KYC Pending',
                           'badge-light-success': data.kycStatus === 'Completed'}">
                         {{data.kycStatus}}
                       </span>
                     </td>
+                    <td *ngIf="activeTab == 'Vendor'" class="text-start">
+                      <span>{{data.emailId || '-'}}</span>
+                    </td>
+                    <td *ngIf="activeTab == 'Vendor'" class="text-start">
+                      <span>{{data.phoneNumber || '-'}}</span>
+                    </td>
+                    <td *ngIf="activeTab == 'Vendor'" class="text-start">
+                      <span>{{data.categoryName || '-'}}</span>
+                    </td>
+                    <td *ngIf="activeTab == 'Vendor'" class="text-start">
+                      <span>{{data.subCategoryName || '-'}}</span>
+                    </td>
                     <td class="text-center">
-                      <!-- (click)="changeStatus(data)" -->
                       <a *ngIf="data.status === 'Active'" (click)="changeStatus(data)">
                         <span class="badge badge-success">
                           {{data.status}}

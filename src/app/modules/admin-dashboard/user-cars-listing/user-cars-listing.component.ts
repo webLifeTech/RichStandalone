@@ -47,7 +47,7 @@ export class UserCarsListingComponent {
 
   public searchFilter: any = {
     branch: 'all',
-    status: 'all',
+    status: 'All Status',
   };
   public activeTab = '';
   activeTabName: any = '';
@@ -57,7 +57,7 @@ export class UserCarsListingComponent {
   tabs: any = [];
 
   vehicleStatusList: any = [
-    { id: 1, name: 'All Status', value: 'all' },
+    { id: 1, name: 'All Status', value: 'All Status' },
     { id: 4, name: "Active", value: "Active" },
     { id: 3, name: 'Pending', value: 'Pending' },
     { id: 2, name: 'InActive', value: 'InActive' },
@@ -78,21 +78,21 @@ export class UserCarsListingComponent {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Vehicles";
-      this.searchFilter.status = params['status'] ? params['status'] : 'all';
+      this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
       this.getTableData();
     })
   }
 
   getTableData() {
-    let tabName = this.tabs.find((item: any) => item.value === this.activeTab)?.title;
-    this.activeTabName = tabName;
+    // let tabName = this.tabs.find((item: any) => item.value === this.activeTab)?.title;
+    // this.activeTabName = tabName;
     this.gs.isSpinnerShow = true;
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
       "globalSearch": this.searchDataValue?.trim() || "",
       "userType": JSON.stringify([this.activeTab]),
-      "status": (!this.searchFilter.status || this.searchFilter.status === 'all') ? null : JSON.stringify([this.searchFilter.status]),
+      "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
     }
     this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {
       this.carOwnerTabs = [];
@@ -151,6 +151,34 @@ export class UserCarsListingComponent {
 
   searchData() {
     this.getTableData();
+  }
+
+  exportToExcel() {
+    const body = {
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "userType": JSON.stringify([this.activeTab]),
+      "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
+    }
+    this.gs.isSpinnerShow = true;
+    this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        let tableData = response.ownerVehicles;
+        let finalData: any = [];
+        for (let i in tableData) {
+          finalData.push({
+            "SL": Number(i) + 1,
+            "Name": tableData[i].ownerName + ' - ' + tableData[i].userStatus + ' - ' + tableData[i].roleName,
+          });
+        }
+        let title = 'Vehicles - ' + this.activeTab + ' - ' + this.searchFilter.status;
+        this.gs.exportToExcelWithNested(tableData, "Vehicles", title);
+      } else {
+        this.toast.errorToastr(response.message);
+      }
+    });
   }
 
 }

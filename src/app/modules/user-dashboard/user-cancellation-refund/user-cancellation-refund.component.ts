@@ -168,4 +168,73 @@ export class UserCancellationRefundComponent {
     this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
     this.getTableData();
   }
+
+  exportToExcel() {
+    const body = {
+      "pageNumber": 1,
+      "pagesize": this.totalData,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || ""
+    };
+    this.gs.isSpinnerShow = true;
+    this.adminService.GetBookingRefundDetailsForAdmin(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+
+      let tableData = response.refundDetails;
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+      }
+      const refundStatus: any = {
+        "Approved": "1FBC2F",
+        "Pending": "FF9307",
+        "Rejected": "FF0000",
+        "Pending Disburse": "127384",
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Reference Number": {
+            ...style,
+            value: tableData[i].bookingReferenceNumber || '-',
+          },
+          "Reason": {
+            ...style,
+            value: tableData[i].cancellationReason || '-',
+          },
+          "Remark": {
+            ...style,
+            value: tableData[i].refundReason || '-',
+          },
+          "Requested Date": {
+            ...style,
+            value: tableData[i].requestedDate || '-',
+          },
+          "Refund Amount": {
+            ...style,
+            value: tableData[i].refundAmount || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+            isTotal: true,
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].refundStatus || '-',
+            font: { bold: true, color: { argb: refundStatus[tableData[i].refundStatus] } },
+          },
+        });
+      }
+      this.gs.exportToExcelCustom(finalData, "PaymentsRefund", "Payments Refund");
+    });
+  }
 }

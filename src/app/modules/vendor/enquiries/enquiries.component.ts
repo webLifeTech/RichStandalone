@@ -48,6 +48,7 @@ export class EnquiriesComponent {
 
   public tableData: any = [];
   public totalData = 0;
+  public pageSize = 10;
   public currentPage = 1;
   public searchFilter: any = {
     startDate: null,
@@ -101,14 +102,12 @@ export class EnquiriesComponent {
   }
 
   getTableData() {
-    console.log(".......startDate", this.searchFilter.startDate);
-    console.log(".......endDate", this.searchFilter.endDate);
 
     const body = {
       "searchCriteria": {
         "userId": this.gs.loggedInUserInfo.userId,
         "pageNumber": this.currentPage,
-        "pagesize": 10,
+        "pagesize": this.pageSize,
         "globalSearch": this.searchFilter.globalSearch?.trim() || null
       },
       "filterCriteria": {
@@ -125,7 +124,6 @@ export class EnquiriesComponent {
       this.gs.isSpinnerShow = false;
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode === "200") {
         const aggFilters = JSON.parse(res.aggregateFilters);
-        console.log("aggFilters >>>>>", aggFilters);
         this.providerList = aggFilters.filter((item: any) => item.CompanyName);
         this.tableData = res.providerEnquiryMatches;
         this.totalData = res.viewModel.totalCount;
@@ -133,12 +131,9 @@ export class EnquiriesComponent {
     })
   }
 
-  onChangeFilter() {
-    setTimeout(() => {
-      this.currentPage = 1;
-      console.log("searchFilter.category >>>>", this.searchFilter.category);
-      this.getTableData();
-    }, 500);
+  searchData() {
+    this.currentPage = 1;
+    this.getTableData();
   }
 
   resetFilter() {
@@ -148,12 +143,12 @@ export class EnquiriesComponent {
     this.searchFilter.subCategory = null;
     this.searchFilter.providerName = null;
     this.searchFilter.globalSearch = null;
-    this.onChangeFilter();
+    this.searchData();
   }
 
 
   onChangeServices(event: any) {
-    this.onChangeFilter();
+    this.searchData();
     this.vendorService.getMasterProviderSubCategories({
       categoryId: event.ID
     }).subscribe((res: any) => {
@@ -224,6 +219,98 @@ export class EnquiriesComponent {
     } else {
       return null;
     }
+  }
+
+  exportToExcel() {
+
+    const body = {
+      "searchCriteria": {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": 1,
+        "pagesize": this.totalData,
+        "globalSearch": this.searchFilter.globalSearch?.trim() || null
+      },
+      "filterCriteria": {
+        "category": this.searchFilter.category || null, // "Mortgage brokers"
+        "subCategory": this.searchFilter.subCategory ? JSON.stringify([this.searchFilter.subCategory]) : null, // "[\"Personal Loans\",\"Home Loans\"]"
+        "startDate": this.searchFilter.startDate ? this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') : null,
+        "endDate": this.searchFilter.endDate ? this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy') : null,
+        "companyName": this.searchFilter.providerName || null
+      }
+    }
+    this.gs.isSpinnerShow = true;
+    this.vendorService.GetAllProviderEnquiry(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode === "200") {
+
+        let tableData = response.providerEnquiryMatches;
+        let finalData: any = [];
+        const style = {
+          border: {
+            top: { style: "medium" },
+            left: { style: "medium" },
+            bottom: { style: "medium" },
+            right: { style: "medium" }
+          },
+          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
+        }
+        for (let i in tableData) {
+          finalData.push({
+            "SL": {
+              ...style,
+              value: Number(i) + 1,
+            },
+            "Lead ID": {
+              ...style,
+              value: tableData[i].id || '-',
+            },
+            "Company name": {
+              ...style,
+              value: tableData[i].companyName || '-',
+            },
+            "Contact Person": {
+              ...style,
+              value: tableData[i].name || '-',
+            },
+            "Mobile": {
+              ...style,
+              value: tableData[i].phoneNumber || '-',
+            },
+            "Email": {
+              ...style,
+              value: tableData[i].emailId || '-',
+            },
+            "Category": {
+              ...style,
+              value: tableData[i].category || '-',
+            },
+            "Sub Category": {
+              ...style,
+              value: tableData[i].subCategory || '-',
+            },
+            "Date": {
+              ...style,
+              value: tableData[i].enquiryDate || '-',
+            },
+          });
+        }
+        let title = "Enquiries";
+
+        if (this.searchFilter.startDate) {
+          title = title + ' - ' + this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') + ' To ' + this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy');
+        }
+        if (this.searchFilter.providerName) {
+          title = title + ' - ' + this.searchFilter.providerName;
+        }
+        if (this.searchFilter.category) {
+          title = title + ' - ' + this.searchFilter.category;
+        }
+        if (this.searchFilter.subCategory) {
+          title = title + ' - ' + this.searchFilter.subCategory;
+        }
+        this.gs.exportToExcelCustom(finalData, "Enquiries", title);
+      }
+    })
   }
 
 }
