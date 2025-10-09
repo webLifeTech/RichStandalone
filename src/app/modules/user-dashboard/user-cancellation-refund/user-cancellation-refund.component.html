@@ -9,6 +9,12 @@
           </div>
           <div class="col-md-7 text-md-end">
             <div class="table-search">
+              <div class="mb-1 me-3">
+                <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
+                  [(ngModel)]="dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
+                  [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
+                <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+              </div>
               <div id="tablefilter">
                 <div class="dataTables_filter">
                   <label>
@@ -35,13 +41,6 @@
                 <th>
                   <span>SL</span>
                 </th>
-                <!-- <th class="pointer" (click)="onSort('paymentReferenceNumber')">
-                  Payment ID
-                  <span *ngIf="sortColumn === 'paymentReferenceNumber'">
-                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
-                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
-                  </span>
-                </th> -->
                 <th class="pointer" (click)="onSort('bookingReferenceNumber')">
                   Reference Number
                   <span *ngIf="sortColumn === 'bookingReferenceNumber'">
@@ -49,21 +48,6 @@
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
                 </th>
-                <!-- <th class="text-start pointer" (click)="onSort('Make')">
-                  Car Name
-                  <span *ngIf="sortColumn === 'Make'">
-                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
-                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
-                  </span>
-                </th>
-                <th class="text-start pointer" (click)="onSort('driverName')"
-                  *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'">
-                  Driver Name
-                  <span *ngIf="sortColumn === 'driverName'">
-                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
-                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
-                  </span>
-                </th> -->
                 <th class="text-start pointer" (click)="onSort('cancellationReason')">
                   Reason
                   <span *ngIf="sortColumn === 'cancellationReason'">
@@ -108,33 +92,9 @@
                 <td>
                   <span>{{idx+1}}</span>
                 </td>
-                <!-- <td class="text-start">
-                  <a>{{data.paymentReferenceNumber}}</a>
-                </td> -->
                 <td>
                   <a>{{data.bookingReferenceNumber || "-"}}</a>
                 </td>
-                <!-- <td class="text-start">
-                  <div class="table-avatar">
-                    <a class="avatar avatar-lg flex-shrink-0 d-flex">
-                      <img class="car-img" [src]="data.carimage" alt="Booking">
-                    </a>
-                    <div class="table-head-name flex-grow-1">
-                      <a>{{data.Make}} {{data.Model}}</a>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
-                  class="text-start">
-                  <div class="table-avatar">
-                    <a class="avatar avatar-lg flex-shrink-0">
-                      <img class="avatar-img" [src]="data.driverprofilepath" alt="Booking">
-                    </a>
-                    <div class="table-head-name flex-grow-1">
-                      <a>{{data.driverName}}</a>
-                    </div>
-                  </div>
-                </td> -->
                 <td class="text-start">
                   <span>{{data.cancellationReason || "-"}}</span>
                 </td>
@@ -153,7 +113,7 @@
                           'badge-light-success': data.refundStatus === 'Approved',
                           'badge-light-warning': data.refundStatus === 'Pending',
                           'badge-light-danger':data.refundStatus === 'Rejected',
-                          'badge-light-secondary': data.refundStatus === 'Pending Disburse'
+                          'badge-light-secondary': data.refundStatus === 'Processed' || data.refundStatus === 'Pending Disburse',
                            }" class="badge">
                     {{data.refundStatus}}
                   </span>

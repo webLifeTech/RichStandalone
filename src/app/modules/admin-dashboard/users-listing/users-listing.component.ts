@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { GlobalService } from '../../../shared/services/global.service';
 import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 import { AdminService } from '../../../shared/services/admin.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-users-listing',
@@ -23,7 +24,10 @@ import { AdminService } from '../../../shared/services/admin.service';
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './users-listing.component.html',
   styleUrl: './users-listing.component.scss'
 })
@@ -33,6 +37,7 @@ export class UsersListingComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
+  dateTimeRange: any = "";
 
   public searchFilter: any = {
     status: 'All Status',
@@ -59,6 +64,7 @@ export class UsersListingComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
+    private datePipe: DatePipe,
 
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
@@ -70,8 +76,7 @@ export class UsersListingComponent {
   }
 
   getTableData() {
-
-    this.gs.isSpinnerShow = true;
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
@@ -80,7 +85,10 @@ export class UsersListingComponent {
       "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
       "userStatus": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
+      "startDate": startDate,
+      "endDate": endDate,
     }
+    this.gs.isSpinnerShow = true;
     this.adminService.GetAllUsersForAdmin(body).subscribe((response: any) => {
       this.tableData = [];
       this.gs.isSpinnerShow = false;
@@ -162,7 +170,12 @@ export class UsersListingComponent {
     this.getTableData();
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": 1,
       "pagesize": this.totalData,
@@ -171,6 +184,8 @@ export class UsersListingComponent {
       "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
       "userStatus": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
+      "startDate": startDate,
+      "endDate": endDate,
     }
     this.adminService.GetAllUsersForAdmin(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

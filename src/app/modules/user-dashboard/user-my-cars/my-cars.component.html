@@ -13,7 +13,7 @@
       <div class="col-lg-12">
         <div class="sorting-info">
           <div class="row d-flex align-items-center">
-            <div class="col-lg-8 col-sm-12 col-12">
+            <div class="col-lg-10 col-sm-12 col-12">
               <div class="booking-lists">
                 <ul class="nav">
                   <li *ngFor="let item of booktabs">
@@ -31,24 +31,6 @@
                 </select>
               </div>
             </div>
-            <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <select class="form-select">
-                <option selected>This Week</option>
-                <option value="1">This Month</option>
-                <option value="2">Last 30 Days</option>
-                <option value="3">Custom</option>
-              </select>
-            </div>
-            <!-- <div class="col-lg-2 col-sm-12 col-12 text-end">
-              <div class="filter-group">
-                <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
-                  <ng-container *ngFor="let item of vehicleStatusList">
-                    <option [value]="item.value">{{item.name}}</option>
-                  </ng-container>
-                </select>
-              </div>
-            </div> -->
-
           </div>
         </div>
       </div>
@@ -65,6 +47,12 @@
               </div>
               <div class="col-md-7 text-md-end">
                 <div class="table-search">
+                  <div class="mb-1 me-3">
+                    <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
+                      [(ngModel)]="dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
+                      [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
+                    <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                  </div>
                   <div id="tablefilter">
                     <div class="dataTables_filter">
                       <label>

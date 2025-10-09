@@ -101,12 +101,12 @@
               </table>
               <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
             </div>
-            <div *ngIf="from === 'wishlist'" class="book-flight">
+            <!-- <div *ngIf="from === 'wishlist'" class="book-flight">
               <a class="btn btn-theme margin-5" (click)="checkAvailability()">
                 {{'Check Availability' | translate}}
               </a>
-            </div>
-            <div *ngIf="from === 'owner_interest'" class="book-flight">
+            </div> -->
+            <div *ngIf="from === 'wishlist' || from === 'owner_interest'" class="book-flight">
               <button *ngIf="!details.isBooked" class="btn btn-theme margin-5" (click)="bookNow(details)">
                 {{'car_list_page.book' | translate}}
               </button>

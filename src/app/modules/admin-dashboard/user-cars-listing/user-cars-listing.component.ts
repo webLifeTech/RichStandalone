@@ -1,23 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { apiResultFormat } from '../../../shared/services/model/model';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { MyCarsService } from '../../../shared/services/mycars.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
-import { DeleteModalComponent } from '../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
-import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
 import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
-import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/modal/my-car-modals/change-car-price-modal/change-car-price-modal.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AdminService } from '../../../shared/services/admin.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-cars-listing',
@@ -32,7 +28,10 @@ import { AdminService } from '../../../shared/services/admin.service';
     MatButtonModule,
     CurrencySymbolPipe,
     MatExpansionModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-cars-listing.component.html',
   styleUrl: './user-cars-listing.component.scss'
 })
@@ -44,6 +43,7 @@ export class UserCarsListingComponent {
   public pageIndex = 0;
   public currentPage = 1;
   public currentPageSecond = 1;
+  dateTimeRange: any = "";
 
   public searchFilter: any = {
     branch: 'all',
@@ -73,7 +73,7 @@ export class UserCarsListingComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
-
+    private datePipe: DatePipe,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -84,16 +84,17 @@ export class UserCarsListingComponent {
   }
 
   getTableData() {
-    // let tabName = this.tabs.find((item: any) => item.value === this.activeTab)?.title;
-    // this.activeTabName = tabName;
-    this.gs.isSpinnerShow = true;
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
       "globalSearch": this.searchDataValue?.trim() || "",
       "userType": JSON.stringify([this.activeTab]),
       "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
+      "startDate": startDate,
+      "endDate": endDate,
     }
+    this.gs.isSpinnerShow = true;
     this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {
       this.carOwnerTabs = [];
       this.gs.isSpinnerShow = false;
@@ -153,13 +154,20 @@ export class UserCarsListingComponent {
     this.getTableData();
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": 1,
       "pagesize": this.totalData,
       "globalSearch": this.searchDataValue?.trim() || "",
       "userType": JSON.stringify([this.activeTab]),
       "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
+      "startDate": startDate,
+      "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {

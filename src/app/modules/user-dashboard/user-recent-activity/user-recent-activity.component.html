@@ -19,7 +19,7 @@
                 <!-- <h4>{{'All Activities'}} <span>{{totalData}}</span></h4> -->
               </div>
 
-              <div id="tablefilter" class="col-md-2 filter-input">
+              <!-- <div id="tablefilter" class="col-md-2 filter-input">
                 <div *ngIf="filterObj.sortFilter == 'Custom Date'">
                   <input placeholder="Date Range:" class="form-control datetimepicker-input digits"
                     [(ngModel)]="filterObj.dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
@@ -31,9 +31,15 @@
                 <ng-select [items]="sortFilter" bindLabel="value" bindValue="value" placeholder="Select Date Duration"
                   [(ngModel)]="filterObj.sortFilter" name="sortFilter" clearable="false" (ngModelChange)="onChange()">
                 </ng-select>
-              </div>
-              <div class="col-md-5 text-end">
+              </div> -->
+              <div class="col-md-9 text-end">
                 <div class="table-search">
+                  <div class="mb-1 me-3">
+                    <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
+                      [(ngModel)]="filterObj.dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
+                      [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
+                    <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                  </div>
                   <div id="tablefilter">
                     <div class="dataTables_filter">
                       <label>

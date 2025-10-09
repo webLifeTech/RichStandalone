@@ -65,14 +65,33 @@ export class AuthService {
       "userUniqueId": null,
       "Source": "Web"
     }
+    this.gs.isSpinnerShow = true;
     this.SignOut(body).subscribe((res: any) => {
       console.log("res >>>", res);
+      this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
-        this.isLoggedIn = false;
-        this.gs.loggedInUserInfo = {};
-        localStorage.removeItem('loggedIn');
-        localStorage.removeItem('loggedInUser');
         this.router.navigateByUrl('/home');
+        setTimeout(() => {
+          this.isLoggedIn = false;
+          this.gs.isLicenseVerified = false;
+          this.gs.isFleetOwnerLicenseVerified = false;
+          this.gs.isIndCarOwnerLicenseVerified = false;
+          this.gs.isDivComeOwnedCarLicenseVerified = false;
+          this.gs.loggedInUserInfo = {};
+          localStorage.removeItem('isLicenseVerified');
+          localStorage.removeItem('driverInfoData');
+          localStorage.removeItem('isFleetOwnerLicenseVerified');
+          localStorage.removeItem('fleetOwnerKycData');
+          localStorage.removeItem('isIndCarOwnerLicenseVerified');
+          localStorage.removeItem('individualCarOwnerKycData');
+          localStorage.removeItem('isDivComeOwnedCarLicenseVerified');
+          localStorage.removeItem('divComeOwnedCarKycData');
+          localStorage.removeItem('driverDetailsData');
+          localStorage.removeItem('MyWishlistStore');
+          localStorage.removeItem('purchasedNFTUser');
+          localStorage.removeItem('loggedIn');
+          localStorage.removeItem('loggedInUser');
+        }, 1000);
       }
     })
   }

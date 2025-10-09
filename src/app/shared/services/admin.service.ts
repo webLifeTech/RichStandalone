@@ -84,4 +84,13 @@ export class AdminService {
       })
     );
   }
+
+  // Admin -> GetPendingConfirmationBookingPaymentsForAdmin
+  public GetPendingConfirmationBookingPaymentsForAdmin(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingConfirmationBookingPaymentsForAdmin', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

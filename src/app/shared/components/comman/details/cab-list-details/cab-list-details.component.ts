@@ -139,7 +139,9 @@ export class CabListDetailsComponent {
     }
     this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
     this.searchInfo = this.gs.getLastSearch();
-    this.checkFav();
+    if (this.auth.isLoggedIn) {
+      this.checkFav();
+    }
   }
 
   setPage(page: number) {

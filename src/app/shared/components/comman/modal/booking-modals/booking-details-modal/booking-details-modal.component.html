@@ -32,8 +32,10 @@
         <div *ngIf="bookingDetails.bookingDetails.bookingStatus !== 'Cancelled'" class="alert-msg">
           <div class="alert alert-success py-2 alert-dismissible fade show" role="alert">
             <b>{{alertMessages.alertMessage}}</b>
-            <!-- <br />
-            <span>Approved By Johna Melinda on 17 Sep 2024</span> -->
+            <br *ngIf="bookingDetails.cancellationRefundDetails.approvedDate" />
+            <span *ngIf="bookingDetails.cancellationRefundDetails.approvedDate">
+              Approved By Admin on {{bookingDetails.cancellationRefundDetails.approvedDate | date : 'd MMM y'}}
+            </span>
           </div>
         </div>
 
@@ -55,7 +57,17 @@
             <p>
               Cancelled By {{bookingDetails.cancellationRefundDetails.driverPersonalDetails}} on
               {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
-              Refund will deposited in user account on 19 Sep 2023
+              <!-- refundStatusCd == 4 = 'Processed'  -->
+              <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
+                Refund will be deposit soon in user account
+              </ng-container>
+              <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd == 4">
+                Amount
+                <strong>
+                  {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
+                </strong> Refund is deposited
+                in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'd MMM y'}}
+              </ng-container>
             </p>
           </div>
         </ng-container>

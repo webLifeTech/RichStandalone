@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -13,6 +13,7 @@ import { BookingDetailsModalComponent } from '../../../shared/components/comman/
 import { GlobalService } from '../../../shared/services/global.service';
 import { DriversBookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/drivers-booking-details-modal/drivers-booking-details-modal.component';
 import { AdminService } from '../../../shared/services/admin.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-all-booking-overview',
@@ -26,7 +27,10 @@ import { AdminService } from '../../../shared/services/admin.service';
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './all-booking-overview.component.html',
   styleUrl: './all-booking-overview.component.scss'
 })
@@ -36,6 +40,7 @@ export class AllBookingOverviewComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
+  dateTimeRange: any = "";
 
   public activeTab = '';
   public activeTypes = '';
@@ -68,6 +73,7 @@ export class AllBookingOverviewComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
+    private datePipe: DatePipe,
 
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
@@ -84,7 +90,7 @@ export class AllBookingOverviewComponent {
   }
 
   getTableData() {
-    this.gs.isSpinnerShow = true;
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
@@ -94,7 +100,10 @@ export class AllBookingOverviewComponent {
       "userType": JSON.stringify([this.activeTab]),
       "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
       "riskType": this.activeTypes,
+      "startDate": startDate,
+      "endDate": endDate,
     }
+    this.gs.isSpinnerShow = true;
     this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
       this.tableData = [];
       this.gs.isSpinnerShow = false;
@@ -107,8 +116,6 @@ export class AllBookingOverviewComponent {
       }
     });
   }
-
-
 
   changeBookTab(item: any) {
     this.activeTab = item.name;
@@ -185,6 +192,7 @@ export class AllBookingOverviewComponent {
   }
 
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": 1,
       "pagesize": this.totalData,
@@ -194,6 +202,8 @@ export class AllBookingOverviewComponent {
       "userType": JSON.stringify([this.activeTab]),
       "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
       "riskType": this.activeTypes,
+      "startDate": startDate,
+      "endDate": endDate,
     }
     this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

@@ -1,26 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { booking } from '../../../shared/interface/pages';
 import { CabService } from '../../../shared/services/cab.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
-import { apiResultFormat, pageSelection, userBookings } from '../../../shared/services/model/model';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { AlertService } from '../../../shared/services/alert.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { DeleteModalComponent } from '../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { PaymentService } from '../../../shared/services/payment.service';
-import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
 import { AddPaymentModalComponent } from '../../../shared/components/comman/modal/payment-modals/add-payment-modal/add-payment-modal.component';
 import { AddCardModalComponent } from '../../../shared/components/comman/modal/payment-modals/add-card-modal/add-card-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
 import { WalletService } from '../../../shared/services/wallet.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-wallet',
@@ -33,6 +27,8 @@ import { WalletService } from '../../../shared/services/wallet.service';
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   templateUrl: './user-wallet.component.html',
   styleUrl: './user-wallet.component.scss'
@@ -46,6 +42,7 @@ export class UserWalletComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
+  dateTimeRange: any = '';
 
   walletDetails: any = {};
 
@@ -105,6 +102,7 @@ export class UserWalletComponent {
   }
 
   getWalletDetails() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": this.currentPage,
@@ -112,6 +110,8 @@ export class UserWalletComponent {
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
       "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,
@@ -121,7 +121,6 @@ export class UserWalletComponent {
     }
     this.gs.isSpinnerShow = true;
     this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
-      console.log("GetAllWalletPayments >>>>", response);
       this.gs.isSpinnerShow = false;
       if (response && response.response && response.response.statusCode == "200") {
         this.tableData = response.walletPaymentDetails?.walletpaymentMatches;
@@ -214,6 +213,7 @@ export class UserWalletComponent {
   }
 
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": 1,
@@ -221,6 +221,8 @@ export class UserWalletComponent {
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
       "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,

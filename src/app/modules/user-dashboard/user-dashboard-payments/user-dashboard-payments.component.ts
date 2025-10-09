@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
@@ -16,6 +15,7 @@ import { ConfirmationModalComponent } from '../../../shared/components/comman/mo
 import { ToastService } from '../../../shared/services/toast.service';
 import { AdminService } from '../../../shared/services/admin.service';
 import { UserCancellationRefundComponent } from '../user-cancellation-refund/user-cancellation-refund.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-dashboard-payments',
@@ -29,7 +29,10 @@ import { UserCancellationRefundComponent } from '../user-cancellation-refund/use
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-dashboard-payments.component.html',
   styleUrl: './user-dashboard-payments.component.scss'
 })
@@ -42,6 +45,7 @@ export class UserDashboardPaymentsComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
+  dateTimeRange: any = "";
 
   tabs: any = [
     { "name": "All Payments", "value": "All Payments" },
@@ -63,7 +67,7 @@ export class UserDashboardPaymentsComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
-
+    private datePipe: DatePipe,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -80,28 +84,42 @@ export class UserDashboardPaymentsComponent {
   }
 
   getTableData() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,
-      "globalSearch": this.searchDataValue?.trim() || "",
       "paymentRefNumber": null,
       "paymentDate": null,
       "paymentStatus": null,
       "bookingRefNumber": null,
     };
-    this.gs.isSpinnerShow = true;
-    this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
-      this.gs.isSpinnerShow = false;
-      this.tableData = response.bookingpaymentMatches;
-      this.totalData = response.viewModel?.totalCount;
 
-    });
+    if (this.activeTab == "All Payments") {
+      this.gs.isSpinnerShow = true;
+      this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
+        this.gs.isSpinnerShow = false;
+        this.tableData = response.bookingpaymentMatches;
+        this.totalData = response.viewModel?.totalCount;
+      });
+    }
+
+    if (this.activeTab == "Pending Confirmation") {
+      this.gs.isSpinnerShow = true;
+      this.adminService.GetPendingConfirmationBookingPaymentsForAdmin(body).subscribe((response: any) => {
+        this.gs.isSpinnerShow = false;
+        this.tableData = response.bookingpaymentMatches;
+        this.totalData = response.viewModel?.totalCount;
+      });
+    }
 
     // this.paymentService.getUserPayment().subscribe((response: any) => {
     //   this.gs.isSpinnerShow = false;
@@ -211,7 +229,12 @@ export class UserDashboardPaymentsComponent {
     this.getTableData();
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": 1,
@@ -219,6 +242,8 @@ export class UserDashboardPaymentsComponent {
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
       "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
       "paymentMethod": null,
       "paymentType": null,
       "transactionType": null,

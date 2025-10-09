@@ -79,50 +79,7 @@ export class BookingCancellationComponent {
   ngOnInit() {
     console.log("singleBookingDetail >>>>>", this.singleBookingDetail);
     this.GetMasterBookingCancellationReasons();
-    // if (this.singleBookingDetail.riskType == "Vehicle") {
-    //   this.GetCarBookingCancellationInfo();
-    // }
-    // if (this.singleBookingDetail.riskType == "Driver") {
-    //   this.GetDriverBookingCancellationInfo();
-    // }
-    // this.GetBookingByBookingRefNo();
-    // if (this.type == "driver") {
-    //   this.reasons = this.driverRentCancellationReasons;
-    // } else {
-    //   this.reasons = this.carRentCancellationReasons;
-    // }
   }
-
-
-  // GetCarBookingCancellationInfo() {
-  //   this.gs.isSpinnerShow = true;
-  //   const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
-  //   this.bookingService.GetCarBookingCancellationInfo({
-  //     bookingId: this.singleBookingDetail.bookingId,
-  //     cancelDate: todayDate,
-  //   }).subscribe((response: any) => {
-  //     this.gs.isSpinnerShow = false;
-  //     console.log("GetCarBookingCancellationInfo >>>>>", response);
-  //     if (response && response.responseResult && response.responseResult.statusCode == "200") {
-  //       this.cancellationInfo = response;
-  //     }
-  //   })
-  // }
-
-  // GetDriverBookingCancellationInfo() {
-  //   this.gs.isSpinnerShow = true;
-  //   const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
-  //   this.bookingService.GetDriverBookingCancellationInfo({
-  //     bookingId: this.singleBookingDetail.bookingId,
-  //     cancelDate: todayDate,
-  //   }).subscribe((response: any) => {
-  //     this.gs.isSpinnerShow = false;
-  //     console.log("GetDriverBookingCancellationInfo >>>>>", response);
-  //     if (response && response.responseResult && response.responseResult.statusCode == "200") {
-  //       this.cancellationInfo = response;
-  //     }
-  //   })
-  // }
 
   GetMasterBookingCancellationReasons() {
     this.gs.isSpinnerShow = true;
@@ -134,23 +91,6 @@ export class BookingCancellationComponent {
       this.reasons = response;
     })
   }
-
-  // GetBookingByBookingRefNo() {
-  //   this.gs.isSpinnerShow = true;
-  //   this.bookingService.GetBookingByBookingRefNo({
-  //     bookingRefNo: this.bookingRefNo,
-  //     loginUserId: this.gs.loggedInUserInfo.userId,
-  //   }).subscribe((response: any) => {
-  //     this.gs.isSpinnerShow = false;
-  //     console.log("GetBookingByBookingRefNo >>>>>", response);
-  //     if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-  //       this.bookingDetails = response;
-  //       this.GetMasterBookingCancellationReasons();
-  //     }
-  //   })
-  // }
-
-
 
   get cancelFormControl(): any {
     return this.cancellationForm.controls;

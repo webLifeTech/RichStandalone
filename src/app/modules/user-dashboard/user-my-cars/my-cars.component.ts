@@ -1,24 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
-import { apiResultFormat, pageSelection, userBookings } from '../../../shared/services/model/model';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { MyCarsService } from '../../../shared/services/mycars.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
-import { DeleteModalComponent } from '../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
-import { MatDialog } from '@angular/material/dialog';
-import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
-import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/modal/my-car-modals/change-car-price-modal/change-car-price-modal.component';
 import { ProfileService } from '../../../shared/services/profile.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-my-cars',
@@ -32,7 +26,10 @@ import { ProfileService } from '../../../shared/services/profile.service';
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './my-cars.component.html',
   styleUrl: './my-cars.component.scss'
 })
@@ -43,6 +40,7 @@ export class MyCarsComponent {
   pageSize: any = 10;
   currentPage: any = 1;
   totalData: any = 0;
+  dateTimeRange: any = "";
 
   public searchFilter: any = {
     branch: 'all',
@@ -55,13 +53,7 @@ export class MyCarsComponent {
   total_refunded_amount: any = 200;
   total_net_profit: any = 1000;
   editInfo: any = {};
-  booktabs: any = [
-    // { title: "All Cars", value: "All Cars" },
-    // { title: "Booked", value: "booked" },
-    // { title: "Available", value: "available" },
-    // { title: "KYC Pending", value: "kyc_pending" },
-    // { title: "Cancelled", value: "cancelled" }
-  ];
+  booktabs: any = [];
 
   vehicleStatusList: any = [
     { id: 1, name: 'All Status', value: 'all' },
@@ -78,16 +70,13 @@ export class MyCarsComponent {
 
 
   constructor(
-    // private data: DataService,
-    private router: Router,
     private route: ActivatedRoute,
-    private mycarsService: MyCarsService,
     public cabService: CabService,
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
     public profileService: ProfileService,
-
+    private datePipe: DatePipe,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -98,6 +87,7 @@ export class MyCarsComponent {
   }
 
   getTableData() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       userId: this.gs.loggedInUserInfo.userId,
       pageNumber: this.currentPage,
@@ -106,7 +96,9 @@ export class MyCarsComponent {
       sortColumn: this.sortColumn,
       sortOrder: this.sortOrder,
       vin: null,
-      vehicleStatus: this.activeTab,
+      vehicleStatus: this.activeTab == "All Cars" ? null : this.activeTab,
+      startDate: startDate,
+      endDate: endDate,
     }
     this.gs.isSpinnerShow = true;
     this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {
@@ -114,24 +106,7 @@ export class MyCarsComponent {
       this.tableData = response.carDetails;
       this.totalData = response?.viewModel?.totalCount;
       this.booktabs = response.filterList ? JSON.parse(response.filterList) : [];
-      console.log("this.booktabs >>", this.booktabs);
-
     })
-    // this.mycarsService.getMyCars().subscribe((apiRes: apiResultFormat) => {
-    //   let allCars = apiRes.data;
-    //   let filteredData = [];
-
-    //   filteredData = allCars.filter((item: any) => {
-    //     const matchesTab = type === 'All Cars' ? item : item.vehicle_status === tabName;
-    //     const matchesStatus = this.searchFilter.status === 'all' ? item : item.status === this.searchFilter.status;
-    //     const matchesBranch = this.searchFilter.branch === 'all' ? item : item.branch === this.searchFilter.branch;
-
-    //     return matchesTab && matchesStatus && matchesBranch;
-    //   });
-
-    //   this.totalData = filteredData.length;
-    //   this.tableData = filteredData;
-    // });
   }
 
   selectStatus() {
@@ -218,8 +193,13 @@ export class MyCarsComponent {
     });
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
 
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       userId: this.gs.loggedInUserInfo.userId,
       pageNumber: 1,
@@ -229,6 +209,8 @@ export class MyCarsComponent {
       sortOrder: this.sortOrder,
       vin: null,
       vehicleStatus: this.activeTab,
+      startDate: startDate,
+      endDate: endDate,
     }
     this.gs.isSpinnerShow = true;
     this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {

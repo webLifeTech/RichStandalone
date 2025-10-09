@@ -1,22 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
-import { apiResultFormat, pageSelection, userBookings } from '../../../shared/services/model/model';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BookingService } from '../../../shared/services/booking.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
-import { DeleteModalComponent } from '../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
-import { MatDialog } from '@angular/material/dialog';
 import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
-import { BookingCancelModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-cancel-modal/booking-cancel-modal.component';
 import { WriteReviewModalComponent } from '../../../shared/components/comman/modal/booking-modals/write-review-modal/write-review-modal.component';
 import { RefundApproveRejectModalComponent } from '../../../shared/components/comman/modal/booking-modals/refund-approve-reject-modal/refund-approve-reject-modal.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
@@ -26,6 +21,7 @@ import { OtpVerificationModalComponent } from '../user-settings/modals/otp-verif
 import { VerificationSuccessModalComponent } from '../user-settings/modals/verification-success-modal/verification-success-modal.component';
 import { BookingChecklistComponent } from './booking-checklist/booking-checklist.component';
 import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -42,6 +38,8 @@ import { ViewAllDocumentsModalComponent } from '../../../shared/components/comma
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   providers: [DatePipe],
   templateUrl: './user-dashboard-booking.component.html',
@@ -64,6 +62,7 @@ export class UserDashboardBookingComponent {
   tempTableData: any = [];
   singleBookingDetail: any = {};
   cancellationInfo: any = {};
+  dateTimeRange: any = "";
 
 
   constructor(
@@ -83,7 +82,7 @@ export class UserDashboardBookingComponent {
   }
 
   getTableData() {
-
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
       "bookingStatus": JSON.stringify([this.activeTab]),
@@ -92,6 +91,8 @@ export class UserDashboardBookingComponent {
       "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
+      "startDate": startDate,
+      "endDate": endDate,
       "bookingRefNumber": null,
       "bookingType": null,
       "pickUpDate": null,
@@ -328,10 +329,10 @@ export class UserDashboardBookingComponent {
 
   GetCarBookingCancellationInfo() {
     this.gs.isSpinnerShow = true;
-    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+    const todayDate = new Date();
     this.bookingService.GetCarBookingCancellationInfo({
       bookingId: this.singleBookingDetail.bookingId,
-      cancelDate: todayDate,
+      cancelDate: todayDate.toISOString(),
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
@@ -343,15 +344,18 @@ export class UserDashboardBookingComponent {
       } else {
         this.toast.errorToastr(response.responseResult.message);
       }
-    })
+    }, (error) => {
+      this.toast.errorToastr(error.error.Message);
+      this.gs.isSpinnerShow = false;
+    });
   }
 
   GetDriverBookingCancellationInfo() {
     this.gs.isSpinnerShow = true;
-    const todayDate = this.transformDate(new Date(), 'MM/dd/yy');
+    const todayDate = new Date();
     this.bookingService.GetDriverBookingCancellationInfo({
       bookingId: this.singleBookingDetail.bookingId,
-      cancelDate: todayDate,
+      cancelDate: todayDate.toISOString(),
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
@@ -363,7 +367,10 @@ export class UserDashboardBookingComponent {
       } else {
         this.toast.errorToastr(response.responseResult.message);
       }
-    })
+    }, (error) => {
+      this.toast.errorToastr(error.error.Message);
+      this.gs.isSpinnerShow = false;
+    });
   }
 
   transformDate(date: any, format: any) {
@@ -371,6 +378,7 @@ export class UserDashboardBookingComponent {
   }
 
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "bookingStatus": JSON.stringify([this.activeTab]),
@@ -379,6 +387,8 @@ export class UserDashboardBookingComponent {
       "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
+      "startDate": startDate,
+      "endDate": endDate,
       "bookingRefNumber": null,
       "bookingType": null,
       "pickUpDate": null,

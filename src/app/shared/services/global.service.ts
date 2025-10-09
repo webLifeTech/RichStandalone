@@ -370,7 +370,22 @@ export class GlobalService {
 
     // Save file
     const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), `${fileName}.xlsx`);
+    // saveAs(new Blob([buffer]), `${fileName}.xlsx`);
+
+    const blob = new Blob([buffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+
+    // Use object URL instead of file-saver
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 
   async exportToExcelWithNested(data: any[], fileName: string, title: string): Promise<void> {
@@ -475,8 +490,23 @@ export class GlobalService {
 
     // Save file
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    saveAs(blob, `${fileName}.xlsx`);
+    // const blob = new Blob([buffer], { type: 'application/octet-stream' });
+    // saveAs(blob, `${fileName}.xlsx`);
+
+    const blob = new Blob([buffer], {
+      type:
+        "application/octet-stream.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+
+    // Use object URL instead of file-saver
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileName}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 
   async exportToExcelWithNested2(
@@ -644,5 +674,24 @@ export class GlobalService {
     startDate.setDate(today.getDate() - 30);
     startDate.setHours(0, 0, 0, 0);
     return { startDate };
+  }
+
+  normalizeDateRange(startD: string, endD: string, useUTC = false) {
+    const startDate: any = startD ? new Date(startD) : null;
+    const endDate: any = endD ? new Date(endD) : null;
+
+    if (!startD || !endD) {
+      return { startDate, endDate };
+    }
+
+    if (useUTC) {
+      startDate.setUTCHours(0, 0, 0, 0);
+      endDate.setUTCHours(23, 59, 59, 999);
+    } else {
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+    }
+
+    return { startDate, endDate };
   }
 }

@@ -47,8 +47,6 @@ export class EnquiriesModalComponent {
   }
 
   ngOnInit() {
-    console.log("this.searchDetails >>>", this.searchDetails);
-    console.log("providerDetails >>>", this.providerDetails);
 
     this.enquiryForm = this.bf.group({
       "providerUserId": this.providerDetails.userId,
@@ -66,12 +64,10 @@ export class EnquiriesModalComponent {
       "isRead": true,
       "enquiryDate": [this.transformDate(this.todayDate, 'MM/dd/yy')]
     })
-    console.log("providerDetails >>>", this.providerDetails);
 
   }
 
   changeSubCategory(event: any) {
-    console.log("event >>>>>", event);
     this.enquiryForm?.patchValue({ subCategory: event.subCategoryName });
 
   }
@@ -80,8 +76,6 @@ export class EnquiriesModalComponent {
     this.modalService.dismissAll();
   }
   onConfirm() {
-    console.log("enquiryForm.valid >>>>>>>", this.enquiryForm.valid);
-    console.log("this.enquiryForm.value >>>>>>>", this.enquiryForm.value);
     this.submitted = true;
     if (this.enquiryForm.valid) {
       this.gs.isSpinnerShow = true;

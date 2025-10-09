@@ -60,21 +60,6 @@ export class ProfileComponent {
     // modalRef.componentInstance.cancelButton = "Close";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        localStorage.removeItem('isLicenseVerified');
-        localStorage.removeItem('driverInfoData');
-        localStorage.removeItem('isFleetOwnerLicenseVerified');
-        localStorage.removeItem('fleetOwnerKycData');
-        localStorage.removeItem('isIndCarOwnerLicenseVerified');
-        localStorage.removeItem('individualCarOwnerKycData');
-        localStorage.removeItem('isDivComeOwnedCarLicenseVerified');
-        localStorage.removeItem('divComeOwnedCarKycData');
-        localStorage.removeItem('driverDetailsData');
-        localStorage.removeItem('MyWishlistStore');
-        localStorage.removeItem('purchasedNFTUser');
-        this.gs.isLicenseVerified = false;
-        this.gs.isFleetOwnerLicenseVerified = false;
-        this.gs.isIndCarOwnerLicenseVerified = false;
-        this.gs.isDivComeOwnedCarLicenseVerified = false;
         this.authService.logOut();
       }
     }, () => { });

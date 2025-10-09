@@ -55,10 +55,7 @@ export class UserRecentActivityComponent {
   }
 
   getTableData() {
-
-    const startDate = this.filterObj.dateTimeRange ? this.filterObj.dateTimeRange[0] : null// this.transformDate(this.filterObj.dateTimeRange[0], 'MM/dd/yy') : null;
-    const endDate = this.filterObj.dateTimeRange ? this.filterObj.dateTimeRange[1] : null// this.transformDate(this.filterObj.dateTimeRange[1], 'MM/dd/yy') : null;
-
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.filterObj.dateTimeRange[0], this.filterObj.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": this.currentPage,
@@ -125,11 +122,7 @@ export class UserRecentActivityComponent {
   }
 
   exportToExcel() {
-    console.log("this.filterObj.dateTimeRange >>>>>>>", this.filterObj.dateTimeRange);
-
-    const startDate = this.filterObj.dateTimeRange ? this.filterObj.dateTimeRange[0] : null
-    const endDate = this.filterObj.dateTimeRange ? this.filterObj.dateTimeRange[1] : null
-
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.filterObj.dateTimeRange[0], this.filterObj.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": 1,

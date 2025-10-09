@@ -107,8 +107,8 @@ export class CabListLeftSidebarComponent {
       let Body = {
         "SearchCriteria": {
           "PickUpLocation": searchObj.same_location || null,
-          "PickUpTime": searchObj.pick_time ? this.datePipe.transform(searchObj.pick_time, 'MM/dd/yyyy') : null,
-          "DropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
+          "PickUpTime": searchObj.pick_time ? searchObj.pick_time : null,
+          "DropTime": searchObj.drop_time ? searchObj.pick_time : null,
           "RentType": searchObj.timeType || "ALL",
           "PageNumber": this.params['page'] || 1,
           "Pagesize": this.pageSize,
@@ -183,8 +183,8 @@ export class CabListLeftSidebarComponent {
       let Body = {
         "SearchCriteria": {
           "pickUpLocation": searchObj.same_location || null,
-          "pickUpTime": searchObj.pick_time ? this.datePipe.transform(searchObj.pick_time, 'MM/dd/yyyy') : null,
-          "dropTime": searchObj.drop_time ? this.datePipe.transform(searchObj.drop_time, 'MM/dd/yyyy') : null,
+          "pickUpTime": searchObj.pick_time ? searchObj.pick_time : null,
+          "dropTime": searchObj.drop_time ? searchObj.drop_time : null,
           "rentType": searchObj.timeType || "ALL",
           "pageNumber": this.params['page'] || 1,
           "pagesize": this.pageSize,

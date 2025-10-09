@@ -1,19 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgxPaginationModule, PaginationService } from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
-import { MatDialog } from '@angular/material/dialog';
 import { GlobalService } from '../../../shared/services/global.service';
 import { ReviewService } from '../../../shared/services/review.service';
 import { BarRating } from 'ngx-bar-rating';
 import { WriteReviewModalComponent } from '../../../shared/components/comman/modal/booking-modals/write-review-modal/write-review-modal.component';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-reviews',
@@ -25,8 +25,11 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
     NgxPaginationModule,
     MatMenuModule,
     MatButtonModule,
-    BarRating
+    BarRating,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-reviews.component.html',
   styleUrl: './user-reviews.component.scss'
 })
@@ -37,7 +40,7 @@ export class UserReviewsComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
-
+  dateTimeRange: any = "";
 
   editInfo: any = {};
   public activeTab = 'i_gave';
@@ -58,7 +61,7 @@ export class UserReviewsComponent {
     public cabService: CabService,
     public gs: GlobalService,
     private modalService: NgbModal,
-
+    private datePipe: DatePipe,
   ) {
     if (this.gs.loggedInUserInfo['role'] === 'user') {
       this.booktabs = [
@@ -91,8 +94,8 @@ export class UserReviewsComponent {
   }
 
   getTableData() {
-    console.log("this.activeTab >>>>", this.activeTab);
 
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     let Body = {
       "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
       "riskType": null,
@@ -102,9 +105,10 @@ export class UserReviewsComponent {
       "globalSearch": this.searchDataValue?.trim() || "",
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
+      "startDate": startDate,
+      "endDate": endDate,
     };
 
-    // if (this.activeTab == 'i_gave') {
     this.gs.isSpinnerShow = true;
     this.reviewService.GetAllRiskReviews(Body).subscribe((res: any) => {
       console.log("GetAllRiskReviews >>>>>", res);
@@ -152,6 +156,10 @@ export class UserReviewsComponent {
         this.getTableData();
       }
     });
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
   }
 
 }

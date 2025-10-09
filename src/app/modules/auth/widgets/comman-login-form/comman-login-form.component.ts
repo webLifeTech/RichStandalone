@@ -145,15 +145,12 @@ export class CommanLoginFormComponent {
   authUser(frm: any, type: string) {
     this.submitted = true;
     if (type == 'login') {
-      console.log("frm >>>>>", frm);
-
       if (!frm.valid) {
         this.toast.errorToastr("Fill the required fields!");
         return;
       }
       this.gs.isSpinnerShow = true;
       this.authService.userLogin(this.loginForm).subscribe((res: any) => {
-        console.log("res >>>>>>>", res);
         this.gs.isSpinnerShow = false;
         let roles: any = {
           ["Driver"]: "user",
@@ -187,8 +184,6 @@ export class CommanLoginFormComponent {
 
       }, err => {
         this.gs.isSpinnerShow = false;
-        console.log("err >>>>>", err);
-
         this.toast.errorToastr(err?.error?.error_description || "Username or password not correct!");
       })
       // }
@@ -201,8 +196,6 @@ export class CommanLoginFormComponent {
         this.toast.errorToastr("Please enter valid details.");
         return;
       }
-      console.log("this.loginForm.password >>>>>>", this.loginForm.password);
-      console.log("this.rePassword >>>>>>", this.rePassword);
 
       if (this.loginForm.password !== this.rePassword) {
         this.toast.errorToastr('Password and confirm password do not match.');
@@ -223,10 +216,8 @@ export class CommanLoginFormComponent {
         body["userType"] = "06E0E6F2-E9E6-4555-B4C8-8C91507FE3D6";
       }
 
-      console.log("body >>>>>", body);
       this.gs.isSpinnerShow = true;
       this.authService.register(body).subscribe((res: any) => {
-        console.log("registerVendor --->", res);
         this.gs.isSpinnerShow = false;
         if (res && res.statusCode == "200") {
           this.toast.successToastr(res.message);
@@ -240,14 +231,7 @@ export class CommanLoginFormComponent {
 
   async sendOtp(frm: any, sendType: any) {
 
-    console.log("frm >>>>", frm);
-
     this.submitted = true;
-    // if (!this.loginForm.username || !this.registerForm.full_name?.trim() || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {
-    //   this.toast.errorToastr("Please fill the all details!");
-    //   return;
-    // }
-
     if (!frm.valid && sendType !== 'resend') {
       this.toast.errorToastr("Please fill the all required fields.");
       return;
@@ -264,7 +248,6 @@ export class CommanLoginFormComponent {
       email: this.verificationType == "EmailId" ? this.loginForm.username : null,
     })
 
-    console.log("checkExist >>>>", checkExist);
     if (checkExist.statusCode != "200") {
       this.toast.errorToastr(checkExist.message);
       return;
@@ -281,7 +264,6 @@ export class CommanLoginFormComponent {
     }
     this.gs.isSpinnerShow = true;
     this.authService.SendVerificationCodeAsync(body).subscribe((res: any) => {
-      console.log("SendVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.submitted = false;
@@ -331,7 +313,6 @@ export class CommanLoginFormComponent {
     };
     this.gs.isSpinnerShow = true;
     this.authService.ReSendPhoneVerificationCodeAsync(body).subscribe((res: any) => {
-      console.log("ReSendPhoneVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
     })
   }
@@ -343,7 +324,6 @@ export class CommanLoginFormComponent {
     };
     this.gs.isSpinnerShow = true;
     this.authService.ReSendEmailVerificationCodeAsync(body).subscribe((res: any) => {
-      console.log("ReSendEmailVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
     })
   }
@@ -364,7 +344,6 @@ export class CommanLoginFormComponent {
     this.gs.isSpinnerShow = true;
     this.authService.ValidateVerificationCodeMethod(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("ValidateVerificationCodeMethod >>>", res);
       if (res && res.statusCode == "200") {
         this.isOtpVerified = true;
         this.submitted = false;
@@ -382,17 +361,12 @@ export class CommanLoginFormComponent {
   }
 
   selectCategory(vendor: any) {
-    console.log("vendor >>>>>>", vendor);
     this.registerForm.categoryCd = vendor.ID;
     this.vendorServ.getMasterProviderSubCategories({
       categoryId: vendor.ID
     }).subscribe((res: any) => {
       this.subCategories = res;
     })
-  }
-
-  changeSubCat(subCat: any) {
-
   }
 
   viewPassword(pass: any) {
@@ -414,7 +388,6 @@ export class CommanLoginFormComponent {
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-      console.log('Selected Country Code:', result);
       if (result) {
         this.selectedCountry = result;
       }

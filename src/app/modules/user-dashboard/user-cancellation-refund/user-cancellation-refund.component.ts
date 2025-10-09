@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -9,13 +9,13 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { PaymentService } from '../../../shared/services/payment.service';
-import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
 import { GlobalService } from '../../../shared/services/global.service';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AdminService } from '../../../shared/services/admin.service';
 import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { RefundApproveRejectModalComponent } from '../../../shared/components/comman/modal/booking-modals/refund-approve-reject-modal/refund-approve-reject-modal.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @Component({
   selector: 'app-user-cancellation-refund',
@@ -28,7 +28,10 @@ import { RefundApproveRejectModalComponent } from '../../../shared/components/co
     MatMenuModule,
     MatButtonModule,
     CurrencySymbolPipe,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-cancellation-refund.component.html',
   styleUrl: './user-cancellation-refund.component.scss'
 })
@@ -41,6 +44,7 @@ export class UserCancellationRefundComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
+  dateTimeRange: any = "";
   activeTab: any = "Refund";
   statusList: any = [];
 
@@ -52,7 +56,7 @@ export class UserCancellationRefundComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
-
+    private datePipe: DatePipe,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -62,12 +66,15 @@ export class UserCancellationRefundComponent {
   }
 
   getTableData() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
-      "globalSearch": this.searchDataValue?.trim() || ""
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
     };
     this.gs.isSpinnerShow = true;
     this.adminService.GetBookingRefundDetailsForAdmin(body).subscribe((response: any) => {
@@ -83,9 +90,6 @@ export class UserCancellationRefundComponent {
     this.adminService.GetMasterRefundStatus().subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       this.statusList = response;
-      console.log("GetMasterRefundStatus >>>>", response);
-      // this.tableData = response.refundDetails;
-      // this.totalData = response.viewModel?.totalCount;
     });
   }
 
@@ -169,13 +173,20 @@ export class UserCancellationRefundComponent {
     this.getTableData();
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "pageNumber": 1,
       "pagesize": this.totalData,
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
-      "globalSearch": this.searchDataValue?.trim() || ""
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
     };
     this.gs.isSpinnerShow = true;
     this.adminService.GetBookingRefundDetailsForAdmin(body).subscribe((response: any) => {
