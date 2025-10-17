@@ -69,6 +69,20 @@
                     <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                   </span>
                 </th>
+                <th class="text-center pointer" (click)="onSort('totalAmount')">
+                  Total Amount
+                  <span *ngIf="sortColumn === 'totalAmount'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
+                <th class="text-center pointer" (click)="onSort('cancellationCharge')">
+                  Cancellation Charge
+                  <span *ngIf="sortColumn === 'cancellationCharge'">
+                    <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                    <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                  </span>
+                </th>
                 <th class="text-center pointer" (click)="onSort('refundAmount')">
                   Refund Amount
                   <span *ngIf="sortColumn === 'refundAmount'">
@@ -102,8 +116,14 @@
                   <span>{{data.refundReason || "-"}}</span>
                 </td>
                 <td class="text-center">
-                  <span>{{data.requestedDate}}
+                  <span>{{data.requestedDate | date : 'MMM d, y, h:mm a'}}
                   </span>
+                </td>
+                <td class="text-center">
+                  <span>{{data.totalAmount | currencyPipe: gs.currency}}</span>
+                </td>
+                <td class="text-center">
+                  <span>{{data.cancellationCharge | currencyPipe: gs.currency}}</span>
                 </td>
                 <td class="text-center">
                   <span>{{data.refundAmount | currencyPipe: gs.currency}}</span>

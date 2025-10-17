@@ -158,7 +158,7 @@
                 <thead class="thead-light">
                   <tr>
                     <th>SL</th>
-                    <th class="pointer" (click)="onSort('paymentReferenceNumber')">
+                    <th class="text-start pointer" (click)="onSort('paymentReferenceNumber')">
                       Reference Number
                       <span *ngIf="sortColumn === 'paymentReferenceNumber'">
                         <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
@@ -214,8 +214,9 @@
                     *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index">
                     <tr>
                       <td>{{idx+1}}</td>
-                      <td><a> {{item.paymentReferenceNumber}}</a></td>
-
+                      <td class="text-start">
+                        <a> {{item.paymentReferenceNumber}}</a>
+                      </td>
                       <td
                         [ngClass]="{ 'text-danger': item.transactionType === 'DEBIT', 'text-success-light': item.transactionType === 'CREDIT'}">
                         Amount - {{item.transactionType}}
@@ -231,7 +232,7 @@
                       <td>
                         {{item.remarks || "-"}}
                       </td>
-                      <td>{{item.createdDate}}</td>
+                      <td>{{item.createdDate | date : 'MMM d, y, h:mm a'}}</td>
                       <td>
                         <span [ngClass]="{
                             'badge-light-success': item.status === 'SUCCESS',

@@ -12,6 +12,7 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-users-listing',
@@ -65,7 +66,7 @@ export class UsersListingComponent {
     private modalService: NgbModal,
     private toast: ToastService,
     private datePipe: DatePipe,
-
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -177,101 +178,94 @@ export class UsersListingComponent {
   exportToExcel() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
-      "pageNumber": 1,
-      "pagesize": this.totalData,
       "globalSearch": this.searchDataValue?.trim() || "",
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
-      "userStatus": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
+      "status": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
       "startDate": startDate,
       "endDate": endDate,
     }
-    this.adminService.GetAllUsersForAdmin(body).subscribe((response: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportAllUsersToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        let tableData = response.allUsers;
-        let finalData: any = [];
-        const style = {
-          border: {
-            top: { style: "medium" },
-            left: { style: "medium" },
-            bottom: { style: "medium" },
-            right: { style: "medium" }
-          },
-          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
-        }
-        const kycStatus: any = {
-          "KYC Pending": "FF0000",
-          "Completed": "1FBC2F"
-        }
-        const status: any = {
-          "InActive": "FF9307", // danger
-          "Active": "1FBC2F", // success
-        }
-        for (let i in tableData) {
-          finalData.push({
-            "SL": {
-              ...style,
-              value: Number(i) + 1,
-            },
-            "User Name": {
-              ...style,
-              value: tableData[i].userName || '-',
-            },
-            "User Type": {
-              ...style,
-              value: tableData[i].rolename || '-',
-            },
-            "License Number": {
-              ...style,
-              value: tableData[i].licenseNumber || '-',
-            },
-            "KYC status": {
-              ...style,
-              value: tableData[i].kycStatus || '-',
-              font: { bold: true, color: { argb: kycStatus[tableData[i].kycStatus] } },
-            },
-            "Email": {
-              ...style,
-              value: tableData[i].emailId || '-',
-            },
-            "Phone Number": {
-              ...style,
-              value: tableData[i].phoneNumber || '-',
-            },
-            "Category Name": {
-              ...style,
-              value: tableData[i].categoryName || '-',
-            },
-            "Sub Category": {
-              ...style,
-              value: tableData[i].subCategoryName || '-',
-            },
-            "Status": {
-              ...style,
-              value: tableData[i].status || '-',
-              font: { bold: true, color: { argb: status[tableData[i].status] } },
-            },
-          });
-
-          if (this.activeTab == 'Vendor') {
-            delete finalData[i]['User Type'];
-            delete finalData[i]['License Number'];
-            delete finalData[i]['KYC status'];
-          }
-          if (this.activeTab != 'Vendor') {
-            delete finalData[i]['Email'];
-            delete finalData[i]['Phone Number'];
-            delete finalData[i]['Category Name'];
-            delete finalData[i]['Sub Category'];
-          }
-        }
-        let title = this.activeTab + ' - ' + this.searchFilter.status;
-        this.gs.exportToExcelCustom(finalData, "Users", title);
-      } else {
-        this.toast.errorToastr(response.message);
+      let tableData = JSON.parse(response);
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
       }
+      const kycStatus: any = {
+        "KYC Pending": "FF0000",
+        "Completed": "1FBC2F"
+      }
+      const status: any = {
+        "InActive": "FF9307", // danger
+        "Active": "1FBC2F", // success
+      }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "User Name": {
+            ...style,
+            value: tableData[i].userName || '-',
+          },
+          "User Type": {
+            ...style,
+            value: tableData[i].rolename || '-',
+          },
+          "License Number": {
+            ...style,
+            value: tableData[i].licenseNumber || '-',
+          },
+          "KYC status": {
+            ...style,
+            value: tableData[i].kycStatus || '-',
+            font: { bold: true, color: { argb: kycStatus[tableData[i].kycStatus] } },
+          },
+          "Email": {
+            ...style,
+            value: tableData[i].emailId || '-',
+          },
+          "Phone Number": {
+            ...style,
+            value: tableData[i].phoneNumber || '-',
+          },
+          "Category Name": {
+            ...style,
+            value: tableData[i].categoryName || '-',
+          },
+          "Sub Category": {
+            ...style,
+            value: tableData[i].subCategoryName || '-',
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].status || '-',
+            font: { bold: true, color: { argb: status[tableData[i].status] } },
+          },
+        });
+
+        if (this.activeTab == 'Vendor') {
+          delete finalData[i]['User Type'];
+          delete finalData[i]['License Number'];
+          delete finalData[i]['KYC status'];
+        }
+        if (this.activeTab != 'Vendor') {
+          delete finalData[i]['Email'];
+          delete finalData[i]['Phone Number'];
+          delete finalData[i]['Category Name'];
+          delete finalData[i]['Sub Category'];
+        }
+      }
+      let title = this.activeTab + ' - ' + this.searchFilter.status;
+      this.excelExport.exportToExcelCustom(finalData, "Users", title);
+
     });
   }
 

@@ -15,6 +15,7 @@ import { AddCardModalComponent } from '../../../shared/components/comman/modal/p
 import { GlobalService } from '../../../shared/services/global.service';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-user-wallet',
@@ -30,6 +31,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
   ],
+  providers: [DatePipe],
   templateUrl: './user-wallet.component.html',
   styleUrl: './user-wallet.component.scss'
 })
@@ -86,7 +88,8 @@ export class UserWalletComponent {
     private modalService: NgbModal,
     public gs: GlobalService,
     public walletService: WalletService,
-
+    private excelExport: ExcelExportService,
+    private datePipe: DatePipe,
   ) {
     // this.getWalletDetails();
     this.getWalletDetails();
@@ -212,28 +215,22 @@ export class UserWalletComponent {
     this.getWalletDetails();
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
-      "pageNumber": 1,
-      "pagesize": this.totalData,
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "globalSearch": this.searchDataValue?.trim() || "",
       "startDate": startDate,
       "endDate": endDate,
-      "paymentMethod": null,
-      "paymentType": null,
-      "transactionType": null,
-      "paymentRefNumber": null,
-      "paymentStatus": null,
-      "paymentDate": null,
     }
     this.gs.isSpinnerShow = true;
-    this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportUserWalletPaymentsToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      let tableData = response.walletPaymentDetails?.walletpaymentMatches;
+      let tableData = JSON.parse(response).walletpaymentMatches;
       let finalData: any = [];
       const style = {
         border: {
@@ -276,7 +273,7 @@ export class UserWalletComponent {
           },
           "Date": {
             ...style,
-            value: tableData[i].createdDate || '-',
+            value: this.transformDate(tableData[i].createdDate, 'MMM d, y, h:mm a') || '-',
           },
           "Status": {
             ...style,
@@ -285,8 +282,8 @@ export class UserWalletComponent {
         });
       }
 
-      this.gs.exportToExcelCustom(finalData, "WalletHistory", "Wallet Usage History");
-      // this.gs.exportToExcel(finalData, "WalletHistory", "Wallet Usage History");
+      this.excelExport.exportToExcelCustom(finalData, "WalletHistory", "Wallet Usage History");
+      // this.excelExport.exportToExcel(finalData, "WalletHistory", "Wallet Usage History");
 
       // const data = [
       //   {

@@ -13,13 +13,13 @@
     </div> -->
     <div class="promos mt-0">
       <div class="form-check position-relative" *ngFor="let item of gs.couponList">
-        <input class="form-check-input radio_animated" type="radio" name="exampleRadios2" id="{{ item.couponId }}"
-          (change)="applyCouponCode(item)" [(ngModel)]="item.checked" [value]="true">
+        <input class="form-check-input radio_animated" type="radio" name="couponRadios"
+          id="{{ 'coupon'+item.couponId }}" (change)="applyCouponCode(item)" [checked]="item.checked" [value]="true">
         <div>
-          <label class="form-check-label title" for="{{ item.couponId }}">
+          <label class="form-check-label title" for="{{ 'coupon'+item.couponId }}">
             {{ item.couponCode }}
           </label>
-          <label class="form-check-label" for="{{ item.couponId }}">
+          <label class="form-check-label" for="{{ 'coupon'+item.couponId }}">
             {{ item.couponDescription }}
           </label>
         </div>

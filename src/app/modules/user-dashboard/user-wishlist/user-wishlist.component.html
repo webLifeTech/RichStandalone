@@ -35,19 +35,20 @@
         </ng-container>
 
         <ng-container *ngIf="activeTab === 'car_owner_interest'">
-          <mat-accordion *ngIf="carOwnerTabs.length" class="accordion-align">
+          <mat-accordion *ngIf="tableData.length" class="accordion-align">
             <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
-              (closed)="onToggle(false, section)" *ngFor="let section of carOwnerTabs; let i = index">
+              (closed)="onToggle(false, section)"
+              *ngFor="let section of tableData | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">
               <mat-expansion-panel-header>
                 <mat-panel-title class="justify-content-between me-5">
                   <span>
-                    {{ section.roleName | translate }}
+                    {{ section.roleName }}
                   </span>
                   <span>
-                    {{ section.contactName | translate }}
+                    {{ section.contactName}}
                   </span>
                   <span>
-                    {{ section.createdDate | translate }}
+                    {{ section.createdDate | date : 'mediumDate' }}
                   </span>
                 </mat-panel-title>
                 <mat-panel-description>
@@ -55,18 +56,25 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
               <div
-                *ngFor="let item of section.ownerVehicles | paginate: { id: section.ownerId, itemsPerPage: pageSize, currentPage: currentPage, totalItems: section.viewModel?.totalCount }; let idx = index;"
+                *ngFor="let item of tableDataSecond | paginate: { id: section.ownerId, itemsPerPage: pageSizeSecond, currentPage: currentPageSecond, totalItems: totalDataSecond }; let idx = index;"
                 class="col-md-12 mt-4">
                 <app-cab-card-view [from]="'owner_interest'" [type]="'car'" [singleItem]="item"
                   (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
               </div>
+              <div *ngIf="!tableDataSecond.length" class="col-md-12">
+                <p class="text-center">
+                  <b>Vehicle Not Found</b>
+                </p>
+              </div>
               <div class="col-md-12 text-end">
-                <pagination-controls [id]="section.ownerId" (pageChange)="pageChanged($event)"></pagination-controls>
+                <pagination-controls [id]="section.ownerId" (pageChange)="pageChangedSecond($event, section)">
+                </pagination-controls>
               </div>
             </mat-expansion-panel>
+            <pagination-controls id="first" (pageChange)="pageChanged($event)"></pagination-controls>
           </mat-accordion>
 
-          <div *ngIf="!carOwnerTabs.length" class="col-md-12">
+          <div *ngIf="!tableData.length" class="col-md-12">
             <p class="text-center">
               <b>No One Interested</b>
             </p>

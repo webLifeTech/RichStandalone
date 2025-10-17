@@ -26,9 +26,27 @@ export class FavoriteService {
   }
 
   // Favorite -> GetInterestOnDriverFavourites
-  public GetInterestOnDriverFavourites(dataParams: any) {
-    const params = new HttpParams().set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetInterestOnDriverFavourites', { params }).pipe(
+  // public GetInterestOnDriverFavourites(dataParams: any) {
+  //   const params = new HttpParams().set('userId', dataParams.userId);
+  //   return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetInterestOnDriverFavourites', { params }).pipe(
+  //     map((res: any) => {
+  //       return res;
+  //     })
+  //   );
+  // }
+
+  // Favorite -> GetInterestOnDriverFavourites
+  public GetInterestOnDriverFavourites(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Favorite/GetInterestOnDriverFavourites', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Favorite -> GetCarOwnerVehicles
+  public GetCarOwnerVehicles(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Favorite/GetCarOwnerVehicles', data).pipe(
       map((res: any) => {
         return res;
       })

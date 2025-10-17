@@ -13,6 +13,7 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/modal/my-car-modals/change-car-price-modal/change-car-price-modal.component';
 import { ProfileService } from '../../../shared/services/profile.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-my-cars',
@@ -77,6 +78,7 @@ export class MyCarsComponent {
     private toast: ToastService,
     public profileService: ProfileService,
     private datePipe: DatePipe,
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -202,20 +204,15 @@ export class MyCarsComponent {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       userId: this.gs.loggedInUserInfo.userId,
-      pageNumber: 1,
-      pagesize: this.totalData,
       globalSearch: this.searchFilter.globalSearch || "",
-      sortColumn: this.sortColumn,
-      sortOrder: this.sortOrder,
-      vin: null,
-      vehicleStatus: this.activeTab,
+      status: this.activeTab,
       startDate: startDate,
       endDate: endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportUserCarListDetailsToExcel').subscribe(async (response: any) => {
       this.gs.isSpinnerShow = false;
-      let tableData = response.carDetails;
+      let tableData = JSON.parse(response);
       let finalData: any = [];
       const style = {
         border: {
@@ -272,7 +269,7 @@ export class MyCarsComponent {
           },
         });
       }
-      this.gs.exportToExcelCustom(finalData, "MyCars", "My Cars - " + this.activeTab)
+      this.excelExport.exportToExcelCustom(finalData, "MyCars", "My Cars - " + this.activeTab)
 
     })
   }

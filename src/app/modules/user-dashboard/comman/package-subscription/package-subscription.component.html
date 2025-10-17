@@ -54,11 +54,11 @@
                   <tbody>
                     <tr>
                       <td class="bold">{{'Start Date' | translate}}</td>
-                      <td class="bold">{{currentPlan?.packTransaction?.startDate}}</td>
+                      <td class="bold">{{currentPlan?.packTransaction?.startDate | date : 'mediumDate'}}</td>
                     </tr>
                     <tr>
                       <td class="bold">{{'Expiry date' | translate}}</td>
-                      <td class="bold">{{currentPlan?.packTransaction?.endDate}}</td>
+                      <td class="bold">{{currentPlan?.packTransaction?.endDate | date : 'mediumDate'}}</td>
                     </tr>
                     <tr>
                       <td class="bold">{{'Remaining Days' | translate}}</td>
@@ -139,8 +139,8 @@
                       {{item.paidAmount | currencyPipe: gs.currency}}
                     </td>
                     <td>{{item.paymentMethod}}</td>
-                    <td>{{item.startDate}}</td>
-                    <td>{{item.endDate}}</td>
+                    <td>{{item.startDate | date : 'mediumDate'}}</td>
+                    <td>{{item.endDate | date : 'mediumDate'}}</td>
                     <td>
                       <span
                         [ngClass]="{

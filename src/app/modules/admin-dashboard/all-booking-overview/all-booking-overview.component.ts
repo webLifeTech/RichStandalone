@@ -14,11 +14,17 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { DriversBookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/drivers-booking-details-modal/drivers-booking-details-modal.component';
 import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
+import { BookingCancellationComponent } from '../../user-dashboard/user-dashboard-booking/booking-cancellation/booking-cancellation.component';
+import { BookingService } from '../../../shared/services/booking.service';
 
 @Component({
   selector: 'app-all-booking-overview',
   standalone: true,
   imports: [
+    BookingCancellationComponent,
+
     CommonModule,
     FormsModule,
     RouterLink,
@@ -47,17 +53,21 @@ export class AllBookingOverviewComponent {
   sortColumn: any = "";
   sortOrder: any = "DESC";
 
+  isShowCancellation: any = false;
+  singleBookingDetail: any = {};
+  cancellationInfo: any = {};
+
   public searchFilter: any = {
     // user_type: 'all',
-    status: 'All Bookings',
+    status: 'All Status',
   };
-  tabs: any = []
+  tabs: any = [];
   bookTypes = [
     { title: "Cars", value: "Vehicle" },
     { title: "Drivers", value: "Driver" },
   ]
   vehicleStatusList: any = [
-    { name: "All Bookings", value: "All Bookings" },
+    { name: "All Status", value: "All Status" },
     { name: "Confirmed", value: "Confirmed" },
     { name: "Pending Request", value: "Pending Request" },
     { name: "Start Service", value: "Start Service" },
@@ -73,18 +83,14 @@ export class AllBookingOverviewComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
+    private bookingService: BookingService,
     private datePipe: DatePipe,
-
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
       this.activeTypes = params['activeTypes'] ? params['activeTypes'] : "Vehicle";
-      if (this.activeTypes === 'Vehicle') {
-        this.activeTab = params['activeTab'] ? params['activeTab'] : "Driver with owned car";
-      }
-      if (this.activeTypes === 'Driver') {
-        this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
-      }
+      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
       this.getTableData();
     })
   }
@@ -98,7 +104,7 @@ export class AllBookingOverviewComponent {
       "sortColumn": this.sortColumn,
       "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
-      "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
+      "bookingStatus": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
       "riskType": this.activeTypes,
       "startDate": startDate,
       "endDate": endDate,
@@ -134,17 +140,13 @@ export class AllBookingOverviewComponent {
 
   changeTypes(item: any) {
     this.activeTypes = item.value;
-    if (item.value === 'Vehicle') {
-      this.activeTab = "Driver with owned car";
-    }
-    if (item.value === 'Driver') {
-      this.activeTab = "All Bookings";
-    }
+    this.currentPage = 1;
+    this.activeTab = "All Bookings";
+
     let params = {
       activeTypes: this.activeTypes,
       activeTab: this.activeTab,
     }
-    this.currentPage = 1;
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: params,
@@ -159,6 +161,7 @@ export class AllBookingOverviewComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getTableData();
   }
 
   onSort(column: any) {
@@ -191,112 +194,180 @@ export class AllBookingOverviewComponent {
     this.getTableData();
   }
 
+  onViewDocument(item: any) {
+    console.log("item >>>", item);
+
+    const modalRef = this.modalService.open(ViewAllDocumentsModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.bookingDetails = item;
+  }
+
+  GetCarBookingCancellationInfo() {
+    this.gs.isSpinnerShow = true;
+    const todayDate = new Date();
+    this.bookingService.GetCarBookingCancellationInfo({
+      bookingId: this.singleBookingDetail.bookingId,
+      cancelDate: todayDate.toISOString(),
+      loginUserId: this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("GetCarBookingCancellationInfo >>>>>", response);
+      if (response && response.responseResult && response.responseResult.statusCode == "200") {
+        this.cancellationInfo = response;
+        this.isShowCancellation = true;
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      } else {
+        this.toast.errorToastr(response.responseResult.message);
+      }
+    }, (error) => {
+      this.toast.errorToastr(error.error.Message);
+      this.gs.isSpinnerShow = false;
+    });
+  }
+
+  GetDriverBookingCancellationInfo() {
+    this.gs.isSpinnerShow = true;
+    const todayDate = new Date();
+    this.bookingService.GetDriverBookingCancellationInfo({
+      bookingId: this.singleBookingDetail.bookingId,
+      cancelDate: todayDate.toISOString(),
+      loginUserId: this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("GetDriverBookingCancellationInfo >>>>>", response);
+      if (response && response.responseResult && response.responseResult.statusCode == "200") {
+        this.cancellationInfo = response;
+        this.isShowCancellation = true;
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      } else {
+        this.toast.errorToastr(response.responseResult.message);
+      }
+    }, (error) => {
+      this.toast.errorToastr(error.error.Message);
+      this.gs.isSpinnerShow = false;
+    });
+  }
+
+  bookingCancel(item: any) {
+    this.singleBookingDetail = item;
+    if (this.singleBookingDetail.riskType == "Vehicle") {
+      this.GetCarBookingCancellationInfo();
+    }
+    if (this.singleBookingDetail.riskType == "Driver") {
+      this.GetDriverBookingCancellationInfo();
+    }
+  }
+
+  backToBooking() {
+    this.isShowCancellation = false;
+    this.getTableData();
+    window.scrollTo({ top: 280, behavior: 'smooth' });
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
+
   exportToExcel() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
-      "pageNumber": 1,
-      "pagesize": this.totalData,
       "globalSearch": this.searchDataValue?.trim() || "",
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "userType": JSON.stringify([this.activeTab]),
-      "bookingStatus": this.searchFilter.status == 'All Bookings' ? null : JSON.stringify([this.searchFilter.status]),
+      "status": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
       "riskType": this.activeTypes,
       "startDate": startDate,
       "endDate": endDate,
     }
-    this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
+    this.gs.isSpinnerShow = true;
+    this.excelExport.exportToExcelPost(body, 'ExportAllBookingOverviewToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-
-        let tableData = response.bookingOverviews;
-        let finalData: any = [];
-        const style = {
-          border: {
-            top: { style: "medium" },
-            left: { style: "medium" },
-            bottom: { style: "medium" },
-            right: { style: "medium" }
-          },
-          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
-        }
-        const status: any = {
-          "Confirmed": "127384", // secondary
-          "Delivered": "FF9307", // warning
-          "Pending Request": "FF9307", // warning
-          "Start Service": "FF9307", // warning
-          "Cancelled": "FF0000", // danger
-          "Refund Started": "FF0000", // danger
-          "Refund Received": "FF0000", // danger
-          "Refund Rejected": "FF0000", // danger
-          "Received": "1FBC2F", // success
-          "End Service": "1FBC2F", // success
-        }
-
-        for (let i in tableData) {
-          finalData.push({
-            "SL": {
-              ...style,
-              value: Number(i) + 1,
-            },
-            "Booking ID": {
-              ...style,
-              value: tableData[i].bookingReferenceNumber || '-',
-            },
-            "Car Name": {
-              ...style,
-              value: tableData[i].carName || '-',
-            },
-            "Driver Name": {
-              ...style,
-              value: tableData[i].driver_name || '-',
-            },
-            "Booked On": {
-              ...style,
-              value: tableData[i].bookingDate || '-',
-            },
-            "Pickup Date": {
-              ...style,
-              value: tableData[i].pickUpDate || '-',
-            },
-            "End Date": {
-              ...style,
-              value: tableData[i].endDate || '-',
-            },
-            "Duration": {
-              ...style,
-              value: tableData[i].bookingDuration || '-',
-            },
-            "Price": {
-              ...style,
-              value: (tableData[i].pricePerBooking + ' per ' + tableData[i].durationType) || '-',
-            },
-            "Total Amount": {
-              ...style,
-              value: tableData[i].totalAmount || '-',
-              font: { bold: true },
-              alignment: { ...style.alignment, ...{ horizontal: 'right' } },
-              isTotal: true,
-            },
-            "Status": {
-              ...style,
-              value: tableData[i].bookingStatus || '-',
-              font: { bold: true, color: { argb: status[tableData[i].bookingStatus] } },
-            },
-          });
-
-          if (this.activeTypes === 'Vehicle') {
-            delete finalData[i]['Driver Name'];
-          }
-          if (this.activeTypes === 'Driver') {
-            delete finalData[i]['Car Name'];
-          }
-        }
-        let title = this.activeTypes + ' Bookings - ' + this.activeTab + ' - ' + this.searchFilter.status;
-        this.gs.exportToExcelCustom(finalData, "VehiclesBookings", title);
-      } else {
-        this.toast.errorToastr(response.message);
+      let tableData = JSON.parse(response);
+      console.log("ExportAllBookingOverviewToExcel tableData >>", tableData);
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
       }
+      const status: any = {
+        "Confirmed": "127384", // secondary
+        "Delivered": "FF9307", // warning
+        "Pending Request": "FF9307", // warning
+        "Start Service": "FF9307", // warning
+        "Cancelled": "FF0000", // danger
+        "Refund Started": "FF0000", // danger
+        "Refund Received": "FF0000", // danger
+        "Refund Rejected": "FF0000", // danger
+        "Received": "1FBC2F", // success
+        "End Service": "1FBC2F", // success
+      }
+
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Booking ID": {
+            ...style,
+            value: tableData[i].bookingReferenceNumber || '-',
+          },
+          "Car Name": {
+            ...style,
+            value: tableData[i].carName || '-',
+          },
+          "Driver Name": {
+            ...style,
+            value: tableData[i].driver_name || '-',
+          },
+          "Booked On": {
+            ...style,
+            value: this.transformDate(tableData[i].bookingDate, 'MMM d, y, h:mm a') || '-',
+          },
+          "Pickup Date": {
+            ...style,
+            value: this.transformDate(tableData[i].pickUpDate, 'MMM d, y, h:mm a') || '-',
+          },
+          "End Date": {
+            ...style,
+            value: this.transformDate(tableData[i].endDate, 'MMM d, y, h:mm a') || '-',
+          },
+          "Duration": {
+            ...style,
+            value: tableData[i].bookingDuration || '-',
+          },
+          // "Price": {
+          //   ...style,
+          //   value: (tableData[i].pricePerBooking + ' per ' + tableData[i].durationType) || '-',
+          // },
+          "Total Amount": {
+            ...style,
+            value: tableData[i].totalAmount || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+            isTotal: true,
+          },
+          "Status": {
+            ...style,
+            value: tableData[i].bookingStatus || '-',
+            font: { bold: true, color: { argb: status[tableData[i].bookingStatus] } },
+          },
+        });
+
+        if (this.activeTypes === 'Vehicle') {
+          delete finalData[i]['Driver Name'];
+        }
+        if (this.activeTypes === 'Driver') {
+          delete finalData[i]['Car Name'];
+        }
+      }
+      let title = this.activeTypes + ' Bookings - ' + this.activeTab + ' - ' + this.searchFilter.status;
+      this.excelExport.exportToExcelCustom(finalData, "VehiclesBookings", title);
     });
   }
 

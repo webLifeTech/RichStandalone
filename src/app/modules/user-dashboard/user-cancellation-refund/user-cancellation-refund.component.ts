@@ -16,6 +16,7 @@ import { AdminService } from '../../../shared/services/admin.service';
 import { BookingDetailsModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-details-modal/booking-details-modal.component';
 import { RefundApproveRejectModalComponent } from '../../../shared/components/comman/modal/booking-modals/refund-approve-reject-modal/refund-approve-reject-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-user-cancellation-refund',
@@ -50,13 +51,13 @@ export class UserCancellationRefundComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private paymentService: PaymentService,
     private adminService: AdminService,
     public cabService: CabService,
     public gs: GlobalService,
     private modalService: NgbModal,
     private toast: ToastService,
     private datePipe: DatePipe,
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -180,19 +181,14 @@ export class UserCancellationRefundComponent {
   exportToExcel() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
-      "pageNumber": 1,
-      "pagesize": this.totalData,
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "globalSearch": this.searchDataValue?.trim() || "",
       "startDate": startDate,
       "endDate": endDate,
     };
     this.gs.isSpinnerShow = true;
-    this.adminService.GetBookingRefundDetailsForAdmin(body).subscribe((response: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportAllBookingRefundDetailsToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-
-      let tableData = response.refundDetails;
+      let tableData = JSON.parse(response);
       let finalData: any = [];
       const style = {
         border: {
@@ -207,7 +203,7 @@ export class UserCancellationRefundComponent {
         "Approved": "1FBC2F",
         "Pending": "FF9307",
         "Rejected": "FF0000",
-        "Pending Disburse": "127384",
+        "Processed": "127384",
       }
       for (let i in tableData) {
         finalData.push({
@@ -229,7 +225,19 @@ export class UserCancellationRefundComponent {
           },
           "Requested Date": {
             ...style,
-            value: tableData[i].requestedDate || '-',
+            value: this.transformDate(tableData[i].requestedDate, 'MMM d, y, h:mm a') || '-',
+          },
+          "Total Amount": {
+            ...style,
+            value: tableData[i].totalAmount || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
+          },
+          "Cancellation Charge": {
+            ...style,
+            value: tableData[i].cancellationCharge || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
           },
           "Refund Amount": {
             ...style,
@@ -245,7 +253,7 @@ export class UserCancellationRefundComponent {
           },
         });
       }
-      this.gs.exportToExcelCustom(finalData, "PaymentsRefund", "Payments Refund");
+      this.excelExport.exportToExcelCustom(finalData, "PaymentsRefund", "Payments Refund");
     });
   }
 }

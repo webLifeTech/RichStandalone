@@ -1,10 +1,47 @@
 <div class="content">
   <div class="container">
+    <div class="row" *ngIf="gs.loggedInUserInfo.role == 'admin'">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="wallet-section">
+            <div class="row">
+              <div class="col-lg-12 content-header text-center pb-3">
+                <h4>Wallet</h4>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner credit-info mb-0">
+                  <h6>{{377 | currencyPipe: gs.currency}}</h6>
+                  <p>TLH Account Balance</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner debit-info mb-0">
+                  <h6>{{120 | currencyPipe: gs.currency}}</h6>
+                  <p>Pending Confirmation</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner credit-info mb-0">
+                  <h6>{{200 | currencyPipe: gs.currency}}</h6>
+                  <p>Under Clearance</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner debit-info mb-0">
+                  <h6>{{50 | currencyPipe: gs.currency}}</h6>
+                  <p>Pending Refund</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="content-header">
       <div class="row">
         <div class="col-lg-4">
-          <h4>My Payments</h4>
+          <h4>{{gs.loggedInUserInfo.role == 'admin' ? 'Payments':'My Payments'}}</h4>
         </div>
       </div>
     </div>
@@ -167,7 +204,7 @@
                         </div>
                       </td>
                       <td class="text-center">
-                        <span>{{data.createdDate}}
+                        <span>{{data.createdDate | date : 'MMM d, y, h:mm a'}}
                         </span>
                       </td>
                       <td class="text-center">
@@ -176,15 +213,15 @@
                       <td class="text-center">
                         <span>{{data.amount | currencyPipe: gs.currency}}</span>
                       </td>
-                      <td *ngIf="gs.loggedInUserInfo['role'] !== 'admin'">
+                      <!-- <td *ngIf="gs.loggedInUserInfo['role'] !== 'admin'">
                         <span [ngClass]="{
                             'badge-light-success': data.status === 'Completed' || data.status === 'Complete',
                             'badge-light-warning': data.status === 'Pending',
                             'badge-light-danger':data.status === 'Failed',
                             'badge-light-secondary': data.status !== 'Completed' || data.status !== 'Pending' || data.status !== 'Failed'
                              }" class="badge">{{data.status}}</span>
-                      </td>
-                      <td *ngIf="gs.loggedInUserInfo['role'] === 'admin'">
+                      </td> -->
+                      <td>
                         <span [ngClass]="{
                             'badge-light-success': data.paymentStatus === 'Cleared',
                             'badge-light-warning': data.paymentStatus === 'Pending Clearance',

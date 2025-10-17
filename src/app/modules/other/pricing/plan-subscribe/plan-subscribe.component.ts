@@ -21,6 +21,7 @@ import { WalletService } from '../../../../shared/services/wallet.service';
 import { BookingCryptoComponent } from '../../../../shared/components/comman/booking/booking-crypto/booking-crypto.component';
 import { PaymentService } from '../../../../shared/services/payment.service';
 import { WebViewUrlModalComponent } from '../../../../shared/components/comman/modal/webview-url-modal/webview-url-modal.component';
+import { CabPromoCodeComponent } from '../../../cab/booking/widgets/cab-promo-code/cab-promo-code.component';
 
 @Component({
   selector: 'app-plan-subscribe',
@@ -30,6 +31,7 @@ import { WebViewUrlModalComponent } from '../../../../shared/components/comman/m
     BookingMyWalletComponent,
     BookingNetBankingComponent,
     BookingCryptoComponent,
+    CabPromoCodeComponent,
     CommonModule,
     TranslateModule,
     NgbModule,
@@ -80,6 +82,8 @@ export class PlanSubscribeComponent {
   coinList: any = [];
   selectedCoin = ""; // LTCT
   customOrderId: any = null;
+  appliedCouponCode: any = "";
+  isCouponApplied: boolean = false;
 
   constructor(
     public cabService: CabService,
@@ -94,11 +98,9 @@ export class PlanSubscribeComponent {
     public walletService: WalletService,
     private paymentService: PaymentService,
   ) {
-    // this.payckageStatus = route.snapshot.params['payckageStatus'];
     this.route.queryParams.subscribe((params) => {
       this.params = params;
       this.getPricingDetails();
-      console.log("this.params >>>>", this.params);
     })
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -150,31 +152,26 @@ export class PlanSubscribeComponent {
       packageId: this.params.packageId
     }).subscribe((apiRes: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("getPackageSubscriptionDetails <<<", apiRes);
       this.packageObj = apiRes;
+      this.gs.couponList = this.packageObj.couponDetails;
     });
   }
 
   getPackageSummaryDetails() {
     this.gs.isSpinnerShow = true;
-    console.log("this.summaryObj.timeType >>", this.summaryObj.timeType);
-    console.log("this.summaryObj.timeDuration >>", this.summaryObj.timeDuration);
-
     const body = {
       "userId": this.gs.loggedInUserInfo.userId || null,
       "packageId": this.params.packageId,
       "startDate": this.transformDate(this.summaryObj.start_time, 'MM/dd/yy'),
       "endDate": this.transformDate(this.summaryObj.end_time, 'MM/dd/yy'),
       "noOfMonths": this.summaryObj.timeType == "Monthly" ? parseInt(this.summaryObj.timeDuration) : parseInt(this.summaryObj.timeDuration) * 12,
-      "couponCode": this.summaryObj.couponCode
+      "couponCode": this.appliedCouponCode || "",
     }
-    console.log("body >>>", body);
 
     this.pricingS.getPackageSummaryDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
         this.packageSummaryObj = response.packageSummary;
-        console.log("packageSummaryObj <<<", response);
       }
     });
   }
@@ -192,7 +189,6 @@ export class PlanSubscribeComponent {
     this.profileService.getMasterVehicleCodes(body).subscribe((res: any) => {
       if (res && res.length) {
         this.packageTypeList = this.gs.groupByMasterDropdown(res, 'TypeCode');
-        console.log("packageTypeList >>>>", this.packageTypeList);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
@@ -264,7 +260,6 @@ export class PlanSubscribeComponent {
 
     this.paymentService.createTransaction(cryptoBody).subscribe(response => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
 
       this.paymentService.CryptoPaymentRequestResponse({
         "userId": this.gs.loggedInUserInfo.userId,
@@ -304,6 +299,8 @@ export class PlanSubscribeComponent {
   }
 
   async payNow() {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.packageSummaryObj.startDate, this.packageSummaryObj.endDate);
+
     let body: any = {
       "userId": this.gs.loggedInUserInfo.userId,
       "amount": this.packageSummaryObj.totalAmount,
@@ -319,8 +316,8 @@ export class PlanSubscribeComponent {
       "otherFee": this.packageSummaryObj.otherFee,
       "subscrptionPackageDetails": {
         "packageId": this.packageSummaryObj.packageId,
-        "startDate": this.packageSummaryObj.startDate,
-        "endDate": this.packageSummaryObj.endDate,
+        "startDate": startDate,
+        "endDate": endDate,
         "noOfMonths": this.packageSummaryObj.noOfMonths,
         "payckageStatus": this.params.packageStatus
       }
@@ -356,7 +353,6 @@ export class PlanSubscribeComponent {
         "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
       }
     }
-    console.log("body >>>", body);
 
     this.gs.isSpinnerShow = true;
     this.pricingS.payForSubscribePackage(body).subscribe((response: any) => {
@@ -405,8 +401,18 @@ export class PlanSubscribeComponent {
     this.getPackageSummaryDetails();
   }
 
-  onChange() {
+  onChange(value: any) {
     this.calculateDropTime();
+    if (value == 'coupon') {
+      this.isCouponApplied = true;
+      this.toast.successToastr("Coupon Applied!");
+      for (let i in this.gs.couponList) {
+        this.gs.couponList[i].checked = false;
+        if (this.gs.couponList[i].couponCode == this.appliedCouponCode?.trim()) {
+          this.gs.couponList[i].checked = true;
+        }
+      }
+    }
   }
 
   selectPaymentMode(details: any, type: any) {
@@ -419,5 +425,18 @@ export class PlanSubscribeComponent {
 
   onSelectCoin(event: any) {
     this.selectedCoin = event;
+  }
+
+  applyCoupon(event: any) {
+    this.appliedCouponCode = (event && event.couponCode) ? event.couponCode : "";
+    if (this.appliedCouponCode) {
+      this.isCouponApplied = true;
+    } else {
+      this.isCouponApplied = false;
+      for (let i in this.gs.couponList) {
+        this.gs.couponList[i].checked = false;
+      }
+    }
+    this.calculateDropTime();
   }
 }

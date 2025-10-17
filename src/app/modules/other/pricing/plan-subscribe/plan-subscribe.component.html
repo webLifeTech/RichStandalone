@@ -143,7 +143,7 @@
                     <tr>
                       <td>{{ 'Type' | translate }}</td>
                       <td>
-                        <ng-select [items]="packageTypeList['Package_Type']" (change)="onChange()"
+                        <ng-select [items]="packageTypeList['Package_Type']" (change)="onChange('type')"
                           bindLabel="Description" bindValue="Code"
                           placeholder="{{ 'global.select' | translate }} {{ 'global.type' | translate }}"
                           [(ngModel)]="summaryObj.timeType" name="timeType" clearable="false">
@@ -153,7 +153,8 @@
                     <tr *ngIf="summaryObj.timeType">
                       <td>{{ labels[summaryObj.timeType] }}</td>
                       <td>
-                        <ng-select [items]="duration" bindLabel="value" bindValue="value" (change)="onChange()"
+                        <ng-select [items]="duration" bindLabel="value" bindValue="value"
+                          (change)="onChange('duration')"
                           placeholder="{{ 'global.select' | translate }} {{ 'Duration' | translate }}"
                           [(ngModel)]="summaryObj.timeDuration" name="timeDuration" clearable="false">
                         </ng-select>
@@ -162,7 +163,7 @@
                     <tr>
                       <td>{{'Start Date' | translate}}</td>
                       <td>
-                        <input [(ngModel)]="summaryObj.start_time" name="start_time" (change)="onChange()"
+                        <input [(ngModel)]="summaryObj.start_time" name="start_time" (change)="onChange('pick_time')"
                           class="form-control datetimepicker-input digits"
                           placeholder="{{ 'Choose Pickup Date' | translate }}" type="text"
                           [owlDateTimeTrigger]="start_time" [owlDateTime]="start_time" [min]="today">
@@ -190,12 +191,25 @@
                   </tbody>
                 </table>
                 <div class="promo-section">
-                  <div class="input-group">
-                    <input [(ngModel)]="summaryObj.couponCode" type="text" class="form-control"
-                      [placeholder]="'have_coupon.input_plchold' | translate">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">{{'have_coupon.apply' | translate}}</span>
+                  <div class="mb-0">
+                    <div class="input-group mb-0">
+                      <input type="text" class="form-control" [(ngModel)]="appliedCouponCode"
+                        [placeholder]="'have_coupon.input_plchold' | translate" [disabled]="isCouponApplied">
+                      <div *ngIf="!isCouponApplied" class="input-group-prepend pointer">
+                        <button [disabled]="!appliedCouponCode " class="input-group-text"
+                          (click)="onChange('coupon')">{{'have_coupon.apply' |
+                          translate}}
+                        </button>
+                      </div>
+                      <div *ngIf="isCouponApplied" class="input-group-prepend pointer">
+                        <span class="input-group-text" (click)="applyCoupon(null)">
+                          {{'have_coupon.remove' | translate}}
+                        </span>
+                      </div>
                     </div>
+                  </div>
+                  <div *ngIf="isCouponApplied" class="text-green fw-bold">
+                    Coupon Applied!
                   </div>
                 </div>
                 <table class="table table-borderless">
@@ -216,6 +230,10 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="review_box promo-box">
+            <app-cab-promo-code (applyCoupon)="applyCoupon($event)"></app-cab-promo-code>
           </div>
         </div>
       </div>

@@ -174,7 +174,7 @@
                         <span>{{data.riskType}}</span>
                       </td>
                       <td class="text-center">
-                        <span>{{data.pickUpDate | date : 'mediumDate'}}</span>
+                        <span>{{data.pickUpDate | date : 'MMM d, y, h:mm a'}}</span>
                       </td>
                       <!-- <td class="text-center">
                         <span>{{data.endDate}}</span>
@@ -236,7 +236,7 @@
                             <i class="feather icon-star"></i>
                             <span class="ms-2">Write Review</span>
                           </button>
-                          <button
+                          <!-- <button
                             *ngIf="(gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3') && data.bookingStatus === 'Cancelled'"
                             (click)="refundApprove(data)" type="button" mat-menu-item>
                             <i class="feather icon-check-circle"></i>
@@ -247,7 +247,7 @@
                             (click)="refundReject(data)" type="button" mat-menu-item>
                             <i class="feather icon-x-circle"></i>
                             <span class="ms-2">Refund Reject</span>
-                          </button>
+                          </button> -->
                         </mat-menu>
                       </td>
                     </tr>

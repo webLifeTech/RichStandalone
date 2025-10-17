@@ -22,6 +22,7 @@ import { VerificationSuccessModalComponent } from '../user-settings/modals/verif
 import { BookingChecklistComponent } from './booking-checklist/booking-checklist.component';
 import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -73,6 +74,7 @@ export class UserDashboardBookingComponent {
     private modalService: NgbModal,
     private toast: ToastService,
     private datePipe: DatePipe,
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -164,12 +166,6 @@ export class UserDashboardBookingComponent {
   }
 
   bookingCancel(item: any) {
-    // const todayDate = new Date();
-    // const pickUpDate = new Date(item.pickUpDate);
-    // if (pickUpDate > todayDate) {
-    //   this.toast.errorToastr("Booking is not allowed to cancel - Cancellation date exceeds Start Date date");
-    //   return;
-    // }
     this.singleBookingDetail = item;
     if (this.singleBookingDetail.riskType == "Vehicle") {
       this.GetCarBookingCancellationInfo();
@@ -381,25 +377,15 @@ export class UserDashboardBookingComponent {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
-      "bookingStatus": JSON.stringify([this.activeTab]),
-      "pageNumber": 1,
-      "pagesize": this.totalData,
+      "status": JSON.stringify([this.activeTab]),
       "globalSearch": this.searchDataValue?.trim() || "",
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "startDate": startDate,
       "endDate": endDate,
-      "bookingRefNumber": null,
-      "bookingType": null,
-      "pickUpDate": null,
-      "dropDate": null,
-      "bookingDate": null,
-      "duration": null,
     }
     this.gs.isSpinnerShow = true;
-    this.bookingService.GetAllBookings(body).subscribe((res: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportUserBookingsToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      let tableData = res?.bookingMatches;
+      let tableData = JSON.parse(response);
       let finalData: any = [];
       const style = {
         border: {
@@ -447,7 +433,7 @@ export class UserDashboardBookingComponent {
           },
           "Pickup Date": {
             ...style,
-            value: tableData[i].pickUpDate || '-',
+            value: this.transformDate(tableData[i].pickUpDate, 'MMM d, y, h:mm a') || '-',
           },
           "Duration": {
             ...style,
@@ -455,11 +441,13 @@ export class UserDashboardBookingComponent {
           },
           "Total Amount": {
             ...style,
-            value: tableData[i].totalAmount || '-'
+            value: tableData[i].totalAmount || '-',
+            font: { bold: true },
+            alignment: { ...style.alignment, ...{ horizontal: 'right' } },
           },
         });
       }
-      this.gs.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTabName)
+      this.excelExport.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTabName)
     });
   }
 }

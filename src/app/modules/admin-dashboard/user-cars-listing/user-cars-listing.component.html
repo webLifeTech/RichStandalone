@@ -76,10 +76,10 @@
             </div>
           </div>
           <div class="card-body">
-            <mat-accordion *ngIf="carOwnerTabs.length" class="accordion-align">
+            <mat-accordion *ngIf="tableData.length" class="accordion-align">
               <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
                 (closed)="onToggle(false, section)"
-                *ngFor="let section of carOwnerTabs | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">
+                *ngFor="let section of tableData | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">
                 <mat-expansion-panel-header>
                   <mat-panel-title class="justify-content-between me-5">
                     <span>
@@ -118,7 +118,7 @@
                       </thead>
                       <tbody>
                         <tr
-                          *ngFor="let data of section.allVehicles | paginate: { id: section.userId, itemsPerPage: 5, currentPage: currentPageSecond, totalItems: section.viewModel?.totalCount }; let idx = index;">
+                          *ngFor="let data of tableDataSecond | paginate: { id: section.userId, itemsPerPage: pageSizeSecond, currentPage: currentPageSecond, totalItems: totalDataSecond }; let idx = index;">
                           <td>
                             <span>{{idx+1}}</span>
                           </td>
@@ -182,20 +182,20 @@
                       </tbody>
                     </table>
                   </div>
-                  <div *ngIf="!section.allVehicles.length" class="col-md-12">
-                    <p class="text-center">
+                  <div *ngIf="!tableDataSecond.length" class="col-md-12">
+                    <p class="text-center mt-3">
                       <b>Vehicle Not Found</b>
                     </p>
                   </div>
-                  <pagination-controls [id]="section.userId"
-                    (pageChange)="pageChangedSecond($event)"></pagination-controls>
+                  <pagination-controls [id]="section.userId" (pageChange)="pageChangedSecond($event, section)">
+                  </pagination-controls>
                 </div>
               </mat-expansion-panel>
 
               <pagination-controls [id]="'first'" (pageChange)="pageChanged($event)"></pagination-controls>
             </mat-accordion>
 
-            <div *ngIf="!carOwnerTabs.length" class="col-md-12">
+            <div *ngIf="!tableData.length" class="col-md-12">
               <p class="text-center">
                 <b>Data Not Found</b>
               </p>

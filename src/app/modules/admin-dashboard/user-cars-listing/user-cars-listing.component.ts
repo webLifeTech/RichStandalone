@@ -14,6 +14,7 @@ import { CarStatusChangeModalComponent } from '../../../shared/components/comman
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-user-cars-listing',
@@ -40,8 +41,12 @@ export class UserCarsListingComponent {
   public searchDataValue = '';
   public pageSize = 10;
   public totalData = 0;
-  public pageIndex = 0;
   public currentPage = 1;
+
+  public tableDataSecond: any = [];
+  public searchDataValueSecond = '';
+  public pageSizeSecond = 10;
+  public totalDataSecond = 0;
   public currentPageSecond = 1;
   dateTimeRange: any = "";
 
@@ -63,7 +68,7 @@ export class UserCarsListingComponent {
     { id: 2, name: 'InActive', value: 'InActive' },
     // { id: 3, name: 'Repair', value: 'Repair' },
   ]
-  carOwnerTabs: any = [];
+  ownerVehiclesData: any = [];
 
 
   constructor(
@@ -74,6 +79,7 @@ export class UserCarsListingComponent {
     private modalService: NgbModal,
     private toast: ToastService,
     private datePipe: DatePipe,
+    private excelExport: ExcelExportService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
@@ -95,13 +101,39 @@ export class UserCarsListingComponent {
       "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {
-      this.carOwnerTabs = [];
+    this.adminService.GetAllVehicleOwnersForAdmin(body).subscribe((response: any) => {
+      this.tableData = [];
       this.gs.isSpinnerShow = false;
       if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.carOwnerTabs = response.ownerVehicles;
+        response.vehicleOwners[0].isOpen = true;
+        this.tableData = response.vehicleOwners;
         this.totalData = response.viewModel?.totalCount || 0;
         this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
+        this.getOwnerVehicles(this.tableData[0].userId)
+      } else {
+        this.toast.errorToastr(response.message);
+      }
+    });
+  }
+
+  getOwnerVehicles(ownerUserId: any) {
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
+    const body = {
+      "pageNumber": this.currentPageSecond,
+      "pagesize": this.pageSizeSecond,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
+      "startDate": startDate,
+      "endDate": endDate,
+      "userId": ownerUserId,
+    }
+    this.tableDataSecond = [];
+    this.gs.isSpinnerShow = true;
+    this.adminService.GetAllOwnerVehiclesForAdmin(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.tableDataSecond = response.ownerVehicles;
+        this.totalDataSecond = response.viewModel?.totalCount || 0;
       } else {
         this.toast.errorToastr(response.message);
       }
@@ -123,11 +155,13 @@ export class UserCarsListingComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.currentPageSecond = 1;
     this.getTableData();
   }
 
-  pageChangedSecond(event: any) {
+  pageChangedSecond(event: any, section: any) {
     this.currentPageSecond = event;
+    this.getOwnerVehicles(section.userId);
   }
 
   async changeStatus(item: any) {
@@ -147,7 +181,10 @@ export class UserCarsListingComponent {
 
   onToggle(value: any, section: any) {
     section.isOpen = value;
-    this.currentPage = 1;
+    this.currentPageSecond = 1;
+    if (section.isOpen) {
+      this.getOwnerVehicles(section.userId);
+    }
   }
 
   searchData() {
@@ -161,8 +198,6 @@ export class UserCarsListingComponent {
   exportToExcel() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
-      "pageNumber": 1,
-      "pagesize": this.totalData,
       "globalSearch": this.searchDataValue?.trim() || "",
       "userType": JSON.stringify([this.activeTab]),
       "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
@@ -170,22 +205,19 @@ export class UserCarsListingComponent {
       "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.adminService.GetAllVehiclesForAdmin(body).subscribe((response: any) => {
+    this.excelExport.exportToExcelPost(body, 'ExportAllVehiclesToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        let tableData = response.ownerVehicles;
-        let finalData: any = [];
-        for (let i in tableData) {
-          finalData.push({
-            "SL": Number(i) + 1,
-            "Name": tableData[i].ownerName + ' - ' + tableData[i].userStatus + ' - ' + tableData[i].roleName,
-          });
-        }
-        let title = 'Vehicles - ' + this.activeTab + ' - ' + this.searchFilter.status;
-        this.gs.exportToExcelWithNested(tableData, "Vehicles", title);
-      } else {
-        this.toast.errorToastr(response.message);
+      let tableData = JSON.parse(response);
+      let finalData: any = [];
+      for (let i in tableData) {
+        finalData.push({
+          "SL": Number(i) + 1,
+          "Name": tableData[i].ownerName + ' - ' + tableData[i].userStatus + ' - ' + tableData[i].roleName,
+        });
       }
+      let title = 'Vehicles - ' + this.activeTab + ' - ' + this.searchFilter.status;
+      this.excelExport.exportToExcelWithNested(tableData, "Vehicles", title);
+
     });
   }
 

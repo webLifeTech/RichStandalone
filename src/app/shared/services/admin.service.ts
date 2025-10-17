@@ -13,9 +13,18 @@ export class AdminService {
   baseUrl1 = environment.apiUrl1;
   constructor(private http: HttpClient) { }
 
-  // Admin -> GetAllVehiclesForAdmin
-  public GetAllVehiclesForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllVehiclesForAdmin`, data).pipe(
+  // Admin -> GetAllVehicleOwnersForAdmin
+  public GetAllVehicleOwnersForAdmin(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllVehicleOwnersForAdmin`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Admin -> GetAllOwnerVehiclesForAdmin
+  public GetAllOwnerVehiclesForAdmin(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllOwnerVehiclesForAdmin`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -88,6 +97,15 @@ export class AdminService {
   // Admin -> GetPendingConfirmationBookingPaymentsForAdmin
   public GetPendingConfirmationBookingPaymentsForAdmin(data: any) {
     return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingConfirmationBookingPaymentsForAdmin', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Admin -> GetPendingClearanceBookingPaymentsForAdmin
+  public GetPendingClearanceBookingPaymentsForAdmin(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingClearanceBookingPaymentsForAdmin', data).pipe(
       map((res: any) => {
         return res;
       })

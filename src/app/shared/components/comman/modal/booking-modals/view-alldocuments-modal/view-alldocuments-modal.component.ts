@@ -36,7 +36,7 @@ export class ViewAllDocumentsModalComponent {
   getAllDocuments() {
     const body = {
       "bookingId": this.bookingDetails.bookingId,
-      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "userId": this.gs.loggedInUserInfo.userId,
       "riskId": this.bookingDetails.riskId,
       "riskType": this.bookingDetails.riskType
     }
@@ -46,6 +46,8 @@ export class ViewAllDocumentsModalComponent {
       console.log("GetBookingAllDocuments >>>>>", res);
       this.gs.isSpinnerShow = false;
       this.documentsList = res;
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
     });
   }
 

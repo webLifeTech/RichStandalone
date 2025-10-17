@@ -4003,3 +4003,27 @@ header.light_header .main-navbar .menubar .nav-menu>li {
 header.light_header .main-navbar .menubar .nav-menu>li>a {
   padding: 0 !important;
 }
+
+
+// .book-card .table-search #tablefilter .dataTables_filter .form-control {
+//     height: 39px;
+//     border: 1px solid #F4F4F4;
+//     border-radius: 5px;
+//     min-width: 276px;
+//     background-color: #F5F5F5;
+//     padding: 10px 35px 10px 15px;
+// }
+
+.pricing-plan-more {
+  .promo-box {
+    .form-check {
+      align-items: flex-start !important;
+
+      .form-check-input {
+        width: 1em !important;
+        height: 1em !important;
+        border-width: 0 !important;
+      }
+    }
+  }
+}

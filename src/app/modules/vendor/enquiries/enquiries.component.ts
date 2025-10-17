@@ -18,6 +18,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule } from '@ngx-translate/core';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 
 @Component({
@@ -72,6 +73,7 @@ export class EnquiriesComponent {
     public gs: GlobalService,
     private vendorService: VendorServService,
     private datePipe: DatePipe,
+    private excelExport: ExcelExportService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getCategories();
@@ -223,93 +225,85 @@ export class EnquiriesComponent {
 
   exportToExcel() {
 
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.searchFilter.startDate, this.searchFilter.endDate);
+
     const body = {
-      "searchCriteria": {
-        "userId": this.gs.loggedInUserInfo.userId,
-        "pageNumber": 1,
-        "pagesize": this.totalData,
-        "globalSearch": this.searchFilter.globalSearch?.trim() || null
-      },
-      "filterCriteria": {
-        "category": this.searchFilter.category || null, // "Mortgage brokers"
-        "subCategory": this.searchFilter.subCategory ? JSON.stringify([this.searchFilter.subCategory]) : null, // "[\"Personal Loans\",\"Home Loans\"]"
-        "startDate": this.searchFilter.startDate ? this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') : null,
-        "endDate": this.searchFilter.endDate ? this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy') : null,
-        "companyName": this.searchFilter.providerName || null
-      }
+      "userId": this.gs.loggedInUserInfo.userId,
+      "globalSearch": this.searchFilter.globalSearch?.trim() || null,
+      "category": this.searchFilter.category || null, // "Mortgage brokers"
+      "subCategory": this.searchFilter.subCategory ? JSON.stringify([this.searchFilter.subCategory]) : null, // "[\"Personal Loans\",\"Home Loans\"]"
+      "startDate": startDate,
+      "endDate": endDate,
+      "companyName": this.searchFilter.providerName || null
     }
+
     this.gs.isSpinnerShow = true;
-    this.vendorService.GetAllProviderEnquiry(body).subscribe((response: any) => {
+    this.excelExport.exportToExcelPost(body, "ExportAllProviderEnquiryToExcel").subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode === "200") {
+      let tableData = JSON.parse(response);
+      console.log("ExportAllProviderEnquiryToExcel tableData >>", tableData);
 
-        let tableData = response.providerEnquiryMatches;
-        let finalData: any = [];
-        const style = {
-          border: {
-            top: { style: "medium" },
-            left: { style: "medium" },
-            bottom: { style: "medium" },
-            right: { style: "medium" }
-          },
-          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
-        }
-        for (let i in tableData) {
-          finalData.push({
-            "SL": {
-              ...style,
-              value: Number(i) + 1,
-            },
-            "Lead ID": {
-              ...style,
-              value: tableData[i].id || '-',
-            },
-            "Company name": {
-              ...style,
-              value: tableData[i].companyName || '-',
-            },
-            "Contact Person": {
-              ...style,
-              value: tableData[i].name || '-',
-            },
-            "Mobile": {
-              ...style,
-              value: tableData[i].phoneNumber || '-',
-            },
-            "Email": {
-              ...style,
-              value: tableData[i].emailId || '-',
-            },
-            "Category": {
-              ...style,
-              value: tableData[i].category || '-',
-            },
-            "Sub Category": {
-              ...style,
-              value: tableData[i].subCategory || '-',
-            },
-            "Date": {
-              ...style,
-              value: tableData[i].enquiryDate || '-',
-            },
-          });
-        }
-        let title = "Enquiries";
-
-        if (this.searchFilter.startDate) {
-          title = title + ' - ' + this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') + ' To ' + this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy');
-        }
-        if (this.searchFilter.providerName) {
-          title = title + ' - ' + this.searchFilter.providerName;
-        }
-        if (this.searchFilter.category) {
-          title = title + ' - ' + this.searchFilter.category;
-        }
-        if (this.searchFilter.subCategory) {
-          title = title + ' - ' + this.searchFilter.subCategory;
-        }
-        this.gs.exportToExcelCustom(finalData, "Enquiries", title);
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
       }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Company name": {
+            ...style,
+            value: tableData[i].companyName || '-',
+          },
+          "Contact Person": {
+            ...style,
+            value: tableData[i].name || '-',
+          },
+          "Mobile": {
+            ...style,
+            value: tableData[i].phoneNumber || '-',
+          },
+          "Email": {
+            ...style,
+            value: tableData[i].emailId || '-',
+          },
+          "Category": {
+            ...style,
+            value: tableData[i].category || '-',
+          },
+          "Sub Category": {
+            ...style,
+            value: tableData[i].subCategory || '-',
+          },
+          "Date": {
+            ...style,
+            value: this.transformDate(tableData[i].enquiryDate, 'MMM d, y, h:mm a') || '-',
+          },
+        });
+      }
+      let title = "Enquiries";
+
+      if (this.searchFilter.startDate) {
+        title = title + ' - ' + this.datePipe.transform(this.searchFilter.startDate, 'MM/dd/yyyy') + ' To ' + this.datePipe.transform(this.searchFilter.endDate, 'MM/dd/yyyy');
+      }
+      if (this.searchFilter.providerName) {
+        title = title + ' - ' + this.searchFilter.providerName;
+      }
+      if (this.searchFilter.category) {
+        title = title + ' - ' + this.searchFilter.category;
+      }
+      if (this.searchFilter.subCategory) {
+        title = title + ' - ' + this.searchFilter.subCategory;
+      }
+      this.excelExport.exportToExcelCustom(finalData, "Enquiries", title);
     })
   }
 

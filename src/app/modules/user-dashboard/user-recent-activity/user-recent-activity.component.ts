@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { GlobalService } from '../../../shared/services/global.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { ExcelExportService } from '../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-user-recent-activity',
@@ -50,6 +51,7 @@ export class UserRecentActivityComponent {
   constructor(
     private datePipe: DatePipe,
     public gs: GlobalService,
+    private excelExport: ExcelExportService,
   ) {
     this.onChange();
   }
@@ -125,57 +127,50 @@ export class UserRecentActivityComponent {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.filterObj.dateTimeRange[0], this.filterObj.dateTimeRange[1]);
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
-      "pageNumber": 1,
-      "pagesize": this.totalData,
       "globalSearch": this.searchDataValue?.trim() || "",
-      "sortColumn": this.sortColumn,
-      "sortOrder": this.sortOrder,
       "startDate": startDate,
       "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.gs.GetUserActivityLogs(body).subscribe(async (response: any) => {
-      console.log("response >>>", response);
+    this.excelExport.exportToExcelPost(body, 'ExportUserActivityLogsToExcel').subscribe(async (response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        let tableData = response.userActivityLog;
-        let finalData: any = [];
-        const style = {
-          border: {
-            top: { style: "medium" },
-            left: { style: "medium" },
-            bottom: { style: "medium" },
-            right: { style: "medium" }
-          },
-          alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
-        }
-        for (let i in tableData) {
-          finalData.push({
-            "SL": {
-              ...style,
-              value: Number(i) + 1,
-            },
-            "Activity ID": {
-              ...style,
-              value: tableData[i].activityId || '-',
-            },
-            "Description": {
-              ...style,
-              value: tableData[i].summary || '-',
-            },
-            "Date": {
-              ...style,
-              value: tableData[i].timestamp || '-',
-            },
-          });
-        }
-        let title = "My Activities";
-        if (startDate) {
-          title = title + ' - ' + this.transformDate(this.filterObj.dateTimeRange[0], 'MM/dd/yyyy') + ' To ' + this.transformDate(this.filterObj.dateTimeRange[1], 'MM/dd/yyyy');
-        }
-
-        this.gs.exportToExcelCustom(finalData, "MyActivities", title);
+      let tableData = JSON.parse(response);
+      let finalData: any = [];
+      const style = {
+        border: {
+          top: { style: "medium" },
+          left: { style: "medium" },
+          bottom: { style: "medium" },
+          right: { style: "medium" }
+        },
+        alignment: { vertical: 'middle', horizontal: 'left', wrapText: true }
       }
+      for (let i in tableData) {
+        finalData.push({
+          "SL": {
+            ...style,
+            value: Number(i) + 1,
+          },
+          "Activity ID": {
+            ...style,
+            value: tableData[i].activityId || '-',
+          },
+          "Description": {
+            ...style,
+            value: tableData[i].summary || '-',
+          },
+          "Date": {
+            ...style,
+            value: this.transformDate(tableData[i].timestamp, 'MMM d, y, h:mm a') || '-',
+          },
+        });
+      }
+      let title = "My Activities";
+      if (startDate) {
+        title = title + ' - ' + this.transformDate(this.filterObj.dateTimeRange[0], 'MM/dd/yyyy') + ' To ' + this.transformDate(this.filterObj.dateTimeRange[1], 'MM/dd/yyyy');
+      }
+
+      this.excelExport.exportToExcelCustom(finalData, "MyActivities", title);
     })
   }
 }

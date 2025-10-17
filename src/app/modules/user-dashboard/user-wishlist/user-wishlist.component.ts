@@ -48,10 +48,15 @@ import { TranslateModule } from '@ngx-translate/core';
 export class UserWishlistComponent {
 
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public pageSize = 3;
-  public totalRecord = 0;
+  public pageSize = 10;
+  public totalData = 0;
   public currentPage = 1;
+
+  public tableDataSecond: any = [];
+  public searchDataValueSecond = '';
+  public pageSizeSecond = 10;
+  public totalDataSecond = 0;
+  public currentPageSecond = 1;
 
   editInfo: any = {};
   activeTab: any = "car";
@@ -120,38 +125,58 @@ export class UserWishlistComponent {
       })
     }
     if (this.activeTab === 'car_owner_interest') {
-      this.favoriteService.GetInterestOnDriverFavourites({
-        "userId": this.gs.loggedInUserInfo.userId
-      }).subscribe((response: any) => {
+      const body = {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": this.currentPage,
+        "pageSize": this.pageSize,
+        "startDate": null,
+        "endDate": null,
+      }
+      this.tableData = [];
+      this.favoriteService.GetInterestOnDriverFavourites(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
         this.isLoader = false;
         if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-          this.carOwnerTabs = [];
+          // for (let i in response.carOwners) {
+          //   this.tableData.push(response.carOwners[i]);
+          // }
           response.carOwners[0].isOpen = true;
-          // response.carOwners[i].isOpen = (Number(i) ? false : true);
-          for (let i in response.carOwners) {
-            console.log("iiiiii >>>>>", i + response.carOwners[i].isOpen);
-            this.carOwnerTabs.push(response.carOwners[i]);
-          }
-
-          console.log("this.carOwnerTabs >>>>>", this.carOwnerTabs);
-
-          // carOwnerTabs: any = [
-          //   {
-          //     title: "userDashboard.kyc.driverInfo.title",
-          //     tab: "driver_info",
-          //     isOpen: true,
-          //   },
-          // ]
-          // this.myWishlist = response.carOwners;
-          // console.log("myWishlist >>>", this.myWishlist);
+          this.tableData = response.carOwners;
+          this.totalData = response.viewModel?.totalCount || 0;
+          this.getCarOwnerVehicles(this.tableData[0].ownerId);
         }
       })
     }
   }
 
+  getCarOwnerVehicles(ownerUserId: any) {
+    const body = {
+      "userId": ownerUserId,
+      "pageNumber": this.currentPageSecond,
+      "pageSize": this.pageSizeSecond,
+    }
+    this.tableDataSecond = [];
+    this.gs.isSpinnerShow = true;
+    this.favoriteService.GetCarOwnerVehicles(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      this.isLoader = false;
+      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        this.tableDataSecond = response.carOwnerVehicles;
+        this.totalDataSecond = response.viewModel?.totalCount || 0;
+
+      }
+    })
+  }
+
   pageChanged(event: any) {
     this.currentPage = event;
+    this.currentPageSecond = 1;
+    this.getTableData();
+  }
+
+  pageChangedSecond(event: any, section: any) {
+    this.currentPageSecond = event;
+    this.getCarOwnerVehicles(section.ownerId);
   }
 
   onCheckAvailability(item: any) {
@@ -170,12 +195,17 @@ export class UserWishlistComponent {
   onChangeTab(item: any) {
     this.activeTab = item.value;
     this.myWishlist = [];
+    this.currentPage = 1;
+    this.currentPageSecond = 1;
     this.getTableData();
   }
 
   onToggle(value: any, section: any) {
     section.isOpen = value;
-    // section.get('isOpen').setValue(value);
+    if (section.isOpen) {
+      this.currentPageSecond = 1;
+      this.getCarOwnerVehicles(section.ownerId);
+    }
   }
 
 }

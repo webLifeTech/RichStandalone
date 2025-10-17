@@ -365,8 +365,6 @@ export class CabBookingSummaryComponent {
   }
 
   ngOnInit() {
-    console.log("CouponCode 111111111 >>>>", this.appliedCouponCode);
-
     if (this.type === 'car') {
       this.getVehicleBookingSummaryDetails();
     }
@@ -408,6 +406,12 @@ export class CabBookingSummaryComponent {
     if (value == 'coupon') {
       this.isCouponApplied = true;
       this.toast.successToastr("Coupon Applied!");
+      for (let i in this.gs.couponList) {
+        this.gs.couponList[i].checked = false;
+        if (this.gs.couponList[i].couponCode == this.appliedCouponCode?.trim()) {
+          this.gs.couponList[i].checked = true;
+        }
+      }
     }
   }
 
@@ -417,23 +421,20 @@ export class CabBookingSummaryComponent {
     let body = {
       "rentType": this.searchObj.timeType,
       "duration": parseInt(this.searchObj.timeDuration),
-      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yy'),
-      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yy'),
+      "pickUpTime": this.searchObj.pick_time,
+      "dropTime": this.searchObj.drop_time,
       "vehicleId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
-      "couponCode": this.appliedCouponCode || "",
+      "couponCode": this.appliedCouponCode?.trim() || "",
       "userId": this.gs.loggedInUserInfo.userId
     }
 
     this.cabService.getVehicleBookingSummaryDetails(body).subscribe((res: any) => {
-      console.log("getBookingVehicleDetails >>>>", res);
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.vehicleBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
-        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
-
       } else {
         this.gs.isSpinnerShow = false;
         this.gs.bookingSummaryDetails.isRestrict = true;
@@ -454,21 +455,18 @@ export class CabBookingSummaryComponent {
       "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yy'),
       "driverId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
-      "couponCode": this.appliedCouponCode || "",
+      "couponCode": this.appliedCouponCode?.trim() || "",
       "userId": this.gs.loggedInUserInfo.userId
     }
 
     this.cabService.getDriverBookingSummary(body).subscribe((res: any) => {
-      console.log("getDriverBookingSummary >>>>", res);
       if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
         this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
-        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
       } else {
         this.gs.bookingSummaryDetails.isRestrict = true;
         this.gs.bookingSummaryDetails.restrictMessage = res.responseResultDtos.message;
-        console.log("this.gs.bookingSummaryDetails >>>>>>", this.gs.bookingSummaryDetails);
         this.toast.errorToastr(res.responseResultDtos.message);
         this.gs.isSpinnerShow = false;
       }
@@ -484,9 +482,6 @@ export class CabBookingSummaryComponent {
   calculateDropTime(value: any) {
     let { pick_time, timeType, timeDuration } = this.searchObj;
     if (!pick_time || !timeType || !timeDuration) return;
-
-    console.log("value >>>>>", value);
-    console.log("timeType >>>>>", timeType);
 
     if (value == 'type') {
       let range = 0;
