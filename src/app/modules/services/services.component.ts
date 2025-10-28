@@ -98,14 +98,12 @@ export class ServicesComponent {
     this.gs.isSpinnerShow = true;
     this.vendorService.ProviderSearchResult(Body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("ProviderSearchResult >>>", res);
       this.aggregateFilters = {};
       this.servicSearchResult = [];
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      if (res.response && res.response.statusCode == "200") {
         const aggFilters = JSON.parse(res.aggregateFilters);
         this.aggregateFilters = aggFilters.subCategoryInfo || {};
-        console.log("this.aggregateFilters >>>", this.aggregateFilters);
-        this.servicSearchResult = res.providerMatches;
+        this.servicSearchResult = res.searchList;
         this.searchObj.totalDataCount = res.viewModel.totalCount;
         this.viewModel = res.viewModel;
         this.reLoadDetails = false;

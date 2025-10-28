@@ -72,9 +72,9 @@ export class UserRecentActivityComponent {
     this.gs.GetUserActivityLogs(body).subscribe(async (response: any) => {
       console.log("response >>>", response);
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.tableData = response.userActivityLog;
-        console.log("this.totalData >>>", this.totalData);
+
+      if (response.response && response.response.statusCode == "200") {
+        this.tableData = response.gridList;
         this.totalData = response.viewModel.totalCount;
       }
     }, (error: any) => {

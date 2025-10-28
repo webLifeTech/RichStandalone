@@ -430,7 +430,7 @@ export class CabBookingSummaryComponent {
     }
 
     this.cabService.getVehicleBookingSummaryDetails(body).subscribe((res: any) => {
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      if (res.response && res.response.statusCode == "200") {
         this.bookingSummaryDetails = res.vehicleBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
@@ -460,7 +460,7 @@ export class CabBookingSummaryComponent {
     }
 
     this.cabService.getDriverBookingSummary(body).subscribe((res: any) => {
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      if (res.response && res.response.statusCode == "200") {
         this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;

@@ -23,9 +23,8 @@
     <div class="flight-detail-sec cab-detail-sec"
       [ngClass]="{ 'product-wrapper-grid special-section grid-box' : marginClass}">
       <div class="detail-bar">
-        <!-- @for(details of searchResult.vehicleMatches; track details){ -->
         <div
-          *ngFor="let details of searchResult.vehicleMatches | paginate: { itemsPerPage: this.pageSize, currentPage: pageNo, totalItems: this.searchResult.viewModel?.totalCount }; let idx = index;"
+          *ngFor="let details of searchResult.searchList | paginate: { itemsPerPage: this.pageSize, currentPage: pageNo, totalItems: this.searchResult.viewModel?.totalCount }; let idx = index;"
           class="container-fluid detail-wrap wow fadeInUp">
           <a [ngClass]="{'btn-available': !details.isBooked, 'btn-booked' :details.isBooked}" class="btn">
             {{details.availability | translate}}
@@ -306,9 +305,7 @@
 
           </div>
         </div>
-        <!-- }@empty {
-          } -->
-        <ng-container *ngIf="!searchResult?.vehicleMatches?.length">
+        <ng-container *ngIf="!searchResult?.searchList?.length">
           <app-no-data *ngIf="type === 'car'" [icon]="icon" [title]="title" [description]="description"></app-no-data>
           <app-no-data *ngIf="type === 'driver'" [icon]="d_icon" [title]="d_title"
             [description]="d_description"></app-no-data>
@@ -316,9 +313,7 @@
       </div>
     </div>
 
-    <!-- <app-pagination *ngIf="searchResult.vehicleMatches.length" [cabDetails]="searchResult.vehicleMatches"
-      [paginate]="paginate" (setPage)="setPage($event)"></app-pagination> -->
-    <ng-container *ngIf="searchResult?.vehicleMatches?.length">
+    <ng-container *ngIf="searchResult?.searchList?.length">
       <div class="text-center">
         <pagination-controls (pageChange)="setPage($event)"></pagination-controls>
       </div>

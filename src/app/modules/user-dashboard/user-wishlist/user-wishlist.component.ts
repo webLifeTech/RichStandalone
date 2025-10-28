@@ -116,12 +116,11 @@ export class UserWishlistComponent {
         "userId": this.gs.loggedInUserInfo.userId,
         "riskType": this.activeTab === 'car' ? 'Vehicle' : 'Driver',
       }).subscribe((response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-          this.myWishlist = response.favoriteList;
-          console.log("myWishlist >>>", this.myWishlist);
-        }
         this.gs.isSpinnerShow = false;
         this.isLoader = false;
+        if (response.response && response.response.statusCode == "200") {
+          this.myWishlist = response.gridList;
+        }
       })
     }
     if (this.activeTab === 'car_owner_interest') {
@@ -135,15 +134,13 @@ export class UserWishlistComponent {
       this.tableData = [];
       this.favoriteService.GetInterestOnDriverFavourites(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        this.isLoader = false;
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-          // for (let i in response.carOwners) {
-          //   this.tableData.push(response.carOwners[i]);
-          // }
-          response.carOwners[0].isOpen = true;
-          this.tableData = response.carOwners;
+        console.log("response >>>>>", response);
+        if (response.response && response.response.statusCode == "200") {
+          response.gridList[0].isOpen = true;
+          this.tableData = response.gridList;
           this.totalData = response.viewModel?.totalCount || 0;
           this.getCarOwnerVehicles(this.tableData[0].ownerId);
+          this.isLoader = false;
         }
       })
     }
@@ -160,10 +157,9 @@ export class UserWishlistComponent {
     this.favoriteService.GetCarOwnerVehicles(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       this.isLoader = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.tableDataSecond = response.carOwnerVehicles;
+      if (response.response && response.response.statusCode == "200") {
+        this.tableDataSecond = response.gridList;
         this.totalDataSecond = response.viewModel?.totalCount || 0;
-
       }
     })
   }

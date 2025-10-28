@@ -103,12 +103,8 @@ export class CabClassicHomeSectionComponent {
     this.gs.isSpinnerShow = true;
     this.cabService.GetLocations(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>>", response);
-      if (response && response.getLocations && response.getLocations.length) {
-        this.locationArray = response.getLocations;
-        console.log("this.locationArray >>>>>", this.locationArray);
-
-        // console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
+      if (response.response && response.response.statusCode == "200") {
+        this.locationArray = response.gridList;
       }
     }, err => {
       this.gs.isSpinnerShow = false;

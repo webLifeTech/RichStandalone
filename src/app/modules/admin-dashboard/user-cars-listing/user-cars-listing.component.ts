@@ -101,12 +101,12 @@ export class UserCarsListingComponent {
       "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.adminService.GetAllVehicleOwnersForAdmin(body).subscribe((response: any) => {
-      this.tableData = [];
+    this.adminService.GetAllVehicleOwners(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        response.vehicleOwners[0].isOpen = true;
-        this.tableData = response.vehicleOwners;
+      this.tableData = [];
+      if (response.response && response.response.statusCode == "200") {
+        response.gridList[0].isOpen = true;
+        this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
         this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
         this.getOwnerVehicles(this.tableData[0].userId)
@@ -129,10 +129,10 @@ export class UserCarsListingComponent {
     }
     this.tableDataSecond = [];
     this.gs.isSpinnerShow = true;
-    this.adminService.GetAllOwnerVehiclesForAdmin(body).subscribe((response: any) => {
+    this.adminService.GetAllOwnerVehicles(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.tableDataSecond = response.ownerVehicles;
+      if (response.response && response.response.statusCode == "200") {
+        this.tableDataSecond = response.gridList;
         this.totalDataSecond = response.viewModel?.totalCount || 0;
       } else {
         this.toast.errorToastr(response.message);

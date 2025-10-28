@@ -28,7 +28,7 @@
             <div class="timing">
               <div>
                 <div class="time">
-                  {{cancellationInfo.pickUpDate}}
+                  {{cancellationInfo.pickUpDate | date : 'MMM d, y, h:mm a'}}
                 </div>
                 <div class="location"></div>
               </div>
@@ -37,7 +37,7 @@
               </div>
               <div>
                 <div class="time">
-                  {{cancellationInfo.dropdate}}
+                  {{cancellationInfo.dropdate | date : 'MMM d, y, h:mm a'}}
                 </div>
                 <div class="location"></div>
               </div>

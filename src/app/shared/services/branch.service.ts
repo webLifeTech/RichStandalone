@@ -25,7 +25,7 @@ export class BranchService {
   }
 
   // CompanyBranchKYC -> GetCompanyBranchByBranchId
-  public GetCompanyBranchByBrnachId(dataParams: any) {
+  public GetCompanyBranchByBranchId(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('branchPersonNum', dataParams.branchPersonNum)

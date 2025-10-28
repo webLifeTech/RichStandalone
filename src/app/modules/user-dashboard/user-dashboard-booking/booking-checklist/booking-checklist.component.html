@@ -49,8 +49,8 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>License Plate Number:</label>
-                  <input type="text" class="form-control" formControlName="licensePlateNumber"
-                    name="licensePlateNumber" />
+                  <input type="text" class="form-control" formControlName="licensePlateNumber" name="licensePlateNumber"
+                    readonly />
                   <span class="text-danger mt-1"
                     *ngIf="(insnFormControl.licensePlateNumber?.touched || submitted) && insnFormControl.licensePlateNumber?.errors?.required">
                     License plate number is required
@@ -60,7 +60,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>VIN Number:</label>
-                  <input type="text" class="form-control" formControlName="vinNumber" name="vinNumber" />
+                  <input type="text" class="form-control" formControlName="vinNumber" name="vinNumber" readonly />
                   <span class="text-danger mt-1"
                     *ngIf="(insnFormControl.vinNumber?.touched || submitted) && insnFormControl.vinNumber?.errors?.required">
                     License plate number is required

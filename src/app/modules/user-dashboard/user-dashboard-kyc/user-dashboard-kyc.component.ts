@@ -562,10 +562,9 @@ export class UserDashboardKycComponent {
       }
 
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
-        if (response && response.userId) {
+        if (response && response.response.statusCode == "200" && response.userId) {
           this.isFormEdit = true;
           this.singleDetailInfo = response;
-          console.log("getCompanyDetailsByCompanyId -------->>>>>>>>", response);
           this.kycForm.state = this.singleDetailInfo.driveInCity || 42
         }
       })
@@ -578,7 +577,7 @@ export class UserDashboardKycComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        if (response.response && response.response.statusCode == "200") {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
           this.singleDetailInfo = response;

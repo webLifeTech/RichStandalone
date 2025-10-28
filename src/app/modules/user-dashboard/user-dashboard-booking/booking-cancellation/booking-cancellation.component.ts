@@ -77,17 +77,15 @@ export class BookingCancellationComponent {
   }
 
   ngOnInit() {
-    console.log("singleBookingDetail >>>>>", this.singleBookingDetail);
     this.GetMasterBookingCancellationReasons();
   }
 
   GetMasterBookingCancellationReasons() {
     this.gs.isSpinnerShow = true;
     this.bookingService.GetMasterBookingCancellationReasons({
-      riskType: this.singleBookingDetail.riskType,
+      riskType: this.gs.loggedInUserInfo.role == 'admin' ? 'All' : this.singleBookingDetail.riskType,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetMasterBookingCancellationReasons >>>>>", response);
       this.reasons = response;
     })
   }

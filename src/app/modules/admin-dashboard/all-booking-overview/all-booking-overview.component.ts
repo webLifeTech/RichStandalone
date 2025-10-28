@@ -110,11 +110,11 @@ export class AllBookingOverviewComponent {
       "endDate": endDate,
     }
     this.gs.isSpinnerShow = true;
-    this.adminService.GetAllBookingOverviewForAdmin(body).subscribe((response: any) => {
+    this.adminService.GetAllBookingOverview(body).subscribe((response: any) => {
       this.tableData = [];
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        this.tableData = response.bookingOverviews;
+      if (response.response && response.response.statusCode == "200") {
+        this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
         this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
       } else {

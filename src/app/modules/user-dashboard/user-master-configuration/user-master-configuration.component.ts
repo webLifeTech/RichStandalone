@@ -211,7 +211,7 @@ export class UserMasterConfigurationComponent {
       "driverId": 0,
     }).subscribe((response: any) => {
       console.log("GetDriverWorkingHours >>>>>", response);
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      if (response.response && response.response.statusCode == "200") {
         this.gridInfoData = [response];
         this.singleDetailInfo = { driverDetailsRequest: response };
         if (!response.isActiveOrInActive) {
@@ -306,7 +306,7 @@ export class UserMasterConfigurationComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        if (response.response && response.response.statusCode == "200") {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
           this.singleDetailInfo = response;
@@ -321,8 +321,8 @@ export class UserMasterConfigurationComponent {
         branchPersonNum: singleDetail.branchPersonNum
       }
 
-      this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      this.branchService.GetCompanyBranchByBranchId(body).subscribe(async (response: any) => {
+        if (response.response && response.response.statusCode == "200") {
           this.isFormEdit = true;
           this.isAddEditBranch = true;
           this.singleDetailInfo = response;

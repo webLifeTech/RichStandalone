@@ -22,7 +22,7 @@ import { AdminService } from '../../../../shared/services/admin.service';
 })
 export class AdVehiclesDetailsComponent {
 
-  @Input() data: any = {};
+  data: any = {};
   @Input() timeTypeList: any = [];
 
 
@@ -48,14 +48,15 @@ export class AdVehiclesDetailsComponent {
   ) { }
 
   ngOnInit() {
-    this.setData();
+    this.filterData();
   }
 
   filterData() {
     this.gs.isSpinnerShow = true;
     this.isDataLoading = true;
     const body = {
-      filter: this.timeType
+      filter: this.timeType,
+      type: "VehiclesOverView"
     }
     this.adminService.GetAdminDashboardDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

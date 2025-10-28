@@ -126,15 +126,15 @@ export class CabListDetailsComponent {
   }
 
   ngOnInit() {
-    for (let i in this.searchResult.vehicleMatches) {
-      if (this.searchResult.vehicleMatches[i].type === 'car' && !this.auth.isLoggedIn) {
-        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].ratingAverage);
+    for (let i in this.searchResult.searchList) {
+      if (this.searchResult.searchList[i].type === 'car' && !this.auth.isLoggedIn) {
+        this.searchResult.searchList[i].maxRate = Math.ceil(this.searchResult.searchList[i].ratingAverage);
       }
-      if (this.searchResult.vehicleMatches[i].type === 'driver' && !this.auth.isLoggedIn) {
-        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].driverRating);
+      if (this.searchResult.searchList[i].type === 'driver' && !this.auth.isLoggedIn) {
+        this.searchResult.searchList[i].maxRate = Math.ceil(this.searchResult.searchList[i].driverRating);
       }
       if (this.auth.isLoggedIn) {
-        this.searchResult.vehicleMatches[i].maxRate = Math.ceil(this.searchResult.vehicleMatches[i].riskRating);
+        this.searchResult.searchList[i].maxRate = Math.ceil(this.searchResult.searchList[i].riskRating);
       }
     }
     this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
@@ -257,14 +257,14 @@ export class CabListDetailsComponent {
       "userId": this.gs.loggedInUserInfo.userId,
       "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
     }).subscribe((response: any) => {
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
-        for (let i in this.searchResult.vehicleMatches) {
+      if (response.response && response.response.statusCode == "200") {
+        for (let i in this.searchResult.searchList) {
           for (let j in response.favoriteList) {
-            if (this.type === 'car' && this.searchResult.vehicleMatches[i].vehicleId == response.favoriteList[j].vehicleId) {
-              this.searchResult.vehicleMatches[i].isAddWishlist = true;
+            if (this.type === 'car' && this.searchResult.searchList[i].vehicleId == response.favoriteList[j].vehicleId) {
+              this.searchResult.searchList[i].isAddWishlist = true;
             }
-            if (this.type === 'driver' && this.searchResult.vehicleMatches[i].driverId == response.favoriteList[j].driverId) {
-              this.searchResult.vehicleMatches[i].isAddWishlist = true;
+            if (this.type === 'driver' && this.searchResult.searchList[i].driverId == response.favoriteList[j].driverId) {
+              this.searchResult.searchList[i].isAddWishlist = true;
             }
           }
         }

@@ -91,7 +91,6 @@ export class UserWalletComponent {
     private excelExport: ExcelExportService,
     private datePipe: DatePipe,
   ) {
-    // this.getWalletDetails();
     this.getWalletDetails();
     this.getCards();
   }
@@ -125,7 +124,7 @@ export class UserWalletComponent {
     this.gs.isSpinnerShow = true;
     this.walletService.GetAllWalletPayments(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.response && response.response.statusCode == "200") {
+      if (response.response && response.response.statusCode == "200") {
         this.tableData = response.walletPaymentDetails?.walletpaymentMatches;
         this.totalData = response.viewModel?.totalCount;
         this.walletDetails = response.walletPaymentDetails?.walletDetails;

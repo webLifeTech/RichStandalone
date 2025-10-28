@@ -35,7 +35,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-md-3">
-                  <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+                  <h4>{{activeTab}} <span>{{totalData}}</span></h4>
                 </div>
                 <div class="col-md-9 text-md-end">
                   <div class="table-search">
@@ -88,6 +88,13 @@
                       <th class="text-center pointer" (click)="onSort('bookingStatus')">
                         Status
                         <span *ngIf="sortColumn === 'bookingStatus'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-start pointer" (click)="onSort('updatedBy')">
+                        Updatedby
+                        <span *ngIf="sortColumn === 'updatedBy'">
                           <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
@@ -154,6 +161,9 @@
                             'badge-light-success': data.bookingStatus === 'Received' || data.bookingStatus === 'End Service'}">
                           {{data.bookingStatus}}
                         </span>
+                      </td>
+                      <td class="text-start">
+                        <span>{{data.updatedBy}}</span>
                       </td>
                       <td class="text-center">
                         <span>{{data.bookingStatusRemarks}}</span>

@@ -35,13 +35,11 @@
           </div>
         </div>
       </div>
-      <div *ngIf="dashboardAllDetails.vehiclesOverView" class="col-lg-4">
-        <app-ad-vehicles-details [timeTypeList]="timeTypeList"
-          [data]="dashboardAllDetails.vehiclesOverView"></app-ad-vehicles-details>
+      <div class="col-lg-4">
+        <app-ad-vehicles-details [timeTypeList]="timeTypeList"></app-ad-vehicles-details>
       </div>
-      <div *ngIf="dashboardAllDetails.bookingOverview" class="col-lg-8">
-        <app-ad-booking-details [timeTypeList]="timeTypeList"
-          [data]="dashboardAllDetails.bookingOverview"></app-ad-booking-details>
+      <div class="col-lg-8">
+        <app-ad-booking-details [timeTypeList]="timeTypeList"></app-ad-booking-details>
       </div>
     </div>
 

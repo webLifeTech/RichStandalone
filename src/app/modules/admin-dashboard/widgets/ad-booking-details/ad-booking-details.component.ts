@@ -18,7 +18,7 @@ import { AdminService } from '../../../../shared/services/admin.service';
   styleUrls: ['./ad-booking-details.component.scss']
 })
 export class AdBookingDetailsComponent {
-  @Input() data: any = {};
+  data: any = {};
   @Input() timeTypeList: any = [];
 
   totalDrivers: any = {
@@ -43,14 +43,15 @@ export class AdBookingDetailsComponent {
   ) { }
 
   ngOnInit() {
-    this.setData();
+    this.filterData();
   }
 
   filterData() {
     this.gs.isSpinnerShow = true;
     this.isDataLoading = true;
     const body = {
-      filter: this.timeType
+      filter: this.timeType,
+      type: "BookingOverview" // VehiclesOverView
     }
     this.adminService.GetAdminDashboardDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

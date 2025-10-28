@@ -124,11 +124,11 @@ export class EnquiriesComponent {
     this.gs.isSpinnerShow = true;
     this.vendorService.GetAllProviderEnquiry(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode === "200") {
+      if (res.response && res.response.statusCode == "200") {
+        this.tableData = res.gridList;
+        this.totalData = res.viewModel.totalCount;
         const aggFilters = JSON.parse(res.aggregateFilters);
         this.providerList = aggFilters.filter((item: any) => item.CompanyName);
-        this.tableData = res.providerEnquiryMatches;
-        this.totalData = res.viewModel.totalCount;
       }
     })
   }

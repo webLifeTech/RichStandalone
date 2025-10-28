@@ -94,7 +94,7 @@ export class CabBookingComponent {
     this.loadSummary = false;
     this.cabService.getBookingVehicleDetails(body).subscribe((res: any) => {
       this.loadSummary = true;
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      if (res.response && res.response.statusCode == "200") {
         this.bookingDetails = res.vehicleBookingInfoDetails;
         this.gs.couponList = this.bookingDetails.couponDetails;
       } else {
@@ -117,7 +117,7 @@ export class CabBookingComponent {
     }
 
     this.cabService.getBookingDriverDetails(body).subscribe((res: any) => {
-      if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+      if (res.response && res.response.statusCode == "200") {
         this.bookingDetails = res.driverBookingInfoDetails;
         this.bookingDetails.vehicleDetails = this.bookingDetails.driverDetails;
         this.gs.couponList = this.bookingDetails.couponDetails;
@@ -147,38 +147,13 @@ export class CabBookingComponent {
       this.toast.errorToastr(this.gs.bookingSummaryDetails.restrictMessage);
       return;
     }
-
     this.bookingStep = 2;
     this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
     window.scrollTo({ top: 300, behavior: 'smooth' });
-    // this.router.navigate(['/cab/booking/booking-payment', this.searchObj.vehicleId, this.searchObj.summaryId], {
-    //   queryParams: this.params,
-    //   queryParamsHandling: "merge"
-    // });
   }
 
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
-  }
-
-  applyCoupon(event: any) {
-    console.log("Yes", event);
-    // this.loadSummary = false;
-    // this.appliedCouponCode = event.couponCode;
-    // // this.searchObj.couponCode = event.couponCode;
-    // // this.gs.lastSearch = this.searchObj;
-    // // localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
-    // setTimeout(() => {
-    //   this.loadSummary = true;
-    // }, 500);
-    // this.params.couponApply = 0
-    // this.params = { ...this.params, ...{ couponCode: event.couponCode } };
-    // console.log("this.params >>>", this.params);
-
-    // this.router.navigate(['/cab/booking/booking', this.searchObj.vehicleId, this.searchObj.summaryId], {
-    //   queryParams: this.params,
-    //   queryParamsHandling: "merge"
-    // });
   }
 
   backStep() {

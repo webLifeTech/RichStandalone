@@ -96,11 +96,12 @@ export class NftsInfoComponent {
 
     this.gs.isSpinnerShow = true;
     this.nftService.GetNftDocDetails(body).subscribe((res: any) => {
-      console.log("GetNftDocDetails >>>>>", res);
       this.gs.isSpinnerShow = false;
-      this.totalRecord = res.viewModel?.totalCount || 0;
-      this.pageHeading = res.viewModel?.pageHeading || 0;
-      this.tableData = res.nftDocsInfos || [];
+      if (res.response && res.response.statusCode == "200") {
+        this.tableData = res.gridList;
+        this.totalRecord = res.viewModel?.totalCount || 0;
+        this.pageHeading = res.viewModel?.pageHeading || 0;
+      }
 
     })
   }

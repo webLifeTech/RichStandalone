@@ -65,12 +65,6 @@
         <div class="review-section">
           <app-cab-booking-summary *ngIf="bookingDetails.vehicleDetails" [bookingStep]="bookingStep"
             [singleItem]="bookingDetails.vehicleDetails"></app-cab-booking-summary>
-          <!-- app-cab-promo-code moved inside app-cab-booking-summary -->
-          <!-- <div class="review_box"></div> -->
-          <!-- <div *ngIf="bookingStep == 1 && bookingDetails.couponDetails?.length" class="review_box mt-3">
-            <app-cab-promo-code [couponDetails]="bookingDetails.couponDetails"
-              (applyCoupon)="applyCoupon($event)"></app-cab-promo-code>
-          </div> -->
           <div *ngIf="bookingStep == 1" class="book-flight text-center">
             <a (click)="continueToBook()" class="btn btn-theme margin-5">
               {{'booking_page.continue_to_book' | translate}}</a>

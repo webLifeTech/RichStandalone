@@ -33,8 +33,7 @@ export class BookingMyWalletComponent {
     this.walletService.getWalletDetails({
       "userId": this.gs.loggedInUserInfo.userId
     }).subscribe((response: any) => {
-      console.log("response >>>>", response);
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      if (response.response && response.response.statusCode == "200") {
         this.walletDetails = response.walletDetails;
         this.gs.paymentDetails.wallet = this.walletDetails;
       }

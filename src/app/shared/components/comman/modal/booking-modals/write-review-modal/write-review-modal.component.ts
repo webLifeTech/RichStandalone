@@ -37,8 +37,6 @@ export class WriteReviewModalComponent {
   ) { }
 
   ngOnInit() {
-    console.log("this.singleDetails >>>>>", this.singleDetails);
-
     if (this.singleDetails && this.singleDetails.id) {
       this.form.rating = this.singleDetails.rating;
       this.form.ratingText = this.singleDetails.ratingText;
@@ -51,14 +49,11 @@ export class WriteReviewModalComponent {
   onConfirm() {
     let Body = {
       "id": this.singleDetails.id || 0,
-      "bookingReferenceNumber": this.singleDetails.bookingReferenceNumber,
+      "bookingId": this.singleDetails.bookingId,
       "userId": this.gs.loggedInUserInfo.userId,
       "rating": this.form.rating,
       "ratingText": this.form.ratingText
     };
-
-    console.log("Body >>>", Body);
-    // return;
 
     this.gs.isSpinnerShow = true;
     this.reviewService.InsertAndUpdateRiskReviews(Body).subscribe((res: any) => {

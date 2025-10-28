@@ -387,7 +387,8 @@ export class UserDashboardComponent {
   getAdminDashboardDetails() {
     this.gs.isSpinnerShow = true;
     const body = {
-      filter: this.timeType
+      filter: this.timeType,
+      type: "CustomerStatus" // ,BookingOverview,VehiclesOverView
     }
     this.userDetails['data']['series'] = [];
     this.userDetails['data']['chartLabels'] = [];
@@ -395,9 +396,6 @@ export class UserDashboardComponent {
       this.gs.isSpinnerShow = false;
       if (response && response.statusCode == "200") {
         this.dashboardAllDetails = JSON.parse(response.userDashboardDetails);
-        this.dashboardAllDetails.vehiclesOverView = JSON.parse(this.dashboardAllDetails.vehiclesOverView);
-        this.dashboardAllDetails.bookingOverview = JSON.parse(this.dashboardAllDetails.bookingOverview);
-
         this.userDetails['data']['series'] = [
           {
             name: "Active",

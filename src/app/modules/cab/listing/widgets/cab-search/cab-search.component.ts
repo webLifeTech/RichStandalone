@@ -464,8 +464,8 @@ export class CabSearchComponent {
     this.gs.isSpinnerShow = true;
     this.cabService.GetLocations(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.getLocations && response.getLocations.length) {
-        this.locationArray = response.getLocations;
+      if (response.response && response.response.statusCode == "200") {
+        this.locationArray = response.gridList;
       }
     }, err => {
       this.gs.isSpinnerShow = false;

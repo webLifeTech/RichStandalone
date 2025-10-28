@@ -78,11 +78,12 @@ export class UserCancellationRefundComponent {
       "endDate": endDate,
     };
     this.gs.isSpinnerShow = true;
-    this.adminService.GetBookingRefundDetailsForAdmin(body).subscribe((response: any) => {
+    this.adminService.GetBookingRefundDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>", response);
-      this.tableData = response.refundDetails;
-      this.totalData = response.viewModel?.totalCount;
+      if (response.response && response.response.statusCode == "200") {
+        this.tableData = response.gridList;
+        this.totalData = response.viewModel?.totalCount;
+      }
     });
   }
 

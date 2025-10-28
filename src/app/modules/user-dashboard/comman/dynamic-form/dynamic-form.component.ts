@@ -2673,7 +2673,7 @@ export class DynamicFormComponent {
           userId: this.gs.loggedInUserInfo.userId,
           vehicleId: this.singleDetailInfo.vehicleInfo.vehicleId
         }).subscribe(async (response: any) => {
-          if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+          if (response.response && response.response.statusCode == "200") {
             this.singleDetailInfo = response;
           }
         })
@@ -2914,8 +2914,10 @@ export class DynamicFormComponent {
 
   parseDate(dateString: string) {
     if (dateString) {
-      const [month, day, year] = dateString.split('/').map(Number);
-      return new Date(year, month - 1, day);
+      const newDate: any = this.transformDate(dateString, 'MM/dd/yy')
+      return new Date(newDate);
+      // const [month, day, year] = dateString.split('/').map(Number);
+      // return new Date(year, month - 1, day);
     } else {
       return null;
     }

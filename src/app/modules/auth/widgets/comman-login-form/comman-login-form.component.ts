@@ -159,6 +159,7 @@ export class CommanLoginFormComponent {
           ["Driver with owned car"]: "user_4",
           ["Administrator"]: "admin",
           ["Vendor"]: "Vendor",
+          ["Accountant"]: "Accountant",
         }
 
         this.loginForm = {

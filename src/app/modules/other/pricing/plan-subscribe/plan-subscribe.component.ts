@@ -150,10 +150,12 @@ export class PlanSubscribeComponent {
     this.pricingS.getPackageSubscriptionDetails({
       userId: this.gs.loggedInUserInfo.userId || null,
       packageId: this.params.packageId
-    }).subscribe((apiRes: any) => {
+    }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      this.packageObj = apiRes;
-      this.gs.couponList = this.packageObj.couponDetails;
+      if (response.response && response.response.statusCode == "200") {
+        this.packageObj = response;
+        this.gs.couponList = this.packageObj.couponDetails;
+      }
     });
   }
 
@@ -170,8 +172,11 @@ export class PlanSubscribeComponent {
 
     this.pricingS.getPackageSummaryDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+
+      if (response.response && response.response.statusCode == "200") {
         this.packageSummaryObj = response.packageSummary;
+      } else {
+        this.toast.errorToastr(response.message);
       }
     });
   }

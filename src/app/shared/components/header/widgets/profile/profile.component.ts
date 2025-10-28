@@ -111,4 +111,8 @@ export class ProfileComponent {
   goActivities() {
     this.router.navigateByUrl('/user/recent-activity');
   }
+
+  goPayments() {
+    this.router.navigateByUrl('/user/payments');
+  }
 }

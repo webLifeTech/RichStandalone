@@ -105,9 +105,11 @@ export class MyCarsComponent {
     this.gs.isSpinnerShow = true;
     this.profileService.GetMyCarListDetails(body).subscribe(async (response: any) => {
       this.gs.isSpinnerShow = false;
-      this.tableData = response.carDetails;
-      this.totalData = response?.viewModel?.totalCount;
-      this.booktabs = response.filterList ? JSON.parse(response.filterList) : [];
+      if (response.response && response.response.statusCode == "200") {
+        this.tableData = response.gridList;
+        this.totalData = response?.viewModel?.totalCount;
+        this.booktabs = response.filterList ? JSON.parse(response.filterList) : [];
+      }
     })
   }
 

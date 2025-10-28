@@ -98,40 +98,57 @@ export class BookingChecklistComponent {
   GetMasterInspectionLineItems() {
     const body = {
       "inspectiontype": this.gs.loggedInUserInfo.role === 'user' ? "PRE_RENTAL" : "POST_RENTAL",
+      "userId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.GetMasterInspectionLineItems(body).subscribe((res: any) => {
-      console.log("GetMasterInspectionLineItems >>>>>", res);
       this.gs.isSpinnerShow = false;
-      this.checklist = res;
-      for (let i in this.checklist) {
-        this.checklist[i].satisfactory = true;
-        this.checklist[i].status = "Satisfactory";
+      if (res.response && res.response.statusCode == "200") {
+        this.checklist = res.preRentalInspections;
+        for (let i in this.checklist) {
+          this.checklist[i].satisfactory = true;
+          this.checklist[i].status = "Satisfactory";
+        }
+        this.inspectionForm.patchValue({
+          inspectorName: res.inspectorDetails.inspectorName,
+          licensePlateNumber: res.inspectorDetails.plateNumber,
+          vinNumber: res.inspectorDetails.vinNumber,
+          odometerReading: res.inspectorDetails.OdometerReading,
+        });
       }
     });
   }
 
   GetPostMasterInspectionLineItems() {
     const body = {
-      bookingId: this.bookingDetails.bookingId
+      "bookingId": this.bookingDetails.bookingId,
+      "userId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.GetPostMasterInspectionLineItems(body).subscribe((res: any) => {
-      console.log("GetPostMasterInspectionLineItems >>>>>", res);
       this.gs.isSpinnerShow = false;
-      this.checklist = res;
-      for (let i in this.checklist) {
-        // this.checklist[i].satisfactory = true;
-        if (this.checklist[i].selectedResult === "Satisfactory") {
-          this.checklist[i].satisfactory = true;
+      if (res.response && res.response.statusCode == "200") {
+        this.checklist = res.postRentalInspections;
+        for (let i in this.checklist) {
+          // this.checklist[i].satisfactory = true;
+          if (this.checklist[i].selectedResult === "Satisfactory") {
+            this.checklist[i].satisfactory = true;
+          }
+          if (this.checklist[i].selectedResult === "Defective") {
+            this.checklist[i].defective = true;
+          }
+          if (this.checklist[i].selectedResult === "N/A") {
+            this.checklist[i].na = true;
+          }
+          this.checklist[i].status = this.checklist[i].selectedResult;
         }
-        if (this.checklist[i].selectedResult === "Defective") {
-          this.checklist[i].defective = true;
-        }
-        if (this.checklist[i].selectedResult === "N/A") {
-          this.checklist[i].na = true;
-        }
-        this.checklist[i].status = this.checklist[i].selectedResult;
+
+        this.inspectionForm.patchValue({
+          inspectorName: res.inspectorDetails.inspectorName,
+          licensePlateNumber: res.inspectorDetails.plateNumber,
+          vinNumber: res.inspectorDetails.vinNumber,
+          odometerReading: res.inspectorDetails.OdometerReading,
+        });
       }
     });
   }
@@ -141,9 +158,6 @@ export class BookingChecklistComponent {
   }
 
   onChangeCheck(row: any, slctValue: any) {
-    console.log("satisfactory >>>>>", row["satisfactory"]);
-    console.log("defective >>>>>", row["defective"]);
-    console.log("na >>>>>", row["na"]);
 
     if (slctValue === "satisfactory" && row[slctValue]) {
       row["defective"] = !row["satisfactory"];
@@ -160,32 +174,15 @@ export class BookingChecklistComponent {
       row["defective"] = !row["na"];
       row.status = "N/A"
     }
-
-    // for (let [key, value] of Object.entries(row)) {
-    //   console.log("key >>>>>>", key);
-    //   if (key !== slctValue) {
-    //     row[key] = !row[slctValue];
-    //   }
-    // }
-    // row.map((obj: any) => {
-    //   console.log("obj >>>>>>>", obj);
-
-    //   if (obj[slctValue] && obj !== slctValue) {
-    //     return { ...obj, emp_name: "rahul" };
-    //   }
-    // });
   }
 
   onSubmit() {
-    console.log("checklist >>>>>>", this.checklist);
-    console.log("this.inspectionForm >>>>>>", this.inspectionForm);
 
     this.submitted = true;
     if (this.inspectionForm.valid) {
       let checkListItems: any = [];
       const rentalType = this.gs.loggedInUserInfo.role === 'user' ? "PRE_RENTAL" : "POST_RENTAL"
       const findIt = this.inspectionTypes.find((i: any) => i.code === rentalType);
-      console.log("findIt >>>>>>>", findIt);
 
       let inspectionTypeId = findIt.id;
       const inspectionDate = this.transformDate(new Date(), 'MM/dd/yy');
@@ -204,7 +201,7 @@ export class BookingChecklistComponent {
         "contractId": null,
         "riskId": this.bookingDetails.riskId,
         "riskType": this.bookingDetails.riskType,
-        "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+        "userId": this.gs.loggedInUserInfo.userId,
         "inspectionTypeId": inspectionTypeId,
         "inspectorName": this.inspectionForm.value.inspectorName,
         "inspectionDate": inspectionDate,
@@ -217,8 +214,6 @@ export class BookingChecklistComponent {
         "comments": null,
         "items": checkListItems
       }
-      console.log("body >>>>", body);
-      // return;
       this.gs.isSpinnerShow = true;
       if (this.gs.loggedInUserInfo.role === 'user') { // for driver
         this.bookingService.ConfirmVehicleAcceptanceByDriver(body).subscribe((res: any) => {

@@ -55,7 +55,6 @@ export class UserDashboardBookingComponent {
   totalData: any = 0;
   currentPage: any = 1;
   activeTab: any = '';
-  activeTabName: any = '';
   editInfo: any = {};
   booktabs: any = []
   isShowCancellation: any = false;
@@ -104,14 +103,12 @@ export class UserDashboardBookingComponent {
     }
     this.gs.isSpinnerShow = true;
     this.bookingService.GetAllBookings(body).subscribe((res: any) => {
-      console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
-      this.tableData = res?.bookingMatches || [];
-      this.tempTableData = JSON.parse(JSON.stringify(res?.bookingMatches)) || [];
-      this.totalData = res?.viewModel?.totalCount || 0;
-      this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
-      let tabName = this.booktabs.find((item: any) => item.name === this.activeTab)?.name;
-      this.activeTabName = tabName;
+      if (res.response && res.response.statusCode == "200") {
+        this.tableData = res.gridList;
+        this.totalData = res?.viewModel?.totalCount || 0;
+        this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
+      }
     });
   }
 
@@ -129,24 +126,7 @@ export class UserDashboardBookingComponent {
   changeBookTab(row: any) {
     this.activeTab = row.name;
     console.log("bookingStatus >>>>", row);
-
-
     this.getTableData();
-    // if (this.activeTab == "All Bookings") {
-    // } else {
-    //   this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == row.name);
-    //   this.totalData = this.tableData.length;
-    //   let tabName = this.booktabs.find((item: any) => item.name === this.activeTab)?.name;
-    //   this.activeTabName = tabName;
-    // }
-    // let params = {
-    //   activeTab: this.activeTab
-    // }
-    // this.router.navigate([], {
-    //   relativeTo: this.route,
-    //   queryParams: params,
-    //   queryParamsHandling: "merge"
-    // });
   }
 
   pageChanged(event: any) {
@@ -252,10 +232,6 @@ export class UserDashboardBookingComponent {
     modalRef.componentInstance.title = "Are you sure you want to move to " + status + " ?";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        const oldStatus = JSON.parse(JSON.stringify(data.bookingStatus));
-        // data.bookingStatus = status;
-        // this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
-        // this.totalData = this.tableData.length;
         if (status === "Delivered") {
           this.InitiateDeliverVehicleToDriver(data);
         }
@@ -263,38 +239,9 @@ export class UserDashboardBookingComponent {
           this.singleBookingDetail = data;
           this.goToChecklist();
         }
-        // this.openOtpVerification(data, status);
       }
     }, () => { });
     return;
-  }
-
-  openOtpVerification(data: any, status: any) {
-    const modalRef = this.modalService.open(OtpVerificationModalComponent, {
-      centered: true
-    });
-    modalRef.result.then((res: any) => {
-      if (res.confirmed) {
-        console.log("status >>>>", status);
-        const oldStatus = JSON.parse(JSON.stringify(data.bookingStatus));
-        data.bookingStatus = status;
-        this.tableData = this.tempTableData.filter((item: any) => item.bookingStatus == oldStatus);
-        this.totalData = this.tableData.length;
-        this.openVerificationSuccess(status);
-      }
-    }, () => {
-    });
-  }
-
-  openVerificationSuccess(status: any) {
-    const modalRef = this.modalService.open(VerificationSuccessModalComponent, {
-      centered: true
-    });
-    modalRef.componentInstance.title = "Booking status updated successfully.";
-    modalRef.result.then((res: any) => {
-
-    }, () => {
-    });
   }
 
   InitiateDeliverVehicleToDriver(item: any) {
@@ -447,7 +394,7 @@ export class UserDashboardBookingComponent {
           },
         });
       }
-      this.excelExport.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTabName)
+      this.excelExport.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTab)
     });
   }
 }

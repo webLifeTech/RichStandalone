@@ -111,9 +111,8 @@ export class PricingComponent {
     this.gs.isSpinnerShow = true;
     this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.package) {
+      if (response.response && response.response.statusCode == "200") {
         this.currentPlan = response.package;
-        console.log("currentPlan ----->>>>>", this.currentPlan);
       }
       this.getMasterPackageType();
     }, err => {

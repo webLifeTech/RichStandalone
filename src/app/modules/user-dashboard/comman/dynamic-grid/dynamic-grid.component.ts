@@ -213,8 +213,7 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
-        console.log("getDriverDetails >>>>>>>>", response);
-        if (response && response.userId) {
+        if (response && response.response.statusCode == "200" && response.userId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
@@ -234,7 +233,7 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+        if (response.response && response.response.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
@@ -254,8 +253,8 @@ export class DynamicGridComponent {
         branchPersonNum: item.branchPersonNum
       }
 
-      this.branchService.GetCompanyBranchByBrnachId(body).subscribe(async (response: any) => {
-        if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      this.branchService.GetCompanyBranchByBranchId(body).subscribe(async (response: any) => {
+        if (response.response && response.response.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });

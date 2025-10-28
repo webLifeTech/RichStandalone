@@ -109,26 +109,32 @@ export class UserDashboardPaymentsComponent {
       this.gs.isSpinnerShow = true;
       this.paymentService.GetAllBookingPayments(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        this.tableData = response.bookingpaymentMatches;
-        this.totalData = response.viewModel?.totalCount;
+        if (response.response && response.response.statusCode == "200") {
+          this.tableData = response.gridList;
+          this.totalData = response.viewModel?.totalCount;
+        }
       });
     }
 
     if (this.activeTab == "Pending Confirmation") {
       this.gs.isSpinnerShow = true;
-      this.adminService.GetPendingConfirmationBookingPaymentsForAdmin(body).subscribe((response: any) => {
+      this.adminService.GetPendingConfirmationBookingPayments(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        this.tableData = response.bookingpaymentMatches;
-        this.totalData = response.viewModel?.totalCount;
+        if (response.response && response.response.statusCode == "200") {
+          this.tableData = response.gridList;
+          this.totalData = response.viewModel?.totalCount;
+        }
       });
     }
 
     if (this.activeTab == "Pending Clearance") {
       this.gs.isSpinnerShow = true;
-      this.adminService.GetPendingClearanceBookingPaymentsForAdmin(body).subscribe((response: any) => {
+      this.adminService.GetPendingClearanceBookingPayments(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        this.tableData = response.bookingpaymentMatches;
-        this.totalData = response.viewModel?.totalCount;
+        if (response.response && response.response.statusCode == "200") {
+          this.tableData = response.gridList;
+          this.totalData = response.viewModel?.totalCount;
+        }
       });
     }
   }
@@ -152,7 +158,7 @@ export class UserDashboardPaymentsComponent {
     this.gs.isSpinnerShow = true;
     this.paymentService.GetBookingByBookingRefNo(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      if (response.response && response.response.statusCode == "200") {
         const modalRef = this.modalService.open(InvoiceModalComponent, {
           size: 'xl'
         });
@@ -213,7 +219,7 @@ export class UserDashboardPaymentsComponent {
       "endDate": endDate,
     };
     const endpoint: any = {
-      "All Payments": this.gs.loggedInUserInfo.role == 'admin' ? "ExportAllBookingPaymentsToExcel" : "ExportUserBookingPaymentsToExcel",
+      "All Payments": (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') ? "ExportAllBookingPaymentsToExcel" : "ExportUserBookingPaymentsToExcel",
       "Pending Confirmation": "ExportAllPendingConfirmationPaymentsToExcel",
       "Pending Clearance": "ExportAllPendingClearancePaymentsToExcel",
     }

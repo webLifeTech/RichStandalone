@@ -29,8 +29,10 @@ export class CabListLeftSidebarComponent {
   pageSize: number = 5;
   aggregateFilters: any = [];
   vehicleSearchResult: any = {
-    vehicleMatches: [],
-    ViewModel: {},
+    searchList: [],
+    viewModel: {},
+    // vehicleMatches: [],
+    // ViewModel: {},
     aggregateFilters: {},
   };
   reLoadDetails: boolean = false;
@@ -131,7 +133,7 @@ export class CabListLeftSidebarComponent {
       this.gs.isSpinnerShow = true;
       this.cabService.VehicleSearchResult(Body).subscribe((res: any) => {
         this.gs.isSpinnerShow = false;
-        if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+        if (res.response && res.response.statusCode == "200") {
           if (!this.aggregateFilters.length || type == 'main-search') {
             const aggFilters = JSON.parse(res.aggregateFilters);
             this.aggregateFilters = Object.entries(aggFilters).map(([key, value]: any) => ({ ...value, key })).sort((a, b) => a.position - b.position);
@@ -167,8 +169,8 @@ export class CabListLeftSidebarComponent {
           this.vehicleSearchResult = res;
         } else {
           this.vehicleSearchResult = {
-            vehicleMatches: [],
-            ViewModel: {},
+            searchList: [],
+            viewModel: {},
           };
         }
         this.reLoadDetails = true;
@@ -202,7 +204,7 @@ export class CabListLeftSidebarComponent {
       this.gs.isSpinnerShow = true;
       this.cabService.DriverSearchResult(Body).subscribe((res: any) => {
         this.gs.isSpinnerShow = false;
-        if (res && res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
+        if (res.response && res.response.statusCode == "200") {
           if (!this.aggregateFilters.length || type == 'main-search') {
             const aggFilters = JSON.parse(res.aggregateFilters);
             this.aggregateFilters = Object.entries(aggFilters).map(([key, value]: any) => ({ ...value, key })).sort((a, b) => a.position - b.position);
@@ -227,14 +229,15 @@ export class CabListLeftSidebarComponent {
             });
 
           }
-          this.vehicleSearchResult = {
-            vehicleMatches: res.driverMatches,
-            ...res
-          };
+          this.vehicleSearchResult = res;
+          // this.vehicleSearchResult = {
+          //   vehicleMatches: res.driverMatches,
+          //   ...res
+          // };
         } else {
           this.vehicleSearchResult = {
-            vehicleMatches: [],
-            ViewModel: {},
+            searchList: [],
+            viewModel: {},
           };
         }
         this.reLoadDetails = true;

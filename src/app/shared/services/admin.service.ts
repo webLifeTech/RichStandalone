@@ -13,36 +13,36 @@ export class AdminService {
   baseUrl1 = environment.apiUrl1;
   constructor(private http: HttpClient) { }
 
-  // Admin -> GetAllVehicleOwnersForAdmin
-  public GetAllVehicleOwnersForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllVehicleOwnersForAdmin`, data).pipe(
+  // Admin -> GetAllVehicleOwners
+  public GetAllVehicleOwners(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllVehicleOwners`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Admin -> GetAllOwnerVehiclesForAdmin
-  public GetAllOwnerVehiclesForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllOwnerVehiclesForAdmin`, data).pipe(
+  // Admin -> GetAllOwnerVehicles
+  public GetAllOwnerVehicles(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllOwnerVehicles`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Admin -> GetAllUsersForAdmin
-  public GetAllUsersForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllUsersForAdmin`, data).pipe(
+  // Admin -> GetAllUsers
+  public GetAllUsers(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllUsers`, data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Admin -> GetAllBookingOverviewForAdmin
-  public GetAllBookingOverviewForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllBookingOverviewForAdmin`, data).pipe(
+  // Admin -> GetAllBookingOverview
+  public GetAllBookingOverview(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetAllBookingOverview`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -51,7 +51,7 @@ export class AdminService {
 
   // Admin -> GetAdminDashboardDetails
   public GetAdminDashboardDetails(dataParams: any) {
-    const params = new HttpParams().set('filter', dataParams.filter)
+    const params = new HttpParams().set('filter', dataParams.filter).set('type', dataParams.type)
     return this.http.get(this.baseUrl1 + `TLHUB/Admin/GetAdminDashboardDetails`, { params }).pipe(
       map((res: any) => {
         return res;
@@ -76,9 +76,9 @@ export class AdminService {
     );
   }
 
-  // Admin -> GetBookingRefundDetailsForAdmin
-  public GetBookingRefundDetailsForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetBookingRefundDetailsForAdmin`, data).pipe(
+  // Admin -> GetBookingRefundDetails
+  public GetBookingRefundDetails(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Admin/GetBookingRefundDetails`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -94,18 +94,18 @@ export class AdminService {
     );
   }
 
-  // Admin -> GetPendingConfirmationBookingPaymentsForAdmin
-  public GetPendingConfirmationBookingPaymentsForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingConfirmationBookingPaymentsForAdmin', data).pipe(
+  // Admin -> GetPendingConfirmationBookingPayments
+  public GetPendingConfirmationBookingPayments(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingConfirmationBookingPayments', data).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  // Admin -> GetPendingClearanceBookingPaymentsForAdmin
-  public GetPendingClearanceBookingPaymentsForAdmin(data: any) {
-    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingClearanceBookingPaymentsForAdmin', data).pipe(
+  // Admin -> GetPendingClearanceBookingPayments
+  public GetPendingClearanceBookingPayments(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/GetPendingClearanceBookingPayments', data).pipe(
       map((res: any) => {
         return res;
       })

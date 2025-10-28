@@ -111,10 +111,9 @@ export class UserReviewsComponent {
 
     this.gs.isSpinnerShow = true;
     this.reviewService.GetAllRiskReviews(Body).subscribe((res: any) => {
-      console.log("GetAllRiskReviews >>>>>", res);
       this.gs.isSpinnerShow = false;
-      if (res.responseResultDtos && res.responseResultDtos.statusCode == "200") {
-        this.tableData = res.reviewsLists;
+      if (res.response && res.response.statusCode == "200") {
+        this.tableData = res.gridList;
         this.totalData = res.viewModel.totalCount;
       } else {
         this.tableData = [];

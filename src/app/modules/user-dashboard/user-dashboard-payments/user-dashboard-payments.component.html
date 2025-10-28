@@ -1,6 +1,6 @@
 <div class="content">
   <div class="container">
-    <div class="row" *ngIf="gs.loggedInUserInfo.role == 'admin'">
+    <div class="row" *ngIf="gs.loggedInUserInfo.role == 'admin' || gs.loggedInUserInfo.role == 'Accountant'">
       <div class="col-lg-12">
         <div class="sorting-info">
           <div class="wallet-section">
@@ -23,7 +23,7 @@
               <div class="col-md-3 d-flex">
                 <div class="balance-inner credit-info mb-0">
                   <h6>{{200 | currencyPipe: gs.currency}}</h6>
-                  <p>Under Clearance</p>
+                  <p>Pending Clearance</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
@@ -41,12 +41,15 @@
     <div class="content-header">
       <div class="row">
         <div class="col-lg-4">
-          <h4>{{gs.loggedInUserInfo.role == 'admin' ? 'Payments':'My Payments'}}</h4>
+          <h4>
+            {{gs.loggedInUserInfo.role == 'admin' &&
+            gs.loggedInUserInfo.role == 'Accountant' ? 'Payments':'My Payments'}}
+          </h4>
         </div>
       </div>
     </div>
 
-    <div class="row" *ngIf="gs.loggedInUserInfo.role == 'admin'">
+    <div class="row" *ngIf="gs.loggedInUserInfo.role == 'admin' || gs.loggedInUserInfo.role == 'Accountant'">
       <div class="col-lg-12">
         <div class="sorting-info">
           <div class="row d-flex align-items-center">

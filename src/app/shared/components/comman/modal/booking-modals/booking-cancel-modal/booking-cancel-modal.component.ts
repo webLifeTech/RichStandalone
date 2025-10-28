@@ -91,8 +91,7 @@ export class BookingCancelModalComponent {
       bookingRefNo: this.bookingRefNo,
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      console.log("GetBookingByBookingRefNo >>>>>", response);
-      if (response && response.responseResultDtos && response.responseResultDtos.statusCode == "200") {
+      if (response.response && response.response.statusCode == "200") {
         this.bookingDetails = response;
         if (!this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Driver' || this.bookingDetails.isBooker && this.bookingDetails.bookingDetails?.riskType == 'Vehicle') {
           this.isShowOwnerDetails = true;

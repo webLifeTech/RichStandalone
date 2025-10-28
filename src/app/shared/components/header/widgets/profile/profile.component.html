@@ -19,11 +19,13 @@
       <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
       Admin Dashboard
     </a>
-    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goDashBoard()">
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'Accountant'" class="dropdown-item"
+      (click)="goDashBoard()">
       <img src="assets/images/icon/dashboard/dashboard-icon.svg" width="24" alt="Dashboard" />
       Dashboard
     </a>
-    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goSettings()">
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'Accountant'" class="dropdown-item"
+      (click)="goSettings()">
       <img src="assets/images/icon/dashboard/settings-icon.svg" width="24" alt="Settings" />
       Settings
     </a>
@@ -39,14 +41,19 @@
         </div>
       </div>
     </a>
-    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'user' && gs.loggedInUserInfo.role !== 'Vendor'"
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'user' && gs.loggedInUserInfo.role !== 'Vendor' && gs.loggedInUserInfo.role !== 'Accountant'"
       class="dropdown-item" (click)="goConfiguration()">
       <img src="assets/images/icon/dashboard/booking-icon.svg" width="24" alt="Settings" />
       Cars Status
     </a>
-    <a *ngIf="gs.loggedInUserInfo.role !== 'admin'" class="dropdown-item" (click)="goActivities()">
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'Accountant'" class="dropdown-item"
+      (click)="goActivities()">
       <img src="assets/images/icon/dashboard/activities.svg" width="24" alt="Settings" />
       My Activities
+    </a>
+    <a *ngIf="gs.loggedInUserInfo.role === 'Accountant'" class="dropdown-item" (click)="goPayments()">
+      <img src="assets/images/icon/dashboard/payment-icon.svg" width="24" alt="Payments" />
+      Payments
     </a>
     <a class="dropdown-item" (click)="logOut()">
       <img src="assets/images/icon/logout.svg" width="24" alt="Logout" />

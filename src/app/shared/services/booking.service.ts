@@ -154,7 +154,7 @@ export class BookingService {
 
   // Master -> GetMasterInspectionLineItems
   public GetMasterInspectionLineItems(dataParams: any) {
-    const params = new HttpParams().set('inspectiontype', dataParams.inspectiontype);
+    const params = new HttpParams().set('userId', dataParams.userId).set('inspectiontype', dataParams.inspectiontype);
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectionLineItems', { params }).pipe(
       map((res: any) => {
         return res;
@@ -164,7 +164,7 @@ export class BookingService {
 
   // Master -> GetPostMasterInspectionLineItems
   public GetPostMasterInspectionLineItems(dataParams: any) {
-    const params = new HttpParams().set('bookingId', dataParams.bookingId);
+    const params = new HttpParams().set('userId', dataParams.userId).set('bookingId', dataParams.bookingId);
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetPostMasterInspectionLineItems', { params }).pipe(
       map((res: any) => {
         return res;
