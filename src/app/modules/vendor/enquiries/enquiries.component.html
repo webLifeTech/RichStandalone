@@ -154,6 +154,11 @@
                 </tbody>
               </table>
             </div>
+            <div *ngIf="!tableData.length" class="col-md-12">
+              <p class="text-center mt-3">
+                <b>No records found</b>
+              </p>
+            </div>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
           </div>
         </div>

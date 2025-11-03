@@ -111,4 +111,14 @@ export class AdminService {
       })
     );
   }
+
+  // Admin -> GetTLHPaymentOverview
+  public GetTLHPaymentOverview(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + `TLHUB/Admin/GetTLHPaymentOverview`, { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

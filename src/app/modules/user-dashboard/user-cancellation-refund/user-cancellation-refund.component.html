@@ -128,7 +128,7 @@
                 <td class="text-center">
                   <span>{{data.refundAmount | currencyPipe: gs.currency}}</span>
                 </td>
-                <td *ngIf="gs.loggedInUserInfo['role'] === 'admin'">
+                <td *ngIf="gs.loggedInUserInfo.role === 'admin' || gs.loggedInUserInfo.role == 'Accountant'">
                   <span [ngClass]="{
                           'badge-light-success': data.refundStatus === 'Approved',
                           'badge-light-warning': data.refundStatus === 'Pending',

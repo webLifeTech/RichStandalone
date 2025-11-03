@@ -224,24 +224,24 @@
                             <span class="ms-2">Delivered</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatus === 'Start Service' && gs.loggedInUserInfo.role !== 'user'"
+                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatusCd == '4' && gs.loggedInUserInfo.role !== 'user'"
                             (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatusRemarksCd == '5' && data.bookingStatus === 'Start Service' && gs.loggedInUserInfo.role === 'user'"
+                            *ngIf="data.bookingStatusRemarksCd == '5' && data.bookingStatusCd == '4' && (gs.loggedInUserInfo.role === 'user' || gs.loggedInUserInfo.role === 'user_4')"
                             (click)="changeStatus(data,'Accept')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Accept</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatus === 'Pending Request' || data.bookingStatus === 'Confirmed' || data.bookingStatus === 'Delivered'"
+                            *ngIf="data.bookingStatusCd == '1' || data.bookingStatusCd == '2' || data.bookingStatus == 'Delivered'"
                             (click)="bookingCancel(data)" type="button" mat-menu-item>
                             <i class="feather icon-x-square"></i>
                             <span class="ms-2">Cancel Booking</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'End Service' && data.isBooker && !data.isReviewAdded"
+                          <button *ngIf="data.bookingStatusCd == '6' && data.isBooker && !data.isReviewAdded"
                             (click)="writeReview(data)" type="button" mat-menu-item>
                             <i class="feather icon-star"></i>
                             <span class="ms-2">Write Review</span>

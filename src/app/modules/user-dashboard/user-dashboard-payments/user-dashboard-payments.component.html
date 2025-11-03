@@ -10,25 +10,25 @@
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner credit-info mb-0">
-                  <h6>{{377 | currencyPipe: gs.currency}}</h6>
+                  <h6>{{walletInfo.availableBalance | currencyPipe: gs.currency}}</h6>
                   <p>TLH Account Balance</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner debit-info mb-0">
-                  <h6>{{120 | currencyPipe: gs.currency}}</h6>
+                  <h6>{{walletInfo.pendingConfirmation | currencyPipe: gs.currency}}</h6>
                   <p>Pending Confirmation</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner credit-info mb-0">
-                  <h6>{{200 | currencyPipe: gs.currency}}</h6>
+                  <h6>{{walletInfo.pendingClearance | currencyPipe: gs.currency}}</h6>
                   <p>Pending Clearance</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner debit-info mb-0">
-                  <h6>{{50 | currencyPipe: gs.currency}}</h6>
+                  <h6>{{walletInfo.pendingRefund | currencyPipe: gs.currency}}</h6>
                   <p>Pending Refund</p>
                 </div>
               </div>
@@ -42,7 +42,7 @@
       <div class="row">
         <div class="col-lg-4">
           <h4>
-            {{gs.loggedInUserInfo.role == 'admin' &&
+            {{gs.loggedInUserInfo.role == 'admin' ||
             gs.loggedInUserInfo.role == 'Accountant' ? 'Payments':'My Payments'}}
           </h4>
         </div>
@@ -227,7 +227,7 @@
                       <td>
                         <span [ngClass]="{
                             'badge-light-success': data.paymentStatus === 'Cleared',
-                            'badge-light-warning': data.paymentStatus === 'Pending Clearance',
+                            'badge-light-warning': data.paymentStatus === 'Pending Confirmation' || data.paymentStatus === 'Pending Clearance',
                             'badge-light-danger':data.paymentStatus === 'Failed',
                             'badge-light-secondary': data.paymentStatus === 'Pending Disburse'
                              }" class="badge">{{data.paymentStatus}}</span>
@@ -241,21 +241,26 @@
                             <i class="feather icon-eye"></i>
                             <span class="ms-2">View Invoice</span>
                           </button>
-                          <button *ngIf="data.admin_status === 'Pending Confirm'" (click)="changeStatus(data,'Confirm')"
-                            type="button" mat-menu-item>
+                          <button *ngIf="data.paymentStatus === 'Pending Confirmation'"
+                            (click)="changeStatus(data,'Confirm')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
-                            <span class="ms-2">Confirm</span>
+                            <span class="ms-2">Payment Confirm</span>
                           </button>
-                          <button *ngIf="data.admin_status === 'Pending Disburse'"
+                          <button *ngIf="data.paymentStatus === 'Pending Clearance'"
                             (click)="changeStatus(data,'Disburse')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
-                            <span class="ms-2">Disburse</span>
+                            <span class="ms-2">Payment Disburse</span>
                           </button>
                         </mat-menu>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div *ngIf="!tableData.length" class="col-md-12">
+                <p class="text-center mt-3">
+                  <b>No records found</b>
+                </p>
               </div>
               <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
             </div>

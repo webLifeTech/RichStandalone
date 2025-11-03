@@ -58,6 +58,7 @@ export class UserDashboardPaymentsComponent {
   activeTab: any = "";
   tempTableData: any = [];
   isRefundTab: boolean = false;
+  walletInfo: any = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -82,6 +83,7 @@ export class UserDashboardPaymentsComponent {
         this.isRefundTab = false;
         this.getTableData();
       }
+      this.getTLHPaymentOverview();
     })
   }
 
@@ -137,10 +139,24 @@ export class UserDashboardPaymentsComponent {
         }
       });
     }
+
+  }
+
+  getTLHPaymentOverview() {
+    if (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') {
+      this.adminService.GetTLHPaymentOverview({
+        "userId": this.gs.loggedInUserInfo.userId,
+      }).subscribe((response: any) => {
+        if (response) {
+          this.walletInfo = JSON.parse(response);
+        }
+      });
+    }
   }
 
   searchData() {
     this.getTableData();
+    this.getTLHPaymentOverview();
   }
 
   pageChanged(event: any) {
@@ -186,15 +202,18 @@ export class UserDashboardPaymentsComponent {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
-    modalRef.componentInstance.title = "Are you sure you want to move to " + status + " ?";
+    modalRef.componentInstance.title = status == "Confirm" ? "Are you sure you received the payment in TLH account?" : "Are you sure you want to payment disburse ?";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        const oldStatus = JSON.parse(JSON.stringify(data.admin_status));
-        data.admin_status = status == "Confirm" ? "Pending Disburse" : "Cleared";
-        this.tableData = this.tempTableData.filter((item: any) => item.admin_status == oldStatus);
-        this.totalData = this.tableData.length;
-
-        this.toast.successToastr("Payment status updated");
+        // const oldStatus = JSON.parse(JSON.stringify(data.admin_status));
+        // data.admin_status = status == "Confirm" ? "Pending Disburse" : "Cleared";
+        // this.tableData = this.tempTableData.filter((item: any) => item.admin_status == oldStatus);
+        // this.totalData = this.tableData.length;
+        if (status == "Confirm") {
+          this.toast.successToastr("Payment confirm has been received in TLH account.");
+        } else {
+          this.toast.successToastr("Payment disbursed successfully.");
+        }
       }
     }, () => { });
     return;

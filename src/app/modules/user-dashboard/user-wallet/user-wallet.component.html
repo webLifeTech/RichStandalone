@@ -6,7 +6,8 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-5 col-md-12 d-flex">
+      <div class="col-md-12 d-flex"
+        [ngClass]="(gs.loggedInUserInfo.role == 'admin' || gs.loggedInUserInfo.role == 'Accountant') ? 'col-lg-12' : 'col-lg-5'">
         <div class="card wallet-card flex-fill">
           <div class="card-body">
             <div class="balance-info">
@@ -25,13 +26,13 @@
                 <div class="row">
                   <div class="col-md-6 d-flex">
                     <div class="balance-inner credit-info">
-                      <h6>{{walletDetails.withdrawalAmount | currencyPipe: gs.currency}}</h6>
+                      <h6>{{(walletDetails.withdrawalAmount|| 0) | currencyPipe: gs.currency}}</h6>
                       <p>Withdrawal Balance</p>
                     </div>
                   </div>
                   <div class="col-md-6 d-flex">
                     <div class="balance-inner debit-info">
-                      <h6>{{walletDetails.pendingClearancePayment | currencyPipe: gs.currency}}</h6>
+                      <h6>{{(walletDetails.pendingClearancePayment|| 0) | currencyPipe: gs.currency}}</h6>
                       <p>Pending Clearance Payment</p>
                     </div>
                   </div>
@@ -59,7 +60,8 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-7 col-md-12 d-flex">
+      <div *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'Accountant'"
+        class="col-lg-7 col-md-12 d-flex">
         <div class="card your-card flex-fill">
           <div class="card-body">
             <div class="wallet-header">
@@ -246,6 +248,11 @@
                   </ng-container>
                 </tbody>
               </table>
+            </div>
+            <div *ngIf="!tableData.length" class="col-md-12">
+              <p class="text-center mt-3">
+                <b>No records found</b>
+              </p>
             </div>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
           </div>

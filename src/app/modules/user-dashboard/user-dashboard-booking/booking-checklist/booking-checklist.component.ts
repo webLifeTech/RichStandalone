@@ -79,7 +79,7 @@ export class BookingChecklistComponent {
 
   ngOnInit() {
     this.GetMasterInspectiontypes();
-    if (this.gs.loggedInUserInfo.role === 'user') {
+    if (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') {
       this.GetMasterInspectionLineItems();
     } else {
       this.GetPostMasterInspectionLineItems();
@@ -97,7 +97,7 @@ export class BookingChecklistComponent {
 
   GetMasterInspectionLineItems() {
     const body = {
-      "inspectiontype": this.gs.loggedInUserInfo.role === 'user' ? "PRE_RENTAL" : "POST_RENTAL",
+      "inspectiontype": (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') ? "PRE_RENTAL" : "POST_RENTAL",
       "userId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
@@ -181,7 +181,7 @@ export class BookingChecklistComponent {
     this.submitted = true;
     if (this.inspectionForm.valid) {
       let checkListItems: any = [];
-      const rentalType = this.gs.loggedInUserInfo.role === 'user' ? "PRE_RENTAL" : "POST_RENTAL"
+      const rentalType = (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') ? "PRE_RENTAL" : "POST_RENTAL"
       const findIt = this.inspectionTypes.find((i: any) => i.code === rentalType);
 
       let inspectionTypeId = findIt.id;
@@ -215,7 +215,7 @@ export class BookingChecklistComponent {
         "items": checkListItems
       }
       this.gs.isSpinnerShow = true;
-      if (this.gs.loggedInUserInfo.role === 'user') { // for driver
+      if (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') { // for driver
         this.bookingService.ConfirmVehicleAcceptanceByDriver(body).subscribe((res: any) => {
           console.log("ConfirmVehicleAcceptanceByDriver >>>>>", res);
           this.gs.isSpinnerShow = false;

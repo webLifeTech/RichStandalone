@@ -97,7 +97,7 @@ export class UserReviewsComponent {
 
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     let Body = {
-      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "userId": this.gs.loggedInUserInfo.userId,
       "riskType": null,
       "reviewType": this.activeTab == 'i_gave' ? "Given" : "Received",
       "pageNumber": this.currentPage,

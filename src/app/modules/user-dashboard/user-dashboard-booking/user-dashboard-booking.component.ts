@@ -85,7 +85,7 @@ export class UserDashboardBookingComponent {
   getTableData() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
-      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "userId": this.gs.loggedInUserInfo.userId,
       "bookingStatus": JSON.stringify([this.activeTab]),
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
@@ -247,7 +247,7 @@ export class UserDashboardBookingComponent {
   InitiateDeliverVehicleToDriver(item: any) {
     const body = {
       "bookingId": item.bookingId,
-      "userId": this.gs.loggedInUserInfo.userId, // "c5c9b193-64ec-46ae-b1a1-f646bc1e0933" // this.gs.loggedInUserInfo.userId
+      "userId": this.gs.loggedInUserInfo.userId,
       "riskId": item.riskId,
       "riskType": item.riskType
     }
