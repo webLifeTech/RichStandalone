@@ -15,6 +15,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-user-cars-listing',
@@ -80,11 +81,14 @@ export class UserCarsListingComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
+    this.roleService.getButtons("AVEH");
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Vehicles";
       this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
+      this.getGridTabsDetails();
       this.getTableData();
     })
   }
@@ -105,10 +109,12 @@ export class UserCarsListingComponent {
       this.gs.isSpinnerShow = false;
       this.tableData = [];
       if (response.response && response.response.statusCode == "200") {
-        response.gridList[0].isOpen = true;
+        if (response.gridList.length) {
+          response.gridList[0].isOpen = true;
+        }
         this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
-        this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
+        // this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
         this.getOwnerVehicles(this.tableData[0].userId)
       } else {
         this.toast.errorToastr(response.message);
@@ -138,6 +144,16 @@ export class UserCarsListingComponent {
         this.toast.errorToastr(response.message);
       }
     });
+  }
+
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "37",
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.tabs = response || [];
+    })
   }
 
   selectStatus() {

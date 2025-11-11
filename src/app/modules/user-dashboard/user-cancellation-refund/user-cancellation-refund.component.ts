@@ -17,6 +17,7 @@ import { BookingDetailsModalComponent } from '../../../shared/components/comman/
 import { RefundApproveRejectModalComponent } from '../../../shared/components/comman/modal/booking-modals/refund-approve-reject-modal/refund-approve-reject-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-user-cancellation-refund',
@@ -58,8 +59,10 @@ export class UserCancellationRefundComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
+    this.roleService.getButtons("PAYM");
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
       this.getMasterRefundStatus();

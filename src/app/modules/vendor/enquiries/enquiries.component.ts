@@ -68,16 +68,16 @@ export class EnquiriesComponent {
 
   constructor(
     private route: ActivatedRoute,
-    public getPer: RolePermissionService,
     public cabService: CabService,
     public gs: GlobalService,
     private vendorService: VendorServService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
+    this.roleService.getButtons("ENQ");
     this.route.queryParams.subscribe((params) => {
       this.getCategories();
-
     })
   }
 

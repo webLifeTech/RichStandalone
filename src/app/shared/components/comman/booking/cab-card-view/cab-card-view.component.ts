@@ -135,7 +135,7 @@ export class CabCardViewComponent {
     this.gs.lastSearch = searchObj;
 
     let params = {
-      type: "car",
+      type: this.type,
     }
     this.router.navigate(['/cab/booking/booking', this.type === 'car' ? details.vehicleId : details.driverId, details.summaryId], {
       queryParams: params,

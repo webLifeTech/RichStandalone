@@ -50,10 +50,18 @@
               <input type="text" class="form-control" placeholder="1000">
             </div> -->
             <div class="wallet-btn">
-              <a class="btn" (click)="paymentAction('add')">
+              <!-- <a *ngIf="roleService.permissions['WSEARCH']"
+                [class]="roleService.permissions['WSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                [title]="roleService.permissions['WSEARCH'].Name">
+                <i [class]="roleService.permissions['WSEARCH'].ActionIcon"></i>
+                {{roleService.permissions['WSEARCH'].Name}}
+              </a> -->
+              <a *ngIf="roleService.permissions['WADD']" [class]="roleService.permissions['WADD'].Class || 'btn'"
+                [title]="roleService.permissions['WADD'].Name" (click)="paymentAction('add')">
                 Add Payment
               </a>
-              <a class="btn ms-3" (click)="paymentAction('withdrawal')">
+              <a *ngIf="roleService.permissions['WWITH']" [class]="roleService.permissions['WWITH'].Class || 'btn ms-3'"
+                [title]="roleService.permissions['WWITH'].Name" (click)="paymentAction('withdrawal')">
                 Withdrawal Payment
               </a>
             </div>
@@ -125,10 +133,10 @@
         <div class="card book-card flex-fill mb-0 mt-4">
           <div class="card-header">
             <div class="row align-items-center">
-              <div class="col-md-5">
-                <h4>Wallet Usage History</h4>
+              <div class="col-md-4">
+                <h4>Wallet Usage History <span>{{totalData}}</span></h4>
               </div>
-              <div class="col-md-7 text-md-end">
+              <div class="col-md-8 text-md-end">
                 <div class="table-search">
                   <div class="mb-1 me-3">
                     <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
@@ -143,12 +151,20 @@
                       </label>
                     </div>
                   </div>
-                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                    Search
+                  <a *ngIf="roleService.permissions['WSEARCH']"
+                    [class]="roleService.permissions['WSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                    [title]="roleService.permissions['WSEARCH'].Name" (click)="searchData()">
+                    <i [class]="roleService.permissions['WSEARCH'].ActionIcon"></i>
+                    {{roleService.permissions['WSEARCH'].Name}}
                   </a>
-                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
-                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                    Export
+                  <button *ngIf="roleService.permissions['WEXP']"
+                    [class]="roleService.permissions['WEXP'].Class || 'btn btn-add'"
+                    [title]="roleService.permissions['WEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                    (click)="exportToExcel()">
+                    <i [class]="roleService.permissions['WEXP'].ActionIcon"></i>
+                    <img *ngIf="!roleService.permissions['WEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                      width="24px" class="me-2">
+                    {{roleService.permissions['WEXP'].Name}}
                   </button>
                 </div>
               </div>

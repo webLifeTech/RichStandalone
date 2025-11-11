@@ -43,7 +43,7 @@ export class UserReviewsComponent {
   dateTimeRange: any = "";
 
   editInfo: any = {};
-  public activeTab = 'i_gave';
+  public activeTab = '';
   activeTabName: any = '';
 
   booktabs: any = [
@@ -62,44 +62,54 @@ export class UserReviewsComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private datePipe: DatePipe,
+    public roleService: RolePermissionService,
   ) {
-    if (this.gs.loggedInUserInfo['role'] === 'user') {
-      this.booktabs = [
-        { title: "My Review of the Car Experience", value: "i_gave" },
-        { title: "Reviews from Car Owners", value: "my_driver" }
-      ]
-    }
-    if (this.gs.loggedInUserInfo['role'] === 'user_2') {
-      this.booktabs = [
-        { title: "My Review of the Driver's Experience", value: "i_gave" },
-        { title: "Reviews from Drivers", value: "my_car" }
-      ]
-    }
-    if (this.gs.loggedInUserInfo['role'] === 'user_3') {
-      this.booktabs = [
-        { title: "My Review of the Driver's Performance", value: "i_gave" },
-        { title: "Reviews from Drivers", value: "my_car" }
-      ]
-    }
-    if (this.gs.loggedInUserInfo['role'] === 'user_4') {
-      this.booktabs = [
-        { title: "My Review of the Driver's Service", value: "i_gave" },
-        { title: "Reviews from Car Owners", value: "my_driver" }
-      ]
-    }
+    // if (this.gs.loggedInUserInfo['role'] === 'user') {
+    //   this.booktabs = [
+    //     { title: "My Review of the Car Experience", value: "i_gave" },
+    //     { title: "Reviews from Car Owners", value: "my_driver" }
+    //   ]
+    // }
+    // if (this.gs.loggedInUserInfo['role'] === 'user_2') {
+    //   this.booktabs = [
+    //     { title: "My Review of the Driver's Experience", value: "i_gave" },
+    //     { title: "Reviews from Drivers", value: "my_car" }
+    //   ]
+    // }
+    // if (this.gs.loggedInUserInfo['role'] === 'user_3') {
+    //   this.booktabs = [
+    //     { title: "My Review of the Driver's Performance", value: "i_gave" },
+    //     { title: "Reviews from Drivers", value: "my_car" }
+    //   ]
+    // }
+    // if (this.gs.loggedInUserInfo['role'] === 'user_4') {
+    //   this.booktabs = [
+    //     { title: "My Review of the Driver's Service", value: "i_gave" },
+    //     { title: "Reviews from Car Owners", value: "my_driver" }
+    //   ]
+    // }
+    this.roleService.getButtons("RVS");
     this.route.queryParams.subscribe((params) => {
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "i_gave";
-      this.getTableData();
+      this.activeTab = params['activeTab'] ? params['activeTab'] : "";
+      this.getGridTabsDetails();
     })
   }
 
   getTableData() {
 
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
+
+    const pickType: any = {
+      "76": "Given",
+      "77": "Received",
+      "78": "Given",
+      "79": "Received",
+    }
+
     let Body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "riskType": null,
-      "reviewType": this.activeTab == 'i_gave' ? "Given" : "Received",
+      "reviewType": pickType[this.activeTab], // this.activeTab == 'i_gave' ? "Given" : "Received",
       "pageNumber": this.currentPage,
       "pagesize": this.pageSize,
       "globalSearch": this.searchDataValue?.trim() || "",
@@ -125,6 +135,18 @@ export class UserReviewsComponent {
     })
   }
 
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "22",
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.booktabs = response || [];
+      this.activeTab = this.booktabs[0].menuID;
+      this.getTableData();
+    })
+  }
+
   searchData() {
     this.getTableData();
   }
@@ -136,7 +158,7 @@ export class UserReviewsComponent {
   }
 
   changeBookTab(item: any) {
-    this.activeTab = item.value;
+    this.activeTab = item.menuID;
     this.getTableData();
   }
 

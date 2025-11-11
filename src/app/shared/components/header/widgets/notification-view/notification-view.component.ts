@@ -78,10 +78,6 @@ export class NotificationViewComponent {
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
     })
-
-    this.getPer.actionPermissions = {
-
-    }
   }
 
   getTableData() {

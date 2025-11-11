@@ -136,7 +136,9 @@ export class UserWishlistComponent {
         this.gs.isSpinnerShow = false;
         console.log("response >>>>>", response);
         if (response.response && response.response.statusCode == "200") {
-          response.gridList[0].isOpen = true;
+          if (response.gridList.length) {
+            response.gridList[0].isOpen = true;
+          }
           this.tableData = response.gridList;
           this.totalData = response.viewModel?.totalCount || 0;
           this.getCarOwnerVehicles(this.tableData[0].ownerId);

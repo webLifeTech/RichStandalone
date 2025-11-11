@@ -59,6 +59,8 @@ export class CabBookingComponent {
     this.searchObj.summaryId = route.snapshot.params['summaryId'];
     this.route.queryParams.subscribe((params) => {
       this.params = params;
+      console.log("this.params.type >>>>>", this.params.type);
+
       if (this.params.type == 'car') {
         this.getBookingVehicleDetails();
       }

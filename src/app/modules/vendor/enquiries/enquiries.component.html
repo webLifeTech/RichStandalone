@@ -46,8 +46,11 @@
             </div>
             <div class="col-lg-2 col-sm-12 col-12">
               <div class="search-btn text-center">
-                <a class="btn btn-solid color3 ms-2" (click)="resetFilter()">
-                  {{ 'global.reset' | translate }}
+                <a *ngIf="roleService.permissions['EQRESET']"
+                  [class]="roleService.permissions['EQRESET'].Class || 'btn btn-solid color3 ms-2'"
+                  [title]="roleService.permissions['EQRESET'].Name" (click)="resetFilter()">
+                  <i [class]="roleService.permissions['EQRESET'].ActionIcon"></i>
+                  {{roleService.permissions['EQRESET'].Name}}
                 </a>
               </div>
             </div>
@@ -75,30 +78,21 @@
                       </label>
                     </div>
                   </div>
-                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                    Search
+                  <a *ngIf="roleService.permissions['EQSEARCH']"
+                    [class]="roleService.permissions['EQSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                    [title]="roleService.permissions['EQSEARCH'].Name" (click)="searchData()">
+                    <i [class]="roleService.permissions['EQSEARCH'].ActionIcon"></i>
+                    {{roleService.permissions['EQSEARCH'].Name}}
                   </a>
-                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
-                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                    Export
+                  <button *ngIf="roleService.permissions['EQEXP']"
+                    [class]="roleService.permissions['EQEXP'].Class || 'btn btn-add'"
+                    [title]="roleService.permissions['EQEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                    (click)="exportToExcel()">
+                    <i [class]="roleService.permissions['EQEXP'].ActionIcon"></i>
+                    <img *ngIf="!roleService.permissions['EQEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                      width="24px" class="me-2">
+                    {{roleService.permissions['EQEXP'].Name}}
                   </button>
-
-                  <!-- <div id="tablefilter">
-                    <div class="dataTables_filter">
-                      <label>
-                        <input [(ngModel)]="searchFilter.globalSearch" type="search" class="form-control"
-                          placeholder="Search" />
-                      </label>
-                      <a class="btn btn-theme ms-2 me-2" (click)="searchData()">
-                        {{ 'global.search' | translate }}
-                      </a>
-                      <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel"
-                        [disabled]="!totalData">
-                        <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                        Export
-                      </button>
-                    </div>
-                  </div> -->
                 </div>
               </div>
             </div>

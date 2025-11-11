@@ -60,17 +60,20 @@
                       </label>
                     </div>
                   </div>
-                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                    Search
+                  <a *ngIf="roleService.permissions['AUSEARCH']"
+                    [class]="roleService.permissions['AUSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                    [title]="roleService.permissions['AUSEARCH'].Name" (click)="searchData()">
+                    <i [class]="roleService.permissions['AUSEARCH'].ActionIcon"></i>
+                    {{roleService.permissions['AUSEARCH'].Name}}
                   </a>
-                  <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
-                    class="btn btn-theme btn-add">
-                    <i class="feather icon-plus-circle"></i>
-                    Add Booking
-                  </a>
-                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
-                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                    Export
+                  <button *ngIf="roleService.permissions['AUEXP']"
+                    [class]="roleService.permissions['AUEXP'].Class || 'btn btn-add'"
+                    [title]="roleService.permissions['AUEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                    (click)="exportToExcel()">
+                    <i [class]="roleService.permissions['AUEXP'].ActionIcon"></i>
+                    <img *ngIf="!roleService.permissions['AUEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                      width="24px" class="me-2">
+                    {{roleService.permissions['AUEXP'].Name}}
                   </button>
                 </div>
               </div>

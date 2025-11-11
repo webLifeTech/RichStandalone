@@ -43,7 +43,7 @@
           <div class="card-header">
             <div class="row align-items-center">
               <div class="col-md-3">
-                <h4>{{activeTab}}</h4>
+                <h4>{{activeTab}} <span>{{totalData}}</span></h4>
               </div>
               <div class="col-md-9 text-md-end">
                 <div class="table-search">
@@ -60,16 +60,20 @@
                       </label>
                     </div>
                   </div>
-                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                    Search
+                  <a *ngIf="roleService.permissions['AVSEARCH']"
+                    [class]="roleService.permissions['AVSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                    [title]="roleService.permissions['AVSEARCH'].Name" (click)="searchData()">
+                    <i [class]="roleService.permissions['AVSEARCH'].ActionIcon"></i>
+                    {{roleService.permissions['AVSEARCH'].Name}}
                   </a>
-                  <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
-                    class="btn btn-theme btn-add"><i class="feather icon-plus-circle"></i>
-                    Add Booking
-                  </a>
-                  <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
-                    <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                    Export
+                  <button *ngIf="roleService.permissions['AVEXP']"
+                    [class]="roleService.permissions['AVEXP'].Class || 'btn btn-add'"
+                    [title]="roleService.permissions['AVEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                    (click)="exportToExcel()">
+                    <i [class]="roleService.permissions['AVEXP'].ActionIcon"></i>
+                    <img *ngIf="!roleService.permissions['AVEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                      width="24px" class="me-2">
+                    {{roleService.permissions['AVEXP'].Name}}
                   </button>
                 </div>
               </div>

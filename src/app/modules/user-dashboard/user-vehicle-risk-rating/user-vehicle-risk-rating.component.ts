@@ -59,10 +59,6 @@ export class UserVehicleRiskRatingComponent {
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
     })
-
-    this.getPer.actionPermissions = {
-
-    }
   }
 
   getTableData() {

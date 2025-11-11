@@ -502,6 +502,13 @@ export class UserDashboardKycComponent {
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
+  cancelVehicleInfo() {
+    this.isFormEdit = false;
+    this.gs.isModificationOn = false;
+    this.isVehicleInfoEdit = false;
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
 
   getKyc(item: any) {
     this.singleDetailInfo = item;

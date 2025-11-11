@@ -23,6 +23,7 @@ import { BookingChecklistComponent } from './booking-checklist/booking-checklist
 import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -74,10 +75,13 @@ export class UserDashboardBookingComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
+    this.roleService.getButtons("MYBK");
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
+      this.getGridTabsDetails();
       this.getTableData();
     })
   }
@@ -107,9 +111,19 @@ export class UserDashboardBookingComponent {
       if (res.response && res.response.statusCode == "200") {
         this.tableData = res.gridList;
         this.totalData = res?.viewModel?.totalCount || 0;
-        this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
+        // this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
       }
     });
+  }
+
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "21",
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.booktabs = response || [];
+    })
   }
 
   public searchData(): void {
@@ -260,6 +274,9 @@ export class UserDashboardBookingComponent {
       } else {
         this.toast.errorToastr(res.message);
       }
+    }, (err) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err.error.message);
     });
   }
 

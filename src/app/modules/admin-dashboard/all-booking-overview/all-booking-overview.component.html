@@ -32,7 +32,7 @@
                 </ul>
               </div>
             </div> -->
-              <div *ngIf="activeTypes === 'Vehicle'" class="col-lg-2 col-sm-12 col-12 text-end">
+              <div *ngIf="selectedMenuID == '41'" class="col-lg-2 col-sm-12 col-12 text-end">
                 <div class="filter-group">
                   <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
                     <ng-container *ngFor="let item of vehicleStatusList">
@@ -45,7 +45,7 @@
                 <div class="booking-lists justify-content-end d-flex">
                   <ul class="nav">
                     <li *ngFor="let item of bookTypes">
-                      <a [class.active]="activeTypes == item.value" (click)="changeTypes(item)">{{item.title}}</a>
+                      <a [class.active]="selectedMenuID == item.menuID" (click)="changeTypes(item)">{{item.name}}</a>
                     </li>
                   </ul>
                 </div>
@@ -80,18 +80,20 @@
                         </label>
                       </div>
                     </div>
-                    <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                      Search
+                    <a *ngIf="roleService.permissions['BOSEARCH']"
+                      [class]="roleService.permissions['BOSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                      [title]="roleService.permissions['BOSEARCH'].Name" (click)="searchData()">
+                      <i [class]="roleService.permissions['BOSEARCH'].ActionIcon"></i>
+                      {{roleService.permissions['BOSEARCH'].Name}}
                     </a>
-                    <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
-                      class="btn btn-theme btn-add">
-                      <i class="feather icon-plus-circle"></i>
-                      Add Booking
-                    </a>
-                    <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel"
-                      [disabled]="!totalData">
-                      <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                      Export
+                    <button *ngIf="roleService.permissions['BOEXP']"
+                      [class]="roleService.permissions['BOEXP'].Class || 'btn btn-add'"
+                      [title]="roleService.permissions['BOEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                      (click)="exportToExcel()">
+                      <i [class]="roleService.permissions['BOEXP'].ActionIcon"></i>
+                      <img *ngIf="!roleService.permissions['BOEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                        width="24px" class="me-2">
+                      {{roleService.permissions['BOEXP'].Name}}
                     </button>
                   </div>
                 </div>

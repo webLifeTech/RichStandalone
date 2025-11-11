@@ -19,7 +19,7 @@
               <div class="booking-lists">
                 <ul class="nav">
                   <li *ngFor="let item of booktabs">
-                    <a [class.active]="activeTab == item.value" (click)="changeBookTab(item)">{{item.title}}</a>
+                    <a [class.active]="activeTab == item.menuID" (click)="changeBookTab(item)">{{item.name}}</a>
                   </li>
                 </ul>
               </div>
@@ -53,8 +53,11 @@
                       </label>
                     </div>
                   </div>
-                  <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                    Search
+                  <a *ngIf="roleService.permissions['RVSEARCH']"
+                    [class]="roleService.permissions['RVSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                    [title]="roleService.permissions['RVSEARCH'].Name" (click)="searchData()">
+                    <i [class]="roleService.permissions['RVSEARCH'].ActionIcon"></i>
+                    {{roleService.permissions['RVSEARCH'].Name}}
                   </a>
                 </div>
               </div>

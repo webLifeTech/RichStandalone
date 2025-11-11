@@ -111,7 +111,7 @@ export class UserMasterConfigurationComponent {
     private branchService: BranchService,
     private modalService: NgbModal,
   ) {
-    this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || "42";
+    this.kycForm.state = this.gs.loggedInUserInfo.driveInCity != '0' ? this.gs.loggedInUserInfo.driveInCity : "42";
     this.route.queryParams.subscribe((params: any) => {
       this.selectedPackage = params.packageId;
       if (this.selectedPackage) {

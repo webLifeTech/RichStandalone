@@ -4,10 +4,10 @@
     <div class="card book-card flex-fill mb-0">
       <div class="card-header">
         <div class="row align-items-center">
-          <div class="col-md-5">
+          <div class="col-md-3">
             <h4>{{activeTab}} <span>{{totalData}}</span></h4>
           </div>
-          <div class="col-md-7 text-md-end">
+          <div class="col-md-9 text-md-end">
             <div class="table-search">
               <div class="mb-1 me-3">
                 <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
@@ -22,12 +22,20 @@
                   </label>
                 </div>
               </div>
-              <a (click)="searchData()" class="btn btn-theme btn-add me-2">
-                Search
+              <a *ngIf="roleService.permissions['PSEARCH']"
+                [class]="roleService.permissions['PSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                [title]="roleService.permissions['PSEARCH'].Name" (click)="searchData()">
+                <i [class]="roleService.permissions['PSEARCH'].ActionIcon"></i>
+                {{roleService.permissions['PSEARCH'].Name}}
               </a>
-              <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel" [disabled]="!totalData">
-                <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                Export
+              <button *ngIf="roleService.permissions['PEXP']"
+                [class]="roleService.permissions['PEXP'].Class || 'btn btn-add'"
+                [title]="roleService.permissions['PEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                (click)="exportToExcel()">
+                <i [class]="roleService.permissions['PEXP'].ActionIcon"></i>
+                <img *ngIf="!roleService.permissions['PEXP'].ActionIcon" src="assets/images/icon/excel.png" width="24px"
+                  class="me-2">
+                {{roleService.permissions['PEXP'].Name}}
               </button>
             </div>
           </div>

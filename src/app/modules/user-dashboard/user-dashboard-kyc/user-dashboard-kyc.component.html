@@ -266,7 +266,7 @@
         <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
         <div *ngIf="isVehicleInfoEdit">
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+            (onHandleSubmit)="handleSubmit()" (onCancel)="cancelVehicleInfo()" [selectedTabObj]="selectedTabObj"
             [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
         </div>
 

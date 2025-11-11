@@ -121,4 +121,13 @@ export class AdminService {
       })
     );
   }
+
+  // Admin -> UpdatePendingPaymentStatus
+  public UpdatePendingPaymentStatus(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Admin/UpdatePendingPaymentStatus', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

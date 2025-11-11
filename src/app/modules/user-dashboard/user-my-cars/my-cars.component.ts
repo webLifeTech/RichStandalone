@@ -14,6 +14,8 @@ import { ChangeCarPriceModalComponent } from '../../../shared/components/comman/
 import { ProfileService } from '../../../shared/services/profile.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { TableSearchBarComponent } from '../comman/table-search-bar/table-search-bar.component';
 
 @Component({
   selector: 'app-my-cars',
@@ -29,6 +31,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    TableSearchBarComponent
   ],
   providers: [DatePipe],
   templateUrl: './my-cars.component.html',
@@ -36,6 +39,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
 })
 export class MyCarsComponent {
   public tableData: any = [];
+  public searchDataValue = '';
   sortColumn: any = "vin";
   sortOrder: any = "DESC";
   pageSize: any = 10;
@@ -46,7 +50,6 @@ export class MyCarsComponent {
   public searchFilter: any = {
     branch: 'all',
     status: 'all',
-    globalSearch: ''
   };
   public activeTab = 'All Cars';
   activeTabName: any = '';
@@ -79,14 +82,18 @@ export class MyCarsComponent {
     public profileService: ProfileService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
+    this.roleService.getButtons("MYCR");
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Cars";
       this.searchFilter.status = params['status'] ? params['status'] : 'all';
+      this.getGridTabsDetails();
       this.getTableData();
     })
   }
+
 
   getTableData() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
@@ -94,7 +101,7 @@ export class MyCarsComponent {
       userId: this.gs.loggedInUserInfo.userId,
       pageNumber: this.currentPage,
       pagesize: this.pageSize,
-      globalSearch: this.searchFilter.globalSearch || "",
+      globalSearch: this.searchDataValue?.trim() || "",
       sortColumn: this.sortColumn,
       sortOrder: this.sortOrder,
       vin: null,
@@ -108,8 +115,17 @@ export class MyCarsComponent {
       if (response.response && response.response.statusCode == "200") {
         this.tableData = response.gridList;
         this.totalData = response?.viewModel?.totalCount;
-        this.booktabs = response.filterList ? JSON.parse(response.filterList) : [];
       }
+    })
+  }
+
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "39",
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.booktabs = response || [];
     })
   }
 
@@ -140,21 +156,6 @@ export class MyCarsComponent {
     this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
     this.getTableData();
   }
-
-  // async changeStatus(item: any) {
-  //   // let newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
-  //   const modalRef = this.modalService.open(CarStatusChangeModalComponent, {
-  //     centered: true,
-  //   });
-  //   modalRef.componentInstance.singleDetails = item;
-  //   modalRef.componentInstance.title = 'Are sure you want to change status ?';
-  //   modalRef.result.then((res: any) => {
-  //     if (res.confirmed) {
-  //       item.status = res.status;
-  //       this.toast.successToastr("Status successfully");
-  //     }
-  //   }, () => { });
-  // }
 
   async changeStatus(event: any, row: any) {
     let Body = {
@@ -206,7 +207,7 @@ export class MyCarsComponent {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
     const body = {
       userId: this.gs.loggedInUserInfo.userId,
-      globalSearch: this.searchFilter.globalSearch || "",
+      globalSearch: this.searchDataValue || "",
       status: this.activeTab,
       startDate: startDate,
       endDate: endDate,
@@ -276,5 +277,15 @@ export class MyCarsComponent {
     })
   }
 
+  handleAction(actionObj: any) {
+    this.dateTimeRange = actionObj.date;
+    this.searchDataValue = actionObj.search;
+    if (actionObj.actionCode == 'MCSEARCH') {
+      this.searchData();
+    }
+    if (actionObj.actionCode == 'MCEXP') {
+      this.exportToExcel();
+    }
+  }
 
 }

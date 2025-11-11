@@ -17,6 +17,7 @@ import { AdminService } from '../../../shared/services/admin.service';
 import { UserCancellationRefundComponent } from '../user-cancellation-refund/user-cancellation-refund.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-user-dashboard-payments',
@@ -49,11 +50,11 @@ export class UserDashboardPaymentsComponent {
   dateTimeRange: any = "";
 
   tabs: any = [
-    { "name": "All Payments", "value": "All Payments" },
-    { "name": "Pending Confirmation", "value": "Pending Confirm" },
-    { "name": "Pending Clearance", "value": "Pending Clearance" },
-    // { "name": "Cleared", "value": "Cleared" },
-    { "name": "Refund", "value": "Refund" },
+    // { "name": "All Payments", "value": "All Payments" },
+    // { "name": "Pending Confirmation", "value": "Pending Confirm" },
+    // { "name": "Pending Clearance", "value": "Pending Clearance" },
+    // // { "name": "Cleared", "value": "Cleared" },
+    // { "name": "Refund", "value": "Refund" },
   ]
   activeTab: any = "";
   tempTableData: any = [];
@@ -71,8 +72,10 @@ export class UserDashboardPaymentsComponent {
     private toast: ToastService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
+    this.roleService.getButtons("PAYM");
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Payments";
       console.log("this.activeTab >>>>>", this.activeTab);
@@ -144,6 +147,7 @@ export class UserDashboardPaymentsComponent {
 
   getTLHPaymentOverview() {
     if (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') {
+      this.getGridTabsDetails();
       this.adminService.GetTLHPaymentOverview({
         "userId": this.gs.loggedInUserInfo.userId,
       }).subscribe((response: any) => {
@@ -152,6 +156,16 @@ export class UserDashboardPaymentsComponent {
         }
       });
     }
+  }
+
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "26",
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.tabs = response || [];
+    })
   }
 
   searchData() {
@@ -205,15 +219,24 @@ export class UserDashboardPaymentsComponent {
     modalRef.componentInstance.title = status == "Confirm" ? "Are you sure you received the payment in TLH account?" : "Are you sure you want to payment disburse ?";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        // const oldStatus = JSON.parse(JSON.stringify(data.admin_status));
-        // data.admin_status = status == "Confirm" ? "Pending Disburse" : "Cleared";
-        // this.tableData = this.tempTableData.filter((item: any) => item.admin_status == oldStatus);
-        // this.totalData = this.tableData.length;
-        if (status == "Confirm") {
-          this.toast.successToastr("Payment confirm has been received in TLH account.");
-        } else {
-          this.toast.successToastr("Payment disbursed successfully.");
+        const body = {
+          "paymentRefNumber": data.paymentReferenceNumber,
+          "bookingId": data.bookingId,
+          "userId": this.gs.loggedInUserInfo.userId,
         }
+        this.gs.isSpinnerShow = true;
+        this.adminService.UpdatePendingPaymentStatus(body).subscribe((response: any) => {
+          this.gs.isSpinnerShow = false;
+          if (response && response.statusCode == "200") {
+            this.toast.successToastr(response.message);
+            this.getTableData();
+          } else {
+            this.toast.errorToastr(response.message);
+          }
+        }, (err: any) => {
+          this.gs.isSpinnerShow = false;
+          this.toast.errorToastr(err.error.message);
+        })
       }
     }, () => { });
     return;

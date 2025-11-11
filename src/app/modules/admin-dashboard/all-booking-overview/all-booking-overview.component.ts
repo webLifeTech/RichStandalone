@@ -18,6 +18,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
 import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 import { BookingCancellationComponent } from '../../user-dashboard/user-dashboard-booking/booking-cancellation/booking-cancellation.component';
 import { BookingService } from '../../../shared/services/booking.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 
 @Component({
   selector: 'app-all-booking-overview',
@@ -50,6 +51,7 @@ export class AllBookingOverviewComponent {
 
   public activeTab = '';
   public activeTypes = '';
+  public selectedMenuID = '';
   sortColumn: any = "";
   sortOrder: any = "DESC";
 
@@ -62,9 +64,9 @@ export class AllBookingOverviewComponent {
     status: 'All Status',
   };
   tabs: any = [];
-  bookTypes = [
-    { title: "Cars", value: "Vehicle" },
-    { title: "Drivers", value: "Driver" },
+  bookTypes: any = [
+    // { title: "Cars", value: "Vehicle" },
+    // { title: "Drivers", value: "Driver" },
   ]
   vehicleStatusList: any = [
     { name: "All Status", value: "All Status" },
@@ -86,12 +88,18 @@ export class AllBookingOverviewComponent {
     private bookingService: BookingService,
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
+    public roleService: RolePermissionService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
+    this.roleService.getButtons("BKOV");
     this.route.queryParams.subscribe((params) => {
       this.activeTypes = params['activeTypes'] ? params['activeTypes'] : "Vehicle";
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
-      this.getTableData();
+      if (this.bookTypes.length && this.tabs.length) {
+        this.getTableData();
+      } else {
+        this.getGridTabsDetails();
+      }
     })
   }
 
@@ -116,11 +124,39 @@ export class AllBookingOverviewComponent {
       if (response.response && response.response.statusCode == "200") {
         this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
-        this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
+        // this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
       } else {
         this.toast.errorToastr(response.message);
       }
     });
+  }
+
+  getGridTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: "38",
+    }
+    this.gs.isSpinnerShow = true;
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.bookTypes = response || [];
+      if (this.bookTypes.length) {
+        this.selectedMenuID = this.bookTypes[0].menuID;
+        this.getGridSubTabsDetails();
+        console.log("selectedMenuID >>>>>>", this.selectedMenuID);
+      }
+    })
+  }
+
+  getGridSubTabsDetails() {
+    const body = {
+      roleId: this.gs.loggedInUserInfo.roleName,
+      menuId: this.selectedMenuID,
+    }
+    this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+      this.gs.isSpinnerShow = false;
+      this.tabs = response || [];
+      this.getTableData();
+    })
   }
 
   changeBookTab(item: any) {
@@ -139,7 +175,8 @@ export class AllBookingOverviewComponent {
   }
 
   changeTypes(item: any) {
-    this.activeTypes = item.value;
+    this.selectedMenuID = item.menuID;
+    this.activeTypes = item.menuID == '41' ? 'Vehicle' : 'Driver';
     this.currentPage = 1;
     this.activeTab = "All Bookings";
 
@@ -147,6 +184,7 @@ export class AllBookingOverviewComponent {
       activeTypes: this.activeTypes,
       activeTab: this.activeTab,
     }
+    this.getGridSubTabsDetails();
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: params,

@@ -53,18 +53,34 @@
                         </label>
                       </div>
                     </div>
-                    <a (click)="searchData()" class="btn btn-theme btn-add me-2">
+                    <!-- <a (click)="searchData()" class="btn btn-theme btn-add me-2">
                       Search
                     </a>
                     <a *ngIf="gs.loggedInUserInfo['role'] === 'user'" [routerLink]="'/cab/listing/list-view'"
                       class="btn btn-theme btn-add me-2">
                       <i class="feather icon-plus-circle"></i>
                       Add Booking
+                    </a> -->
+                    <a *ngIf="roleService.permissions['MBSEARCH']"
+                      [class]="roleService.permissions['MBSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                      [title]="roleService.permissions['MBSEARCH'].Name" (click)="searchData()">
+                      <i [class]="roleService.permissions['MBSEARCH'].ActionIcon"></i>
+                      {{roleService.permissions['MBSEARCH'].Name}}
                     </a>
-                    <button (click)="exportToExcel()" class="btn btn-add" title="Export To Excel"
-                      [disabled]="!totalData">
-                      <img src="assets/images/icon/excel.png" width="24px" class="me-2">
-                      Export
+                    <a *ngIf="roleService.permissions['MBADBK']"
+                      [class]="roleService.permissions['MBADBK'].Class || 'btn btn-theme btn-add me-2 p-0 px-2'"
+                      [title]="roleService.permissions['MBADBK'].Name" [routerLink]="'/cab/listing/list-view'">
+                      <i [class]="roleService.permissions['MBADBK'].ActionIcon || 'feather icon-plus-circle'"></i>
+                      {{roleService.permissions['MBADBK'].Name}}
+                    </a>
+                    <button *ngIf="roleService.permissions['MBEXP']"
+                      [class]="roleService.permissions['MBEXP'].Class || 'btn btn-add'"
+                      [title]="roleService.permissions['MBEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                      (click)="exportToExcel()">
+                      <i [class]="roleService.permissions['MBEXP'].ActionIcon"></i>
+                      <img *ngIf="!roleService.permissions['MBEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                        width="24px" class="me-2">
+                      {{roleService.permissions['MBEXP'].Name}}
                     </button>
                   </div>
                 </div>
@@ -218,13 +234,14 @@
                             <i class="feather icon-file-text"></i>
                             <span class="ms-2">View Documents</span>
                           </button>
-                          <button *ngIf="data.bookingStatus === 'Confirmed' && gs.loggedInUserInfo.role !== 'user'"
+                          <button
+                            *ngIf="data.bookingStatus === 'Confirmed' && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"
                             (click)="changeStatus(data,'Delivered')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Delivered</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatusCd == '4' && gs.loggedInUserInfo.role !== 'user'"
+                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatusCd == '4' && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"
                             (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Received</span>

@@ -16,6 +16,8 @@ import { GlobalService } from '../../../shared/services/global.service';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
+import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { TableSearchBarComponent } from '../comman/table-search-bar/table-search-bar.component';
 
 @Component({
   selector: 'app-user-wallet',
@@ -30,6 +32,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    TableSearchBarComponent
   ],
   providers: [DatePipe],
   templateUrl: './user-wallet.component.html',
@@ -90,7 +93,9 @@ export class UserWalletComponent {
     public walletService: WalletService,
     private excelExport: ExcelExportService,
     private datePipe: DatePipe,
+    public roleService: RolePermissionService,
   ) {
+    this.roleService.getButtons("WALL");
     this.getWalletDetails();
     this.getCards();
   }
@@ -324,5 +329,16 @@ export class UserWalletComponent {
       //   },
       // ];
     });
+  }
+
+  handleAction(actionObj: any) {
+    this.dateTimeRange = actionObj.date;
+    this.searchDataValue = actionObj.search;
+    if (actionObj.actionCode == 'MCSEARCH') {
+      this.searchData();
+    }
+    if (actionObj.actionCode == 'MCEXP') {
+      this.exportToExcel();
+    }
   }
 }
