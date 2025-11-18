@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CabService } from '../../../shared/services/cab.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
@@ -18,6 +18,7 @@ import { UserCancellationRefundComponent } from '../user-cancellation-refund/use
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { SignalRService } from '../../../shared/services/signalr.service';
 
 @Component({
   selector: 'app-user-dashboard-payments',
@@ -59,7 +60,13 @@ export class UserDashboardPaymentsComponent {
   activeTab: any = "";
   tempTableData: any = [];
   isRefundTab: boolean = false;
-  walletInfo: any = {};
+  walletInfo: any = {
+    availableBalance: 0,
+    pendingClearance: 0,
+    pendingConfirmation: 0,
+    pendingRefund: 0
+  };
+  private intervalId!: number; // Store the interval ID
 
   constructor(
     private route: ActivatedRoute,
@@ -73,21 +80,40 @@ export class UserDashboardPaymentsComponent {
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
+    public signalR: SignalRService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("PAYM");
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Payments";
-      console.log("this.activeTab >>>>>", this.activeTab);
-
       if (this.activeTab == "Refund") {
         this.isRefundTab = true;
       } else {
         this.isRefundTab = false;
         this.getTableData();
       }
-      this.getTLHPaymentOverview();
+      if (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') {
+        this.getTLHPaymentOverview();
+        this.sendWalletInfoNotify();
+        this.intervalId = window.setInterval(() => {
+          this.sendWalletInfoNotify();
+        }, 10000);
+      }
+
     })
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  sendWalletInfoNotify() {
+    this.signalR.SendRealTimeWalletInfo({}, {
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => { });
   }
 
   getTableData() {
@@ -146,16 +172,15 @@ export class UserDashboardPaymentsComponent {
   }
 
   getTLHPaymentOverview() {
-    if (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') {
-      this.getGridTabsDetails();
-      this.adminService.GetTLHPaymentOverview({
-        "userId": this.gs.loggedInUserInfo.userId,
-      }).subscribe((response: any) => {
-        if (response) {
-          this.walletInfo = JSON.parse(response);
-        }
-      });
-    }
+
+    this.getGridTabsDetails();
+    this.adminService.GetTLHPaymentOverview({
+      "userId": this.gs.loggedInUserInfo.userId,
+    }).subscribe((response: any) => {
+      if (response) {
+        this.signalR.walletInfo = JSON.parse(response);
+      }
+    });
   }
 
   getGridTabsDetails() {
@@ -179,7 +204,6 @@ export class UserDashboardPaymentsComponent {
   }
 
   onView(item: any) {
-    console.log("item >>>>>", item);
 
     const body = {
       "bookingRefNo": item.bookingReferenceNumber,

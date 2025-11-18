@@ -178,6 +178,9 @@ export class DynamicFormComponent {
               } else {
                 this.configMasterDp[mdItem].isVisible = false;
               }
+              if (this.formArray[i].fValue && this.singleDetailInfo[this.formArray[i].modalObject].requestedURL) {
+                this.configMasterDp[mdItem].isVisible = true;
+              }
 
               if (!this.formArray[i].apiDropdownList) {
                 this.formArray[i].apiDropdownList = [];
@@ -1102,7 +1105,7 @@ export class DynamicFormComponent {
       }
 
       if (dpItem.dropDownCode === "VIEW_MVR_DETAILS") { // for "VIEW_MVR_DETAILS"
-        window.open(this.mvrDriverDetailsRes?.mvrlog?.requestedURL, "_blank");
+        window.open(this.mvrDriverDetailsRes?.mvrlog?.requestedURL || this.singleDetailInfo[field.value.modalObject].requestedURL, "_blank");
       }
     }
   }

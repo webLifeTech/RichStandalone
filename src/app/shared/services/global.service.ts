@@ -42,6 +42,21 @@ export class GlobalService {
   // Loader
   isSpinnerShow: boolean = false;
 
+  passRequirement = {
+    passwordMinUpperCase: 1,
+    passwordMinLowerCase: 1,
+    passwordMinNumber: 1,
+    passwordMinSymbol: 1,
+    passwordMinCharacters: 8
+  };
+  passPattern = [
+    `(?=([^A-Z]*[A-Z]){${this.passRequirement.passwordMinUpperCase},})`,
+    `(?=([^a-z]*[a-z]){${this.passRequirement.passwordMinLowerCase},})`,
+    `(?=([^0-9]*[0-9])\{${this.passRequirement.passwordMinNumber},\})`,
+    `(?=(\.\*[\$\@\$\!\%\*\#\^\(\)\&])\{${this.passRequirement.passwordMinSymbol},\})`,
+    `[A-Za-z\\d\$\@\$\!\%\*\#\^\(\)\&]{${this.passRequirement.passwordMinCharacters},}`
+  ].map(item => item.toString()).join('');
+
   constructor(
     private http: HttpClient,
     private dialog: MatDialog,

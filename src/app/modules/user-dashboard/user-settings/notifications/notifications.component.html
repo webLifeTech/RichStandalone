@@ -4,6 +4,44 @@
       <h4>Notifications</h4>
     </div>
     <div class="notification-grid">
+
+      <div class="notification-checkbox">
+        <h5>Notify me when...</h5>
+        <ul class="nav">
+          <ng-container *ngFor="let item of settingsDetails">
+            <li *ngIf="item.ControlType === 'CheckBox'">
+              <label class="custom_check">
+                <input type="checkbox" name="offers" [checked]="item.IsActive">
+                <span class="checkmark"></span>
+                {{item.Name}}
+              </label>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <ng-container *ngFor="let item of settingsDetails">
+        <div *ngIf="item.ControlType === 'Toggle'" class="notification-status">
+          <div class="notification-status-content">
+            <h5>{{item.Name}}</h5>
+            <p>{{item.Description}}</p>
+          </div>
+          <div class="status-toggle">
+            <input [id]="item.Code" class="check" type="checkbox" [checked]="item.IsActive"
+              (change)="updateSettingsDetails(item)">
+            <label [for]="item.Code" class="checktoggle">checkbox</label>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="content">
+  <div class="settings-info">
+    <div class="settings-sub-heading">
+      <h4>Notifications</h4>
+    </div>
+    <div class="notification-grid">
       <div class="notification-checkbox">
         <h5>Notify me when...</h5>
         <ul class="nav">
@@ -62,4 +100,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

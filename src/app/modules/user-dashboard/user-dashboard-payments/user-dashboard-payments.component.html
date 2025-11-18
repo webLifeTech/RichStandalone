@@ -10,25 +10,25 @@
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner credit-info mb-0">
-                  <h6>{{walletInfo.availableBalance | currencyPipe: gs.currency}}</h6>
+                  <h6>{{signalR.walletInfo.availableBalance | currencyPipe: gs.currency}}</h6>
                   <p>TLH Account Balance</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner debit-info mb-0">
-                  <h6>{{walletInfo.pendingConfirmation | currencyPipe: gs.currency}}</h6>
+                  <h6>{{signalR.walletInfo.pendingConfirmation | currencyPipe: gs.currency}}</h6>
                   <p>Pending Confirmation</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner credit-info mb-0">
-                  <h6>{{walletInfo.pendingClearance | currencyPipe: gs.currency}}</h6>
+                  <h6>{{signalR.walletInfo.pendingClearance | currencyPipe: gs.currency}}</h6>
                   <p>Pending Clearance</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner debit-info mb-0">
-                  <h6>{{walletInfo.pendingRefund | currencyPipe: gs.currency}}</h6>
+                  <h6>{{signalR.walletInfo.pendingRefund | currencyPipe: gs.currency}}</h6>
                   <p>Pending Refund</p>
                 </div>
               </div>

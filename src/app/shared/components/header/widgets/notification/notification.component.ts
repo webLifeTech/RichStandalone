@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CabService } from '../../../../services/cab.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NotificationsService } from '../../../../services/notifications.service';
 import { GlobalService } from '../../../../services/global.service';
 import { RouterLink } from '@angular/router';
+import { SignalRService } from '../../../../services/signalr.service';
+import { TimeAgoPipe } from '../../../../pipe/time-ago.pipe';
 
 @Component({
   selector: 'app-notification',
@@ -12,14 +14,13 @@ import { RouterLink } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    TimeAgoPipe
   ],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent {
-
-
   notificationList: any = [];
   roles: any = {
     "user": "Drivers",
@@ -29,10 +30,12 @@ export class NotificationComponent {
     "admin": "Admin",
   }
   public selectedCur: string;
+
   constructor(
     private cabService: CabService,
     private notifService: NotificationsService,
-    public gs: GlobalService
+    public gs: GlobalService,
+    public signalR: SignalRService,
   ) {
     this.selectedCur = localStorage.getItem('currency') || 'usd';
     this.getAllNotifications();
@@ -48,7 +51,7 @@ export class NotificationComponent {
 
   getAllNotifications() {
     this.notifService.getAllNotifications().subscribe((apiRes: any) => {
-      this.notificationList = apiRes[this.roles[this.gs.loggedInUserInfo.role]]
+      this.notificationList = this.signalR.notification ? this.signalR.notification : apiRes[this.roles[this.gs.loggedInUserInfo.role]]
     });
   }
 }

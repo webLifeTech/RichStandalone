@@ -214,6 +214,7 @@ export class BookingComponent {
 
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
+      backdrop: 'static',
     });
     modalRef.componentInstance.title = `Are you sure you want to book this ${this.riskType} ?`;
     modalRef.componentInstance.confirmButton = "Yes";

@@ -4,6 +4,37 @@
       <h4>Security</h4>
     </div>
     <div class="row">
+      <ng-container *ngFor="let item of settingsDetails">
+        <div class="col-lg-4 col-md-6 d-flex">
+          <div class="security-grid flex-fill">
+            <div class="security-heading">
+              <h5>{{item.Name}}</h5>
+              <div *ngIf="item.ControlType === 'Toggle'" class="status-toggle">
+                <input id="google_authenticator" class="check" type="checkbox" [checked]="item.IsActive" />
+                <label for="google_authenticator" class="checktoggle">checkbox</label>
+              </div>
+            </div>
+            <div class="security-content">
+              <p>
+                {{item.Description}}
+              </p>
+              <span *ngIf="item.Code === 'GAuth'" class="badge"
+                [ngClass]="{'badge-light-success': item.Color === 'Green', 'badge-light-danger': item.Color === 'Red'}">
+                {{item.LabelValue}}
+              </span>
+            </div>
+            <div *ngIf="item.FieldType === 'Button' && item.Code !== 'GAuth'" class="security-btn">
+              <a class="btn no-text-transorm "
+                [ngClass]="{'btn-secondary': item.Color === 'Black', 'btn-danger': item.Color === 'Red'}"
+                (click)="openChange(item)">{{item.LabelValue}}</a>
+              <!-- <a class="btn btn-remove no-text-transorm">Remove</a> -->
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- <div class="row">
       <div class="col-lg-4 col-md-6 d-flex">
         <div class="security-grid flex-fill">
           <div class="security-heading">
@@ -139,6 +170,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { routes } from '../../../../../app.routes';
+import { ToastService } from '../../../../../shared/services/toast.service';
+import { GlobalService } from '../../../../../shared/services/global.service';
+import { SettingsService } from '../../../../../shared/services/setting.service';
 
 @Component({
   selector: 'app-change-password-modal',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './change-password-modal.component.html',
   styleUrl: './change-password-modal.component.scss'
@@ -28,65 +32,31 @@ export class ChangePasswordModalComponent {
   public togglePassword(index: any) {
     this.password[index] = !this.password[index]
   }
-  form = new FormGroup({
-    email: new FormControl('admin@dreamstechnologies.in', [
-      Validators.email,
-      Validators.required,
-    ]),
-    password: new FormControl('123456', [Validators.required]),
-  });
-
-  cardForm: any = {
-    card_number: "",
-    name_on_card: "",
-    cvv: "",
-    expiry_date: "",
-    rememberme: false
-  }
+  form: FormGroup;
+  submitted: boolean = false;
 
   constructor(
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
-  ) { }
+    private gs: GlobalService,
+    private toast: ToastService,
+    public bf: FormBuilder,
+    private settingsService: SettingsService,
+  ) {
+    this.form = this.bf.group({
+      UserName: this.gs.loggedInUserInfo.username,
+      UserId: this.gs.loggedInUserInfo.userId,
+      OldPassword: ["", [Validators.required, Validators.pattern(this.gs.passPattern)]],
+      NewPassword: ["", [Validators.required, Validators.pattern(this.gs.passPattern)]],
+      ConfirmNewPassword: ["", [Validators.required, Validators.pattern(this.gs.passPattern)]],
+    })
+  }
 
   ngOnInit() {
-    this.cardForm = this.singleDetails;
   }
 
-  get f() {
+  get fc(): any {
     return this.form.controls;
-  }
-  public oneTimePassword = {
-    data1: "",
-    data2: "",
-    data3: "",
-    data4: ""
-  };
-  public ValueChanged(data: string, box: string): void {
-    if (box == 'digit-1' && data.length > 0) {
-      document.getElementById('digit-2')?.focus();
-    } else if (box == 'digit-2' && data.length > 0) {
-      document.getElementById('digit-3')?.focus();
-    } else if (box == 'digit-3' && data.length > 0) {
-      document.getElementById('digit-4')?.focus();
-    } else {
-      return
-    }
-  }
-  public tiggerBackspace(data: string, box: string) {
-    let StringyfyData;
-    if (data) {
-      StringyfyData = data.toString();
-    } else {
-      StringyfyData = null;
-    }
-    if (box == 'digit-4' && StringyfyData == null) {
-      document.getElementById('digit-3')?.focus();
-    } else if (box == 'digit-3' && StringyfyData == null) {
-      document.getElementById('digit-2')?.focus();
-    } else if (box == 'digit-2' && StringyfyData == null) {
-      document.getElementById('digit-1')?.focus();
-    }
   }
 
   closeModal() {
@@ -95,6 +65,34 @@ export class ChangePasswordModalComponent {
 
   onConfirm() {
     this.activeModal.close({ confirmed: true, reason: this.reason });
+  }
+
+  submitForm() {
+
+    console.log("fc.OldPassword?.errors >>>>>>", this.fc.OldPassword?.errors);
+
+    this.submitted = true;
+    if (!this.form.valid) {
+      this.toast.errorToastr("Please enter valid details.");
+      return;
+    }
+
+    if (this.form.value.NewPassword !== this.form.value.ConfirmNewPassword) {
+      this.toast.errorToastr('New password and confirm password do not match.');
+      return;
+    }
+
+    this.gs.isSpinnerShow = true;
+    this.settingsService.ChangePassword(this.form.value).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("ChangePassword >>>", res);
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(res.message);
+        this.onConfirm();
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    })
   }
 
 }

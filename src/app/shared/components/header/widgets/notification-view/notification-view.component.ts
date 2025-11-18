@@ -22,6 +22,8 @@ import { NotificationsService } from '../../../../services/notifications.service
 import { SortDirective } from '../../../../directives/sort.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { SignalRService } from '../../../../services/signalr.service';
+import { TimeAgoPipe } from '../../../../pipe/time-ago.pipe';
 
 @Component({
   selector: 'app-notification-view',
@@ -37,6 +39,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     NgSelectModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    TimeAgoPipe
   ],
   templateUrl: './notification-view.component.html',
   styleUrl: './notification-view.component.scss'
@@ -73,6 +76,7 @@ export class NotificationViewComponent {
     public cabService: CabService,
     public gs: GlobalService,
     private notifService: NotificationsService,
+    public signalR: SignalRService,
 
   ) {
     this.route.queryParams.subscribe((params) => {

@@ -84,8 +84,6 @@ export class RolePermissionService {
         acc[item.Code] = item;
         return acc;
       }, {});
-      console.log("this.permissions >>>>>", this.permissions);
-
     })
   }
 }

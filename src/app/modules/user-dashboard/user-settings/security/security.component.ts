@@ -14,6 +14,8 @@ import { EmailVerificationSuccessModalComponent } from '../modals/email-verifica
 import { OtpVerificationModalComponent } from '../modals/otp-verification-modal/otp-verification-modal.component';
 import { VerificationSuccessModalComponent } from '../modals/verification-success-modal/verification-success-modal.component';
 import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
+import { SettingsService } from '../../../../shared/services/setting.service';
+// import { SettingsService } from '../../../../shared/services/settings.service';
 
 @Component({
   selector: 'app-security',
@@ -28,19 +30,39 @@ import { DeleteModalComponent } from '../../../../shared/components/comman/modal
   styleUrl: './security.component.scss'
 })
 export class SecurityComponent {
-
+  settingsDetails: any = [];
 
   constructor(
-    // private data: DataService,
-    private router: Router,
-    private route: ActivatedRoute,
     private toast: ToastService,
     public gs: GlobalService,
     private modalService: NgbModal,
+    private settingsService: SettingsService,
 
   ) {
-    this.route.queryParams.subscribe((params) => {
+    this.getSettingsDetails();
+  }
+
+  getSettingsDetails() {
+    let body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "type": "Security",
+    }
+    this.gs.isSpinnerShow = true;
+    this.settingsService.GetSettingsDetails(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response) {
+        this.settingsDetails = JSON.parse(response)?.settingTabs || [];
+        console.log("Security Details >>>>>", this.settingsDetails);
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
     })
+  }
+
+  openChange(item: any) {
+    if (item.Code === 'Pwd') {
+      this.openChangePassword();
+    }
   }
 
   openChangePassword() {
@@ -50,7 +72,7 @@ export class SecurityComponent {
     modalRef.result.then((res: any) => {
 
       if (res.confirmed) {
-        this.toast.successToastr("Password changed successfully");
+        this.getSettingsDetails();
       }
     }, () => {
     });

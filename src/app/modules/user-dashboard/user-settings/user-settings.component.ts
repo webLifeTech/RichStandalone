@@ -10,6 +10,7 @@ import { ProfileService } from '../../../shared/services/profile.service';
 import { SecurityComponent } from './security/security.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SettingsService } from '../../../shared/services/setting.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -20,11 +21,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
     NotificationsComponent,
     CommonModule,
     FormsModule,
-    RouterLink,
-    RouterLinkActive,
     NgbModule,
     TranslateModule,
-    RouterOutlet
   ],
   templateUrl: './user-settings.component.html',
   styleUrl: './user-settings.component.scss'
@@ -38,10 +36,10 @@ export class UserSettingsComponent {
     private route: ActivatedRoute,
     public gs: GlobalService,
     private profileService: ProfileService,
-
+    private settingsService: SettingsService,
   ) {
     this.route.queryParams.subscribe((params) => {
-      this.getConfigUIForms()
+      this.getConfigUIForms();
     })
   }
 
@@ -57,7 +55,6 @@ export class UserSettingsComponent {
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
       if (response && response.length) {
         this.sidebarTabs = response;
         this.filter();
@@ -82,7 +79,7 @@ export class UserSettingsComponent {
   }
 
   changeKycTab(tab: any) {
-    this.activeKycTab = tab;
+    this.activeKycTab = tab.formId;
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 

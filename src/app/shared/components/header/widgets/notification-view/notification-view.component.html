@@ -15,7 +15,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-md-5">
-                  <h4>{{'All Notifications'}} <span>{{totalData}}</span></h4>
+                  <h4>{{'All Notifications'}} <span>{{signalR.notification.length}}</span></h4>
                 </div>
 
                 <div class="col-md-2">
@@ -56,26 +56,26 @@
                       </th>
                       <th class="text-start">Type</th>
                       <th class="text-start">Notification</th>
-                      <th class="text-start pointer" [appSort]="tableData" data-order="desc" data-name="dateTime">
+                      <th class="text-start pointer" [appSort]="signalR.notification" data-order="desc"
+                        data-name="dateTime">
                         Date <i class="fa fa-sort" aria-hidden="true"></i>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr
-                      *ngFor="let data of tableData | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                      *ngFor="let data of signalR.notification | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: totalData };; let idx = index;">
                       <td>
                         <span>{{idx+1}}</span>
                       </td>
                       <td class="text-start">
-                        {{data.type}}
+                        {{data.Title}}
                       </td>
                       <td class="text-start">
-                        {{data.notifications}}
+                        {{data.Message}}
                       </td>
                       <td class="text-start">
-                        <p *ngIf="data.shortTime">{{data.shortTime}}</p>
-                        <p *ngIf="!data.shortTime">{{data.dateTime | date : 'medium'}}</p>
+                        <p>{{data.CreatedAt | date : 'medium'}} ({{data.CreatedAt | timeAgo}})</p>
                       </td>
 
                     </tr>

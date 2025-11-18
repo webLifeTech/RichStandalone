@@ -1,7 +1,8 @@
 <li class="dropdown dropdown-toggle notification me-0">
   <a class="pe-0 bell-icon">
     <img src="assets/images/icon/notification.svg" alt="Bell" />
-    <span class="badge badge-pill"></span>
+    <span class="badge bell-badge">{{signalR.notification.length}}</span>
+    <!-- <span class="badge badge-pill"></span> -->
   </a>
 
   <!-- [class.show]="isNotiShow"  -->
@@ -11,7 +12,7 @@
     </div>
     <div class="noti-content">
       <ul class="notification-list">
-        <ng-container *ngFor="let item of this.notificationList; let indx = index">
+        <ng-container *ngFor="let item of signalR.notification; let indx = index">
           <li *ngIf="indx <= 4" class="notification-message">
             <div class="media d-flex">
               <span class="avatar avatar-lg flex-shrink-0">
@@ -19,14 +20,17 @@
               </span>
               <div class="media-body flex-grow-1">
                 <p class="noti-title">
-                  {{item.type}}
+                  {{item.Title}}
                 </p>
                 <p class="noti-details">
-                  {{item.notifications}}
+                  {{item.Message}}
                 </p>
-                <p class="noti-time"><span class="notification-time">
-                    {{item.shortTime}}
-                  </span></p>
+                <p class="noti-time">
+                  <span class="notification-time">
+                    {{item.CreatedAt | timeAgo}}
+                    <!-- {{item.shortTime}} -->
+                  </span>
+                </p>
               </div>
             </div>
           </li>
