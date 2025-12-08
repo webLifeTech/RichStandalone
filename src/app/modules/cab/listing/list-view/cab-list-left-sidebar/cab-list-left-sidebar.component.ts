@@ -105,6 +105,10 @@ export class CabListLeftSidebarComponent {
       searchObj = obj.searchObj;
     }
 
+    if (!searchObj.same_location) {
+      return;
+    }
+
     if (this.params.type == 'car') {
       let Body = {
         "SearchCriteria": {

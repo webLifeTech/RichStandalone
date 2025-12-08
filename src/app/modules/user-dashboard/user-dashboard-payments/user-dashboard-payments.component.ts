@@ -95,10 +95,10 @@ export class UserDashboardPaymentsComponent {
       }
       if (this.gs.loggedInUserInfo.role == 'admin' || this.gs.loggedInUserInfo.role == 'Accountant') {
         this.getTLHPaymentOverview();
-        this.sendWalletInfoNotify();
-        this.intervalId = window.setInterval(() => {
-          this.sendWalletInfoNotify();
-        }, 10000);
+        // this.sendWalletInfoNotify();
+        // this.intervalId = window.setInterval(() => {
+        //   this.sendWalletInfoNotify();
+        // }, 10000);
       }
 
     })

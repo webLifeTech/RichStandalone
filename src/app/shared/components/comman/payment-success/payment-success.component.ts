@@ -38,7 +38,8 @@ export class PaymentSuccessComponent {
     private router: Router,
   ) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.getCurrentPackageDetails();
+    // this.getCurrentPackageDetails();
+    this.GetPackageSubscriptionInvoiceDetails();
   }
 
   ngOnInit() {
@@ -51,13 +52,30 @@ export class PaymentSuccessComponent {
     document.documentElement.style.removeProperty('--theme-color2');
   }
 
-  getCurrentPackageDetails() {
+  // getCurrentPackageDetails() {
+  //   let body = {
+  //     "userId": this.gs.loggedInUserInfo.userId || null,
+  //   }
+  //   this.gs.isSpinnerShow = true;
+  //   this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
+  //     this.gs.isSpinnerShow = false;
+  //     if (response.response && response.response.statusCode == "200") {
+  //       this.currentPlan = response;
+  //     }
+  //   }, err => {
+  //     this.gs.isSpinnerShow = false;
+  //   })
+  // }
+
+  GetPackageSubscriptionInvoiceDetails() {
     let body = {
       "userId": this.gs.loggedInUserInfo.userId || null,
     }
     this.gs.isSpinnerShow = true;
-    this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
+    this.pricingS.GetPackageSubscriptionInvoiceDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
+      console.log("response >>>>>", response);
+
       if (response.response && response.response.statusCode == "200") {
         this.currentPlan = response;
       }

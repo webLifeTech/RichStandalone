@@ -1,0 +1,11 @@
+<div class="modal-content add-payment-modal ">
+  <div class="modal-header">
+    <h4 class="modal-title">Re Payment</h4>
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-booking [singleItem]="singleItem" [title]="true" (onRePayment)="makePayment($event)"></app-booking>
+  </div>
+</div>

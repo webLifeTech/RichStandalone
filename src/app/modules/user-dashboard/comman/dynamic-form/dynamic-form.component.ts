@@ -279,6 +279,13 @@ export class DynamicFormComponent {
           "appliesto": "Risk",
         });
         this.masterDropdwonList["FeeRules"] = cancellationFeeMasterDp;
+        let branchMasterDp: any = await this.branchService.GetBranchNames({
+          "userId": this.gs.loggedInUserInfo.userId,
+        });
+        branchMasterDp = branchMasterDp.map((item: any) => ({ Name: item.branch, ID: item.branchPersonNum.toString(), ...item }));
+        console.log("branchMasterDp >>>>", branchMasterDp);
+
+        this.masterDropdwonList["Branch"] = branchMasterDp;
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -2664,6 +2671,7 @@ export class DynamicFormComponent {
         "feeTypeCd": finalBody.vehicleCancellationRules[idx].feeTypeCd,
         "feeValue": finalBody.vehicleCancellationRules[idx].feeValue || 0,
         "description": slctFeeMasterDp.description || null,
+        "isActive": true,
       })
     }
     // return;

@@ -36,6 +36,9 @@ export class AppComponent {
 
   ngOnInit() {
     this.connect();
+    setInterval(() => {
+      this.connect();
+    }, 900000)
     AOS.init({
       duration: 800,  // animation duration
       once: true,     // whether animation should happen only once
@@ -49,6 +52,7 @@ export class AppComponent {
       console.log('notificationList >>>', msg);
       if (msgType === 'updatewallet') {
         this.signalR.walletInfo = JSON.parse(msg);
+        console.log('this.signalR.walletInfo >>>', this.signalR.walletInfo);
       }
       if (msgType === 'receiveNotification') {
         this.signalR.notification.unshift(msg);

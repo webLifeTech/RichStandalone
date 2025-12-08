@@ -14,7 +14,7 @@
         <div class="col-lg-12">
           <div class="sorting-info">
             <div class="row d-flex align-items-center">
-              <div class="col-lg-8 col-sm-12 col-12">
+              <div class="col-sm-12 col-12" [ngClass]="selectedMenuID == '41' ? 'col-lg-7':'col-lg-9'">
                 <div class="booking-lists">
                   <ul class="nav">
                     <li *ngFor="let item of tabs">
@@ -41,7 +41,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-lg-2 col-sm-12 col-12 justify-content-end">
+              <div class="col-lg-3 col-sm-12 col-12 justify-content-end">
                 <div class="booking-lists justify-content-end d-flex">
                   <ul class="nav">
                     <li *ngFor="let item of bookTypes">

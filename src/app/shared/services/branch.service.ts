@@ -45,4 +45,16 @@ export class BranchService {
     );
   }
 
+  // CompanyBranchKYC -> GetBranchNames
+  public GetBranchNames(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/CompanyBranchKYC/GetBranchNames', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
 }

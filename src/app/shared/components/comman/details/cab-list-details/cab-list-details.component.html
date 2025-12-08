@@ -136,7 +136,15 @@
                     </tr>
                   </tbody>
                 </table>
-                <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
+                <h6 class="cancellation">
+                  <button class="btn btn-small btn-link btn-subscribe btn1 no-text-transorm"
+                    (click)="getCancellationPolicy(details)">
+                    <i class="fas fa-exclamation-circle"></i> View {{('car_list_page.cancellation_policy' | translate)}}
+                  </button>
+                  <!-- <button class="btn btn-theme margin-5" (click)="getCancellationPolicy(details)">
+                    View
+                  </button> -->
+                </h6>
               </div>
               <div class="book-flight">
                 <button *ngIf="!details.isBooked" class="btn btn-theme margin-5" (click)="bookNow(details)">

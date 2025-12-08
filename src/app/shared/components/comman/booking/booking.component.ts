@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { cabDetail, cabDetails } from '../../../../shared/interface/cab';
 import { CabService } from '../../../../shared/services/cab.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,6 +45,7 @@ export class BookingComponent {
   @Input() singleItem: any = {};
   // singleItem.vehicleId
   @Input() params: any;
+  @Output() onRePayment = new EventEmitter<any>();
 
   paymentOptions: any = [];
   firstPayOpt: any = {};
@@ -53,6 +54,7 @@ export class BookingComponent {
   type = "CreditCard";
   isLoader: boolean = false;
   riskType = "";
+  isRePaymtn: boolean = false;
 
   public cabDetail: cabDetails;
 
@@ -77,6 +79,16 @@ export class BookingComponent {
     this.cabService.getCabById().subscribe(response => {
       this.cabDetail = response;
     })
+  }
+
+  ngOnInit() {
+    console.log("this.singleItem >>>>", this.singleItem);
+    console.log("isRePaymtn >>>>", this.isRePaymtn);
+
+    if (this.singleItem.bookingId && this.singleItem.bookingReferenceNumber) {
+      this.isRePaymtn = true;
+      this.riskType = this.singleItem.riskType;
+    }
   }
 
   getConfigUIForms() {
@@ -136,7 +148,7 @@ export class BookingComponent {
       "userId": this.gs.loggedInUserInfo.userId,
       "BookingPaymentRequest": {
         "userId": this.gs.loggedInUserInfo.userId,
-        "amount": this.gs.bookingSummaryDetails.totalFare,
+        "amount": this.isRePaymtn ? this.singleItem.totalAmount : this.gs.bookingSummaryDetails.totalFare,
         "bankAccount": null,
         "creditCardInfo": null,
         "transactionType": null,
@@ -246,12 +258,18 @@ export class BookingComponent {
 
     this.isLoader = true;
     let body = {
-      "price": this.gs.bookingSummaryDetails.totalFare,
+      "price": this.isRePaymtn ? this.singleItem.totalAmount : this.gs.bookingSummaryDetails.totalFare,
       "currency": this.selectedCoin, //
       "buyerEmail": "customer_email@gmail.com", // this.gs.loggedInUserInfo.username
       "customOrderId": customOrderId || null,
       "notificationURL": "https://uat.maya-avante.com/PostData/IsoSearch/PostMatchResponseData"
     }
+    console.log("this.isRePaymtn >>>", this.isRePaymtn);
+    console.log("totalAmount >>>", this.singleItem.totalAmount);
+    console.log("totalFare >>>", this.gs.bookingSummaryDetails.totalFare);
+    console.log("body >>>", body);
+    // return;
+
 
     this.paymentService.CryptoPaymentRequestResponse({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -311,6 +329,14 @@ export class BookingComponent {
   }
 
   bookingAgreement(body: any) {
+
+    console.log("this.isRePaymtn >>>>>>", this.isRePaymtn);
+    console.log("body >>>>>>", body);
+    if (this.isRePaymtn) {
+      this.onRePayment.emit(body["BookingPaymentRequest"]);
+      return; // need to do
+    }
+
     this.gs.isSpinnerShow = true;
     this.cabService.CreateBookingAgreement(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
@@ -334,6 +360,9 @@ export class BookingComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
+      console.log("err >>>>>", err);
+
+      this.toast.errorToastr(err.error.message);
       this.gs.isSpinnerShow = false;
     })
   }

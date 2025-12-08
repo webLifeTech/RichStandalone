@@ -226,6 +226,12 @@
                           <i class="feather icon-more-vertical"></i>
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before">
+                          <!--  -->
+                          <button *ngIf="data.bookingStatusRemarksCd == '11' && data.isBooker"
+                            (click)="makeRePayment(data)" type="button" mat-menu-item>
+                            <i class="feather icon-rotate-cw"></i>
+                            <span class="ms-2">Re Payment</span>
+                          </button>
                           <button (click)="onView(data)" type="button" mat-menu-item>
                             <i class="feather icon-eye"></i>
                             <span class="ms-2">View</span>
@@ -241,16 +247,22 @@
                             <span class="ms-2">Delivered</span>
                           </button>
                           <button
-                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatusCd == '4' && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"
-                            (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
-                            <i class="feather icon-send"></i>
-                            <span class="ms-2">Received</span>
-                          </button>
-                          <button
                             *ngIf="data.bookingStatusRemarksCd == '5' && data.bookingStatusCd == '4' && (gs.loggedInUserInfo.role === 'user' || gs.loggedInUserInfo.role === 'user_4')"
                             (click)="changeStatus(data,'Accept')" type="button" mat-menu-item>
                             <i class="feather icon-send"></i>
                             <span class="ms-2">Accept</span>
+                          </button>
+                          <button
+                            *ngIf="data.bookingStatusRemarksCd == '6' && data.bookingStatusCd == '4' && data.isBooker"
+                            (click)="changeStatus(data,'Return')" type="button" mat-menu-item>
+                            <i class="feather icon-send"></i>
+                            <span class="ms-2">Return</span>
+                          </button>
+                          <button
+                            *ngIf="data.bookingStatusRemarksCd == '12' && data.bookingStatusCd == '4' && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"
+                            (click)="changeStatus(data,'Received')" type="button" mat-menu-item>
+                            <i class="feather icon-send"></i>
+                            <span class="ms-2">Received</span>
                           </button>
                           <button
                             *ngIf="data.bookingStatusCd == '1' || data.bookingStatusCd == '2' || data.bookingStatus == 'Delivered'"
@@ -258,8 +270,9 @@
                             <i class="feather icon-x-square"></i>
                             <span class="ms-2">Cancel Booking</span>
                           </button>
-                          <button *ngIf="data.bookingStatusCd == '6' && data.isBooker && !data.isReviewAdded"
-                            (click)="writeReview(data)" type="button" mat-menu-item>
+                          <!-- && data.isBooker -->
+                          <button *ngIf="data.bookingStatusCd == '6' && !data.isReviewAdded" (click)="writeReview(data)"
+                            type="button" mat-menu-item>
                             <i class="feather icon-star"></i>
                             <span class="ms-2">Write Review</span>
                           </button>

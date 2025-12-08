@@ -126,4 +126,14 @@ export class PricingService {
       })
     );
   }
+
+  // Master -> GetPackageSubscriptionInvoiceDetails
+  public GetPackageSubscriptionInvoiceDetails(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId)
+    return this.http.get(this.baseUrl1 + 'TLHUB/Package/GetPackageSubscriptionInvoiceDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

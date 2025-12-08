@@ -26,6 +26,8 @@ import { FavoriteService } from '../../../../services/favorite.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ApexchartsComponent } from '../../../../../modules/admin-dashboard/widgets/apexcharts/apexcharts.component';
 import { EmailQuoteModalComponent } from '../../modal/email-quote-modal/email-quote-modal.component';
+import { CancelPolicyModalComponent } from '../../modal/cancel-policy-modal/cancel-policy-modal.component';
+import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYears } from 'date-fns';
 
 @Component({
   selector: 'app-cab-list-details',
@@ -55,6 +57,7 @@ export class CabListDetailsComponent {
   @Input() pageSize: number;
   @Input() searchResult: any = {};
   @Input() carTypes: any = {};
+  @Input() searchObj: any = {};
 
   public type: string = "";
   public getCarTypeParams: string[] = [];
@@ -444,6 +447,61 @@ export class CabListDetailsComponent {
       disablePopover = true;
     }
     return disablePopover;
+  }
+
+  getCancellationPolicy(item: any) {
+
+    const pickTime = new Date(this.searchObj.pick_time);
+    const dropTime = new Date(this.searchObj.drop_time);
+
+    switch (this.searchObj.timeType) {
+      case "Daily":
+        this.searchObj.timeDuration = differenceInDays(dropTime, pickTime);
+
+        break;
+      case "Weekly":
+        this.searchObj.timeDuration = differenceInWeeks(dropTime, pickTime);
+        break;
+      case "Monthly":
+        this.searchObj.timeDuration = differenceInMonths(dropTime, pickTime);
+        break;
+      case "Yearly":
+        this.searchObj.timeDuration = differenceInYears(dropTime, pickTime);
+        break;
+    }
+
+    let body = {
+      "rentType": this.searchObj.timeType,
+      "duration": this.searchObj.timeDuration,
+      "pickUpTime": this.searchObj.pick_time,
+      "dropTime": this.searchObj.drop_time,
+      "vehicleId": item.vehicleId,
+      "summaryId": item.summaryId,
+      "couponCode": "",
+      "userId": this.gs.loggedInUserInfo.userId,
+
+    }
+
+    this.cabService.getVehicleBookingSummaryDetails(body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("res.vehicleCancellationRules >>>>>", res.vehicleCancellationRules);
+
+      if (res.response && res.response.statusCode == "200") {
+        this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
+        const modalRef = this.modalService.open(CancelPolicyModalComponent, {
+          size: 'lg'
+        });
+        // modalRef.componentInstance.title = "Please login to book";
+        modalRef.result.then((res: any) => {
+          if (res.confirmed) {
+          }
+        }, () => { });
+      } else {
+        this.toast.errorToastr(res.responseResultDtos.message);
+      }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+    })
   }
 
 }

@@ -99,7 +99,8 @@ export class SubscriptionTemplateComponent {
     public gs: GlobalService
   ) {
     setTimeout(() => {
-      this.downloadPDF();
+      this.gs.downloadFile('Package-Subscription-' + this.currentPlan.subscriptionDetails.packageName + '-' + this.currentPlan.subscriptionDetails.paymentId, this.currentPlan.subscriptionDetails.packageInvoice)
+      // this.downloadPDF();
     }, 500);
   }
 

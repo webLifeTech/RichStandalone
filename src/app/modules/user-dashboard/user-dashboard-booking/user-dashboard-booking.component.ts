@@ -24,6 +24,8 @@ import { ViewAllDocumentsModalComponent } from '../../../shared/components/comma
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { RePaymentModalComponent } from '../../../shared/components/comman/modal/payment-modals/re-payment-modal/re-payment-modal.component';
+import { WalletService } from '../../../shared/services/wallet.service';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -76,6 +78,7 @@ export class UserDashboardBookingComponent {
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
+    public walletService: WalletService,
   ) {
     this.roleService.getButtons("MYBK");
     window.scrollTo({ top: 180, behavior: 'smooth' });
@@ -127,6 +130,7 @@ export class UserDashboardBookingComponent {
   }
 
   public searchData(): void {
+    this.currentPage = 1;
     this.getTableData();
   }
 
@@ -253,9 +257,35 @@ export class UserDashboardBookingComponent {
           this.singleBookingDetail = data;
           this.goToChecklist();
         }
+        if (status === "Return") {
+          this.ReturnVehicleToOwner(data);
+        }
       }
     }, () => { });
     return;
+  }
+
+  ReturnVehicleToOwner(item: any) {
+    const body = {
+      "bookingId": item.bookingId,
+      "userId": this.gs.loggedInUserInfo.userId,
+      "riskId": item.riskId,
+      "riskType": item.riskType
+    }
+    this.gs.isSpinnerShow = true;
+    this.bookingService.ReturnVehicleToOwner(body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("ReturnVehicleToOwner >>>>", res);
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(res.message);
+        this.getTableData();
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err.error.message);
+    });
   }
 
   InitiateDeliverVehicleToDriver(item: any) {
@@ -331,6 +361,23 @@ export class UserDashboardBookingComponent {
       this.toast.errorToastr(error.error.Message);
       this.gs.isSpinnerShow = false;
     });
+  }
+
+  makeRePayment(data: any) {
+    const modalRef = this.modalService.open(RePaymentModalComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.title = "Are you sure you received the payment in TLH account?";
+    modalRef.componentInstance.singleItem = data;
+    modalRef.result.then(async (res: any) => {
+      if (res.confirmed) {
+        console.log("res >>>>>", res);
+        this.getTableData();
+        return;
+      }
+    }, () => { });
+    return;
   }
 
   transformDate(date: any, format: any) {

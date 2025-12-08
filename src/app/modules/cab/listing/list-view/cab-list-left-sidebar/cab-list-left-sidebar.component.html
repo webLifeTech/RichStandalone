@@ -15,8 +15,9 @@
           (searchEvent)="searchVehicleResult($event,'filter-search')"></app-cab-filter>
       </div>
       <div *ngIf="reLoadDetails" class="col-lg-9">
-        <app-cab-list-details [searchResult]="vehicleSearchResult" [carTypes]="vehicleType" [pageSize]="pageSize"
-          [marginClass]="false" [responsiveLatestFilter]="true" [noSidebar]="false"></app-cab-list-details>
+        <app-cab-list-details [searchObj]="searchObj" [searchResult]="vehicleSearchResult" [carTypes]="vehicleType"
+          [pageSize]="pageSize" [marginClass]="false" [responsiveLatestFilter]="true"
+          [noSidebar]="false"></app-cab-list-details>
       </div>
     </div>
   </div>

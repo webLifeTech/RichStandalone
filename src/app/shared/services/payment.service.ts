@@ -111,4 +111,13 @@ export class PaymentService {
       })
     );
   }
+
+  // Booking -> RePaymentConfirmBooking
+  public RePaymentConfirmBooking(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Booking/RePaymentConfirmBooking', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

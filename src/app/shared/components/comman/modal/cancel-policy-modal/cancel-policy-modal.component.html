@@ -1,0 +1,29 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="modal-box">
+      <!-- <div class="modal-box-header">
+        <h4>Confirm</h4>
+        <p>{{title || "Are you sure?"}}</p>
+      </div> -->
+      <div class="review-section mb-4">
+        <div class="review_box text-start">
+          <app-cab-information></app-cab-information>
+        </div>
+      </div>
+      <div class="modal-btn">
+        <div class="row">
+          <!-- <div class="col-6">
+            <a (click)="onConfirm()" class="btn btn-theme w-100">
+              {{confirmButton || "Yes"}}
+            </a>
+          </div> -->
+          <div class="col-12">
+            <a (click)="closeModal()" class="btn btn-primary">
+              {{cancelButton || "Close"}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

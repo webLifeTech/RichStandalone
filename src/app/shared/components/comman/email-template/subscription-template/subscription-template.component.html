@@ -30,15 +30,21 @@
                     <tbody style="font-size: 16px; line-height: 1.5;">
                       <tr>
                         <td>{{'package_invoice_summary.transaction_id' | translate}}</td>
-                        <td style="font-weight: 600; color: #3c3c3c;">{{details.transactionID}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{currentPlan.subscriptionDetails.paymentId}}
+                        </td>
                       </tr>
                       <tr>
-                        <td>{{'package_invoice_summary.status' | translate}}</td>
-                        <td style="font-weight: 600; color: #3c3c3c;">Confirmed</td>
+                        <td>{{'pricing_summary.discount' | translate}}</td>
+                        <td>- {{ currentPlan.subscriptionDetails.discountAmount | currencyPipe: gs.currency }}</td>
                       </tr>
                       <tr>
-                        <td>{{'package_invoice_summary.total_fare' | translate}}</td>
-                        <td style="font-weight: 600; color: #3c3c3c;">{{ 1100 | currencyPipe: gs.currency }}
+                        <td>{{'pricing_summary.tax' | translate}}</td>
+                        <td>{{ currentPlan.subscriptionDetails.taxFee | currencyPipe: gs.currency }}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'package_invoice_summary.paid_amount' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">
+                          {{ currentPlan.subscriptionDetails.paidAmount | currencyPipe: gs.currency }}
                         </td>
                       </tr>
                     </tbody>
@@ -53,15 +59,23 @@
                     <tbody style="font-size: 16px; line-height: 1.5;">
                       <tr>
                         <td>{{'pricing_summary.package_name' | translate}}</td>
-                        <td>{{ currentPlan.packageName }}</td>
+                        <td>{{ currentPlan.subscriptionDetails.packageName }}</td>
                       </tr>
                       <tr>
-                        <td>{{'pricing_summary.discount' | translate}}</td>
-                        <td>- {{ 100 | currencyPipe: gs.currency }}</td>
+                        <td>{{'package_invoice_summary.package_price' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">
+                          {{currentPlan.subscriptionDetails.baseAmount | currencyPipe: gs.currency}}
+                        </td>
                       </tr>
                       <tr>
-                        <td>{{'pricing_summary.tax' | translate}}</td>
-                        <td>{{ 10 | currencyPipe: gs.currency }}</td>
+                        <td>{{'package_invoice_summary.end_date' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">
+                          {{currentPlan.subscriptionDetails.endDate | date : 'mediumDate'}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'package_invoice_summary.status' | translate}}</td>
+                        <td style="font-weight: 600; color: #3c3c3c;">{{currentPlan.subscriptionDetails.status}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -80,24 +94,22 @@
       <tr style="color: #616161;">
         <td style="padding: 0 24px 50px;">
           <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
-            {{'package_invoice_summary.name' | translate}}:<span style="font-weight: 500">Mark
-              Jecno</span>
+            {{'package_invoice_summary.name' | translate}}:<span style="font-weight: 500">
+              {{currentPlan.personalDetails.fullName}}
+            </span>
           </h6>
           <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
-            {{'package_invoice_summary.address' | translate}}: <span style="font-weight: 500">1189 Half and Half
-              Drive</span>
-          </h6>
-          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;">
-            Fresno,
-            California,
-            93721</h6>
-          <h6 style="margin: 0; font-size: 16px; font-weight: 500; line-height: 28px;;">United
-            Kingdom</h6>
-          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
-            {{'package_invoice_summary.email' | translate}}:<a style="font-weight: 500">{{'test@example.com'}}</a>
+            {{'package_invoice_summary.address' | translate}}: <span style="font-weight: 500">
+              {{currentPlan.personalDetails.emailId}}
+            </span>
           </h6>
           <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
-            {{'package_invoice_summary.phone_no' | translate}}: <span style="font-weight: 500">+444 222 111</span></h6>
+            {{'package_invoice_summary.email' | translate}}:<a
+              style="font-weight: 500">{{currentPlan.personalDetails.emailId}}</a>
+          </h6>
+          <h6 style="margin: 0; font-size: 16px; font-weight: 700; line-height: 28px; color: #3c3c3c;">
+            {{'package_invoice_summary.phone_no' | translate}}: <span
+              style="font-weight: 500">{{currentPlan.personalDetails.phoneNumber}}</span></h6>
         </td>
       </tr>
     </tbody>

@@ -71,29 +71,34 @@ export class AuthService {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.router.navigateByUrl('/home');
-        setTimeout(() => {
-          this.isLoggedIn = false;
-          this.gs.isLicenseVerified = false;
-          this.gs.isFleetOwnerLicenseVerified = false;
-          this.gs.isIndCarOwnerLicenseVerified = false;
-          this.gs.isDivComeOwnedCarLicenseVerified = false;
-          this.gs.loggedInUserInfo = {};
-          localStorage.removeItem('isLicenseVerified');
-          localStorage.removeItem('driverInfoData');
-          localStorage.removeItem('isFleetOwnerLicenseVerified');
-          localStorage.removeItem('fleetOwnerKycData');
-          localStorage.removeItem('isIndCarOwnerLicenseVerified');
-          localStorage.removeItem('individualCarOwnerKycData');
-          localStorage.removeItem('isDivComeOwnedCarLicenseVerified');
-          localStorage.removeItem('divComeOwnedCarKycData');
-          localStorage.removeItem('driverDetailsData');
-          localStorage.removeItem('MyWishlistStore');
-          localStorage.removeItem('purchasedNFTUser');
-          localStorage.removeItem('loggedIn');
-          localStorage.removeItem('loggedInUser');
-        }, 1000);
+        this.resetStorage();
       }
     })
+  }
+
+  resetStorage() {
+    setTimeout(() => {
+      this.isLoggedIn = false;
+      this.gs.isLicenseVerified = false;
+      this.gs.isFleetOwnerLicenseVerified = false;
+      this.gs.isIndCarOwnerLicenseVerified = false;
+      this.gs.isDivComeOwnedCarLicenseVerified = false;
+      this.gs.isSpinnerShow = false;
+      this.gs.loggedInUserInfo = {};
+      localStorage.removeItem('isLicenseVerified');
+      localStorage.removeItem('driverInfoData');
+      localStorage.removeItem('isFleetOwnerLicenseVerified');
+      localStorage.removeItem('fleetOwnerKycData');
+      localStorage.removeItem('isIndCarOwnerLicenseVerified');
+      localStorage.removeItem('individualCarOwnerKycData');
+      localStorage.removeItem('isDivComeOwnedCarLicenseVerified');
+      localStorage.removeItem('divComeOwnedCarKycData');
+      localStorage.removeItem('driverDetailsData');
+      localStorage.removeItem('MyWishlistStore');
+      localStorage.removeItem('purchasedNFTUser');
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('loggedInUser');
+    }, 1000);
   }
 
   // User Login

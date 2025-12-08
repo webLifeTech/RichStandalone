@@ -181,6 +181,15 @@ export class BookingService {
     );
   }
 
+  // BookingAgreement -> ReturnVehicleToOwner
+  public ReturnVehicleToOwner(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/ReturnVehicleToOwner`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
   // BookingAgreement -> ConfirmVehicleReceivedByOwnerfromDriver
   public ConfirmVehicleReceivedByOwnerfromDriver(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB/BookingAgreement/ConfirmVehicleReceivedByOwnerfromDriver`, data).pipe(

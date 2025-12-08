@@ -45,22 +45,14 @@ import { TimeAgoPipe } from '../../../../pipe/time-ago.pipe';
   styleUrl: './notification-view.component.scss'
 })
 export class NotificationViewComponent {
-
+  sortColumn: any = "";
+  sortOrder: any = "DESC"; // ASC
   public tableData: any = [];
-  dataSource!: MatTableDataSource<userBookings>;
-  public showFilter = false;
   public searchDataValue = '';
-  public lastIndex = 0;
   public pageSize = 10;
   public totalData = 0;
-  public skip = 0;
-  public limit: number = this.pageSize;
-  public pageIndex = 0;
-  public serialNumberArray: Array<number> = [];
   public currentPage = 1;
-  public pageNumberArray: Array<number> = [];
-  public pageSelection = [];
-  public totalPages = 0;
+  dateTimeRange: any = "";
 
   filterObj: any = {};
   sortFilter: any = [
@@ -77,8 +69,10 @@ export class NotificationViewComponent {
     public gs: GlobalService,
     private notifService: NotificationsService,
     public signalR: SignalRService,
+    public roleService: RolePermissionService,
 
   ) {
+    // this.roleService.getButtons("");
     this.route.queryParams.subscribe((params) => {
       this.getTableData();
     })
@@ -86,35 +80,37 @@ export class NotificationViewComponent {
 
   getTableData() {
 
-    this.notifService.getAllNotifications().subscribe((apiRes: any) => {
-      const roles: any = {
-        "user": "Drivers",
-        "user_2": "CarOwner",
-        "user_3": "FleetCompany",
-        "user_4": "DriverOwnedCar",
-        "admin": "Admin",
+    const { startDate, endDate } = this.gs.normalizeDateRange(this.dateTimeRange[0], this.dateTimeRange[1]);
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": this.currentPage,
+      "pageSize": this.pageSize,
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "startDate": startDate,
+      "endDate": endDate,
+      "channelId": 3,
+    }
+    this.gs.isSpinnerShow = true;
+    this.notifService.GetUserNotifications(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response.response && response.response.statusCode == "200") {
+        this.tableData = response.gridList;
+        this.totalData = response.viewModel?.totalCount;
       }
-      this.totalData = apiRes[roles[this.gs.loggedInUserInfo.role]].length;
-      this.tableData = apiRes[roles[this.gs.loggedInUserInfo.role]];
     });
   }
 
-  public searchData(value: string): void {
-    this.dataSource.filter = value.trim().toLowerCase();
-    this.tableData = this.dataSource.filteredData;
+  public searchData(): void {
+    this.currentPage = 1;
+    this.getTableData();
   }
-  initChecked = false;
 
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f: any) => {
-        f.isSelected = false;
-      });
-    }
+  onSort(column: any) {
+    this.sortColumn = column;
+    this.sortOrder = this.sortOrder === "DESC" ? "ASC" : "DESC";
+    this.getTableData();
   }
 
   pageChanged(event: any) {
