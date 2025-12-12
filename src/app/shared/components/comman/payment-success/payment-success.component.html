@@ -28,13 +28,13 @@
           {{'pricing_payment_success.massage3' | translate}}
         </p>
 
-        <button type="button" (click)="downloadInvoice()"
-          class="btn btn-theme">{{'pricing_payment_success.download_invoice' |
-          translate}}</button>
+        <button type="button" (click)="downloadInvoice()" class="btn btn-theme">
+          {{'pricing_payment_success.download_invoice' | translate}}
+        </button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="isShowInvoice" class="mb-5">
+  <div *ngIf="isShowInvoice" class="mt-4 mb-5">
     <app-subscription-template [currentPlan]="currentPlan" [type]="type"></app-subscription-template>
   </div>

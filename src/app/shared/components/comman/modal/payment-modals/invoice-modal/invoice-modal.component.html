@@ -4,7 +4,8 @@
       <a (click)="printInvoice()" class="btn me-2">
         <i class="feather icon-printer"></i> Print
       </a>
-      <a (click)="downloadPDF()" class="btn me-2">
+      <a (click)="gs.downloadFile(invoiceDetails.bookingDetails.docBase64.fileName, 'data:application/pdf;base64,'+invoiceDetails.bookingDetails.docBase64.base64String)"
+        class="btn me-2">
         <i class="feather icon-download"></i> Download Invoice
       </a>
       <a (click)="closeModal()" class="btn"><span>×</span></a>

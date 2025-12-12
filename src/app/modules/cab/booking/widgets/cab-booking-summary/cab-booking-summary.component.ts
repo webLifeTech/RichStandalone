@@ -421,8 +421,8 @@ export class CabBookingSummaryComponent {
     let body = {
       "rentType": this.searchObj.timeType,
       "duration": parseInt(this.searchObj.timeDuration),
-      "pickUpTime": this.searchObj.pick_time,
-      "dropTime": this.searchObj.drop_time,
+      "pickUpTime": this.localSelectedDate(this.searchObj.pick_time),
+      "dropTime": this.localSelectedDate(this.searchObj.drop_time),
       "vehicleId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
       "couponCode": this.appliedCouponCode?.trim() || "",
@@ -554,5 +554,10 @@ export class CabBookingSummaryComponent {
     if (this.type === 'driver') {
       this.getDriverBookingSummary();
     }
+  }
+
+  localSelectedDate(utcString: any) {
+    const d = new Date(utcString);
+    return this.datePipe.transform(d, 'MM/dd/yyyy HH:mm:ss');
   }
 }

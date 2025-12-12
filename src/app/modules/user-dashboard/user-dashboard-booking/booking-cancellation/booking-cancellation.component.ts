@@ -127,9 +127,10 @@ export class BookingCancellationComponent {
             } else {
               this.toast.errorToastr(res.message);
             }
+          }, (err) => {
+            this.gs.isSpinnerShow = false;
+            this.toast.errorToastr(err.error.message);
           });
-          //     this.isBookingCancelled = true;
-          // this.toast.successToastr("Booking Cancelled Successfully")
         }
       }, () => {
       });

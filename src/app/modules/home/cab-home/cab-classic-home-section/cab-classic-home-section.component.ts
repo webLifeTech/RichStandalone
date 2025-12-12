@@ -104,7 +104,7 @@ export class CabClassicHomeSectionComponent {
     this.cabService.GetLocations(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       if (response.response && response.response.statusCode == "200") {
-        this.locationArray = response.gridList;
+        this.locationArray = response.gridList || [];
       }
     }, err => {
       this.gs.isSpinnerShow = false;

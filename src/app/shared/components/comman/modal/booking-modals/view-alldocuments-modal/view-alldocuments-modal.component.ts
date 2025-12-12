@@ -45,7 +45,7 @@ export class ViewAllDocumentsModalComponent {
     this.bookingService.GetBookingAllDocuments(body).subscribe((res: any) => {
       console.log("GetBookingAllDocuments >>>>>", res);
       this.gs.isSpinnerShow = false;
-      this.documentsList = res;
+      this.documentsList = res['bookingDocuments'];
     }, (error: any) => {
       this.gs.isSpinnerShow = false;
     });

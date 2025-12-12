@@ -113,7 +113,7 @@ export class SearchCatLoactionComponent {
     this.cabService.GetLocations(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       if (response.response && response.response.statusCode == "200") {
-        this.locations = response.gridList;
+        this.locations = response.gridList || [];
         this.filteredLocation = this.locationCtrl.valueChanges.pipe(
           startWith(''),
           map(state => (state ? this._filterLocation(state) : this.locations.slice())),

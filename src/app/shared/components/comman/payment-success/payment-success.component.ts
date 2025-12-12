@@ -86,6 +86,7 @@ export class PaymentSuccessComponent {
 
   downloadInvoice() {
     this.isShowInvoice = true;
+    this.gs.downloadFile(this.currentPlan.subscriptionDetails.docBase64.fileName, 'data:application/pdf;base64,' + this.currentPlan.subscriptionDetails.docBase64.base64String)
   }
 
   backToPackage() {

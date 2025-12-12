@@ -27,20 +27,20 @@
                       <td>
                         <div class="table-avatar">
                           <div class="table-head-name flex-grow-1">
-                            {{item.Name}}
+                            {{item.name}}
                           </div>
                         </div>
                       </td>
                       <td>
-                        <span>{{item.RiskType}}</span>
+                        <span>{{item.riskType}}</span>
                       </td>
                       <td>
                         <button mat-mini-fab class="me-2 btn-theme1"
-                          (click)="gs.viewDocumentFile(item.ContractDocPath)">
+                          (click)="gs.viewDocumentFile(item.contractDocPath)">
                           <i class="feather icon-eye"></i>
                         </button>
                         <button mat-mini-fab class="me-2 btn-theme1"
-                          (click)="gs.downloadFile(item.Name, item.ContractDocPath)">
+                          (click)="gs.downloadFile(item.docBase64.fileName, 'data:application/pdf;base64,'+item.docBase64.base64String)">
                           <i class="feather icon-download"></i>
                         </button>
                       </td>
