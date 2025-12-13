@@ -35,7 +35,7 @@
               <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
                 class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
                 value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
-                [min]="todayDate">
+                [min]="minStartDate">
               <owl-date-time #pick_up></owl-date-time>
             </td>
           </tr>

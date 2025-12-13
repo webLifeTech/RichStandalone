@@ -86,7 +86,15 @@ export class PaymentSuccessComponent {
 
   downloadInvoice() {
     this.isShowInvoice = true;
-    this.gs.downloadFile(this.currentPlan.subscriptionDetails.docBase64.fileName, 'data:application/pdf;base64,' + this.currentPlan.subscriptionDetails.docBase64.base64String)
+    this.gs.isSpinnerShow = true;
+    this.gs.DownloadDocs({
+      "documentId": this.currentPlan.subscriptionDetails.documentId,
+    }).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String)
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    });
   }
 
   backToPackage() {

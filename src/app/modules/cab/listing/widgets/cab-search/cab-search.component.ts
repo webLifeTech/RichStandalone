@@ -54,6 +54,7 @@ export class CabSearchComponent {
   locationArray: any = [];
   rentTypeList: any = [];
   todayDate = new Date();
+  minStartDate = new Date(Date.now() - 86400000); // yesterday
   isDriverHireSearch: boolean = false;
   activeTab: any = 'tab1';
 

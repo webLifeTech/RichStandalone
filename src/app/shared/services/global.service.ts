@@ -316,4 +316,15 @@ export class GlobalService {
 
     return { startDate, endDate };
   }
+
+  // Document -> DownloadDocs
+  public DownloadDocs(dataParams: any) {
+    const params = new HttpParams().set('documentId', dataParams.documentId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Document/DownloadDocs', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
 }

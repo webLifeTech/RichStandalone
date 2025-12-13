@@ -58,8 +58,17 @@ export class ViewAllDocumentsModalComponent {
   viewDoc(item: any) {
 
   }
-  downloadDoc(item: any) {
 
+  downloadDoc(documentId: any) {
+    this.gs.isSpinnerShow = true;
+    this.gs.DownloadDocs({
+      "documentId": documentId,
+    }).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String)
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    });
   }
 
 }

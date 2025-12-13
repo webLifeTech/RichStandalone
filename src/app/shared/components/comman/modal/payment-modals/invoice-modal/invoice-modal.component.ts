@@ -6,6 +6,7 @@ import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { GlobalService } from '../../../../../services/global.service';
 import { CurrencySymbolPipe } from '../../../../../pipe/currency.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-invoice-modal',
@@ -36,44 +37,47 @@ export class InvoiceModalComponent {
   ) { }
 
   ngOnInit() {
-    console.log("invoiceDetails >>>>>>>>", this.invoiceDetails);
-    console.log("duration >>>>>>>>", this.invoiceDetails.bookingDetails.duration.split(" ")[0]);
     if (this.invoiceDetails && this.invoiceDetails.bookingDetails) {
       this.invoiceDetails.bookingDetails.priceRange = (this.invoiceDetails.bookingDetails.baseAmount / this.invoiceDetails.bookingDetails.duration.split(" ")[0]) || 0;
     }
-
-
   }
 
   closeModal() {
     this.modalService.dismissAll();
   }
 
-  printInvoice() {
-    const printContents = document.getElementById('invoice-bill')?.innerHTML;
-    const originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents!;
-
-    setTimeout(() => {
-      window.print();
-      document.body.innerHTML = originalContents;
-      window.location.reload();
-    }, 100);
+  downloadAndPrint(type: string) {
+    this.gs.isSpinnerShow = true;
+    this.gs.DownloadDocs({
+      "documentId": this.invoiceDetails.bookingDetails.documentId,
+    }).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (type === 'print') {
+        this.printInvoice(res.base64String)
+      } else {
+        this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String)
+      }
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    });
   }
 
-  // downloadPDF() {
-  //   const doc = new jsPDF();
+  printInvoice(base64: string) {
+    const byteArray = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const blobUrl = URL.createObjectURL(blob);
+    const win = window.open(blobUrl);
+    win?.print();
 
-  //   const content = document.getElementById('invoice');
-  //   doc.html(content!, {
-  //     callback: function (pdf) {
-  //       pdf.save('invoice.pdf');
-  //     },
-  //     x: 10,
-  //     y: 10
-  //   });
-  // }
+    // const printContents = document.getElementById('invoice-bill')?.innerHTML;
+    // const originalContents = document.body.innerHTML;
+    // document.body.innerHTML = printContents!;
+    // setTimeout(() => {
+    //   window.print();
+    //   document.body.innerHTML = originalContents;
+    //   window.location.reload();
+    // }, 100);
+  }
 
   downloadPDF() {
     const invoiceElement = document.getElementById('invoice-bill');

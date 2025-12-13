@@ -1,11 +1,10 @@
 <div class="modal-content invoice-modal">
   <div class="modal-header border-0 m-0 p-0">
     <div class="invoice-btns">
-      <a (click)="printInvoice()" class="btn me-2">
+      <a (click)="downloadAndPrint('print')" class="btn me-2">
         <i class="feather icon-printer"></i> Print
       </a>
-      <a (click)="gs.downloadFile(invoiceDetails.bookingDetails.docBase64.fileName, 'data:application/pdf;base64,'+invoiceDetails.bookingDetails.docBase64.base64String)"
-        class="btn me-2">
+      <a (click)="downloadAndPrint('download')" class="btn me-2">
         <i class="feather icon-download"></i> Download Invoice
       </a>
       <a (click)="closeModal()" class="btn"><span>×</span></a>

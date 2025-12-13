@@ -48,6 +48,7 @@ export class CabBookingSummaryComponent {
   };
   bookingSummaryDetails: any = {};
   todayDate = new Date();
+  minStartDate = new Date(Date.now() - 86400000); // yesterday
   appliedCouponCode: any = "";
   isCouponApplied: boolean = false;
 
