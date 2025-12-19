@@ -42,16 +42,24 @@
         <div class="card book-card flex-fill mb-0">
           <div class="card-header">
             <div class="row align-items-center">
-              <div class="col-md-3">
+              <div class="col-md-12">
                 <h4>{{activeTab}} <span>{{totalData}}</span></h4>
               </div>
-              <div class="col-md-9 text-md-end">
+            </div>
+            <div class="row align-items-center">
+              <div class="col-md-12 text-md-end">
                 <div class="table-search">
                   <div class="mb-1 me-3">
                     <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
                       [(ngModel)]="dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
                       [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
                     <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                  </div>
+                  <div class="me-3 text-start">
+                    <ng-select clearable="false" [items]="filterTypes" bindLabel="name" bindValue="id"
+                      placeholder="-- Select Search Type --" [(ngModel)]="selectedFilter" name="selectedFilter"
+                      class="min-width-250">
+                    </ng-select>
                   </div>
                   <div id="tablefilter">
                     <div class="dataTables_filter">

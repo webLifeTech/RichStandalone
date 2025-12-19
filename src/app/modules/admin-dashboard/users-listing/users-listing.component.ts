@@ -14,6 +14,8 @@ import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BookingService } from '../../../shared/services/booking.service';
 
 @Component({
   selector: 'app-users-listing',
@@ -28,6 +30,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
     MatButtonModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgSelectModule,
   ],
   providers: [DatePipe],
   templateUrl: './users-listing.component.html',
@@ -35,6 +38,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
 })
 export class UsersListingComponent {
   public tableData: any = [];
+  public selectedFilter = null;
   public searchDataValue = '';
   public pageSize = 10;
   public totalData = 0;
@@ -56,6 +60,7 @@ export class UsersListingComponent {
     { id: 3, name: 'Inactive', value: 'Inactive' },
     { id: 3, name: "KYC Pending", value: "KYC Pending" },
   ]
+  filterTypes: any = [];
 
 
   constructor(
@@ -69,6 +74,7 @@ export class UsersListingComponent {
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
+    private bookingService: BookingService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("AUSR");
@@ -77,6 +83,7 @@ export class UsersListingComponent {
       this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
       this.getGridTabsDetails();
       this.getTableData();
+      this.getFilterParameters();
     })
   }
 
@@ -92,6 +99,7 @@ export class UsersListingComponent {
       "userStatus": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllUsers(body).subscribe((response: any) => {
@@ -105,6 +113,16 @@ export class UsersListingComponent {
         this.toast.errorToastr(response.message);
       }
     });
+  }
+
+  getFilterParameters() {
+    const body = {
+      menuId: "36",
+      type: "Users",
+    }
+    this.bookingService.GetFilterParameters(body).subscribe(async (response: any) => {
+      this.filterTypes = response || [];
+    })
   }
 
   getGridTabsDetails() {
@@ -197,6 +215,7 @@ export class UsersListingComponent {
       "status": this.searchFilter.status == 'All Status' ? null : JSON.stringify([this.searchFilter.status]),
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.excelExport.exportToExcelPost(body, 'ExportAllUsersToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

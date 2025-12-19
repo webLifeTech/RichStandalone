@@ -37,6 +37,7 @@ export class SecurityComponent {
     public gs: GlobalService,
     private modalService: NgbModal,
     private settingsService: SettingsService,
+    private router: Router,
 
   ) {
     this.getSettingsDetails();
@@ -62,6 +63,10 @@ export class SecurityComponent {
   openChange(item: any) {
     if (item.Code === 'Pwd') {
       this.openChangePassword();
+    }
+    if (item.Code === 'AccActivity') {
+      // this.openChangePassword();
+      this.router.navigate(['/user/recent-activity'])
     }
   }
 

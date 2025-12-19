@@ -94,6 +94,7 @@ export class DynamicGridComponent {
         this.kycForm.formName = this.selectedTabObj.formName;
       }
       this.filteredData = this.data;
+      // this.onEdit(this.filteredData[0]); // need to do
       console.log("this.filteredData >>>>>", this.filteredData);
 
       this.totalData = this.data.length;

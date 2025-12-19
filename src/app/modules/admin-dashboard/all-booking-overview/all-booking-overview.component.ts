@@ -19,6 +19,9 @@ import { ViewAllDocumentsModalComponent } from '../../../shared/components/comma
 import { BookingCancellationComponent } from '../../user-dashboard/user-dashboard-booking/booking-cancellation/booking-cancellation.component';
 import { BookingService } from '../../../shared/services/booking.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatIconModule } from '@angular/material/icon';
+import { BookingProgressModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-progress-modal/booking-progress-modal.component';
 
 @Component({
   selector: 'app-all-booking-overview',
@@ -36,6 +39,8 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgSelectModule,
+    MatIconModule
   ],
   providers: [DatePipe],
   templateUrl: './all-booking-overview.component.html',
@@ -43,6 +48,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
 })
 export class AllBookingOverviewComponent {
   public tableData: any = [];
+  public selectedFilter = null;
   public searchDataValue = '';
   public pageSize = 10;
   public totalData = 0;
@@ -64,10 +70,8 @@ export class AllBookingOverviewComponent {
     status: 'All Status',
   };
   tabs: any = [];
-  bookTypes: any = [
-    // { title: "Cars", value: "Vehicle" },
-    // { title: "Drivers", value: "Driver" },
-  ]
+  bookTypes: any = []
+  filterTypes: any = []
   vehicleStatusList: any = [
     { name: "All Status", value: "All Status" },
     { name: "Confirmed", value: "Confirmed" },
@@ -100,6 +104,7 @@ export class AllBookingOverviewComponent {
       } else {
         this.getGridTabsDetails();
       }
+      this.getFilterParameters();
     })
   }
 
@@ -116,6 +121,7 @@ export class AllBookingOverviewComponent {
       "riskType": this.activeTypes,
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllBookingOverview(body).subscribe((response: any) => {
@@ -129,6 +135,16 @@ export class AllBookingOverviewComponent {
         this.toast.errorToastr(response.message);
       }
     });
+  }
+
+  getFilterParameters() {
+    const body = {
+      menuId: "38",
+      type: "Booking Overview",
+    }
+    this.bookingService.GetFilterParameters(body).subscribe(async (response: any) => {
+      this.filterTypes = response || [];
+    })
   }
 
   getGridTabsDetails() {
@@ -303,6 +319,17 @@ export class AllBookingOverviewComponent {
     window.scrollTo({ top: 280, behavior: 'smooth' });
   }
 
+  openProgress(bookingData: any) {
+    const modalRef = this.modalService.open(BookingProgressModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.bookingRefNo = bookingData.bookingReferenceNumber;
+    modalRef.componentInstance.bookingId = bookingData.bookingId;
+    modalRef.result.then((res: any) => {
+    }, () => {
+    });
+  }
+
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
   }
@@ -316,6 +343,7 @@ export class AllBookingOverviewComponent {
       "riskType": this.activeTypes,
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.gs.isSpinnerShow = true;
     this.excelExport.exportToExcelPost(body, 'ExportAllBookingOverviewToExcel').subscribe((response: any) => {

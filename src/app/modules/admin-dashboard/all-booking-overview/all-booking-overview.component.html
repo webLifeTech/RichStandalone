@@ -64,13 +64,21 @@
                 <div class="col-md-4">
                   <h4>{{activeTab}} <span>{{totalData}}</span></h4>
                 </div>
-                <div class="col-md-8 text-md-end">
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-12 text-md-end">
                   <div class="table-search">
                     <div class="mb-1 me-3">
                       <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
                         [(ngModel)]="dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
                         [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
                       <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                    </div>
+                    <div class="me-3 text-start">
+                      <ng-select clearable="false" [items]="filterTypes" bindLabel="name" bindValue="id"
+                        placeholder="-- Select Search Type --" [(ngModel)]="selectedFilter" name="selectedFilter"
+                        class="min-width-250">
+                      </ng-select>
                     </div>
                     <div id="tablefilter">
                       <div class="dataTables_filter">
@@ -191,7 +199,7 @@
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
                       </th>
-                      <th class="text-center">Action</th>
+                      <th class="text-center sticky-action">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -256,11 +264,15 @@
                       <td class="text-start">
                         <span>{{data.updatedBy}}</span>
                       </td>
-                      <td class="text-end">
+                      <td class="text-end sticky-action">
                         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                           <i class="feather icon-more-vertical"></i>
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before">
+                          <button (click)="openProgress(data)" type="button" mat-menu-item>
+                            <mat-icon>timeline</mat-icon>
+                            <span>Track Progress</span>
+                          </button>
                           <button *ngIf="activeTypes === 'Vehicle'" (click)="onView(data)" type="button" mat-menu-item>
                             <i class="feather icon-eye"></i>
                             <span class="ms-2">View</span>

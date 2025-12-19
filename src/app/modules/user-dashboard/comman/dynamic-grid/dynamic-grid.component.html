@@ -41,7 +41,7 @@
             </th>
             <th *ngIf="this.type !== 'vendor-profile'" class="text-center">{{'userDashboard.kyc.upload_bulk_vehicle.kyc'
               | translate}}
-            <th *ngIf="actions.length">Actions</th>
+            <th *ngIf="actions.length" class="sticky-action">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@
                 Success
               </span>
             </td>
-            <td *ngIf="actions.length" class="text-center">
+            <td *ngIf="actions.length" class="text-center sticky-action">
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                 <i class="feather icon-more-vertical"></i>
               </button>

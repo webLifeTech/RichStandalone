@@ -19,6 +19,7 @@ import { TermsAndCModalComponent } from '../../../../shared/components/comman/mo
 import { BranchService } from '../../../../shared/services/branch.service';
 import { ConfirmationModalComponent } from '../../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { VendorServService } from '../../../../shared/services/vendor-service.service';
+import { OtpVerificationModalComponent } from '../../user-settings/modals/otp-verification-modal/otp-verification-modal.component';
 
 
 @Component({
@@ -2984,4 +2985,20 @@ export class DynamicFormComponent {
       }
     }, () => { });
   }
+
+  openOtpVerification(field: any) {
+    console.log("field >>>", field)
+    const modalRef = this.modalService.open(OtpVerificationModalComponent, {
+      centered: true
+    });
+    modalRef.componentInstance.title = 'Enter OTP Send to your ' + field.value.description + ' ' + field.value.value;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        console.log("res >>>>", res);
+        // this.openVerificationSuccess();
+      }
+    }, () => {
+    });
+  }
+
 }

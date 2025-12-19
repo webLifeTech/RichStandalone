@@ -177,7 +177,7 @@
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
                       </th>
-                      <th class="text-center">Action</th>
+                      <th class="text-center sticky-action">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -239,7 +239,7 @@
                             'badge-light-secondary': data.paymentStatus === 'Pending Disburse'
                              }" class="badge">{{data.paymentStatus}}</span>
                       </td>
-                      <td class="text-end">
+                      <td class="text-end sticky-action">
                         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                           <i class="feather icon-more-vertical"></i>
                         </button>

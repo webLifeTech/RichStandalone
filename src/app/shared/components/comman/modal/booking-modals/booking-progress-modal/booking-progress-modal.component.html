@@ -1,0 +1,139 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="mb-1 fw-bold text-dark">Booking Progress</h5>
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+
+
+      <div *ngIf="bookingDetails.bookingDetails && bookingDetails.bookingDetails.bookingReferenceNumber"
+        class="booking-header mb-3">
+        <div class="booking-img-wrap">
+          <div class="book-img">
+            <img [src]="bookingDetails.rentaldetails.image" alt="img">
+          </div>
+          <div class="book-info">
+            <h6 *ngIf="!bookingDetails.rentaldetails?.driverName">
+              {{bookingDetails.rentaldetails.carName}}
+            </h6>
+            <h6 *ngIf="bookingDetails.rentaldetails?.driverName">
+              {{bookingDetails.rentaldetails.driverName}}
+            </h6>
+            <h6>Booked On : {{bookingDetails.bookingDetails.bookingDate | date : 'MMM d, y, h:mm a'}}</h6>
+            <h6>Duration : {{bookingDetails.bookingDetails.duration}}</h6>
+          </div>
+        </div>
+        <div class="book-amount">
+          <p>Reference Number</p>
+          <h6 class="text-theme">
+            {{bookingDetails.bookingDetails.bookingReferenceNumber}}
+          </h6>
+        </div>
+      </div>
+
+      <div *ngIf="bookingDetails.bookingDetails && bookingDetails.bookingDetails.bookingReferenceNumber"
+        class="booking-header mb-3">
+        <div class="booking-img-wrap">
+          <div class="book-info">
+            <h6 class="fw-bold">Vehicle Owner Details</h6>
+            <h6>Name : {{bookingDetails.vehicleOwnerPersonalDetails.name}}</h6>
+            <h6>Email : {{bookingDetails.vehicleOwnerPersonalDetails.emailId}}</h6>
+            <h6>Phone Number :
+              <a href="tel:{{bookingDetails.vehicleOwnerPersonalDetails.phoneNumber}}">
+                <i class="feather icon-phone"></i>
+              </a> {{bookingDetails.vehicleOwnerPersonalDetails.phoneNumber}}
+            </h6>
+          </div>
+        </div>
+
+        <div class="booking-img-wrap">
+          <div class="book-info">
+            <h6 class="fw-bold">Driver Details</h6>
+            <h6>Name : {{bookingDetails.driverPersonalDetails.name}}</h6>
+            <h6>Email : {{bookingDetails.driverPersonalDetails.emailId}}</h6>
+            <h6>Phone Number :
+              <a href="tel:{{bookingDetails.driverPersonalDetails.phoneNumber}}">
+                <i class="feather icon-phone"></i>
+              </a> {{bookingDetails.driverPersonalDetails.phoneNumber}}
+            </h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-group m-3">
+        <div class="text-end">
+          <a (click)="checkUpdate()" class="btn btn-theme px-3 pt-2 pb-1" title="Check Update">
+            <mat-icon>autorenew</mat-icon>
+          </a>
+        </div>
+        <div *ngIf="timelineEvents.length" class="timeline-container mt-3">
+
+          <ng-container
+            *ngIf="bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed'">
+            <div class="cancel-box mb-3">
+              <p>
+                Cancelled on {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
+                <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
+                  Amount
+                  <strong>
+                    {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
+                  </strong>
+                  Refund Approval Pending By Admin
+                </ng-container>
+                <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd == 4">
+                  Amount
+                  <strong>
+                    {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
+                  </strong> Refund is deposited
+                  in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'd MMM y'}}
+                </ng-container>
+              </p>
+            </div>
+          </ng-container>
+
+          <div class="timeline-item" *ngFor="let event of timelineEvents; let last = last">
+
+            <div class="timeline-time">
+              <span class="time-text">{{ event.bookingTrackDate | date:'shortTime' }}</span>
+              <span class="date-text">{{ event.bookingTrackDate | date:'MMM d, yy' }}</span>
+            </div>
+
+            <div class="timeline-marker">
+              <div class="icon-circle-r badge-light-{{event.color}}">
+                <mat-icon>{{event.icon}}</mat-icon>
+              </div>
+              <div class="line" *ngIf="!last"></div>
+            </div>
+
+            <div class="timeline-content pb-4">
+              <div class="card p-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <h6 class="fw-bold mb-0">
+                    <span class="badge badge-light-{{event.color}}">{{ event.bookingStatusRemarks }}</span>
+                  </h6>
+                  <span>
+                    <!-- <div>Booking Status : </div> -->
+                    <span class="badge badge-light-{{event.statusColor}}">
+                      {{ event.bookingStatus }}
+                    </span>
+                  </span>
+                </div>
+                <p class="text-muted mb-2 small">{{ event.bookingStatus }}</p>
+
+                <div class="d-flex align-items-center gap-2 mt-2">
+                  <div class="avatar-circle">
+                    {{ event.updatedBy?.charAt(0) }}
+                    <!-- .charAt(0) -->
+                  </div>
+                  <small class="text-secondary">Updated by <strong>{{ event.updatedBy }}</strong></small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

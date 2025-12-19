@@ -18,7 +18,7 @@
                       <th class="text-center">SL</th>
                       <th>Name</th>
                       <th>Type</th>
-                      <th class="text-center">Action</th>
+                      <th class="text-center sticky-action">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -34,7 +34,7 @@
                       <td>
                         <span>{{item.riskType}}</span>
                       </td>
-                      <td>
+                      <td class="sticky-action">
                         <button mat-mini-fab class="me-2 btn-theme1"
                           (click)="gs.viewDocumentFile(item.contractDocPath)">
                           <i class="feather icon-eye"></i>

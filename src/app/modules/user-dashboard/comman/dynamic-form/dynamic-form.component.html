@@ -107,6 +107,34 @@
                         </div>
                       </div>
 
+                      <!-- TEXTBUTTONGROUP -->
+                      <!-- <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'TEXTGROUP'">
+                        <div class="form-group ">
+                          <label for="driver_license_number">
+                            {{ field.get('description')?.value }}
+                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          </label>
+                          <div class="input-group mb-3">
+
+                            <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
+                              [readonly]="field.get('isReadOnly')?.value"
+                              [placeholder]="field.get('description')?.value" class="form-control open-select"
+                              type="text" [attr.aria-describedby]="field.get('fieldCode')?.value" />
+                            <button class="btn btn-outline-secondary" type="button" [id]="field.get('fieldCode')?.value"
+                              (click)="openOtpVerification(field)">
+                              Verify
+                            </button>
+
+                          </div>
+                          <div class="text-danger mt-2"
+                            *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
+                            <div *ngIf="field.get('value')?.errors?.required">This field is required.</div>
+                            <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
+                          </div>
+                        </div>
+                      </div> -->
+
                       <!-- HIDDENTEXT -->
                       <div [ngClass]="field.get('fieldClass')?.value"
                         *ngIf="field.get('fieldType')?.value === 'HIDDENTEXT'">

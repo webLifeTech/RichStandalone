@@ -248,4 +248,28 @@ export class BookingService {
       })
     );
   }
+
+  // Booking -> TrackBookingDetails
+  public TrackBookingDetails(dataParams: any) {
+    const params = new HttpParams()
+      .set('bookingId', dataParams.bookingId)
+      .set('bookingReferenceNumber', dataParams.bookingReferenceNumber);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Booking/TrackBookingDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Master -> GetFilterParameters
+  public GetFilterParameters(dataParams: any) {
+    const params = new HttpParams()
+      .set('menuId', dataParams.menuId)
+      .set('type', dataParams.type);
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetFilterParameters', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

@@ -16,6 +16,8 @@ import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BookingService } from '../../../shared/services/booking.service';
 
 @Component({
   selector: 'app-user-cars-listing',
@@ -32,6 +34,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
     MatExpansionModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgSelectModule,
   ],
   providers: [DatePipe],
   templateUrl: './user-cars-listing.component.html',
@@ -39,6 +42,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
 })
 export class UserCarsListingComponent {
   public tableData: any = [];
+  public selectedFilter = null;
   public searchDataValue = '';
   public pageSize = 10;
   public totalData = 0;
@@ -70,7 +74,7 @@ export class UserCarsListingComponent {
     // { id: 3, name: 'Repair', value: 'Repair' },
   ]
   ownerVehiclesData: any = [];
-
+  filterTypes: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -82,6 +86,7 @@ export class UserCarsListingComponent {
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
+    private bookingService: BookingService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("AVEH");
@@ -90,6 +95,7 @@ export class UserCarsListingComponent {
       this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
       this.getGridTabsDetails();
       this.getTableData();
+      this.getFilterParameters();
     })
   }
 
@@ -103,6 +109,7 @@ export class UserCarsListingComponent {
       "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllVehicleOwners(body).subscribe((response: any) => {
@@ -132,6 +139,7 @@ export class UserCarsListingComponent {
       "startDate": startDate,
       "endDate": endDate,
       "userId": ownerUserId,
+      "type": this.selectedFilter,
     }
     this.tableDataSecond = [];
     this.gs.isSpinnerShow = true;
@@ -144,6 +152,16 @@ export class UserCarsListingComponent {
         this.toast.errorToastr(response.message);
       }
     });
+  }
+
+  getFilterParameters() {
+    const body = {
+      menuId: "37",
+      type: "Vehicles",
+    }
+    this.bookingService.GetFilterParameters(body).subscribe(async (response: any) => {
+      this.filterTypes = response || [];
+    })
   }
 
   getGridTabsDetails() {
@@ -219,6 +237,7 @@ export class UserCarsListingComponent {
       "status": (!this.searchFilter.status || this.searchFilter.status === 'All Status') ? null : JSON.stringify([this.searchFilter.status]),
       "startDate": startDate,
       "endDate": endDate,
+      "type": this.selectedFilter,
     }
     this.gs.isSpinnerShow = true;
     this.excelExport.exportToExcelPost(body, 'ExportAllVehiclesToExcel').subscribe((response: any) => {
