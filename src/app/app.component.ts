@@ -5,6 +5,7 @@ import { GlobalService } from './shared/services/global.service';
 import { CommonModule } from '@angular/common';
 import * as AOS from 'aos'; // Import AOS
 import { SignalRService } from './shared/services/signalr.service';
+import { TabSyncService } from './shared/services/tab-sync.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent {
     private translate: TranslateService,
     public gs: GlobalService,
     public signalR: SignalRService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private tabSyncService: TabSyncService
   ) {
     this.gs.loggedInUserInfo = localStorage.getItem('loggedInUser') ? JSON.parse(localStorage.getItem('loggedInUser') || "") : {};
 
@@ -35,6 +37,8 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    // this.tabSyncService.notifyNewTab();
+
     this.connect();
     setInterval(() => {
       this.connect();

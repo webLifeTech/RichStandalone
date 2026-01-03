@@ -368,7 +368,10 @@ export class PlanSubscribeComponent {
       } else {
         this.toast.errorToastr(response.message);
       }
-    });
+    }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 
   bookCancel() {

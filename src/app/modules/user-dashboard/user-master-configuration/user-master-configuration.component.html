@@ -26,6 +26,12 @@
     <div class="dashboard-box">
       <div class="position-relative">
 
+        <div *ngIf="isNextStepShow && !isFormEdit" class="text-end">
+          <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
+            Next Step
+          </button>
+        </div>
+
         <!--  Driver details -->
         <div *ngIf="activeKycTab === 3">
           <ng-container *ngIf="!isAddEditDriverDetail && isLoadDriverDetail">

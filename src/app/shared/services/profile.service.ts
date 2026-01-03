@@ -571,4 +571,55 @@ export class ProfileService {
       })
     );
   }
+
+  // DriverKYC -> GetDriverDetailsByDriverId
+  public GetDriverDetailsByDriverId(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+      .set('driverId', dataParams.driverId);
+
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+
+    // return this.http.get(this.baseUrl1 + 'TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+  }
+
+  // CompanyKYC -> GetCompanyDetailsByCompanyId
+  public GetCompanyDetailsByCompanyId(dataParams: any) {
+    const params = new HttpParams()
+      .set('userId', dataParams.userId)
+      .set('fleetCompanyId', dataParams.fleetCompanyId);
+
+    // return this.http.get(this.baseUrl1 + 'TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  // User -> UpdateEmailPhoneNumbreVerification
+  public UpdateEmailPhoneNumbreVerification(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/User/UpdateEmailPhoneNumbreVerification`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

@@ -82,13 +82,13 @@ export class DynamicGridComponent {
     } else {
 
       if (this.type === 'driver') {
-        this.kycForm.formName = 'DRIVER INFO';
+        this.kycForm.formName = this.selectedTabObj.formName || 'DRIVER INFO';
       }
       if (this.type === 'individualCarOwner') {
-        this.kycForm.formName = 'CAR OWNER INFO';
+        this.kycForm.formName = this.selectedTabObj.formName || 'CAR OWNER INFO';
       }
       if (this.type === 'fleetOwner') {
-        this.kycForm.formName = 'COMPANY INFO';
+        this.kycForm.formName = this.selectedTabObj.formName || 'COMPANY INFO';
       }
       if (this.type === 'branch' || this.type === 'driver_details' || this.type === 'vendor-profile') {
         this.kycForm.formName = this.selectedTabObj.formName;

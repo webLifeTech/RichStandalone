@@ -36,6 +36,8 @@ export class DynamicInfoModalComponent {
   }
 
   ngOnInit() {
+    console.log("model kycForm >>>", this.kycForm);
+
     this.getConfigUIFields();
     if (this.formType === 'driver_details') {
       this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours;

@@ -6,8 +6,9 @@
         <div class="timeline-icon"></div>
         <div class="timeline-content">
           <p class="mb-1 text-muted">{{this.gs.lastSearch.pick_time | date : 'MMM d, y, h:mm a'}}</p>
-          <p class="fw-bold timeline-location">{{this.gs.lastSearch.same_location}}</p>
-          <a (click)="instructionDialog('pick_up')" class="text-primary">
+          <p class="fw-bold timeline-location">{{this.bookingDetails?.bookingLocationDetails?.location}}</p>
+          <a *ngIf="this.bookingDetails?.bookingLocationDetails?.dropInstruction" (click)="instructionDialog('pick_up')"
+            class="text-primary">
             View pick-up instructions
           </a>
         </div>
@@ -16,8 +17,9 @@
         <div class="timeline-icon"></div>
         <div class="timeline-content">
           <p class="mb-1 text-muted">{{this.gs.lastSearch.drop_time | date : 'MMM d, y, h:mm a'}}</p>
-          <p class="fw-bold timeline-location">{{this.gs.lastSearch.same_location}}</p>
-          <a (click)="instructionDialog('prop_off')" class="text-primary">
+          <p class="fw-bold timeline-location">{{this.bookingDetails?.bookingLocationDetails?.location}}</p>
+          <a *ngIf="this.bookingDetails?.bookingLocationDetails?.pickUpInstruction"
+            (click)="instructionDialog('prop_off')" class="text-primary">
             View drop-off instructions
           </a>
         </div>

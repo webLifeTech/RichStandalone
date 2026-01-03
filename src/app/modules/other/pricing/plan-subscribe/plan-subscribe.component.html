@@ -209,7 +209,7 @@
                     </div>
                   </div>
                   <div *ngIf="isCouponApplied" class="text-green fw-bold">
-                    Coupon Applied!
+                    {{packageSummaryObj.coupon | currencyPipe: cabService.currency}} Coupon Applied!
                   </div>
                 </div>
                 <table class="table table-borderless">

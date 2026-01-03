@@ -21,23 +21,29 @@ import { DynamicFormComponent } from '../comman/dynamic-form/dynamic-form.compon
 import { DynamicGridComponent } from '../comman/dynamic-grid/dynamic-grid.component';
 import { NftsInfoComponent } from '../comman/nfts-info/nfts-info.component';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
 import { AuthService } from '../../../shared/services/auth.service';
+
+// Material Imports
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-user-dashboard-kyc',
   standalone: true,
   imports: [
     NftsInfoComponent,
-
     // Common
     DriverDetailsFormComponent,
     PaymentOptionListComponent,
     BranchbranchListComponent,
     DynamicFormComponent,
     DynamicGridComponent,
-
     // Module
     CommonModule,
     TranslateModule,
@@ -45,7 +51,15 @@ import { AuthService } from '../../../shared/services/auth.service';
     FormsModule,
     MatMenuModule,
     MatExpansionModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink,
+
+    MatStepperModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule
   ],
   // providers: [GlobalService],
   templateUrl: './user-dashboard-kyc.component.html',
@@ -84,6 +98,99 @@ export class UserDashboardKycComponent {
   isLoadVendorDetail: boolean = false;
   gridInfoData: any = [];
   isKYCCompleted: any = 0;
+
+  selectedState: string = '';
+
+  // Display Array
+  currentSteps: any[] = [];
+  isNextStepShow: boolean = true;
+
+  // Data Definitions for Each Role
+  stepsData: any = {
+    "user": [
+      {
+        title: 'Driver & Personal',
+        desc: 'Personal details and driver info.',
+        icon: 'person'
+      },
+      {
+        title: 'License & Permits',
+        desc: 'TLC & Driving License details.',
+        icon: 'badge'
+      },
+      {
+        title: 'Address Info',
+        desc: 'Permanent, Mailing & Billing address.',
+        icon: 'home'
+      },
+      {
+        title: 'Final Details',
+        desc: 'Other info & Terms acceptance.',
+        icon: 'assignment_turned_in'
+      }
+    ],
+    "user_2": [
+      {
+        title: 'Owner Profile',
+        desc: 'Car owner details & License details.',
+        icon: 'account_circle' // Covers: Car Owner Details, Foreign License
+      },
+      {
+        title: 'Personal Info',
+        desc: 'Basic personal details.',
+        icon: 'face' // Covers: Personal Information
+      },
+      {
+        title: 'Address Info',
+        desc: 'Permanent, Mailing & Billing info.',
+        icon: 'place' // Covers: All 3 Address sections
+      },
+      {
+        title: 'Final Details',
+        desc: 'Other info & Terms acceptance.',
+        icon: 'verified' // Covers: Other Info
+      }
+    ],
+    "user_3": [
+      {
+        title: 'Company Details',
+        desc: 'Register your company info & Tax ID.',
+        icon: 'business'
+      },
+      {
+        title: 'Fleet Owner Details',
+        desc: 'Add owner license & fleet info.',
+        icon: 'directions_bus'
+      },
+      {
+        title: 'Read Terms & Confirm',
+        desc: 'Review policies and submit KYC.',
+        icon: 'gavel'
+      }
+    ],
+    "user_4": [
+      {
+        title: 'Driver & Personal',
+        desc: 'Personal details and driver info.',
+        icon: 'person'
+      },
+      {
+        title: 'License & Permits',
+        desc: 'TLC & Driving License details.',
+        icon: 'badge'
+      },
+      {
+        title: 'Address Info',
+        desc: 'Permanent, Mailing & Billing address.',
+        icon: 'home'
+      },
+      {
+        title: 'Final Details',
+        desc: 'Other info & Terms acceptance.',
+        icon: 'assignment_turned_in'
+      }
+    ]
+  };
 
   // Driver List Columns and Data
   driverColumns = [
@@ -208,16 +315,22 @@ export class UserDashboardKycComponent {
     return true;
   }
 
+  updateSteps() {
+    this.currentSteps = this.stepsData[this.gs.loggedInUserInfo.role] || [];
+  }
+
   GetKycByUserId() {
     this.profileService.GetKycByUserId({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       const type: any = {
+        "Driver": "driverkyc",
         "Fleet owner": "companykyc",
         "Individual car owner": "driverkyc",
         "Driver with owned car": "driverkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+      this.updateSteps()
     })
   }
 
@@ -238,6 +351,10 @@ export class UserDashboardKycComponent {
       this.isFormEdit = false;
       this.vehicleUploadType = null;
       this.activeKycTab = tab.formId;
+      this.isNextStepShow = true;
+      if (this.activeKycTab === 7) {
+        this.isNextStepShow = false;
+      }
 
       if (this.gs.loggedInUserInfo.roleName !== 'B5107AB1-19BF-430B-9553-76F39DB1CDCD') {
         this.vehicleUploadType = 'single';
@@ -406,6 +523,7 @@ export class UserDashboardKycComponent {
   }
 
   handleSubmit() {
+
     this.getDriverDetails();
     this.GetKycByUserId();
     window.scrollTo({ top: 300, behavior: 'smooth' });
@@ -425,21 +543,21 @@ export class UserDashboardKycComponent {
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
   // Confirm
-  onDivInfoSubmit() {
-    let mergedForm = {};
-    localStorage.setItem('driverInfoData', JSON.stringify(mergedForm));
-    this.gs.licenseVerified();
-    window.scrollTo({ top: 300, behavior: 'smooth' });
-    this.driverInfoData = this.gs.getDriverInfo();
+  // onDivInfoSubmit() {
+  //   let mergedForm = {};
+  //   localStorage.setItem('driverInfoData', JSON.stringify(mergedForm));
+  //   this.gs.licenseVerified();
+  //   window.scrollTo({ top: 300, behavior: 'smooth' });
+  //   this.driverInfoData = this.gs.getDriverInfo();
 
-    this.activeKycTab = "Driver info";
-    if (this.isFormEdit) {
-      this.toast.successToastr("Updated Successfully");
-    } else {
-      this.toast.successToastr("KYC Completed Successfully");
-    }
-    this.isFormEdit = false;
-  }
+  //   this.activeKycTab = "Driver info";
+  //   if (this.isFormEdit) {
+  //     this.toast.successToastr("Updated Successfully");
+  //   } else {
+  //     this.toast.successToastr("KYC Completed Successfully");
+  //   }
+  //   this.isFormEdit = false;
+  // }
 
   uploadFile(event: any) {
 
@@ -601,6 +719,24 @@ export class UserDashboardKycComponent {
     if (type === 'vendor-profile') {
       this.isFormEdit = true;
       this.isAddEditVendor = true;
+    }
+  }
+
+  nextStep() {
+    if (this.activeKycTab === 1 || this.activeKycTab === 8) {
+      this.router.navigate(['/user/configuration']);
+      return;
+    }
+    if (this.activeKycTab === 12 || this.activeKycTab === 5) {
+      let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 7) || {};
+      this.changeKycTab(tab);
+      return;
+    }
+
+    if (this.activeKycTab === 7) {
+      let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
+      this.changeKycTab(tab);
+      return;
     }
   }
 

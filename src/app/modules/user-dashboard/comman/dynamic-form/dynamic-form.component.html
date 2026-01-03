@@ -107,25 +107,32 @@
                         </div>
                       </div>
 
-                      <!-- TEXTBUTTONGROUP -->
-                      <!-- <div [ngClass]="field.get('fieldClass')?.value"
-                        *ngIf="field.get('fieldType')?.value === 'TEXTGROUP'">
+                      <!-- VERIFYINPUT // TEXTBUTTONGROUP -->
+                      <div [ngClass]="field.get('fieldClass')?.value"
+                        *ngIf="field.get('fieldType')?.value === 'VERIFYINPUT'">
                         <div class="form-group ">
-                          <label for="driver_license_number">
-                            {{ field.get('description')?.value }}
-                            <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                          <label for="driver_license_number" class="d-flex justify-content-between">
+                            <span>
+                              {{ field.get('description')?.value }}
+                              <span *ngIf="field.get('isMandatory')?.value" class="mandatory">*</span>
+                            </span>
+                            <span class="text-green fw-bold" *ngIf="field.get('isVerified')?.value">
+                              <i class="feather icon-check-circle"></i> Verified
+                            </span>
+                            <span class="text-danger fw-bold" *ngIf="!field.get('isVerified')?.value">
+                              <i class="feather icon-alert-circle"></i> Verification Pending
+                            </span>
                           </label>
-                          <div class="input-group mb-3">
-
+                          <div class="input-group">
                             <input (keyup)="onChangeInput($event, field, section)" [formControlName]="'value'"
                               [readonly]="field.get('isReadOnly')?.value"
                               [placeholder]="field.get('description')?.value" class="form-control open-select"
                               type="text" [attr.aria-describedby]="field.get('fieldCode')?.value" />
-                            <button class="btn btn-outline-secondary" type="button" [id]="field.get('fieldCode')?.value"
-                              (click)="openOtpVerification(field)">
+                            <button *ngIf="!field.get('isVerified')?.value" class="btn btn-theme no-text-transorm px-3"
+                              type="button" [id]="field.get('fieldCode')?.value"
+                              (click)="openOtpVerification(field, section)">
                               Verify
                             </button>
-
                           </div>
                           <div class="text-danger mt-2"
                             *ngIf="field.get('value')?.invalid && (field.get('value')?.dirty || field.get('value')?.touched || submitted)">
@@ -133,7 +140,7 @@
                             <div *ngIf="field.get('value')?.errors?.pattern">Invalid format.</div>
                           </div>
                         </div>
-                      </div> -->
+                      </div>
 
                       <!-- HIDDENTEXT -->
                       <div [ngClass]="field.get('fieldClass')?.value"
@@ -383,8 +390,10 @@
                       <div [ngClass]="field.get('fieldClass')?.value"
                         *ngIf="field.get('fieldType')?.value === 'BUTTON' && field.get('isMandatory')?.value">
                         <button *ngIf="field.get('action')?.value === 'ADD' || field.get('action')?.value === 'Add'"
-                          (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button">
-                          {{ field.get('description')?.value }}
+                          (click)="addNew(section)" class="btn btn-solid color2 no-text-transorm" type="button"
+                          title="{{ field.get('description')?.value }}">
+                          <i class="feather icon-plus-circle"></i>
+                          <!-- {{ field.get('description')?.value }} -->
                         </button>
                         <button
                           *ngIf="(field.get('action')?.value === 'SAVE' || field.get('action')?.value === 'Save') && !isTableEdit"
@@ -395,7 +404,7 @@
                         <button *ngIf="field.get('action')?.value === 'SAVE' && isTableEdit"
                           (click)="saveSubmit(field, section)" class="btn btn-solid color2 no-text-transorm"
                           type="button">
-                          Update
+                          Save
                         </button>
                         <button *ngIf="field.get('action')?.value === 'SAVE'" (click)="cancelForm(field, section)"
                           class="btn btn-solid color3 no-text-transorm ms-3" type="button">
@@ -403,7 +412,7 @@
                         </button>
                         <!-- && !section?.get('tableGridValueList')?.value?.length -->
                         <button
-                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && (!isTableVisible || !section?.get('tableGridValueList')?.value?.length)  && isEditInfo"
+                          *ngIf="(field.get('action')?.value === 'UPDATE' || field.get('action')?.value === 'Update') && (!section?.get('tableGridValueList')?.value?.length && (isTableVisible || !section?.get('tableGrid')?.value?.length) && !isTableEdit)  && isEditInfo"
                           (click)="updateDetails(section)" class="btn btn-solid color2 no-text-transorm my-2"
                           type="button">
                           {{ field.get('description')?.value }}
@@ -481,7 +490,7 @@
                 <div class="text-end">
                   <button *ngIf="isEditInfo" (click)="updateDetails(section)"
                     class="btn btn-solid color2 no-text-transorm my-2" type="button">
-                    UPDATE
+                    Save
                   </button>
                 </div>
               </div>
@@ -595,7 +604,7 @@
           Save
         </span>
         <span *ngIf="isEditInfo">
-          Update
+          Save
         </span>
       </button>
     </div>

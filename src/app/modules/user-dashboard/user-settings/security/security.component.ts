@@ -15,6 +15,7 @@ import { OtpVerificationModalComponent } from '../modals/otp-verification-modal/
 import { VerificationSuccessModalComponent } from '../modals/verification-success-modal/verification-success-modal.component';
 import { DeleteModalComponent } from '../../../../shared/components/comman/modal/booking-modals/delete-modal/delete-modal.component';
 import { SettingsService } from '../../../../shared/services/setting.service';
+import { AuthService } from '../../../../shared/services/auth.service';
 // import { SettingsService } from '../../../../shared/services/settings.service';
 
 @Component({
@@ -38,6 +39,7 @@ export class SecurityComponent {
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private router: Router,
+    public authService: AuthService,
 
   ) {
     this.getSettingsDetails();
@@ -67,6 +69,12 @@ export class SecurityComponent {
     if (item.Code === 'AccActivity') {
       // this.openChangePassword();
       this.router.navigate(['/user/recent-activity'])
+    }
+    if (item.Code === 'DeactAcc' || item.Code === 'ActAcc') {
+      this.openActiveDeactiveAccount(item.Code);
+    }
+    if (item.Code === 'DelAcc') {
+      this.onDelete();
     }
   }
 
@@ -160,17 +168,36 @@ export class SecurityComponent {
 
 
 
-  openDeactiveAccount() {
+  openActiveDeactiveAccount(type: any) {
     const modalRef = this.modalService.open(DeactiveAccountModalComponent, {
       centered: true
     });
+    modalRef.componentInstance.mainTitle = type == "ActAcc" ? "Activate Account" : "Deactivate Account";
+    modalRef.componentInstance.confirmButton = type == "ActAcc" ? "Active Account" : "Deactive Account";
+
     modalRef.result.then((res: any) => {
 
-    }, () => {
-    });
+      if (res.confirmed) {
+        const body = {
+          userId: this.gs.loggedInUserInfo.userId,
+          userStatus: type == "ActAcc" ? true : false,
+          reason: "",
+          modifiedBy: this.gs.loggedInUserInfo.userId
+        }
+
+        this.gs.isSpinnerShow = true;
+        this.settingsService.ActivateOrDeactivateUser(body).subscribe((response) => {
+          this.gs.isSpinnerShow = false;
+          if (response && response.statusCode == "200") {
+            this.toast.successToastr(response.message);
+            this.getSettingsDetails();
+          } else {
+            this.toast.errorToastr(response.message);
+          }
+        })
+      }
+    }, () => { });
   }
-
-
 
   async onDeleteTwoFactor() {
     const modalRef = this.modalService.open(DeleteModalComponent, {
@@ -185,15 +212,33 @@ export class SecurityComponent {
     }, () => {
     });
   }
+
   async onDelete() {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
+    const modalRef = this.modalService.open(DeactiveAccountModalComponent, {
       centered: true
     });
     modalRef.componentInstance.mainTitle = "Delete Account";
+    modalRef.componentInstance.confirmButton = "Delete Account";
     modalRef.result.then((res: any) => {
 
       if (res.confirmed) {
-        this.toast.successToastr("Deleted successfully");
+        const body = {
+          userId: this.gs.loggedInUserInfo.userId,
+          reason: "",
+          modifiedBy: this.gs.loggedInUserInfo.userId
+        }
+
+        this.gs.isSpinnerShow = true;
+        this.settingsService.DeleteUserAccount(body).subscribe((response) => {
+          this.gs.isSpinnerShow = false;
+          if (response && response.statusCode == "200") {
+            this.toast.successToastr(response.message);
+            // this.getSettingsDetails();
+            this.authService.logOut();
+          } else {
+            this.toast.errorToastr(response.message);
+          }
+        })
       }
     }, () => {
     });

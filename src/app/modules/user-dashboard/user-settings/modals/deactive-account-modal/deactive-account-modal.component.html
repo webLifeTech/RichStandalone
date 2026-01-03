@@ -1,6 +1,6 @@
 <div class="modal-content form-modal">
   <div class="modal-header">
-    <h4 class="modal-title">Deactivate Account</h4>
+    <h4 class="modal-title">{{mainTitle}}</h4>
     <button type="button" class="close-btn" (click)="closeModal()">
       <span>×</span>
     </button>
@@ -8,8 +8,7 @@
   <div class="modal-body">
     <div class="deactive-content">
       <p>
-        Are you sureyou want to delete This Account? To delete your account,
-        Type your password.
+        {{title || 'Are you sureyou want to delete This Account? To delete your account, Type your password.'}}
       </p>
     </div>
     <form action="#">
@@ -28,12 +27,12 @@
         <div class="row">
           <div class="col-6">
             <a (click)="onConfirm()" class="btn btn-theme w-100">
-              Delete Account
+              {{confirmButton || "Yes"}}
             </a>
           </div>
           <div class="col-6">
             <a (click)="closeModal()" class="btn btn-primary w-100">
-              Cancel
+              {{cancelButton || "Cancel"}}
             </a>
           </div>
         </div>

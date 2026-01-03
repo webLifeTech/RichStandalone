@@ -3,9 +3,22 @@
     <div class="container">
 
       <div class="content-header">
-        <div class="row">
-          <div class="col-lg-4">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
             <h4>My Bookings</h4>
+          </div>
+
+          <div class="col-md-6">
+            <span *ngIf="tableData.length">
+              <app-booking-action-card [bookingDetails]="tableData[0]" [bookingArray]="tableData"
+                (actionTriggered)="handleAction($event, tableData[0])">
+              </app-booking-action-card>
+            </span>
+            <!-- <div class="text-end">
+              <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
+                Next Step
+              </button>
+            </div> -->
           </div>
         </div>
       </div>
@@ -18,7 +31,7 @@
                 <div class="booking-lists">
                   <ul class="nav">
                     <li *ngFor="let item of booktabs">
-                      <a [class.active]="activeTab == item.name" (click)="changeBookTab(item)">{{item.name}}</a>
+                      <a [class.active]="activeTab == item.menuName" (click)="changeBookTab(item)">{{item.name}}</a>
                     </li>
                   </ul>
                 </div>
@@ -35,7 +48,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-md-3">
-                  <h4>{{activeTab}} <span>{{totalData}}</span></h4>
+                  <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
                 </div>
                 <div class="col-md-9 text-md-end">
                   <div class="table-search">
@@ -169,12 +182,11 @@
                       </td>
                       <td><a>{{data.bookingReferenceNumber}}</a></td>
                       <td>
-                        <span class="badge"
-                          [ngClass]="{
-                            'badge-light-secondary': data.bookingStatus === 'Confirmed',
-                            'badge-light-warning': data.bookingStatus === 'Delivered' || data.bookingStatus ===  'Pending Request' || data.bookingStatus ===  'Start Service',
-                            'badge-light-danger': data.bookingStatus === 'Cancelled' || data.bookingStatus === 'Refund Started' || data.bookingStatus === 'Refund Received' || data.bookingStatus === 'Refund Rejected',
-                            'badge-light-success': data.bookingStatus === 'Received' || data.bookingStatus === 'End Service'}">
+                        <span class="badge" [ngClass]="{
+                            'badge-light-secondary': data.bookingStatusCd === '2',
+                            'badge-light-warning': data.bookingStatusCd == '1' || data.bookingStatusCd ===  '4',
+                            'badge-light-danger': data.bookingStatusCd === '5',
+                            'badge-light-success': data.bookingStatusCd === '6' }">
                           {{data.bookingStatus}}
                         </span>
                       </td>

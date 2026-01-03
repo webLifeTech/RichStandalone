@@ -20,6 +20,7 @@ import { BranchService } from '../../../../shared/services/branch.service';
 import { ConfirmationModalComponent } from '../../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { VendorServService } from '../../../../shared/services/vendor-service.service';
 import { OtpVerificationModalComponent } from '../../user-settings/modals/otp-verification-modal/otp-verification-modal.component';
+import { AuthService } from '../../../../shared/services/auth.service';
 
 
 @Component({
@@ -86,6 +87,9 @@ export class DynamicFormComponent {
   workingHours: any = [];
   isPrivateBooking: boolean = false; //
 
+  driverVerifyDetails: any = {};
+  fleetVerifyDetails: any = {};
+
   constructor(
     private fb: FormBuilder,
     public gs: GlobalService,
@@ -95,6 +99,7 @@ export class DynamicFormComponent {
     private modalService: NgbModal,
     private branchService: BranchService,
     private vendorServ: VendorServService,
+    private authService: AuthService,
   ) {
     this.dynamicForm = this.fb.group({
       sections: this.fb.array([])
@@ -202,7 +207,7 @@ export class DynamicFormComponent {
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -244,7 +249,7 @@ export class DynamicFormComponent {
       "effectiveDate": effectiveDate,
     }
 
-    this.profileService.getMasterPolicyCodes(body).subscribe((res: any) => {
+    this.profileService.getMasterPolicyCodes(body).subscribe(async (res: any) => {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("masterDropdwonList >>>>", this.masterDropdwonList);
@@ -256,7 +261,7 @@ export class DynamicFormComponent {
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -294,7 +299,7 @@ export class DynamicFormComponent {
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -328,7 +333,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr("Something went wrong");
       }
     }, (err: any) => {
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -341,7 +346,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr("Something went wrong");
       }
     }, (err: any) => {
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -437,7 +442,7 @@ export class DynamicFormComponent {
       // }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -455,9 +460,81 @@ export class DynamicFormComponent {
         });
       }
     }, (err: any) => {
-      this.toast.errorToastr(err || "Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
+
+  async GetDriverDetailsByDriverId(section: any) {
+    if (!this.isEditInfo) {
+      this.singleDetailInfo = await this.profileService.GetDriverDetailsByDriverId({
+        "userId": this.gs.loggedInUserInfo.userId,
+        "driverId": 1,
+      }).catch((err: any) => {
+        this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      })
+    }
+
+    console.log("singleDetailInfo 111111 >>>>>>>>", this.singleDetailInfo);
+    const privFieldsArray = section.get('fields') as FormArray;
+    privFieldsArray.controls.forEach((fieldTwo: any) => {
+      if (fieldTwo.value.fieldCode == 'FLD_PER_CON_NUM') {
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", this.singleDetailInfo.personalInfo.contactNumber);
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", this.singleDetailInfo.personalInfo.isPhoneNumberVerified);
+        if (!this.isEditInfo && this.singleDetailInfo.personalInfo.isPhoneNumberVerified && this.singleDetailInfo.personalInfo.contactNumber) {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", this.singleDetailInfo.personalInfo.isPhoneNumberVerified);
+        }
+      }
+      if (fieldTwo.value.fieldCode == 'FLD_PER_EMAIL_ID') {
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", this.singleDetailInfo.personalInfo.emailId);
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", this.singleDetailInfo.personalInfo.isEmailVerified);
+        if (!this.isEditInfo && this.singleDetailInfo.personalInfo.isEmailVerified && this.singleDetailInfo.personalInfo.emailId) {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", this.singleDetailInfo.personalInfo.isEmailVerified);
+        }
+      }
+    })
+  }
+
+  async GetCompanyDetailsByCompanyId(section: any) {
+
+    if (!this.isEditInfo) {
+      this.singleDetailInfo = await this.profileService.GetCompanyDetailsByCompanyId({
+        "userId": this.gs.loggedInUserInfo.userId,
+        "fleetCompanyId": 1,
+      });
+    }
+
+    // if (!this.isEditInfo) {
+
+    // }
+    const emailDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.emails[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+    const phoneDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.phoneNumbers[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+    console.log("emailDetails >>>>>", emailDetails);
+    console.log("phoneDetails >>>>>", phoneDetails);
+
+
+    const privFieldsArray = section.get('fields') as FormArray;
+    privFieldsArray.controls.forEach((fieldTwo: any) => {
+      if (fieldTwo.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM') {
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", phoneDetails.phoneNumber);
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", phoneDetails.isPhoneNumberVerified);
+        if (!this.isEditInfo && phoneDetails.isPhoneNumberVerified && phoneDetails.phoneNumber) {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", phoneDetails.isPhoneNumberVerified);
+        }
+      }
+      if (fieldTwo.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", emailDetails.emailId);
+        this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", emailDetails.isEmailVerified);
+        if (!this.isEditInfo && emailDetails.isEmailVerified && emailDetails.emailId) {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", emailDetails.isEmailVerified);
+        }
+      }
+    })
+  }
+
 
   get sections(): FormArray | any {
     return this.dynamicForm.get('sections') as FormArray;
@@ -530,6 +607,7 @@ export class DynamicFormComponent {
               action: [field.action],
               acceptedTypes: [field.acceptedTypes],
               defaultValue: [field.defaultValue],
+              isVerified: [""],
               value: [
                 field.fieldType === "DATE" ? this.parseDate(this.isEditInfo ? field.fValue : field.defaultValue ?? null)
                   : (this.isEditInfo ? (field.fValue ?? field.defaultValue) : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue ?? null)), this.getValidators(field)
@@ -616,8 +694,15 @@ export class DynamicFormComponent {
           this.bindTable(fieldTwo, section);
         }
 
-        if (fieldTwo.value.fieldId === 345) {
+        if (fieldTwo.value.fieldId === 345) { // CANCELLATION FEE TYPE
           this.GetMasterCancellationFeeType(section, fieldTwo.value.fieldId);
+        }
+
+        if (fieldTwo.value.fieldCode == 'FLD_PER_EMAIL_ID') {
+          this.GetDriverDetailsByDriverId(section);
+        }
+        if (fieldTwo.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
+          this.GetCompanyDetailsByCompanyId(section);
         }
       });
     });
@@ -720,6 +805,12 @@ export class DynamicFormComponent {
     section.get('tableGrid').setValue(tableGridBySort);
     section.get('tableGridValueList').setValue(tempTableGridValueList);
     console.log("section >>>>", section);
+
+    if (!tempTableGridValueList.length && this.formType == "vehicleUpload" || this.formType == "my_vehicle") {
+      setTimeout(() => {
+        this.addNew(section);
+      }, 100);
+    }
 
   }
 
@@ -878,7 +969,7 @@ export class DynamicFormComponent {
                   if (fieldTwo.value.fieldType === "DATE" || fieldTwo.value.fieldType === "date") { // Date MM/dd/yyyy
                     fieldTwo.get('value')?.setValue(this.parseDate(resObj[autoFillObj[fieldTwo.value.modalValue]]));
                   } else {
-                    fieldTwo.get('value')?.setValue(resObj[autoFillObj[fieldTwo.value.modalValue]]);
+                    fieldTwo.get('value')?.setValue(resObj[autoFillObj[fieldTwo.value.modalValue]]?.trim());
                   }
 
                   if (fieldTwo.value.fieldId === 82) {
@@ -932,6 +1023,37 @@ export class DynamicFormComponent {
       }
     }
 
+    if (fieldRow.value.fieldCode == 'FLD_PER_CON_NUM') {
+      if ((this.singleDetailInfo.personalInfo.contactNumber !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
+    if (fieldRow.value.fieldCode == 'FLD_PER_EMAIL_ID') {
+      if ((this.singleDetailInfo.personalInfo.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
+
+    if (fieldRow.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM') {
+      const phoneDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.phoneNumbers[0];
+      if ((phoneDetails.phoneNumber !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
+    if (fieldRow.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
+      const emailDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.emails[0];
+      if ((emailDetails.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
 
     if (this.submitted) {
       this.findInvalidControls();
@@ -1521,6 +1643,12 @@ export class DynamicFormComponent {
 
     section.get('tableGrid').setValue(tableGridBySort);
     section.get('tableGridValueList').setValue(tempTableGridValueList);
+
+    if (this.isEditInfo) {
+      setTimeout(() => {
+        this.updateDetails(section);
+      }, 200)
+    }
   }
 
   // Table Edit
@@ -1676,6 +1804,7 @@ export class DynamicFormComponent {
         this.findInvalidControls();
       }
     }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -1731,6 +1860,13 @@ export class DynamicFormComponent {
               sectionData[field.valueCode] = field.value;
             }
 
+            if (field.fieldCode == 'FLD_PER_CON_NUM') {
+              sectionData['isPhoneNumberVerified'] = field.isVerified; // field.isVerified; // need to do
+            }
+            if (field.fieldCode == 'FLD_PER_EMAIL_ID') {
+              sectionData['isEmailVerified'] = field.isVerified;
+            };
+
             if (!finalBody[field.modalObject]) {
               finalBody[field.modalObject] = sectionData;
             } else {
@@ -1785,7 +1921,7 @@ export class DynamicFormComponent {
             this.toast.errorToastr(res.message);
           }
         }, (err: any) => {
-          this.toast.errorToastr("Something went wrong");
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
           this.gs.isSpinnerShow = false;
         })
       }
@@ -1822,7 +1958,7 @@ export class DynamicFormComponent {
             this.toast.errorToastr(res.message);
           }
         }, (err: any) => {
-          this.toast.errorToastr("Something went wrong");
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
           this.gs.isSpinnerShow = false;
         })
       }
@@ -1849,7 +1985,7 @@ export class DynamicFormComponent {
                 this.toast.successToastr(res.message);
                 this.onVehicleUploadSubmit.emit({ type: "vehicle_upload" });
               }, (err: any) => {
-                this.toast.errorToastr("Something went wrong");
+                this.toast.errorToastr(err?.error?.message || "Something went wrong");
                 this.gs.isSpinnerShow = false;
               })
             } else {
@@ -1861,7 +1997,7 @@ export class DynamicFormComponent {
             this.toast.errorToastr(res.message);
           }
         }, (err: any) => {
-          this.toast.errorToastr("Something went wrong");
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
           this.gs.isSpinnerShow = false;
         })
       }
@@ -1943,6 +2079,7 @@ export class DynamicFormComponent {
                   createObj.emailTypeId = null; // field.MasterTypeIds.ID
                   createObj.primaryEmailFlag = true;
                   createObj.currentInd = true;
+                  createObj.isEmailVerified = field.isVerified;
                 }
 
                 if (keys[2] == 'phoneNumbers') {
@@ -1951,6 +2088,7 @@ export class DynamicFormComponent {
                   createObj.extension = 4;
                   createObj.primaryPhoneFlag = true;
                   createObj.currentInd = true;
+                  createObj.isPhoneNumberVerified = field.isVerified; // field.isVerified; // need to do
                 }
 
                 finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
@@ -1987,7 +2125,7 @@ export class DynamicFormComponent {
             this.toast.errorToastr(res.message);
           }
         }, (err: any) => {
-          this.toast.errorToastr("Something went wrong");
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
           this.gs.isSpinnerShow = false;
         })
       }
@@ -2050,6 +2188,27 @@ export class DynamicFormComponent {
             sectionData[field.modalValue] = field.valueCd;
             sectionData[field.valueCode] = field.value;
           }
+          if (field.fieldCode == 'FLD_PER_CON_NUM') {
+            sectionData['isPhoneNumberVerified'] = field.isVerified; // field.isVerified; // need to do
+          }
+          if (field.fieldCode == 'FLD_PER_EMAIL_ID') {
+            sectionData['isEmailVerified'] = field.isVerified;
+          }
+
+          //   if (fieldRow.value.fieldCode == 'FLD_PER_CON_NUM') {
+          //   if ((this.singleDetailInfo.personalInfo.contactNumber !== fieldRow.value?.value) || !fieldRow.value?.value) {
+          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+          //   } else {
+          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+          //   }
+          // }
+          // if (fieldRow.value.fieldCode == 'FLD_PER_EMAIL_ID') {
+          //   if ((this.singleDetailInfo.personalInfo.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
+          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+          //   } else {
+          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+          //   }
+          // }
 
           if (!finalBody) {
             finalBody = sectionData;
@@ -2188,6 +2347,7 @@ export class DynamicFormComponent {
                 createObj.emailTypeId = this.getFieldValue(this.singleDetailInfo, field.modalObject, "emailTypeId") || field?.MasterTypeIds?.ID;
                 createObj.primaryEmailFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryEmailFlag");
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
+                createObj.isEmailVerified = field.isVerified;
               }
 
               if (keys[2] == 'phoneNumbers') {
@@ -2197,6 +2357,7 @@ export class DynamicFormComponent {
                 const primaryPhoneFlag = this.getFieldValue(this.singleDetailInfo, field.modalObject, "primaryPhoneFlag");
                 createObj.primaryPhoneFlag = primaryPhoneFlag == false ? false : true;
                 createObj.currentInd = this.getFieldValue(this.singleDetailInfo, field.modalObject, "currentInd");
+                createObj.isPhoneNumberVerified = field.isVerified; // field.isVerified; // need to do
               }
               finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
             }
@@ -2289,7 +2450,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2315,7 +2476,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2341,7 +2502,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2366,7 +2527,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2408,7 +2569,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2507,7 +2668,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2532,7 +2693,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2556,7 +2717,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2580,7 +2741,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2604,7 +2765,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2628,7 +2789,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2648,7 +2809,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2693,7 +2854,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2735,7 +2896,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2775,7 +2936,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2806,7 +2967,7 @@ export class DynamicFormComponent {
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
-      this.toast.errorToastr("Something went wrong");
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
       this.gs.isSpinnerShow = false;
     })
   }
@@ -2986,19 +3147,78 @@ export class DynamicFormComponent {
     }, () => { });
   }
 
-  openOtpVerification(field: any) {
-    console.log("field >>>", field)
+  async openOtpVerification(field: any, section: any) {
+    const verificationType = (field.value.fieldCode == 'FLD_PER_CON_NUM' || field.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM') ? "PhoneNo" : "EmailId";
+    this.gs.isSpinnerShow = true;
+    const checkExist: any = await this.authService.IsEmailOrPhoneNumberExist({
+      phoneNumber: verificationType == "PhoneNo" ? field.value.value : null,
+      email: verificationType == "EmailId" ? field.value.value : null,
+    }).catch((error) => {
+      this.gs.isSpinnerShow = false;
+      if (error.error.statusCode != "200") {
+        this.toast.errorToastr(error.error.message);
+        return;
+      }
+    });
+    this.gs.isSpinnerShow = false;
+
+
+    if (checkExist.statusCode != "200") {
+      this.toast.errorToastr(checkExist.message);
+      return;
+    }
+
     const modalRef = this.modalService.open(OtpVerificationModalComponent, {
       centered: true
     });
     modalRef.componentInstance.title = 'Enter OTP Send to your ' + field.value.description + ' ' + field.value.value;
+    modalRef.componentInstance.verificationType = verificationType;
+    modalRef.componentInstance.username = field.value.value;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        console.log("res >>>>", res);
-        // this.openVerificationSuccess();
+
+        this.updateValueByFieldId(section, field.value.fieldId, "isVerified", true);
+        if (field.value.fieldCode == 'FLD_PER_CON_NUM') {
+          this.singleDetailInfo.personalInfo.contactNumber = field.value.value;
+        }
+        if (field.value.fieldCode == 'FLD_PER_EMAIL_ID') {
+          this.singleDetailInfo.personalInfo.emailId = field.value.value;
+        }
+        if (field.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM') {
+          this.singleDetailInfo.fleetOwnerDetails.contactInfo.emails[0].phoneNumber = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+        }
+        if (field.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
+          this.singleDetailInfo.fleetOwnerDetails.contactInfo.phoneNumbers[0].emailId = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+        }
+
+
+        // if (this.gs.loggedInUserInfo.role === "user_3") {
+        //   this.GetCompanyDetailsByCompanyId(section);
+        // } else {
+        //   this.GetDriverDetailsByDriverId(section);
+        // }
+        // const body = {
+        //   "userId": this.gs.loggedInUserInfo.userId,
+        //   "type": verificationType == "PhoneNo" ? "PhoneNumber" : "EmailId", // EmailId or PhoneNumber
+        //   "phoneNumber": verificationType == "PhoneNo" ? field.value.value : null,
+        //   "emailId": verificationType == "EmailId" ? field.value.value : null,
+        //   "isVerified": true
+        // }
+        // this.gs.isSpinnerShow = true;
+        // this.profileService.UpdateEmailPhoneNumbreVerification(body).subscribe((res: any) => {
+        //   this.gs.isSpinnerShow = false;
+        //   if (res && res.statusCode == "200") {
+        //     this.GetDriverDetailsByDriverId(section);
+        //     this.toast.successToastr(res.message);
+        //   } else {
+        //     this.toast.errorToastr(res.message);
+        //   }
+        // }, (err: any) => {
+        //   this.gs.isSpinnerShow = false;
+        //   this.toast.errorToastr(err?.error?.message || "Something went wrong");
+        // });
       }
-    }, () => {
-    });
+    }, () => { });
   }
 
 }

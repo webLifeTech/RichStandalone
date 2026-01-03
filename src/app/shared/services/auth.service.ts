@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService } from './global.service';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
+import { TabSyncService } from './tab-sync.service';
 // import { ToastService } from './toast.service';
 
 @Injectable({
@@ -18,7 +19,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private gs: GlobalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private injector: Injector,
   ) {
     this.isLoggedIn = localStorage.getItem('loggedIn') === 'true' || false;
   }
@@ -35,7 +37,12 @@ export class AuthService {
       } else if (this.loggedInUserInfo.role === 'Vendor') {
         this.router.navigateByUrl('/user/profile');
       } else {
-        this.router.navigateByUrl('/cab/listing/list-view');
+        if (this.loggedInUserInfo.isKYCCompleted) {
+          // this.router.navigateByUrl('/cab/listing/list-view');
+          this.router.navigateByUrl('/user/dashboard'); // if KYC Completed
+        } else {
+          this.router.navigateByUrl('/user/profile'); // if KYC pending
+        }
       }
       // this.toast.successToastr("LoggedIn Successfully");
     }
@@ -71,6 +78,9 @@ export class AuthService {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.router.navigateByUrl('/home');
+        // 3. Yahan 'Injector' ka use karke service ko call karein
+        const tabSyncService = this.injector.get(TabSyncService);
+        tabSyncService.logoutAllTabs();
         this.resetStorage();
       }
     })

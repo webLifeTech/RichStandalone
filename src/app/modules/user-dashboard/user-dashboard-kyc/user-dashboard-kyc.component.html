@@ -22,8 +22,7 @@
   </div>
 
   <div class="col-lg-9">
-    <form
-      *ngIf="!gs.isLicenseVerified && !gs.isFleetOwnerLicenseVerified && gs.loggedInUserInfo.role !== 'Vendor'  && gs.loggedInUserInfo.role !== 'admin'"
+    <form *ngIf="!this.isKYCCompleted && gs.loggedInUserInfo.role !== 'Vendor'  && gs.loggedInUserInfo.role !== 'admin'"
       class="row m-0 align-items-center">
       <div class="col-lg-3">
         <div class="form-group">
@@ -52,9 +51,62 @@
     </form>
 
     <div class="dashboard-box">
-      <div *ngIf="kycForm.state" class="position-relative">
 
+      <div *ngIf="!this.isKYCCompleted && !kycForm.state">
+        <div class="profile-container">
+          <div class="control-bar bg-white rounded shadow-sm">
+            <div class="roadmap-container fade-in">
+
+              <div class="text-center mt-5 mb-4">
+                <div class="alert kyc-alert shadow-sm d-inline-block px-4 py-3">
+                  <div class="d-flex align-items-center">
+                    <mat-icon class="me-2">arrow_upward</mat-icon>
+                    <span>Please select your <strong>Drive In State</strong> above to begin KYC.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <h3 class="fw-bold text-theme">KYC Verification Steps</h3>
+                <p class="text-muted">Complete these simple steps to verify your profile as a <span
+                    class="text-theme fw-bold">{{this.gs.loggedInUserInfo.userRoleName}}</span></p>
+                <!-- <p class="text-muted">
+                  Process for
+                  <span class="fw-bold text-decoration-underline text-theme">
+                    {{this.gs.loggedInUserInfo.userRoleName}}
+                  </span>
+                </p> -->
+              </div>
+
+              <div class="process-wrapper">
+                <div class="process-line"></div>
+
+                <div class="process-step" *ngFor="let step of currentSteps; let i = index">
+                  <div class="step-circle">
+                    <mat-icon>{{step.icon}}</mat-icon>
+                  </div>
+
+                  <div class="step-content">
+                    <h6>{{step.title}}</h6>
+                    <p>{{step.desc}}</p>
+                  </div>
+
+                  <div class="step-number">0{{i + 1}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="kycForm.state" class="position-relative">
         <!-- Driver - driver come owned car // Driver info -->
+        <div *ngIf="isNextStepShow && this.isKYCCompleted && !isFormEdit" class="text-end">
+          <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
+            Next Step
+          </button>
+        </div>
+
         <div *ngIf="activeKycTab === 1">
           <div *ngIf="!gs.isLicenseVerified || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isFormEdit"
@@ -63,21 +115,28 @@
           </div>
           <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
+              <!-- <div class="text-end">
+                <button [routerLink]="'/user/configuration'" class="btn btn-solid color2 no-text-transorm"
+                  type="button">
+                  Next Step
+                </button>
+              </div> -->
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-dynamic-grid [type]="'driver'" [data]="driverInfoData" [columns]="driverColumns"
-                [actions]="driverActions" (actionEvent)="handleAction($event, 'driver')"></app-dynamic-grid>
+              <app-dynamic-grid [type]="'driver'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
+                [columns]="driverColumns" [actions]="driverActions"
+                (actionEvent)="handleAction($event, 'driver')"></app-dynamic-grid>
             </div>
           </div>
         </div>
 
         <!--  Driver details -->
-        <div *ngIf="activeKycTab === 3">
+        <!-- <div *ngIf="activeKycTab === 3">
           <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isFormEdit"
             (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
             (cancel)="handleCancel()"></app-driver-details-form>
-        </div>
+        </div> -->
 
         <!-- fleet Owner -->
         <div *ngIf="activeKycTab === 5">
@@ -92,8 +151,9 @@
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-dynamic-grid [type]="'fleetOwner'" [data]="driverInfoData" [columns]="fleetOwnerColumns"
-                [actions]="driverActions" (actionEvent)="handleAction($event, 'fleetOwner')"></app-dynamic-grid>
+              <app-dynamic-grid [type]="'fleetOwner'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
+                [columns]="fleetOwnerColumns" [actions]="driverActions"
+                (actionEvent)="handleAction($event, 'fleetOwner')"></app-dynamic-grid>
               <!-- <app-fleet-owner-details [onlyCompanyInfo]="true" (onEditInfo)="onEditInfo()"
                 [fleetOwnerInfoData]="fleetOwnerInfoData"></app-fleet-owner-details> -->
             </div>
@@ -286,11 +346,18 @@
 
           <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
+              <!-- <div class="text-end">
+                <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm"
+                  type="button">
+                  Next Step
+                </button>
+              </div> -->
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
-              <app-dynamic-grid [type]="'individualCarOwner'" [data]="driverInfoData" [columns]="driverColumns"
-                [actions]="driverActions" (actionEvent)="handleAction($event, 'individualCarOwner')"></app-dynamic-grid>
+              <app-dynamic-grid [type]="'individualCarOwner'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
+                [columns]="driverColumns" [actions]="driverActions"
+                (actionEvent)="handleAction($event, 'individualCarOwner')"></app-dynamic-grid>
             </div>
           </div>
         </div>

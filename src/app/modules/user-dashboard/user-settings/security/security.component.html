@@ -25,7 +25,7 @@
             </div>
             <div *ngIf="item.FieldType === 'Button' && item.Code !== 'GAuth'" class="security-btn">
               <a class="btn no-text-transorm "
-                [ngClass]="{'btn-secondary': item.Color === 'Black', 'btn-danger': item.Color === 'Red'}"
+                [ngClass]="{'btn-secondary': item.Color === 'Black', 'btn-danger': item.Color === 'Red', 'btn-green': item.Color === 'Green'}"
                 (click)="openChange(item)">{{item.LabelValue}}</a>
               <!-- <a class="btn btn-remove no-text-transorm">Remove</a> -->
             </div>

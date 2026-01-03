@@ -43,4 +43,22 @@ export class SettingsService {
     );
   }
 
+  // User -> ActivateOrDeactivateUser
+  public ActivateOrDeactivateUser(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/User/ActivateOrDeactivateUser`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // User -> DeleteUserAccount
+  public DeleteUserAccount(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/User/DeleteUserAccount`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
 }

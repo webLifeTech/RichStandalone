@@ -18,6 +18,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { TableSearchBarComponent } from '../comman/table-search-bar/table-search-bar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-wallet',
@@ -85,6 +86,7 @@ export class UserWalletComponent {
   ];
 
   constructor(
+    public router: Router,
     private toast: ToastService,
     public cabService: CabService,
     private dialog: MatDialog,
@@ -340,5 +342,23 @@ export class UserWalletComponent {
     if (actionObj.actionCode == 'MCEXP') {
       this.exportToExcel();
     }
+  }
+
+  nextStep() {
+    if (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') {
+      this.router.navigate(['/cab/listing/list-view'], {
+        queryParams: {
+          type: "car",
+        },
+      });
+    } else {
+      this.router.navigate(['/cab/listing/list-view'], {
+        queryParams: {
+          type: "driver",
+        },
+      });
+    }
+
+    // this.router.navigate(['/user/wallet']);
   }
 }

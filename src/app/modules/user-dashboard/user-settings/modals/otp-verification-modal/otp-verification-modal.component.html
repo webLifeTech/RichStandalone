@@ -32,14 +32,21 @@
           data-previous="digit-3" maxlength="1" />
       </div>
       <div class="otp-resend">
-        <a>Resend Again</a>
-        <p>Remaining 00:30s</p>
+        <a (click)="sendOtp('resend')">
+          {{'auth.form.resend' | translate}}
+        </a>
+        <p>
+          <span *ngIf="sentotp && !isOtpVerified">
+            ({{'auth.form.resend' | translate}} {{'auth.form.otp_enable' | translate}} {{timer}} {{'auth.form.seconds' |
+            translate}})
+          </span>
+        </p>
       </div>
     </form>
     <div class="modal-btn modal-btn-group">
       <div class="row">
         <div class="col-6">
-          <a (click)="onConfirm()" class="btn btn-primary w-100">
+          <a (click)="confirmOtp()" class="btn btn-primary w-100">
             Verify
           </a>
         </div>

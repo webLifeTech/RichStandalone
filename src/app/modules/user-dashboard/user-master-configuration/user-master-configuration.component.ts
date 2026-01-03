@@ -66,6 +66,7 @@ export class UserMasterConfigurationComponent {
   isLoadBranch: boolean = false;
   isLoadDriverDetail: boolean = false;
   isAddEditDriverDetail: boolean = false;
+  isNextStepShow: boolean = false;
 
   // Vehicle List Columns and Data
   myVehicleColumns = [
@@ -104,6 +105,7 @@ export class UserMasterConfigurationComponent {
 
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private toast: ToastService,
     public gs: GlobalService,
@@ -216,6 +218,8 @@ export class UserMasterConfigurationComponent {
         this.singleDetailInfo = { driverDetailsRequest: response };
         if (!response.isActiveOrInActive) {
           this.isAddEditDriverDetail = true; // need to do
+        } else {
+          this.isNextStepShow = true;
         }
         this.isLoadDriverDetail = true; // need to do
       }
@@ -355,6 +359,12 @@ export class UserMasterConfigurationComponent {
   onUpgradePlan() {
     this.isUpgradePlan = true;
     window.scrollTo({ top: 800, behavior: 'smooth' });
+  }
+
+  nextStep() {
+    // if (this.activeKycTab === 3) {
+    this.router.navigate(['/user/wallet']);
+    // }
   }
 
 

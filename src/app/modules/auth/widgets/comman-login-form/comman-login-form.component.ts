@@ -178,6 +178,7 @@ export class CommanLoginFormComponent {
           "token_type": res.token_type || null,
           "refresh_token": res.refresh_token || null,
           "access_token": res.access_token || null,
+          "profilePath": res.profilePath || null,
         };
 
         this.authService.login(this.loginForm);

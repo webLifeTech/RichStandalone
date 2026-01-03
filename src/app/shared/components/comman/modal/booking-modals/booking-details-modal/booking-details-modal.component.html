@@ -55,7 +55,7 @@
           </div>
           <div *ngIf="bookingDetails.isBooker" class="cancel-box mb-3">
             <p>
-              Cancelled By {{bookingDetails.cancellationRefundDetails.driverPersonalDetails}} on
+              Cancelled By {{bookingDetails.cancellationRefundDetails.cancelledBy}} on
               {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
               <!-- refundStatusCd == 4 = 'Processed'  -->
               <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
@@ -98,11 +98,11 @@
               <div class="booking-view">
                 <h6>Status</h6>
                 <span class="badge" [ngClass]="{
-                  'badge-light-secondary': bookingDetails.bookingDetails.bookingStatus === 'Confirmed',
-                  'badge-light-warning': bookingDetails.bookingDetails.bookingStatus === 'Inprogress' || bookingDetails.bookingDetails.bookingStatus ===  'Pending Request' || bookingDetails.bookingDetails.bookingStatus ===  'Start Service',
-                  'badge-light-danger': bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed' || bookingDetails.bookingDetails.bookingStatus === 'Refund Rejected',
-                  'badge-light-success': bookingDetails.bookingDetails.bookingStatus === 'Completed' || bookingDetails.bookingDetails.bookingStatus === 'End Service'}
-                ">
+                  'badge-light-secondary': bookingDetails.bookingDetails.bookingStatusCd === '2',
+                  'badge-light-warning': bookingDetails.bookingDetails.bookingStatusCd == '1' || bookingDetails.bookingDetails.bookingStatusCd ===  '4',
+                  'badge-light-danger': bookingDetails.bookingDetails.bookingStatusCd === '5',
+                  'badge-light-success': bookingDetails.bookingDetails.bookingStatusCd === '6'
+                }">
                   {{bookingDetails.bookingDetails.bookingStatus}}
                 </span>
                 <p class="mt-1 mb-0">

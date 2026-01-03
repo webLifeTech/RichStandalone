@@ -15,6 +15,9 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DeactiveAccountModalComponent {
   @Input() title: string;
+  @Input() mainTitle: string;
+  @Input() confirmButton: string;
+  @Input() cancelButton: string;
 
   public password: boolean[] = [false];
 

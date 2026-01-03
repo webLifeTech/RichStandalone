@@ -16,6 +16,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BookingService } from '../../../shared/services/booking.service';
+import { SettingsService } from '../../../shared/services/setting.service';
 
 @Component({
   selector: 'app-users-listing',
@@ -75,6 +76,7 @@ export class UsersListingComponent {
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
     private bookingService: BookingService,
+    private settingsService: SettingsService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("AUSR");
@@ -183,9 +185,11 @@ export class UsersListingComponent {
           userId: item.userId,
           userStatus: res.status == "Active" ? true : false,
           reason: "",
+          modifiedBy: this.gs.loggedInUserInfo.userId
         }
+
         this.gs.isSpinnerShow = true;
-        this.adminService.UpdateUserStatus(body).subscribe((response) => {
+        this.settingsService.ActivateOrDeactivateUser(body).subscribe((response) => {
           this.gs.isSpinnerShow = false;
           if (response && response.statusCode == "200") {
             this.toast.successToastr("Status successfully");

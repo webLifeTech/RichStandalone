@@ -26,6 +26,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { RePaymentModalComponent } from '../../../shared/components/comman/modal/payment-modals/re-payment-modal/re-payment-modal.component';
 import { WalletService } from '../../../shared/services/wallet.service';
+import { BookingActionCardComponent } from '../../../shared/components/comman/booking-action-card/booking-action-card.component';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -33,6 +34,7 @@ import { WalletService } from '../../../shared/services/wallet.service';
   imports: [
     BookingCancellationComponent,
     BookingChecklistComponent,
+    BookingActionCardComponent,
 
     CommonModule,
     FormsModule,
@@ -58,6 +60,7 @@ export class UserDashboardBookingComponent {
   totalData: any = 0;
   currentPage: any = 1;
   activeTab: any = '';
+  activeTabName: any = '';
   editInfo: any = {};
   booktabs: any = []
   isShowCancellation: any = false;
@@ -69,6 +72,7 @@ export class UserDashboardBookingComponent {
 
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private bookingService: BookingService,
     public cabService: CabService,
@@ -85,7 +89,7 @@ export class UserDashboardBookingComponent {
     this.route.queryParams.subscribe((params) => {
       this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
       this.getGridTabsDetails();
-      this.getTableData();
+      // this.getTableData();
     })
   }
 
@@ -126,6 +130,9 @@ export class UserDashboardBookingComponent {
     }
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
       this.booktabs = response || [];
+      this.activeTab = this.booktabs[0].menuName;
+      this.activeTabName = this.booktabs[0].name;;
+      this.getTableData();
     })
   }
 
@@ -142,7 +149,8 @@ export class UserDashboardBookingComponent {
 
 
   changeBookTab(row: any) {
-    this.activeTab = row.name;
+    this.activeTab = row.menuName;
+    this.activeTabName = row.name;
     console.log("bookingStatus >>>>", row);
     this.getTableData();
   }
@@ -460,5 +468,29 @@ export class UserDashboardBookingComponent {
       }
       this.excelExport.exportToExcelCustom(finalData, "MyBookings", "My Bookings - " + this.activeTab)
     });
+  }
+
+  nextStep() {
+    this.router.navigate(['/user/payments']);
+  }
+
+  handleAction(actionType: string, booking: any) {
+    console.log('Action received:', actionType);
+
+    if (actionType === 'SIGN') {
+      this.viewDocument(booking.document)
+    }
+    else if (actionType === 'CONFIRM_HANDOVER') {
+      this.changeStatus(booking, 'Delivered')
+    }
+    else if (actionType === 'INSPECT_PICKUP') {
+      this.changeStatus(booking, 'Accept');
+    }
+    else if (actionType === 'INITIATE_RETURN') {
+      this.changeStatus(booking, 'Return');
+    }
+    else if (actionType === 'INSPECT_RETURN') {
+      this.changeStatus(booking, 'Received');
+    }
   }
 }

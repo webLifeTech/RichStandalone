@@ -4172,3 +4172,155 @@ header.light_header .main-navbar .menubar .nav-menu>li>a {
 .timeline-item:last-child .line {
   display: none;
 }
+
+
+// --- THEME CONFIGURATION ---
+
+.profile-container {
+  padding-bottom: 40px;
+
+  .roadmap-container {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+
+    .kyc-alert {
+      background-color: #e6e8ed;
+      color: #001940;
+      border-left: 5px solid #001940;
+    }
+  }
+
+  .process-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 0;
+  }
+
+  // THE CONNECTING LINE
+  .process-line {
+    position: absolute;
+    top: 65px; // Vertically center with circles
+    left: 60px;
+    right: 60px;
+    height: 4px;
+    z-index: 0;
+    border-radius: 10px;
+
+    // Gradient Effect: Fades out at ends, solid Theme Color in middle
+    background: linear-gradient(to right, #eef1f5, rgba(var(--theme-color), 1), #eef1f5);
+    opacity: 0.3; // Thoda subtle rakha hai
+  }
+
+  .process-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    cursor: default;
+  }
+
+  // THE CIRCLE (Icon Holder)
+  .step-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #fff;
+    border: 3px solid rgba(var(--theme-color), 1); // Brand Color Border
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 40px rgba(0, 0, 0, 0.05); // Soft shadow
+
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      color: rgba(var(--theme-color), 1); // Brand Color Icon
+      transition: transform 0.3s ease;
+    }
+
+    // Hover Effect
+    &:hover {
+      background-color: rgba(var(--theme-color), 1); // Fill with dark blue
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 25, 64, 0.3) !important;
+
+      mat-icon {
+        color: #fff; // Icon turns white
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  // NUMBER WATERMARK (01, 02...)
+  .step-number {
+    position: absolute;
+    top: -15px;
+    right: calc(50% - 55px);
+    font-size: 50px;
+    font-weight: 900;
+    color: rgba(0, 25, 64, 0.04); // Brand color but transparent
+    z-index: -1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  // TEXT CONTENT
+  .step-content {
+    margin-top: 20px;
+    text-align: center;
+
+    h6 {
+      color: rgba(var(--theme-color), 1);
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      line-height: 1.5;
+      color: #6c757d;
+      font-size: 0.9rem;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Helper for Alert Icon
+  .icon-align {
+    vertical-align: middle;
+    margin-right: 8px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 767.98px) {
+    .process-wrapper {
+      display: block;
+    }
+  }
+}
