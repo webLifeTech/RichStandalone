@@ -176,8 +176,8 @@ export class AddPaymentModalComponent {
         this.toast.errorToastr("Something went wrong");
       }
     }, err => {
-      this.toast.errorToastr("Something went wrong");
-      // this.isLoader = false;
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -240,6 +240,9 @@ export class AddPaymentModalComponent {
       } else {
         this.toast.errorToastr(response.message);
       }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 
@@ -270,6 +273,9 @@ export class AddPaymentModalComponent {
         this.activeModal.close({ confirmed: true });
       }
       this.gs.isSpinnerShow = false;
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 

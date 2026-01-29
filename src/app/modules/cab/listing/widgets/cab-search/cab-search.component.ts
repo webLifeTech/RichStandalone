@@ -352,7 +352,7 @@ export class CabSearchComponent {
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
-      this.searchObj.type = params['type'] ? params['type'] : this.gs.loggedInUserInfo.role === 'user' ? "car" : "driver";
+      this.searchObj.type = params['type'] ? params['type'] : (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') ? "car" : "driver";
 
 
       this.router.navigate([], {

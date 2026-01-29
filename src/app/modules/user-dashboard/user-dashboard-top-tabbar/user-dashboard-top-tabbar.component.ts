@@ -1,11 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { tabs } from '../../../shared/interface/pages';
 import { TranslateModule } from '@ngx-translate/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { GlobalService } from '../../../shared/services/global.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../shared/services/auth.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InformationModalComponent } from '../../../shared/components/comman/modal/information-modal/information-modal.component';
+import { filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-user-dashboard-top-tabbar',
@@ -172,32 +176,25 @@ export class UserDashboardTopTabBarComponent {
 
   @Output() tabValue = new EventEmitter<string>();
 
-  public activeTab = 'MY PROFILE';
+  public activeTab = '';
 
   constructor(
     public router: Router,
     public gs: GlobalService,
     public roleService: RolePermissionService,
     public auth: AuthService,
+    private modalService: NgbModal,
   ) {
 
     if (this.auth.isLoggedIn) {
-
       this.GetUsrMenuDetails();
-      // for (let i in this.userDashboardTopTabs) {
-      //   if (this.accessList[this.gs.loggedInUserInfo['role']].indexOf(this.userDashboardTopTabs[i].id) !== -1) {
-      //     this.userDashboardTopTabs[i].visible = true;
-      //   }
-      // }
+      this.getProgress();
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe((event: any) => {
+          this.activeTab = event.urlAfterRedirects;
+        });
     }
-
-    // if (this.router.url.includes('/user/booking')) {
-    //   this.activeTab = "My Bookings";
-    // }
-    // if (this.router.url.includes('/user/payments')) {
-    //   this.activeTab = "Payments";
-    // }
-    // this.changeTab(this.activeTab);
   }
 
   GetUsrMenuDetails() {
@@ -209,8 +206,89 @@ export class UserDashboardTopTabBarComponent {
     })
   }
 
-  changeTab(value: string) {
-    this.activeTab = value;
-    this.tabValue.emit(this.activeTab)
+  getProgress() {
+    const body = {
+      "userId": this.gs.loggedInUserInfo.userId,
+    }
+    this.gs.GetUserProgressBarDetails(body).subscribe(async (response: any) => {
+      if (response.response && response.response.statusCode == "200") {
+        this.gs.progressSteps = this.applyActiveStatus(response.progressBars);
+      }
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  changeTab(tab: any) {
+
+    let isKycPending = true;
+    const checkComplate = this.gs.progressSteps.find((i: any) => i.route == tab.menuUrl);
+    const skipRoutes = ['/user/dashboard'];
+    if (checkComplate && (checkComplate.status === 'Completed' || checkComplate.status === 'Partially Completed' || checkComplate.status === 'Active')) {
+      isKycPending = false;
+    }
+    if (skipRoutes.indexOf(tab.menuUrl) !== -1) {
+      isKycPending = false;
+    }
+
+    if (isKycPending) {
+      let checkCurrentTab = this.gs.progressSteps.find((i: any) => i.route == this.activeTab);
+
+      if (!checkCurrentTab || (checkCurrentTab && checkCurrentTab.status === 'Completed')) {
+        checkCurrentTab = this.gs.progressSteps.find((i: any) => i.status == 'Active' || i.status === 'Partially Completed');
+      }
+
+      if (checkCurrentTab && checkCurrentTab.route !== '/user/wallet') {
+        const modalRef = this.modalService.open(InformationModalComponent, {
+          centered: true,
+        });
+        modalRef.componentInstance.mainTitle = `⚠️ ${checkCurrentTab.module} is ${checkCurrentTab.status === 'Active' ? 'Pending' : checkCurrentTab.status}`;
+        modalRef.componentInstance.title = `Please complete ${checkCurrentTab.module} to access other sections.`;
+        modalRef.result.then((res: any) => {
+          if (res.confirmed) {
+            this.router.navigate([checkCurrentTab.route]);
+          }
+        });
+        return;
+      }
+    }
+
+    this.activeTab = tab.menuUrl;
+    this.tabValue.emit(tab.name);
+    this.router.navigate([tab.menuUrl]);
+  }
+
+  applyActiveStatus(steps: any[]): any[] {
+    let makeNextActive = false;
+    return steps.map((step, index) => {
+
+      // Reset any wrong Active from API
+      let status: any = step.status;
+
+      if (status === 'Completed') {
+        makeNextActive = true;
+        return { ...step };
+      }
+
+      if (status === 'Partially Completed') {
+        makeNextActive = false;
+        return { ...step };
+      }
+
+      // First Pending after Completed → Active
+      if (status === 'Pending' && index === 0) {
+        makeNextActive = false;
+        return { ...step, status: 'Active' };
+      }
+      // First Pending after Completed → Active
+      if (status === 'Pending' && makeNextActive) {
+        makeNextActive = false;
+        return { ...step, status: 'Active' };
+      }
+
+      return { ...step };
+    });
   }
 }
+
+

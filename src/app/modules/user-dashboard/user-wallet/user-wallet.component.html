@@ -2,16 +2,12 @@
   <div class="container wallet-section">
 
     <div class="content-header">
-      <div class="row">
-        <div class="col-md-6">
+      <div class="row align-items-center">
+        <div class="col-md-2">
           <h4>Wallet</h4>
         </div>
-        <div class="col-md-6">
-          <div class="text-end">
-            <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
-              Next Step
-            </button>
-          </div>
+        <div *ngIf="gs.isProgressStepShow" class="col-md-10">
+          <app-step-progress></app-step-progress>
         </div>
       </div>
     </div>

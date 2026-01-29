@@ -21,6 +21,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PackageSubscriptionComponent } from '../comman/package-subscription/package-subscription.component';
 import { BranchService } from '../../../shared/services/branch.service';
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
+import { StepProgressComponent } from '../../../shared/components/comman/step-progress/step-progress.component';
 
 @Component({
   selector: 'app-user-master-configuration',
@@ -35,6 +36,7 @@ import { ConfirmationModalComponent } from '../../../shared/components/comman/mo
     PackageCardComponent,
     PaymentSuccessComponent,
     PackageSubscriptionComponent,
+    StepProgressComponent,
 
     CommonModule,
     FormsModule,
@@ -94,9 +96,9 @@ export class UserMasterConfigurationComponent {
   driverDetailsColumns = [
     { header: 'Is Active', fieldObject: null, field: 'isActiveOrInActive' },
     { header: 'Is Available for Private Booking?', fieldObject: null, field: 'isAvailableForPrivateBooking' },
-    { header: 'Price per Day', fieldObject: null, field: 'pricePerDay' },
-    { header: 'Price Per Week', fieldObject: null, field: 'pricePerWeek' },
-    { header: 'Price Per Month', fieldObject: null, field: 'pricePerMonth' },
+    // { header: 'Price per Day', fieldObject: null, field: 'pricePerDay' },
+    // { header: 'Price Per Week', fieldObject: null, field: 'pricePerWeek' },
+    // { header: 'Price Per Month', fieldObject: null, field: 'pricePerMonth' },
   ];
 
   // Actions grids
@@ -170,6 +172,8 @@ export class UserMasterConfigurationComponent {
       if (sidebarTab.formId == 3) {
         this.getDriverWorkingHours();
       }
+
+      this.isNextStepShow = true;
     }, 200);
     return;
   }
@@ -275,6 +279,7 @@ export class UserMasterConfigurationComponent {
     // this.getDriverDetails();
     this.isAddEditBranch = false;
     if (this.selectedTabObj.formId == 6) {
+      this.gs.isModificationOn = false;
       this.getCompanyBranches();
     }
     window.scrollTo({ top: 300, behavior: 'smooth' });

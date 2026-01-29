@@ -46,25 +46,25 @@
     <div
       *ngIf="dashboardAllDetails?.alertMessages && gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4'"
       class="alert-msg mb-4">
-      <div *ngIf="dashboardAllDetails.alertMessages.alertType == 'BOOKING_APPROVED'"
+      <div *ngIf="dashboardAllDetails.alertMessages?.alertType == 'BOOKING_APPROVED'"
         class="alert alert-success py-2 alert-dismissible fade show" role="alert">
-        Reference Number : {{dashboardAllDetails.alertMessages.bookingReferenceNumber}},
-        {{dashboardAllDetails.alertMessages.alertMessage}}
+        Reference Number : {{dashboardAllDetails.alertMessages?.bookingReferenceNumber}},
+        {{dashboardAllDetails.alertMessages?.alertMessage}}
         <a (click)="onView()" class="alert-link">
           <u>View Details</u>
         </a>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div *ngIf="dashboardAllDetails.alertMessages.alertType == 'REFUND_APPROVED'"
+      <div *ngIf="dashboardAllDetails.alertMessages?.alertType == 'REFUND_APPROVED'"
         class="alert alert-warning py-2 alert-dismissible fade show" role="alert">
-        Reference Number : {{dashboardAllDetails.alertMessages.bookingReferenceNumber}},
-        {{dashboardAllDetails.alertMessages.alertMessage}}
+        Reference Number : {{dashboardAllDetails.alertMessages?.bookingReferenceNumber}},
+        {{dashboardAllDetails.alertMessages?.alertMessage}}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div *ngIf="dashboardAllDetails.alertMessages.alertType == 'REFUND_REJECTED'"
+      <div *ngIf="dashboardAllDetails.alertMessages?.alertType == 'REFUND_REJECTED'"
         class="alert alert-danger py-2 alert-dismissible fade show" role="alert">
-        Reference Number : {{dashboardAllDetails.alertMessages.bookingReferenceNumber}},
-        {{dashboardAllDetails.alertMessages.alertMessage}}
+        Reference Number : {{dashboardAllDetails.alertMessages?.bookingReferenceNumber}},
+        {{dashboardAllDetails.alertMessages?.alertMessage}}
         <a (click)="onViewRefundStatus()" class="alert-link">
           <u>View Details</u>
         </a>

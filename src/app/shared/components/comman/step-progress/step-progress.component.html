@@ -1,0 +1,60 @@
+<div class="progress-stepbar">
+  <div class="progress-wrapper">
+    <div class="progress-header">
+      <span class="badge1">Completed {{ newSteps.overallCompletedPercentage }}%</span>
+      <span>Your Progress</span>
+      <span class="badge2">Pending {{ newSteps.overallPendingPercentage }}%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="newSteps.overallCompletedPercentage">
+      </div>
+    </div>
+  </div>
+  <ng-container>
+    <div class="premium-stepper">
+      <div class="progress-card-fill" [style.width.%]="progressCompleted"></div>
+      <ng-container *ngFor="let step of newSteps.progressBars; let i = index">
+        <div class="step-card" [style.width.%]="100/newSteps.progressBars.length"
+          [class.completed]="step.status === 'Completed'"
+          [class.active]="step.status === 'Active' || step.status === 'Partially Completed'"
+          [class.pending]="step.status === 'Pending'" (click)="navigate(step)">
+
+          <div class="d-flex">
+            <div class="step-circle me-2" *ngIf="!step.subBars">
+              <ng-container *ngIf="step.status === 'Completed'; else number">
+                ✓
+              </ng-container>
+              <ng-template #number>{{ i + 1 }}</ng-template>
+            </div>
+            <div class="step-title">
+              {{ step.module }}
+              <small class="step-module">{{ step.status }}</small>
+            </div>
+          </div>
+
+          <div class="sub-section" *ngIf="step.subBars">
+            <ng-container *ngFor="let subStep of step.subBars; let idx = index">
+              <div class="d-flex align-items-center">
+                <div class="step-circle-mini" [class.step-circle-mini-active]="subStep.isCompleted">
+                  <ng-container *ngIf="subStep.isCompleted; else number">
+                    ✓
+                  </ng-container>
+                  <ng-template #number>{{ idx + 1 }}</ng-template>
+                </div>
+
+                <div class="step-title">
+                  {{ subStep.title }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="step-arrow" *ngIf="i !== newSteps.progressBars.length - 1">
+          <img src="assets/images/svg/rigth-arrow.svg" alt="rigth-arrow" srcset="" class="arrow1" height="50px" />
+          <img src="assets/images/svg/rigth-arrow.svg" alt="rigth-arrow" srcset="" class="arrow2" height="50px" />
+          <img src="assets/images/svg/rigth-arrow.svg" alt="rigth-arrow" srcset="" class="arrow3" height="50px" />
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

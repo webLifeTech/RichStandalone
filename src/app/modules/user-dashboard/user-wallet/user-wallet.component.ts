@@ -19,6 +19,7 @@ import { ExcelExportService } from '../../../shared/services/excel-export.servic
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { TableSearchBarComponent } from '../comman/table-search-bar/table-search-bar.component';
 import { Router } from '@angular/router';
+import { StepProgressComponent } from '../../../shared/components/comman/step-progress/step-progress.component';
 
 @Component({
   selector: 'app-user-wallet',
@@ -33,7 +34,8 @@ import { Router } from '@angular/router';
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    TableSearchBarComponent
+    TableSearchBarComponent,
+    StepProgressComponent
   ],
   providers: [DatePipe],
   templateUrl: './user-wallet.component.html',
@@ -172,6 +174,10 @@ export class UserWalletComponent {
       console.log("res >>>>", res);
       if (res.confirmed) {
         this.getWalletDetails();
+        this.gs.isProgressStepShow = false;
+        setTimeout(() => {
+          this.gs.isProgressStepShow = true;
+        }, 100);
       }
     }, () => {
     });

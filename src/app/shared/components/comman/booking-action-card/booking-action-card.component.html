@@ -1,47 +1,42 @@
-<div *ngIf="uiState.showCard"
-  class="action-card d-flex flex-column flex-md-row align-items-md-center justify-content-between p-2 rounded-3 shadow-sm"
-  [ngClass]="uiState.colorClass">
-
-  <div class="d-flex align-items-start align-items-md-center gap-3 mb-3 mb-md-0">
-
-    <div class="icon-box-card d-flex align-items-center justify-content-center shadow-sm">
-      <mat-icon>{{ uiState.icon }}</mat-icon>
+<div *ngIf="uiState.showCard" class="action-alert">
+  <div
+    class="action-card d-flex flex-column flex-md-row align-items-md-center justify-content-between p-2 rounded-3 shadow-sm"
+    [ngClass]="uiState.colorClass">
+    <div class="d-flex align-items-start align-items-md-center gap-3 mb-3 mb-md-0">
+      <div class="icon-box-card d-flex align-items-center justify-content-center shadow-sm">
+        <mat-icon>{{ uiState.icon }}</mat-icon>
+      </div>
+      <div>
+        <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.1rem;">
+          {{ uiState.message }}
+        </h6>
+        <p class="mb-0 text-muted small">
+          {{ uiState.subMessage }}
+        </p>
+      </div>
     </div>
+    <div class="action-area">
+      <div class="text-start">
+        <ng-select clearable="false" [items]="bookingArray" bindLabel="bookingReferenceNumber"
+          bindValue="bookingReferenceNumber" placeholder="-- Select Booking --" [(ngModel)]="selectedBooking"
+          name="selectedFilter" class="min-width-250" (change)="onChange($event)">
+        </ng-select>
+      </div>
+      <!-- <button *ngIf="uiState.isAction" class="btn btn-theme btn-add " (click)="onButtonClick()">
+        {{ uiState.btnText }}
+      </button>
 
-    <div>
-      <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.1rem;">
-        {{ uiState.message }}
-      </h6>
-      <p class="mb-0 text-muted small">
-        {{ uiState.subMessage }}
-      </p>
+      <div *ngIf="!uiState.isAction && uiState.isStart"
+        class="status-pill px-3 py-2 rounded-pill border bg-white text-muted d-flex align-items-center gap-2">
+        <div class="spinner-grow spinner-grow-sm text-primary" role="status"></div>
+        <small class="fw-bold">In Progress</small>
+      </div>
+
+      <div *ngIf="!uiState.isAction && !uiState.isStart"
+        class="status-pill px-3 py-2 rounded-pill border bg-white text-muted d-flex align-items-center gap-2">
+        <mat-icon iconPositionEnd>verified</mat-icon>
+        <small class="fw-bold">End Service</small>
+      </div> -->
     </div>
-  </div>
-
-  <div class="action-area">
-
-    <div class="text-start">
-      <ng-select clearable="false" [items]="bookingArray" bindLabel="bookingReferenceNumber"
-        bindValue="bookingReferenceNumber" placeholder="-- Select Booking --" [(ngModel)]="selectedBooking"
-        name="selectedFilter" class="min-width-250" (change)="onChange($event)">
-      </ng-select>
-    </div>
-
-    <!-- <button *ngIf="uiState.isAction" class="btn btn-theme btn-add " (click)="onButtonClick()">
-      {{ uiState.btnText }}
-    </button>
-
-    <div *ngIf="!uiState.isAction && uiState.isStart"
-      class="status-pill px-3 py-2 rounded-pill border bg-white text-muted d-flex align-items-center gap-2">
-      <div class="spinner-grow spinner-grow-sm text-primary" role="status"></div>
-      <small class="fw-bold">In Progress</small>
-    </div>
-
-    <div *ngIf="!uiState.isAction && !uiState.isStart"
-      class="status-pill px-3 py-2 rounded-pill border bg-white text-muted d-flex align-items-center gap-2">
-      <mat-icon iconPositionEnd>verified</mat-icon>
-      <small class="fw-bold">End Service</small>
-    </div> -->
-
   </div>
 </div>

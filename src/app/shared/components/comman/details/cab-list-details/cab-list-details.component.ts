@@ -59,7 +59,7 @@ export class CabListDetailsComponent {
   @Input() carTypes: any = {};
   @Input() searchObj: any = {};
 
-  public type: string = "";
+  public type: any = "";
   public getCarTypeParams: string[] = [];
   public params: Params;
   public driverDetails: driver[];
@@ -174,14 +174,14 @@ export class CabListDetailsComponent {
 
     if (this.auth.isLoggedIn) {
       this.gs.isLicenseVerified = true // need to do
-      if (!this.gs.isLicenseVerified) {
-        const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      if (!this.gs.loggedInUserInfo.isKYCCompleted) {
+        const modalRef = this.modalService.open(InformationModalComponent, {
           centered: true,
         });
         modalRef.componentInstance.title = "Please complete your KYC";
         modalRef.result.then((res: any) => {
           if (res.confirmed) {
-            this.router.navigateByUrl('/user/profile')
+            this.router.navigateByUrl('/user/profile');
           }
         }, () => { });
         return;

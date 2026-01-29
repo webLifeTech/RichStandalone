@@ -12,7 +12,7 @@
           <li class="nav-item" [hidden]="tab.isHidden">
             <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
               (click)="changeKycTab(tab)">
-              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
             </a>
           </li>
           }
@@ -26,10 +26,8 @@
     <div class="dashboard-box">
       <div class="position-relative">
 
-        <div *ngIf="isNextStepShow && !isFormEdit" class="text-end">
-          <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
-            Next Step
-          </button>
+        <div *ngIf="isNextStepShow && !isFormEdit && !isAddEditDriverDetail" class="text-end">
+          <app-step-progress></app-step-progress>
         </div>
 
         <!--  Driver details -->

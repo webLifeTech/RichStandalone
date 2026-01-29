@@ -12,6 +12,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './verification-success-modal.component.scss'
 })
 export class VerificationSuccessModalComponent {
+  @Input() mainTitle: string = "";
   @Input() title: string = "";
   @Input() buttonLabel: string = "";
   constructor(

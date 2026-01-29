@@ -12,7 +12,7 @@
           <li class="nav-item" [hidden]="tab.isHidden">
             <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
               (click)="changeKycTab(tab)">
-              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
             </a>
           </li>
           }
@@ -68,14 +68,9 @@
 
               <div class="text-center">
                 <h3 class="fw-bold text-theme">KYC Verification Steps</h3>
-                <p class="text-muted">Complete these simple steps to verify your profile as a <span
-                    class="text-theme fw-bold">{{this.gs.loggedInUserInfo.userRoleName}}</span></p>
-                <!-- <p class="text-muted">
-                  Process for
-                  <span class="fw-bold text-decoration-underline text-theme">
-                    {{this.gs.loggedInUserInfo.userRoleName}}
-                  </span>
-                </p> -->
+                <p class="text-muted">Complete these simple steps to verify your profile as a
+                  <span class="text-theme fw-bold">{{this.gs.loggedInUserInfo.userRoleName}}</span>
+                </p>
               </div>
 
               <div class="process-wrapper">
@@ -101,26 +96,19 @@
 
       <div *ngIf="kycForm.state" class="position-relative">
         <!-- Driver - driver come owned car // Driver info -->
-        <div *ngIf="isNextStepShow && this.isKYCCompleted && !isFormEdit" class="text-end">
-          <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
-            Next Step
-          </button>
+        <div *ngIf="isNextStepShow && this.isKYCCompleted && !isFormEdit && gs.isProgressStepShow && !isVehicleInfoEdit"
+          class="text-end">
+          <app-step-progress></app-step-progress>
         </div>
 
         <div *ngIf="activeKycTab === 1">
-          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+          <div *ngIf="!isKYCCompleted || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
-          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
+          <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
-              <!-- <div class="text-end">
-                <button [routerLink]="'/user/configuration'" class="btn btn-solid color2 no-text-transorm"
-                  type="button">
-                  Next Step
-                </button>
-              </div> -->
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>
@@ -131,22 +119,15 @@
           </div>
         </div>
 
-        <!--  Driver details -->
-        <!-- <div *ngIf="activeKycTab === 3">
-          <app-driver-details-form [activeKycTab]="activeKycTab" [isEditInfo]="isFormEdit"
-            (onDivInfoSubmit)="onDivInfoSubmit()" (changeKycTab)="changeKycTab($event)"
-            (cancel)="handleCancel()"></app-driver-details-form>
-        </div> -->
-
         <!-- fleet Owner -->
         <div *ngIf="activeKycTab === 5">
-          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+          <div *ngIf="!isKYCCompleted || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'fleetOwner'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleFleetSubmit()" (onCancel)="cancelFleet()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
-          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
+          <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
@@ -154,8 +135,6 @@
               <app-dynamic-grid [type]="'fleetOwner'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
                 [columns]="fleetOwnerColumns" [actions]="driverActions"
                 (actionEvent)="handleAction($event, 'fleetOwner')"></app-dynamic-grid>
-              <!-- <app-fleet-owner-details [onlyCompanyInfo]="true" (onEditInfo)="onEditInfo()"
-                [fleetOwnerInfoData]="fleetOwnerInfoData"></app-fleet-owner-details> -->
             </div>
           </div>
         </div>
@@ -196,17 +175,13 @@
             </div>
 
             <ng-container *ngIf="vehicleUploadType === 'single' || (vehicleUploadType === 'bulk' && isStartGetKyc) ">
-              <!-- <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-                (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (cancel)="handleCancel()"
-                [selectedTabObj]="selectedTabObj" ></app-dynamic-form> -->
-
               <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
                 (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (onCancel)="handleCancel()"
                 [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
             </ng-container>
 
             <ng-container *ngIf="vehicleUploadType === 'bulk' && !isStartGetKyc">
-              <div class="row m-0 align-items-end">
+              <div class="row m-0 align-items-center">
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label>
@@ -214,10 +189,19 @@
                     </label>
                     <input [(ngModel)]="vin_document_upload" [disabled]="allPendingKycVehicleList.length"
                       (change)="uploadFile($event)" name="vin_document_upload" type="file"
-                      class="form-control open-select" />
+                      class="form-control open-select" #fileInput />
+                    <div class="mt-2" *ngIf="uploadedBulkFile && uploadedBulkFile.name">
+                      <div class="fw-bold">Filename : {{uploadedBulkFile.name}}</div>
+                    </div>
                   </div>
                 </div>
-
+                <div class="col-lg-8 text-end" *ngIf="vinUploadResponse?.successList?.length">
+                  <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm" type="button">
+                    Next Step
+                  </button>
+                </div>
+              </div>
+              <div class="row m-0 align-items-end">
                 <ng-container *ngIf="vinUploadResponse?.successList?.length">
                   <div class="alert alert-success fade show" role="alert">
                     <b>
@@ -326,32 +310,27 @@
         <!--  Vehicle info // fleet owner - individual car owner - driver come owned car -->
         <div *ngIf="isVehicleInfoEdit">
           <app-dynamic-form [kycForm]="kycForm" [formType]="'vehicleUpload'" [isEditInfo]="isFormEdit"
-            (onHandleSubmit)="handleSubmit()" (onCancel)="cancelVehicleInfo()" [selectedTabObj]="selectedTabObj"
-            [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+            (onVehicleUploadSubmit)="onVehicleUploadSubmit()" (onCancel)="cancelVehicleInfo()"
+            [selectedTabObj]="selectedTabObj" [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
         </div>
 
         <!-- My Vehicle -->
         <div *ngIf="activeKycTab === 8 && !isVehicleInfoEdit">
-          <app-dynamic-grid [type]="'my_vehicle'" [columns]="myVehicleColumns" [actions]="myVehicleActions"
+          <app-dynamic-grid [kycForm]="kycForm" [type]="'my_vehicle'" [selectedTabObj]="selectedTabObj"
+            [columns]="myVehicleColumns" [actions]="myVehicleActions"
             (actionEvent)="handleAction($event, 'my_vehicle')"></app-dynamic-grid>
         </div>
 
         <!-- Individual Car owner info -->
         <div *ngIf="activeKycTab === 12">
-          <div *ngIf="!gs.isLicenseVerified || isFormEdit">
+          <div *ngIf="!isKYCCompleted || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'individualCarOwner'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </div>
 
-          <div *ngIf="gs.isLicenseVerified && !isFormEdit" class="col-lg-12">
+          <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
-              <!-- <div class="text-end">
-                <button (click)="nextStep()" class="btn btn-solid color2 no-text-transorm"
-                  type="button">
-                  Next Step
-                </button>
-              </div> -->
               <h2 class="completed-msg">
                 {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
               </h2>

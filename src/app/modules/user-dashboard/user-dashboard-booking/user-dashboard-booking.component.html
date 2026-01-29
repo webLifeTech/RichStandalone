@@ -197,7 +197,7 @@
                         <span>{{data.bookingStatusRemarks}}</span>
                       </td>
                       <td>
-                        <a (click)="viewDocument(data.document)">
+                        <a (click)="viewDocument(data)">
                           <i class="feather icon-file-text"></i>
                         </a>
                       </td>
@@ -239,6 +239,10 @@
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before">
                           <!--  -->
+                          <button (click)="openProgress(data)" type="button" mat-menu-item>
+                            <mat-icon>timeline</mat-icon>
+                            <span>Track Progress</span>
+                          </button>
                           <button *ngIf="data.bookingStatusRemarksCd == '11' && data.isBooker"
                             (click)="makeRePayment(data)" type="button" mat-menu-item>
                             <i class="feather icon-rotate-cw"></i>
@@ -246,11 +250,17 @@
                           </button>
                           <button (click)="onView(data)" type="button" mat-menu-item>
                             <i class="feather icon-eye"></i>
-                            <span class="ms-2">View</span>
+                            <span class="ms-2">View Details</span>
                           </button>
                           <button (click)="onViewDocument(data)" type="button" mat-menu-item>
                             <i class="feather icon-file-text"></i>
                             <span class="ms-2">View Documents</span>
+                          </button>
+                          <button
+                            *ngIf="(data.bookingStatusCd == '1' || data.bookingStatusCd == '2') && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"
+                            (click)="updateInstructions(data)" type="button" mat-menu-item>
+                            <i class="feather icon-map-pin"></i>
+                            <span class="ms-2">Update Instructions</span>
                           </button>
                           <button
                             *ngIf="data.bookingStatus === 'Confirmed' && gs.loggedInUserInfo.role !== 'user' && !data.isBooker"

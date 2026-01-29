@@ -41,6 +41,8 @@ export class GlobalService {
 
   // Loader
   isSpinnerShow: boolean = false;
+  isProgressStepShow: boolean = true;
+  progressSteps: any = [];
 
   passRequirement = {
     passwordMinUpperCase: 1,
@@ -145,6 +147,16 @@ export class GlobalService {
   // COMMON -> GetUserActivityLogs
   public GetUserActivityLogs(data: any) {
     return this.http.post(this.baseUrl1 + 'TLHUB/COMMON/GetUserActivityLogs', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> GetUserProgressBarDetails
+  public GetUserProgressBarDetails(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetUserProgressBarDetails', { params }).pipe(
       map((res: any) => {
         return res;
       })

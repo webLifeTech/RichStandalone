@@ -29,6 +29,29 @@
       </div>
 
       <div class="booking-group">
+        <div *ngIf="bookingDetails.bookingDetails?.pickupInstruction || bookingDetails.bookingDetails?.dropInstruction"
+          class="alert-msg">
+          <div *ngIf="bookingDetails.bookingDetails?.pickupInstruction"
+            class="alert alert-success py-2 alert-dismissible fade show" role="alert">
+            <h5 class="fw-bold">
+              Pickup Instructions
+            </h5>
+            <h6 class="fw-bold">
+              {{bookingDetails.bookingDetails?.pickupInstruction}}
+            </h6>
+          </div>
+
+          <div *ngIf="bookingDetails.bookingDetails?.dropInstruction"
+            class="alert alert-success py-2 alert-dismissible fade show" role="alert">
+            <h5 class="fw-bold">
+              Drop Instructions
+            </h5>
+            <h6 class="fw-bold">
+              {{bookingDetails.bookingDetails?.dropInstruction}}
+            </h6>
+          </div>
+
+        </div>
         <!-- <div *ngIf="bookingDetails.bookingDetails.bookingStatus !== 'Cancelled'" class="alert-msg">
           <div class="alert alert-success py-2 alert-dismissible fade show" role="alert">
             <b>{{alertMessages.alertMessage}}</b>
@@ -268,7 +291,25 @@
             </div>
           </div>
         </div>
-
+        <!-- <div class="booking-wrapper">
+          <div class="booking-title">
+            <h6>Pickup & Drop Instructions</h6>
+          </div>
+          <div class="row container mt-3">
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Pickup Instructions</h6>
+                <p>{{bookingDetails.bookingDetails?.pickupInstruction}}</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="booking-view">
+                <h6>Drop Instructions</h6>
+                <p>{{bookingDetails.bookingDetails?.dropInstruction}}</p>
+              </div>
+            </div>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -16,6 +16,10 @@ import { GlobalService } from '../../../../shared/services/global.service';
 import { BranchService } from '../../../../shared/services/branch.service';
 import { FormsModule } from '@angular/forms';
 import { CarStatusChangeModalComponent } from '../../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
+import { InformationModalComponent } from '../../../../shared/components/comman/modal/information-modal/information-modal.component';
+import { PendingVehicleModalComponent } from '../../../../shared/components/comman/modal/pending-vehicle-modal/pending-vehicle-modal.component';
+import { RolePermissionService } from '../../../../shared/services/rolepermission.service';
+import { BulkUploadVcModalComponent } from '../../../../shared/components/comman/modal/bulk-upload-vc-modal/bulk-upload-vc-modal.component';
 
 @Component({
   selector: 'app-dynamic-grid',
@@ -66,10 +70,12 @@ export class DynamicGridComponent {
     public cabService: CabService,
     public profileService: ProfileService,
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private toast: ToastService,
     public gs: GlobalService,
     private branchService: BranchService,
+    public roleService: RolePermissionService,
   ) {
   }
 
@@ -78,6 +84,7 @@ export class DynamicGridComponent {
     console.log("selectedTabObj >>>>>", this.selectedTabObj);
 
     if (this.type === 'my_vehicle') {
+      this.roleService.getButtons("MYVEH");
       this.kycForm.formName = this.selectedTabObj.formName || 'VEHICLE UPLOAD';
     } else {
 
@@ -111,7 +118,25 @@ export class DynamicGridComponent {
         if (response && response.length) {
           this.filteredData = response;
           this.totalData = response.length;
-          // this.onEdit(this.filteredData[0]); // need to do
+          if (this.selectedTabObj.formId == 14) {
+            const totalVehicles = this.totalData;
+            const completedVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Active")?.length;  // || 0 from API
+            if (completedVehicles < totalVehicles) {
+              const modalRef = this.modalService.open(PendingVehicleModalComponent, {
+                centered: true,
+                backdrop: 'static',
+                keyboard: false,
+                size: 'md'
+              });
+              modalRef.componentInstance.totalVehicles = totalVehicles;
+              modalRef.componentInstance.completedVehicles = completedVehicles;
+              modalRef.result.then((res: any) => {
+                if (res.confirmed) {
+                  this.router.navigate(['/user/configuration']);
+                }
+              });
+            }
+          }
         }
       })
     }
@@ -179,6 +204,47 @@ export class DynamicGridComponent {
   onAdd() {
     this.actionEvent.emit({ add: true });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  onAddVehicle() {
+    this.actionEvent.emit({ addVehicle: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  onUploadBulk() {
+    const modalRef = this.modalService.open(BulkUploadVcModalComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        this.getSearchData();
+        this.gs.isProgressStepShow = false;
+        setTimeout(() => {
+          this.gs.isProgressStepShow = true;
+        }, 100);
+      }
+    }, () => {
+    });
+  }
+
+  onDownloadExcelSample() {
+    fetch('assets/excel/Bulk_Vehicles_Template.xlsx')
+      .then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Bulk_Vehicles_Template.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toast.successToastr("Excel downloaded successfully");
+      });
+  }
+
+  nextStep() {
+    if (this.selectedTabObj.formId == 8) {
+      this.router.navigate(['/user/configuration']);
+      return;
+    }
   }
 
   onView(item: any) {

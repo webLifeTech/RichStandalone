@@ -1,5 +1,39 @@
-<div class="bg-inner small-section pb-0 rental-section">
+<div class="bg-inner small-section pb-0 rental-section" [ngClass]="{'pt-4': isShowSteps}">
   <div class="container">
+    <div *ngIf="isShowSteps" class="row justify-content-center mb-3">
+      <div class=" col-lg-6">
+        <div class="action-alert">
+          <div
+            class="action-card d-flex flex-column flex-md-row align-items-md-center justify-content-between p-2 rounded-3 shadow-sm"
+            [ngClass]="uiState.colorClass">
+
+            <div class="d-flex align-items-start align-items-md-center gap-3 mb-3 mb-md-0">
+
+              <div class="icon-box-card d-flex align-items-center justify-content-center shadow-sm">
+                <mat-icon>{{ uiState.icon }}</mat-icon>
+              </div>
+
+              <div>
+                <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.1rem;">
+                  {{ uiState.message }}
+                </h6>
+                <p class="mb-0 text-muted small">
+                  {{ uiState.subMessage }}
+                </p>
+              </div>
+            </div>
+
+            <div class="action-area">
+
+              <button *ngIf="uiState.isAction" class="btn btn-theme btn-add " (click)="goToProfile()">
+                {{ uiState.btnText }}
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="flight-search">
       <app-cab-search [searchObj]="searchObj"
         (searchEvent)="searchVehicleResult($event,'main-search')"></app-cab-search>
@@ -14,10 +48,13 @@
         <app-cab-filter [aggregateFilters]="aggregateFilters"
           (searchEvent)="searchVehicleResult($event,'filter-search')"></app-cab-filter>
       </div>
-      <div *ngIf="reLoadDetails" class="col-lg-9">
-        <app-cab-list-details [searchObj]="searchObj" [searchResult]="vehicleSearchResult" [carTypes]="vehicleType"
-          [pageSize]="pageSize" [marginClass]="false" [responsiveLatestFilter]="true"
-          [noSidebar]="false"></app-cab-list-details>
+      <div class="col-lg-9">
+
+        <ng-container *ngIf="reLoadDetails">
+          <app-cab-list-details [searchObj]="searchObj" [searchResult]="vehicleSearchResult" [carTypes]="vehicleType"
+            [pageSize]="pageSize" [marginClass]="false" [responsiveLatestFilter]="true"
+            [noSidebar]="false"></app-cab-list-details>
+        </ng-container>
       </div>
     </div>
   </div>

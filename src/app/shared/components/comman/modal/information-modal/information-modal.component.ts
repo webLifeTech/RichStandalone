@@ -17,6 +17,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 export class InformationModalComponent {
 
   @Input() title: string;
+  @Input() mainTitle: string;
   @Input() confirmButton: string;
   @Input() cancelButton: string;
 

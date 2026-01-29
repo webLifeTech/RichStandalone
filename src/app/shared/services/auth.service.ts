@@ -5,7 +5,6 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 import { TabSyncService } from './tab-sync.service';
-// import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,18 +32,17 @@ export class AuthService {
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('loggedInUser', JSON.stringify(data));
       if (this.loggedInUserInfo.role === 'admin') {
-        this.router.navigateByUrl('/user/profile'); // admin/my-profile
+        this.router.navigateByUrl('/user/profile');
       } else if (this.loggedInUserInfo.role === 'Vendor') {
         this.router.navigateByUrl('/user/profile');
       } else {
         if (this.loggedInUserInfo.isKYCCompleted) {
-          // this.router.navigateByUrl('/cab/listing/list-view');
-          this.router.navigateByUrl('/user/dashboard'); // if KYC Completed
+          this.router.navigateByUrl('/user/dashboard');
         } else {
-          this.router.navigateByUrl('/user/profile'); // if KYC pending
+          this.router.navigateByUrl('/cab/listing/list-view');
+          // this.router.navigateByUrl('/user/profile')
         }
       }
-      // this.toast.successToastr("LoggedIn Successfully");
     }
   }
 
@@ -54,15 +52,6 @@ export class AuthService {
         return res;
       })
     );
-    // this.isLoggedIn = true;
-    // if (this.isLoggedIn) {
-    //   this.loggedInUserInfo = data;
-    //   this.gs.loggedInUserInfo = this.loggedInUserInfo;
-    //   localStorage.setItem('loggedIn', 'true');
-    //   localStorage.setItem('loggedInUser', JSON.stringify(data));
-    //   this.router.navigateByUrl('/cab/listing/list-view');
-    //   // this.toast.successToastr("Registration Successfully");
-    // }
   }
 
   logOut() {
@@ -74,11 +63,9 @@ export class AuthService {
     }
     this.gs.isSpinnerShow = true;
     this.SignOut(body).subscribe((res: any) => {
-      console.log("res >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.router.navigateByUrl('/home');
-        // 3. Yahan 'Injector' ka use karke service ko call karein
         const tabSyncService = this.injector.get(TabSyncService);
         tabSyncService.logoutAllTabs();
         this.resetStorage();

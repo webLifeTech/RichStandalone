@@ -8,6 +8,7 @@ import { GlobalService } from '../../../../../shared/services/global.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from '../../../../../shared/services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cab-list-left-sidebar',
@@ -16,7 +17,8 @@ import { AuthService } from '../../../../../shared/services/auth.service';
     CabSearchComponent,
     CabListDetailsComponent,
     CabFilterComponent,
-    CommonModule
+    CommonModule,
+    MatIconModule,
   ],
   providers: [
     DatePipe,
@@ -49,10 +51,22 @@ export class CabListLeftSidebarComponent {
     location_type: "option2",
   };
 
+  isShowSteps: boolean = false;
+  uiState: any = {
+    showCard: true,
+    isAction: true,
+    message: 'Action Required: KYC Pending',
+    subMessage: 'Please complete the KYC.',
+    btnText: 'COMPLETE KYC NOW',
+    icon: 'person_alert',
+    colorClass: 'state-danger', // 'state-warning' | 'state-info' | 'state-success'
+    isStart: true // 'state-warning' | 'state-info' | 'state-success'
+  };
+
   constructor(
     private route: ActivatedRoute,
     public cabService: CabService,
-    private gs: GlobalService,
+    public gs: GlobalService,
     private toast: ToastService,
     private datePipe: DatePipe,
     private router: Router,
@@ -84,9 +98,13 @@ export class CabListLeftSidebarComponent {
       } else {
         this.searchVehicleResult(this.searchObj, 'main-search');
       }
+      if (this.gs.loggedInUserInfo.userId && !this.gs.loggedInUserInfo.isKYCCompleted && this.params.type == 'driver') {
+        this.isShowSteps = true;
+      }
     });
     document.documentElement.style.setProperty('--theme-color1', '233, 179, 14');
     document.documentElement.style.setProperty('--theme-color2', '233, 179, 14');
+
   }
 
   ngOnDestroy() {
@@ -250,6 +268,10 @@ export class CabListLeftSidebarComponent {
         this.gs.isSpinnerShow = false;
       })
     }
+  }
+
+  goToProfile() {
+    this.router.navigateByUrl('/user/profile');
   }
 
 }

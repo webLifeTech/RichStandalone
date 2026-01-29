@@ -2119,6 +2119,7 @@ export class DynamicFormComponent {
           if (res && res.statusCode == "200") {
             this.toast.successToastr(res.message);
             this.gs.loggedInUserInfo.driveInCity = this.kycForm.state;
+            this.gs.loggedInUserInfo.isKYCCompleted = true;
             localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
             this.onHandleSubmit.emit(null)
           } else {

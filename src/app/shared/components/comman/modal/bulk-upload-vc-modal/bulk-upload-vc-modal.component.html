@@ -1,0 +1,72 @@
+<div class="modal-content form-modal enquiry-modal">
+  <div class="modal-header p-0 border-0">
+    <button type="button" class="close-btn" (click)="closeModal()">
+      <span>×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12 side-line">
+        <div class="mb-4">
+          <h3 class="text-theme font-b">Upload Bulk Vehicle</h3>
+        </div>
+
+        <ng-container>
+          <div class="row m-0 align-items-center">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label class="fw-bold mb-2">
+                  {{ 'userDashboard.kyc.upload_bulk_vehicle.upload_vin_number' | translate }}
+                </label>
+                <input [(ngModel)]="vin_document_upload" [disabled]="allPendingKycVehicleList.length"
+                  (change)="uploadFile($event)" name="vin_document_upload" type="file" class="form-control open-select"
+                  #fileInput />
+                <div class="mt-2" *ngIf="uploadedBulkFile && uploadedBulkFile.name">
+                  <div class="fw-bold">Filename : {{uploadedBulkFile.name}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row m-0 align-items-end">
+            <ng-container *ngIf="vinUploadResponse?.successList?.length">
+              <div class="alert alert-success fade show" role="alert">
+                <b>
+                  {{vinUploadResponse?.successList?.length}} out of {{vinUploadResponse?.allVinList?.length}}
+                  vehicles
+                  uploaded successful.
+                </b>
+              </div>
+
+              <table class="table">
+                <tbody>
+                  <tr *ngFor="let item of vinUploadResponse?.successList; let i = index">
+                    <th scope="row">{{i+1}}.</th>
+                    <td>{{item}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <ng-container *ngIf="vinUploadResponse?.errorList?.length">
+              <div class="alert alert-danger fade show" role="alert">
+                {{vinUploadResponse?.errorList?.length}} out of {{vinUploadResponse?.allVinList?.length}} vehicles
+                failed to upload.
+              </div>
+
+              <table class="table">
+                <tbody>
+                  <tr *ngFor="let item of vinUploadResponse?.errorList; let i = index">
+                    <th scope="row">{{i+1}}.</th>
+                    <td>{{item}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+          </div>
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</div>

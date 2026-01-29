@@ -1212,6 +1212,13 @@ header {
     .sticky-action {
       box-shadow: -6px 0 8px -4px rgba(0, 0, 0, 0.15);
     }
+
+    .click-arrow {
+      width: 34px;
+      position: absolute;
+      right: 9px;
+      bottom: 3px;
+    }
   }
 }
 
@@ -4322,5 +4329,390 @@ header.light_header .main-navbar .menubar .nav-menu>li>a {
     .process-wrapper {
       display: block;
     }
+  }
+}
+
+.action-alert {
+
+  // Base Card Style
+  .action-card {
+    background: #fff;
+    border-left: 5px solid transparent; // Left accent border
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  // overflow: hidden;
+  // Icon Box Style
+  .icon-box-card {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #fff;
+    color: #333;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  // ---------------- STATUS THEMES ----------------
+
+  // 1. WARNING (Action Required) - Yellow/Orange
+  .state-warning {
+    background: #ffffff; // linear-gradient(to right, #fffdf5, #fff); // Very light yellow
+    border-left-color: #ff9800; // Orange Accent
+
+    .icon-box-card {
+      color: #e65100;
+      background-color: #fff3e0;
+    }
+
+    .fw-bold {
+      color: #e65100 !important;
+    }
+  }
+
+  // 2. INFO (Waiting) - Blue
+  .state-info {
+    background: #ffffff; // linear-gradient(to right, #f5faff, #fff); // Very light blue
+    border-left-color: #2196f3; // Blue Accent
+
+    .icon-box-card {
+      color: #1565c0;
+      background-color: #e3f2fd;
+    }
+
+    .fw-bold {
+      color: #0d47a1 !important;
+    }
+  }
+
+  // 3. DANGER (Payment/Critical) - Red
+  .state-danger {
+    background: #ffffff; // linear-gradient(to right, #fff5f5, #fff); // Very light red
+    border-left-color: #f44336; // Red Accent
+
+    .icon-box-card {
+      color: #c62828;
+      background-color: #ffcdd2;
+    }
+
+    .fw-bold {
+      color: #c62828 !important;
+    }
+  }
+
+  // 4. SUCCESS (Completed/Good News) - Green
+  .state-success {
+    background: #ffffff; // linear-gradient(to right, #f1f8e9, #ffffff); // Very light green gradient
+    border-left-color: #4caf50; // Green Accent Border
+
+    // Icon styling
+    .icon-box {
+      color: #2e7d32 !important; // Dark Green Icon
+      background-color: #c8e6c9 !important; // Light Green Circle
+    }
+
+    // Text styling
+    .fw-bold {
+      color: #2e7d32 !important; // Green Title
+    }
+  }
+
+  // Button Tweak
+  .action-btn {
+    border-radius: 50px; // Pill shape button
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+  }
+}
+
+.progress-stepbar {
+  .premium-stepper {
+    display: flex;
+    align-items: end;
+    background: #ffffff;
+    border-radius: 0;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 9%);
+    border: 2px solid #dbdbdb;
+    position: relative;
+    z-index: 1;
+    border-radius: 12px;
+    margin-top: -9px;
+    padding-top: 6px;
+
+    .progress-card-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #16a34a) !important;
+      transition: width 0.6s ease;
+      opacity: 0.25; // keeps text readable
+    }
+
+    /* STEP CARD */
+    .step-card {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 0px;
+      white-space: nowrap;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+    }
+
+    /* CIRCLE */
+    .step-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      background: #ced4da;
+      color: #495057;
+    }
+
+    .step-circle-mini {
+      width: 16px;
+      height: 16px;
+      font-size: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      background: #ced4da;
+      color: #495057;
+      margin-right: 5px;
+    }
+
+    .sub-section {
+      margin-left: 40px;
+    }
+
+    /* TITLE */
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .step-module {
+      display: block;
+      font-size: 11px;
+      line-height: 1rem;
+      color: #6c757d;
+      text-align: left;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* STATES */
+    .step-card.completed {
+      // background: #e6f4ea;
+      pointer-events: none;
+    }
+
+    .step-card .completed>.step-module {
+      --tw-text-opacity: 1;
+      color: rgb(5 150 105 / var(--tw-text-opacity, 1)) !important;
+    }
+
+    .step-card.completed .step-circle {
+      background: #198754;
+      color: #fff;
+    }
+
+    .step-card.completed .step-circle-mini {
+      background: #198754;
+      color: #fff;
+    }
+
+    .step-card.active .step-circle-mini {
+      background: #f97316;
+      color: #fff;
+    }
+
+    .step-card .step-circle-mini-active {
+      background: #198754 !important;
+    }
+
+    .step-card.active .step-circle {
+      background: #f97316;
+      color: #fff;
+    }
+
+    .step-card.completed .step-circle,
+    .step-card.completed.step-circle-mini {
+      background: #198754;
+      color: #fff;
+    }
+
+    .step-card.active .step-circle,
+    .step-card.active.step-circle-mini {
+      background: #f97316;
+      color: #fff;
+    }
+
+    .step-card.pending {
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    /* ARROW */
+    .step-arrow {
+      display: flex;
+      align-items: center;
+    }
+
+    .step-arrow span {
+      width: 28px;
+      height: 2px;
+      background: #adb5bd;
+      position: relative;
+    }
+
+    .step-arrow span::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: -4px;
+      border-left: 6px solid #adb5bd;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    .pulse {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      width: 8px;
+      height: 8px;
+      background: #ea580c;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, .7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(234, 88, 12, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(234, 88, 12, 0);
+      }
+    }
+
+    .pulse-green {
+      position: absolute;
+      top: 8px;
+      right: 0px;
+      width: 8px;
+      height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse-green {
+      0% {
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, .7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(22, 163, 74, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+      }
+    }
+  }
+
+  /* Progress */
+  .progress-wrapper {
+    // margin-bottom: 32px;
+    z-index: 10;
+    position: relative;
+    margin: 0px 5px 0 5px;
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0px;
+      align-items: center;
+
+      span:nth-child(2) {
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+      }
+
+      .badge1 {
+        background: #edfff4;
+        color: #198754;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+
+      .badge2 {
+        background: #fff7ed;
+        color: #ea580c;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+    }
+
+    .progress-bar {
+      height: 8px;
+      // background: #e5e7eb;
+      background: linear-gradient(90deg, #fb923c, #ea580c);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 1s ease;
+    }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .premium-stepper {
+      padding: 14px;
+    }
+
+    .step-card {
+      padding: 8px 14px;
+    }
+  }
+
+  .arrow1 {
+    margin-right: -46px;
+  }
+
+  .arrow3 {
+    margin-left: -46px;
   }
 }

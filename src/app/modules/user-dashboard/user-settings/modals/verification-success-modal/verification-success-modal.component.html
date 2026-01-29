@@ -4,7 +4,7 @@
       <span class="order-success-icon">
         <img src="assets/images/icon/dashboard/check-icon.svg" alt="Icon" />
       </span>
-      <h4>Successful</h4>
+      <h4>{{mainTitle || 'Successful'}}</h4>
       <p>{{title || 'You Phone number has been successfully Verified.'}}</p>
       <div class="modal-btn">
         <a *ngIf="!buttonLabel" (click)="closeModal()" class="btn btn-theme no-text-transorm">

@@ -1,0 +1,50 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <h4>Vehicle Details Pending</h4>
+        <!-- <p>{{title || "Are you sure?"}}</p> -->
+      </div>
+      <div class="modal-body pt-2">
+        <div class="text-center mb-3">
+          <div class="display-6 fw-bold text-warning">
+            {{ pendingVehicles }}
+          </div>
+          <div class="text-muted fw-bold">
+            Vehicles pending details
+          </div>
+        </div>
+
+        <div class="alert alert-light border">
+          <h5 class="mb-2 fw-bold">
+            <strong>{{ pendingVehicles }}</strong> Vehicles details pending. Complete the details to list your car in
+            search.
+          </h5>
+          <!-- <h5 class="mb-2 fw-bold">
+            You have added <strong>{{ totalVehicles }}</strong> vehicles.
+          </h5>
+          <h5 class="mb-2 text-success fw-bold">
+            ✅ {{ completedVehicles }} vehicles are active.
+          </h5>
+          <h5 class="mb-0 text-danger fw-bold">
+            ⚠️ {{ pendingVehicles }} vehicles need complete details.
+          </h5> -->
+        </div>
+
+        <!-- <p class="small text-muted mt-3 fw-bold">
+          Complete all vehicle details to activate them and start receiving bookings.
+        </p> -->
+      </div>
+
+      <div class="modal-btn">
+        <div class="row">
+          <div class="col-12 text-center">
+            <a (click)="onConfirm()" class="btn btn-theme">
+              {{confirmButton || "Complete Now"}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

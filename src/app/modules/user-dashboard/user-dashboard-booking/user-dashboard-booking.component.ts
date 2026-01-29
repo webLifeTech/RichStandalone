@@ -17,8 +17,6 @@ import { RefundApproveRejectModalComponent } from '../../../shared/components/co
 import { ConfirmationModalComponent } from '../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { DocumentSignModalComponent } from '../../../shared/components/comman/modal/document-sign-modal/document-sign-modal.component';
 import { BookingCancellationComponent } from './booking-cancellation/booking-cancellation.component';
-import { OtpVerificationModalComponent } from '../user-settings/modals/otp-verification-modal/otp-verification-modal.component';
-import { VerificationSuccessModalComponent } from '../user-settings/modals/verification-success-modal/verification-success-modal.component';
 import { BookingChecklistComponent } from './booking-checklist/booking-checklist.component';
 import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
@@ -27,6 +25,9 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
 import { RePaymentModalComponent } from '../../../shared/components/comman/modal/payment-modals/re-payment-modal/re-payment-modal.component';
 import { WalletService } from '../../../shared/services/wallet.service';
 import { BookingActionCardComponent } from '../../../shared/components/comman/booking-action-card/booking-action-card.component';
+import { InstructionsModalComponent } from '../../../shared/components/comman/modal/instructions-modal/instructions-modal.component';
+import { BookingProgressModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-progress-modal/booking-progress-modal.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -46,6 +47,7 @@ import { BookingActionCardComponent } from '../../../shared/components/comman/bo
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    MatIconModule
   ],
   providers: [DatePipe],
   templateUrl: './user-dashboard-booking.component.html',
@@ -228,16 +230,32 @@ export class UserDashboardBookingComponent {
     });
   }
 
-  viewDocument(document: any) {
+  viewDocument(item: any) {
     const modalRef = this.modalService.open(DocumentSignModalComponent, {
       centered: true,
       backdrop: 'static',
       windowClass: 'document-modal',
       size: 'xl'
     });
-    modalRef.componentInstance.documentIframe = document;
+    modalRef.componentInstance.documentIframe = item.document;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
+        if (this.gs.loggedInUserInfo.role !== 'user') {
+          this.updateInstructions(item);
+        }
+      }
+    }, () => { });
+  }
+
+  updateInstructions(item: any) {
+    const modalRef = this.modalService.open(InstructionsModalComponent, {
+      backdrop: 'static',
+      size: 'md'
+    });
+    modalRef.componentInstance.singleDetails = item;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+        this.getTableData();
       }
     }, () => { });
   }
@@ -492,5 +510,16 @@ export class UserDashboardBookingComponent {
     else if (actionType === 'INSPECT_RETURN') {
       this.changeStatus(booking, 'Received');
     }
+  }
+
+  openProgress(bookingData: any) {
+    const modalRef = this.modalService.open(BookingProgressModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.bookingRefNo = bookingData.bookingReferenceNumber;
+    modalRef.componentInstance.bookingId = bookingData.bookingId;
+    modalRef.result.then((res: any) => {
+    }, () => {
+    });
   }
 }

@@ -272,4 +272,13 @@ export class BookingService {
       })
     );
   }
+
+  // Booking -> UpdatePickupDropInstruction
+  public UpdatePickupDropInstruction(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/Booking/UpdatePickupDropInstruction`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

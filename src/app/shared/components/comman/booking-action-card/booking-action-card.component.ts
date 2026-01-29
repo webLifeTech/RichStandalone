@@ -53,15 +53,17 @@ export class BookingActionCardComponent implements OnChanges {
     if (changes['bookingDetails']) {
       const filtered = this.bookingArray.filter((i: any) => ["1", "2", "3", "4"].includes(i.bookingStatusCd))
       this.bookingArray = JSON.parse(JSON.stringify(filtered));
-      this.selectedBooking = this.bookingArray[0].bookingReferenceNumber;
+
       if ((this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user') && this.bookingDetails.isBooker) {
         this.userType = 'driver';
       } else {
         this.userType = 'owner';
       }
-      console.log("this.bookingDetails.bookingStatusRemarks>>>", this.bookingDetails.bookingStatusRemarks);
-      console.log("this.userType >>>", this.userType);
-      this.updateCardState();
+
+      if (this.bookingArray.length) {
+        this.selectedBooking = this.bookingArray[0]?.bookingReferenceNumber || null;
+        this.updateCardState();
+      }
     }
   }
 

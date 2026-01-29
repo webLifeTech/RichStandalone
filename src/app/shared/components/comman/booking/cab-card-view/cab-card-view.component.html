@@ -65,7 +65,7 @@
                 </li>
               </ul>
             </div>
-            <div class="d-flex">
+            <div *ngIf="type === 'car'" class="d-flex">
               <div *ngFor="let disItem of details.discountInfo" class="offer-box">
                 <img src="assets/images/cab/icon/gift-svgrepo-com.svg" width="30px" class="img-fluid blur-up lazyload"
                   alt="seat-icon">
@@ -79,7 +79,7 @@
           <!-- text-end price-top align-self-end -->
           <div class="col-md-4 text-end price-top">
             <div class="price">
-              <table class="table table-borderless">
+              <table *ngIf="type === 'car'" class="table table-borderless">
                 <tbody class="price-table">
                   <tr *ngIf="details.perDayPrice">
                     <td class="price-title">Price per Day:</td>
@@ -99,7 +99,7 @@
                   </tr>
                 </tbody>
               </table>
-              <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6>
+              <!-- <h6 class="cancellation">{{('car_list_page.free_cancellation' | translate)}}</h6> -->
             </div>
             <!-- <div *ngIf="from === 'wishlist'" class="book-flight">
               <a class="btn btn-theme margin-5" (click)="checkAvailability()">
@@ -107,7 +107,8 @@
               </a>
             </div> -->
             <div *ngIf="from === 'wishlist' || from === 'owner_interest'" class="book-flight">
-              <button *ngIf="!details.isBooked" class="btn btn-theme margin-5" (click)="bookNow(details)">
+              <button *ngIf="!details.isBooked && type === 'car'" class="btn btn-theme margin-5"
+                (click)="bookNow(details)">
                 {{'car_list_page.book' | translate}}
               </button>
               <div *ngIf="details.isBooked" class="fw-bold mt-2 badge badge-light-success">

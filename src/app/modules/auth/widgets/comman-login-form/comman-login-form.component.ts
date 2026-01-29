@@ -248,13 +248,17 @@ export class CommanLoginFormComponent {
     const checkExist: any = await this.authService.IsEmailOrPhoneNumberExist({
       phoneNumber: this.verificationType == "PhoneNo" ? this.loginForm.username : null,
       email: this.verificationType == "EmailId" ? this.loginForm.username : null,
-    })
+    }).catch((error) => {
+      this.gs.isSpinnerShow = false;
+      if (error.error.statusCode != "200") {
+        this.toast.errorToastr(error.error.message);
+        return;
+      }
+    });
 
-    if (checkExist.statusCode != "200") {
-      this.toast.errorToastr(checkExist.message);
+    if (!checkExist) {
       return;
     }
-
 
     const body = {
       verificationType: this.verificationType,
@@ -353,6 +357,9 @@ export class CommanLoginFormComponent {
       } else {
         this.toast.errorToastr(res.message);
       }
+    }, (err: any) => {
+      this.gs.isSpinnerShow = false;
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
     })
   }
 

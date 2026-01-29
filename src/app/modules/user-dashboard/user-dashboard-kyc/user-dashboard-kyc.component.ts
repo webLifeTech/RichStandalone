@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { dashboardDetails } from '../../../shared/interface/pages';
 import { GlobalService } from '../../../shared/services/global.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
@@ -32,6 +32,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { StepProgressComponent } from '../../../shared/components/comman/step-progress/step-progress.component';
+import { VerificationSuccessModalComponent } from '../user-settings/modals/verification-success-modal/verification-success-modal.component';
 
 @Component({
   selector: 'app-user-dashboard-kyc',
@@ -44,6 +46,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     BranchbranchListComponent,
     DynamicFormComponent,
     DynamicGridComponent,
+    StepProgressComponent,
     // Module
     CommonModule,
     TranslateModule,
@@ -66,6 +69,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   styleUrl: './user-dashboard-kyc.component.scss'
 })
 export class UserDashboardKycComponent {
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  uploadedBulkFile: any = {};
 
   kycForm: any = {
     i_am: 1, // 1 need to do
@@ -212,6 +218,7 @@ export class UserDashboardKycComponent {
     { header: 'VIN Number', fieldObject: null, field: 'vinNumber' },
     { header: 'Fuel Type', fieldObject: null, field: 'fuelType' },
     { header: 'Territory Code', fieldObject: null, field: 'territoryCode' },
+    { header: 'KYV Status', fieldObject: null, field: 'kycStatus' },
   ];
 
   // Vehicle List Columns and Data
@@ -305,11 +312,11 @@ export class UserDashboardKycComponent {
       this.usaStatesArray = response;
     })
     this.onChangeIam();
-    this.GetKycByUserId();
+    this.GetKycByUserId('load');
   }
 
   canDeactivate(): boolean {
-    if ((!this.gs.isLicenseVerified || this.isFormEdit) && this.auth.isLoggedIn) {
+    if ((!this.isKYCCompleted || this.isFormEdit) && this.auth.isLoggedIn) {
       return confirm('Are you sure you want to leave this page? You will lose any unsaved data.');
     }
     return true;
@@ -319,7 +326,7 @@ export class UserDashboardKycComponent {
     this.currentSteps = this.stepsData[this.gs.loggedInUserInfo.role] || [];
   }
 
-  GetKycByUserId() {
+  GetKycByUserId(from?: any) {
     this.profileService.GetKycByUserId({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
@@ -330,6 +337,7 @@ export class UserDashboardKycComponent {
         "Driver with owned car": "driverkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+      this.nextStep(from);
       this.updateSteps()
     })
   }
@@ -352,8 +360,8 @@ export class UserDashboardKycComponent {
       this.vehicleUploadType = null;
       this.activeKycTab = tab.formId;
       this.isNextStepShow = true;
-      if (this.activeKycTab === 7) {
-        this.isNextStepShow = false;
+      if (this.activeKycTab === 8) {
+        this.kycForm.isAddSearchSection = true;
       }
 
       if (this.gs.loggedInUserInfo.roleName !== 'B5107AB1-19BF-430B-9553-76F39DB1CDCD') {
@@ -523,46 +531,26 @@ export class UserDashboardKycComponent {
   }
 
   handleSubmit() {
-
-    this.getDriverDetails();
     this.GetKycByUserId();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleFleetSubmit() {
-    this.getAllCompanies();
     this.GetKycByUserId();
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   onVehicleUploadSubmit() {
     this.gs.isModificationOn = false;
-    let setMyVehicle = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
-    console.log("setMyVehicle >>>>", setMyVehicle);
-    this.changeKycTab(setMyVehicle);
+    this.isVehicleInfoEdit = false;
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
-  // Confirm
-  // onDivInfoSubmit() {
-  //   let mergedForm = {};
-  //   localStorage.setItem('driverInfoData', JSON.stringify(mergedForm));
-  //   this.gs.licenseVerified();
-  //   window.scrollTo({ top: 300, behavior: 'smooth' });
-  //   this.driverInfoData = this.gs.getDriverInfo();
-
-  //   this.activeKycTab = "Driver info";
-  //   if (this.isFormEdit) {
-  //     this.toast.successToastr("Updated Successfully");
-  //   } else {
-  //     this.toast.successToastr("KYC Completed Successfully");
-  //   }
-  //   this.isFormEdit = false;
-  // }
 
   uploadFile(event: any) {
 
     const file = event.target.files[0];
     if (file) {
+      this.uploadedBulkFile = file;
       this.gs.isSpinnerShow = true;
       this.gs.readExcel(file).then((vinData) => {
         this.profileService.bulkVehicleUpload(vinData, {
@@ -571,20 +559,25 @@ export class UserDashboardKycComponent {
           this.gs.isSpinnerShow = false;
           this.vinUploadResponse = response;
           this.vinUploadResponse.allVinList = vinData;
-
-          console.log("this.vinUploadResponse >>>>>", this.vinUploadResponse);
+          this.fileInput.nativeElement.value = '';
+          this.gs.isProgressStepShow = false;
+          setTimeout(() => {
+            this.gs.isProgressStepShow = true;
+          }, 100);
 
           if (response && response.statusCode == "200") {
             this.toast.successToastr("VIN uploaded successfully");
             this.getKYCDraftList();
           }
-          if (response && response.successVin.length == vinData.length) {
+          if (response && response.successList.length == vinData.length) {
             this.toast.successToastr("All VIN uploaded successfully");
             // this.getKYCDraftList();
           }
-          // if (response && response.successVin.length == vinData.length) {
-          //   this.toast.successToastr("All VIN uploaded successfully");
-          // }
+        }, (err: any) => {
+          this.fileInput.nativeElement.value = '';
+          this.gs.isSpinnerShow = false;
+          this.vinUploadResponse = err.error;
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
         })
       });
     }
@@ -670,6 +663,14 @@ export class UserDashboardKycComponent {
   handleAction(event: any, type: any) {
     const singleDetail = event.singleDetail;
 
+    if (event.addVehicle) {
+      this.isVehicleInfoEdit = true;
+      return;
+    }
+    if (event.uploadBulk) {
+      return;
+    }
+
     if (type === 'driver' || type === 'individualCarOwner') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
@@ -711,7 +712,6 @@ export class UserDashboardKycComponent {
           this.isFormEdit = true;
           this.isVehicleInfoEdit = true;
           this.singleDetailInfo = response;
-          this.selectedTabObj.formName = "VEHICLE UPLOAD";
         }
       })
     }
@@ -722,20 +722,46 @@ export class UserDashboardKycComponent {
     }
   }
 
-  nextStep() {
-    if (this.activeKycTab === 1 || this.activeKycTab === 8) {
+  nextStep(from?: any) {
+    console.log("activeKycTab", this.activeKycTab);
+    this.gs.isModificationOn = false;
+    if (from == 'load') {
+      return;
+    }
+    if (this.activeKycTab === 7) {
       this.router.navigate(['/user/configuration']);
       return;
     }
-    if (this.activeKycTab === 12 || this.activeKycTab === 5) {
-      let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 7) || {};
-      this.changeKycTab(tab);
-      return;
-    }
 
-    if (this.activeKycTab === 7) {
-      let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
-      this.changeKycTab(tab);
+    if (this.activeKycTab === 1 || this.activeKycTab === 12 || this.activeKycTab === 5) {
+      let massage = "Your kyc verification is successfully completed."
+      const modalRef = this.modalService.open(VerificationSuccessModalComponent, {
+        centered: true,
+        backdrop: 'static',
+      });
+      modalRef.componentInstance.mainTitle = "KYC Completed";
+      modalRef.componentInstance.title = massage;
+      modalRef.componentInstance.buttonLabel = "Next";
+      modalRef.result.then((res: any) => {
+        if (res.confirmed) {
+          console.log("dddddddd");
+          if (this.activeKycTab === 1 && this.gs.loggedInUserInfo.role === 'user_4') {
+            let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
+            this.changeKycTab(tab);
+            return;
+          }
+          if (this.activeKycTab === 1 && this.gs.loggedInUserInfo.role === 'user') {
+            this.router.navigate(['/user/configuration']);
+            return;
+          }
+          if (this.activeKycTab === 12 || this.activeKycTab === 5) {
+            let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
+            this.changeKycTab(tab);
+            return;
+          }
+
+        }
+      });
       return;
     }
   }
