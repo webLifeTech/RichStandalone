@@ -54,9 +54,9 @@ export class StepProgressComponent {
 
   ngOnInit() {
     this.getTableData();
-    // if (this.gs.loggedInUserInfo.role === "admin") {
-    //   this.gs.isProgressStepShow = false;
-    // }
+    if (this.gs.loggedInUserInfo.role === "admin" || this.gs.loggedInUserInfo.role === "Vendor") {
+      this.gs.isProgressStepShow = false;
+    }
   }
 
   getTableData() {

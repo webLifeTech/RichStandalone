@@ -138,7 +138,7 @@
                     <td class="text-success-light">
                       {{item.paidAmount | currencyPipe: gs.currency}}
                     </td>
-                    <td>{{item.paymentMethod}}</td>
+                    <td>{{item.paymentMethod || '-'}}</td>
                     <td>{{item.startDate | date : 'mediumDate'}}</td>
                     <td>{{item.endDate | date : 'mediumDate'}}</td>
                     <td>

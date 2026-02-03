@@ -420,7 +420,7 @@ export class UserDashboardKycComponent {
     this.getConfigUIForms();
   }
 
-  getDriverDetails() {
+  getDriverDetails(isSkipLoad?: any) {
     this.gs.isLicenseVerified = false;
     this.profileService.getAllDrivers({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -429,13 +429,15 @@ export class UserDashboardKycComponent {
         this.driverInfoData = response;
         this.gs.isLicenseVerified = true;
         this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || 42;
-        this.onSelectState();
+        if (!isSkipLoad) {
+          this.onSelectState();
+        }
       }
       console.log("getAllDrivers >>>>>", response);
     })
   }
 
-  getAllCompanies() {
+  getAllCompanies(isSkipLoad?: any) {
     this.gs.isLicenseVerified = false;
     this.profileService.getAllCompanies({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -447,7 +449,9 @@ export class UserDashboardKycComponent {
         this.gs.isLicenseVerified = true;
         this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || 42;
       }
-      this.onSelectState();
+      if (!isSkipLoad) {
+        this.onSelectState();
+      }
       console.log("getAllDrivers >>>>>", response);
     })
   }
@@ -532,11 +536,13 @@ export class UserDashboardKycComponent {
 
   handleSubmit() {
     this.GetKycByUserId();
+    this.getDriverDetails(true); // skip load form
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleFleetSubmit() {
     this.GetKycByUserId();
+    this.getAllCompanies(true); // skip load form
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 

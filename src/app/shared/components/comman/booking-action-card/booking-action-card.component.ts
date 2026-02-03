@@ -50,11 +50,11 @@ export class BookingActionCardComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['bookingDetails']) {
+    if (changes['bookingDetails'] || changes['bookingArray']) {
       const filtered = this.bookingArray.filter((i: any) => ["1", "2", "3", "4"].includes(i.bookingStatusCd))
       this.bookingArray = JSON.parse(JSON.stringify(filtered));
 
-      if ((this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user') && this.bookingDetails.isBooker) {
+      if ((this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') && this.bookingDetails.isBooker) {
         this.userType = 'driver';
       } else {
         this.userType = 'owner';
@@ -63,6 +63,8 @@ export class BookingActionCardComponent implements OnChanges {
       if (this.bookingArray.length) {
         this.selectedBooking = this.bookingArray[0]?.bookingReferenceNumber || null;
         this.updateCardState();
+      } else {
+        this.uiState.showCard = false;
       }
     }
   }
@@ -85,7 +87,7 @@ export class BookingActionCardComponent implements OnChanges {
     // =========================================================
     // 1. DRIVER SIGNATURE
     // =========================================================
-    if (status.includes('driver signature pending')) {
+    if (this.bookingDetails.bookingStatusRemarksCd == '1') {
       this.uiState.showCard = true;
       if (this.userType === 'driver') {
         this.setUI(true, 'Action Required: Sign Agreement', 'Please sign the digital agreement to proceed.', 'Sign Document', 'SIGN', 'draw', 'state-warning', true);

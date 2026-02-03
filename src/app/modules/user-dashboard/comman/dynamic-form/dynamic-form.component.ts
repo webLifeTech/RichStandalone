@@ -142,6 +142,9 @@ export class DynamicFormComponent {
     if (this.isEditInfo) {
       transactionId = 3
     }
+    if (this.formType === 'vendor-profile' && !this.singleDetailInfo.providerRequest.contactInfo.firstName) {
+      transactionId = 1
+    }
     let body = {
       "clientID": null,
       "stateCode": this.kycForm.state,
@@ -253,6 +256,10 @@ export class DynamicFormComponent {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("masterDropdwonList >>>>", this.masterDropdwonList);
+        const tem = this.masterDropdwonList['ShiftStatus'].map((item: any) => ({ Name: null, ...item })) || [];
+        this.masterDropdwonList['ShiftStatus'] = tem.map((item: any) => ({ Name: item.Description, ...item })) || [];
+        console.log("tem >>>>", tem);
+        console.log("['ShiftStatus'] >>>>", this.masterDropdwonList['ShiftStatus']);
 
         this.createForm();
       } else {
@@ -505,9 +512,6 @@ export class DynamicFormComponent {
       });
     }
 
-    // if (!this.isEditInfo) {
-
-    // }
     const emailDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.emails[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
     const phoneDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.phoneNumbers[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
     console.log("emailDetails >>>>>", emailDetails);
@@ -532,6 +536,38 @@ export class DynamicFormComponent {
           this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", emailDetails.isEmailVerified);
         }
       }
+    })
+  }
+
+  async GetProviderDetails(section: any) {
+    const body = {
+      userId: this.gs.loggedInUserInfo.userId,
+    }
+    this.vendorServ.GetProviderDetails(body).subscribe(async (response: any) => {
+      console.log("getProviderDetails 111 >>>>>>", response);
+      this.singleDetailInfo = { providerRequest: response };
+      const emailDetails: any = this.singleDetailInfo.providerRequest.contactInfo.emails[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+      const phoneDetails: any = this.singleDetailInfo.providerRequest.contactInfo.phoneNumbers[0]; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+
+      const privFieldsArray = section.get('fields') as FormArray;
+      privFieldsArray.controls.forEach((fieldTwo: any) => {
+        if (fieldTwo.value.fieldCode == 'FLD_VEN_PHN_NUM') {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", phoneDetails?.phoneNumber);
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", phoneDetails?.isPhoneNumberVerified);
+          if (!this.isEditInfo && phoneDetails?.isPhoneNumberVerified && phoneDetails?.phoneNumber) {
+            this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", phoneDetails?.isPhoneNumberVerified);
+          }
+        }
+        if (fieldTwo.value.fieldCode == 'FLD_VEN_EMAIL_ID') {
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "fieldType", "VERIFYINPUT");
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "value", emailDetails?.emailId);
+          this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isVerified", emailDetails?.isEmailVerified);
+          if (!this.isEditInfo && emailDetails?.isEmailVerified && emailDetails?.emailId) {
+            this.updateValueByFieldId(section, fieldTwo.value.fieldId, "isReadOnly", emailDetails?.isEmailVerified);
+          }
+        }
+      })
     })
   }
 
@@ -703,6 +739,9 @@ export class DynamicFormComponent {
         }
         if (fieldTwo.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
           this.GetCompanyDetailsByCompanyId(section);
+        }
+        if (fieldTwo.value.fieldCode == 'FLD_VEN_EMAIL_ID') {
+          this.GetProviderDetails(section);
         }
       });
     });
@@ -1048,6 +1087,23 @@ export class DynamicFormComponent {
     }
     if (fieldRow.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
       const emailDetails: any = this.singleDetailInfo.fleetOwnerDetails.contactInfo.emails[0];
+      if ((emailDetails.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
+
+    if (fieldRow.value.fieldCode == 'FLD_VEN_PHN_NUM') {
+      const phoneDetails: any = this.singleDetailInfo.providerRequest.contactInfo.phoneNumbers[0];
+      if ((phoneDetails.phoneNumber !== fieldRow.value?.value) || !fieldRow.value?.value) {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
+      } else {
+        this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
+      }
+    }
+    if (fieldRow.value.fieldCode == 'FLD_VEN_EMAIL_ID') {
+      const emailDetails: any = this.singleDetailInfo.providerRequest.contactInfo.emails[0];
       if ((emailDetails.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
         this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
       } else {
@@ -2196,21 +2252,6 @@ export class DynamicFormComponent {
             sectionData['isEmailVerified'] = field.isVerified;
           }
 
-          //   if (fieldRow.value.fieldCode == 'FLD_PER_CON_NUM') {
-          //   if ((this.singleDetailInfo.personalInfo.contactNumber !== fieldRow.value?.value) || !fieldRow.value?.value) {
-          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
-          //   } else {
-          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
-          //   }
-          // }
-          // if (fieldRow.value.fieldCode == 'FLD_PER_EMAIL_ID') {
-          //   if ((this.singleDetailInfo.personalInfo.emailId !== fieldRow.value?.value) || !fieldRow.value?.value) {
-          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", false);
-          //   } else {
-          //     this.updateValueByFieldId(section, fieldRow.value.fieldId, "isVerified", true);
-          //   }
-          // }
-
           if (!finalBody) {
             finalBody = sectionData;
           } else {
@@ -3149,7 +3190,7 @@ export class DynamicFormComponent {
   }
 
   async openOtpVerification(field: any, section: any) {
-    const verificationType = (field.value.fieldCode == 'FLD_PER_CON_NUM' || field.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM') ? "PhoneNo" : "EmailId";
+    const verificationType = (field.value.fieldCode == 'FLD_PER_CON_NUM' || field.value.fieldCode == 'FLD_FLT_OWN_CNT_NUM' || field.value.fieldCode == 'FLD_VEN_PHN_NUM') ? "PhoneNo" : "EmailId";
     this.gs.isSpinnerShow = true;
     const checkExist: any = await this.authService.IsEmailOrPhoneNumberExist({
       phoneNumber: verificationType == "PhoneNo" ? field.value.value : null,
@@ -3190,6 +3231,12 @@ export class DynamicFormComponent {
         }
         if (field.value.fieldCode == 'FLD_FLT_OWN_EMAIL_ID') {
           this.singleDetailInfo.fleetOwnerDetails.contactInfo.phoneNumbers[0].emailId = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+        }
+        if (field.value.fieldCode == 'FLD_VEN_PHN_NUM') {
+          this.singleDetailInfo.providerRequest.contactInfo.phoneNumbers[0].phoneNumber = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
+        }
+        if (field.value.fieldCode == 'FLD_VEN_EMAIL_ID') {
+          this.singleDetailInfo.providerRequest.contactInfo.emails[0].emailId = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
         }
 
 

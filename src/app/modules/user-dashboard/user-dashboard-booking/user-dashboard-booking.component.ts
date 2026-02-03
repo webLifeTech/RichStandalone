@@ -240,7 +240,7 @@ export class UserDashboardBookingComponent {
     modalRef.componentInstance.documentIframe = item.document;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        if (this.gs.loggedInUserInfo.role !== 'user') {
+        if (!item.isBooker && item.bookingStatusRemarksCd == '2') {
           this.updateInstructions(item);
         }
       }
