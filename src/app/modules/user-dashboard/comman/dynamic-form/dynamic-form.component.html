@@ -561,6 +561,73 @@
                   </table>
                 </div>
               </div>
+
+              <!-- Upload Document // sectionID 41 -->
+              <div *ngIf="section?.get('sectionID')?.value == this.rolesDocSection" class="col-lg-12">
+                <div class="table-responsive dashboard-table">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>{{'userDashboard.kyc.upload_document.name' | translate}}</th>
+                        <th class="text-start">{{'userDashboard.kyc.upload_document.upload' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of documentList; let inx = index">
+                        <td>
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{item.Description}} <span class="mandatory">*</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <!-- <div class="form-group"> -->
+                          <div class="input-group">
+                            <div class="custom-file-upload">
+                              <input (change)="uploadDocument($event, item)" type="file" [id]="'uploaddocument'+inx"
+                                class="file-input" />
+                              <span class="choose-file">Choose File</span>
+                              <span *ngIf="item.documentPath" class="file-name">{{item.documentPath}}</span>
+                              <span *ngIf="!item.documentPath" class="file-name">No file chosen</span>
+                              <span class="eye-icon"
+                                (click)="gs.viewDocumentFile(item.documentPath);$event.stopPropagation()"
+                                [title]="'View Document'">
+                                <i class="fas fa-eye"></i>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="text-danger mt-2 text-start" *ngIf="(!item.documentPath && submitted)">
+                            <div>This field is required.</div>
+                          </div>
+                          <!-- </div> -->
+                          <!-- <div class="input-group mb-3">
+                            <input type="file" [id]="'uploaddocument'+inx" class="file-input"
+                              (change)="uploadDocument($event, item)" />
+                              <div class="text-danger mt-2"
+                            *ngIf="(item.documentPath || submitted)">
+                            <div>This field is required.</div>
+                          </div>
+                          </div> -->
+                        </td>
+                        <!-- <td>
+                          -
+                        </td>
+                        <td class="text-center">
+                          <button [disabled]="!item.filename" class="btn btn-solid color3 no-text-transorm ms-2">
+                            View
+                          </button>
+                          <button [disabled]="!item.filename" class="btn btn-theme no-text-transorm ms-2"
+                            title="Download">
+                            <i class="feather icon-download"></i>
+                          </button>
+                        </td> -->
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </mat-expansion-panel>
         </ng-container>

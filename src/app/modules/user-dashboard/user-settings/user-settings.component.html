@@ -14,7 +14,7 @@
             <!-- <a data-bs-toggle="tab" class="nav-link" [routerLink]="tab.route" routerLinkActive="active"> -->
             <a data-bs-toggle="tab" class="nav-link" [class.active]="activeKycTab == tab.formId"
               (click)="changeKycTab(tab)">
-              <i class={{tab.formIcon}}></i> {{ tab.description | translate }}
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
             </a>
           </li>
           }

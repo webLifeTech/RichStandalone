@@ -622,4 +622,22 @@ export class ProfileService {
       })
     );
   }
+
+  // COMMON -> GetGeneratedDocuments
+  public GetGeneratedDocuments(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/GetGeneratedDocuments`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> GetUploadedDocuments
+  public GetUploadedDocuments(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/GetUploadedDocuments`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

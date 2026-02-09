@@ -34,7 +34,6 @@ export class UserRecentActivityComponent {
   public pageSize = 10;
   public totalData = 0;
   public currentPage = 1;
-  public totalPages = 0;
   public tableData: any = [];
   filterObj: any = {
     sortFilter: "Last 30 Days"

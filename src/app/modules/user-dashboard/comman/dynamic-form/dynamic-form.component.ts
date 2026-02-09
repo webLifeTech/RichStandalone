@@ -89,6 +89,8 @@ export class DynamicFormComponent {
 
   driverVerifyDetails: any = {};
   fleetVerifyDetails: any = {};
+  documentList: any = [];
+  rolesDocSection: any = "";
 
   constructor(
     private fb: FormBuilder,
@@ -120,6 +122,18 @@ export class DynamicFormComponent {
     }
     if (this.formType === 'vendor-profile') {
       this.workingHours = this.singleDetailInfo.providerRequest.workingHours;
+    }
+    if (this.formType == 'driver') {
+      this.rolesDocSection = "41";
+    }
+    if (this.formType == 'individualCarOwner') {
+      this.rolesDocSection = "42";
+    }
+    if (this.formType == 'vehicleUpload') {
+      this.rolesDocSection = "51";
+    }
+    if (this.formType == 'fleetOwner') {
+      this.rolesDocSection = "52";
     }
   }
 
@@ -168,9 +182,9 @@ export class DynamicFormComponent {
           if (this.formArray[i].fieldType == "ARRAY") {
             this.formArray[i].isMandatory = false;
           }
-          // if (this.formArray[i].fieldId == 222) {
-          //   this.formArray[i].selectUnique = true;
-          // }
+          if (this.formArray[i].fieldId == 397 || this.formArray[i].fieldId == 399 || this.formArray[i].fieldId == 398 || this.formArray[i].fieldId == 400) { // Upload Document -> Sample field
+            this.formArray[i].isVisible = false;
+          }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
           this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
@@ -256,10 +270,14 @@ export class DynamicFormComponent {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("masterDropdwonList >>>>", this.masterDropdwonList);
-        const tem = this.masterDropdwonList['ShiftStatus'].map((item: any) => ({ Name: null, ...item })) || [];
-        this.masterDropdwonList['ShiftStatus'] = tem.map((item: any) => ({ Name: item.Description, ...item })) || [];
-        console.log("tem >>>>", tem);
+        this.documentList = await this.profileService.getMasterTypeIds({
+          "stateCode": this.kycForm.state || "42",
+          "typeCode": 26,
+          "effectiveDate": effectiveDate,
+        });
+        console.log("UploadDocument >>>>", this.documentList);
         console.log("['ShiftStatus'] >>>>", this.masterDropdwonList['ShiftStatus']);
+
 
         this.createForm();
       } else {
@@ -284,7 +302,11 @@ export class DynamicFormComponent {
     }
     this.profileService.getMasterVehicleCodes(body).subscribe(async (res: any) => {
       if (res && res.length) {
-
+        this.documentList = await this.profileService.getMasterTypeIds({
+          "stateCode": this.kycForm.state || "42",
+          "typeCode": 26,
+          "effectiveDate": effectiveDate,
+        });
 
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
@@ -667,8 +689,11 @@ export class DynamicFormComponent {
           if (fieldTwo.value.fieldType === "DROPDOWN") {
             let dataOptions = fieldTwo.value.dropdownList.find((citem: any) => (citem.ID == fieldTwo.value.value || citem.Name == fieldTwo.value.value)) || {};
             if (dataOptions.ID) {
+              // if (fieldTwo.value.fieldId === 309) {
+              //   this.onShiftChange(dataOptions.ID);
+              // }
               fieldTwo.get('value')?.setValue(dataOptions.Name);
-              this.onChangeDrop(dataOptions, fieldTwo, section)
+              this.onChangeDrop(dataOptions, fieldTwo, section, true) // true = 'isInitiated'
               if (fieldTwo.get('valueCd')?.value) {
                 fieldTwo.get('valueCd')?.setValue(dataOptions.ID);
               } else {
@@ -679,7 +704,7 @@ export class DynamicFormComponent {
                 ID: fieldTwo.value.valueCd,
                 Code: fieldTwo.value.value,
                 isValue: true
-              }, fieldTwo, section)
+              }, fieldTwo, section, true) // true = 'isInitiated'
 
             }
           }
@@ -1297,7 +1322,7 @@ export class DynamicFormComponent {
   }
 
   // On Change Dropdwon
-  onChangeDrop(event: any, field: any, section: any) {
+  onChangeDrop(event: any, field: any, section: any, isInitiated?: any) {
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
@@ -1428,6 +1453,10 @@ export class DynamicFormComponent {
       this.updateValueByFieldId(section, 345, "value", event.FeeType);
       this.updateValueByFieldId(section, 345, "valueCd", event.FeeTypeCd);
       this.updateValueByFieldId(section, 346, "value", String(event.FeeValue));
+    }
+
+    if (field.value.fieldId === 309 && !isInitiated) {
+      this.onShiftChange(event.ID);
     }
     console.log("section >>>>>>", section);
 
@@ -1865,6 +1894,33 @@ export class DynamicFormComponent {
     })
   }
 
+  uploadDocument(event: any, item?: any) {
+
+    const file = event.target.files[0];
+    let dataParams = {
+      "UserId": this.gs.loggedInUserInfo.userId,
+      "DocumentType": item.TypeCode,
+    }
+    console.log("res file >>>", file);
+    let fileFormData: any = new FormData();
+    fileFormData.append('Doc', file, file.name);
+    this.gs.isSpinnerShow = true;
+    this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("res >>>" + item.TypeCode, res)
+      if (res) {
+        item.documentPath = res;
+      }
+
+      // if (this.submitted) {
+      //   this.findInvalidControls();
+      // }
+    }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
   deleteProfile(field: any) {
     field.get('value').setValue("");
   }
@@ -1878,8 +1934,29 @@ export class DynamicFormComponent {
 
     // return;
     this.submitted = true;
-    if (getFormInfo.valid) {
+
+    const uploadDocumentsSctn = this.dynamicForm.value.sections.find((item: any) => item.sectionID == this.rolesDocSection) || null;
+    console.log("uploadDocumentsSctn >>>", uploadDocumentsSctn)
+    if (uploadDocumentsSctn) {
+      const invalid = this.documentList.find((doc: any) => !doc.documentPath || doc.documentPath.trim() === '');
+      if (invalid) {
+        this.toast.errorToastr(`Please upload document: ${invalid.Name}`);
+        return;
+      }
+    }
+    if (getFormInfo.valid) { // need to do
       let finalBody: any = {};
+      if (uploadDocumentsSctn) {
+        finalBody['kycMandatoryDocuments'] = this.documentList.map((doc: any) => {
+          return {
+            id: 0,
+            documentTypeId: doc.ID,
+            userId: this.gs.loggedInUserInfo.userId,
+            documentPath: doc.documentPath
+          };
+        });
+      }
+
 
       if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch') {
         this.dynamicForm.value.sections.forEach((section: any) => {
@@ -3238,35 +3315,32 @@ export class DynamicFormComponent {
         if (field.value.fieldCode == 'FLD_VEN_EMAIL_ID') {
           this.singleDetailInfo.providerRequest.contactInfo.emails[0].emailId = field.value.value; // .find((i: any) => i.primaryEmailFlag === false) // need to do true
         }
-
-
-        // if (this.gs.loggedInUserInfo.role === "user_3") {
-        //   this.GetCompanyDetailsByCompanyId(section);
-        // } else {
-        //   this.GetDriverDetailsByDriverId(section);
-        // }
-        // const body = {
-        //   "userId": this.gs.loggedInUserInfo.userId,
-        //   "type": verificationType == "PhoneNo" ? "PhoneNumber" : "EmailId", // EmailId or PhoneNumber
-        //   "phoneNumber": verificationType == "PhoneNo" ? field.value.value : null,
-        //   "emailId": verificationType == "EmailId" ? field.value.value : null,
-        //   "isVerified": true
-        // }
-        // this.gs.isSpinnerShow = true;
-        // this.profileService.UpdateEmailPhoneNumbreVerification(body).subscribe((res: any) => {
-        //   this.gs.isSpinnerShow = false;
-        //   if (res && res.statusCode == "200") {
-        //     this.GetDriverDetailsByDriverId(section);
-        //     this.toast.successToastr(res.message);
-        //   } else {
-        //     this.toast.errorToastr(res.message);
-        //   }
-        // }, (err: any) => {
-        //   this.gs.isSpinnerShow = false;
-        //   this.toast.errorToastr(err?.error?.message || "Something went wrong");
-        // });
       }
     }, () => { });
   }
 
+  onShiftChange(shiftId: string) {
+    const shift = this.masterDropdwonList['ShiftStatus'].find((s: any) => s.ID === shiftId);
+    if (!shift) return;
+    let from = '';
+    let to = '';
+    if (shift.Code === 'ALL') {
+      from = '12:00 AM';
+      to = '11:59 PM';
+    } else {
+      const timeMatch = shift.Description.match(/\((.*?)\)/);
+      if (timeMatch) {
+        const times = timeMatch[1].split('–');
+        from = times[0].trim();
+        to = times[1].trim();
+      }
+    }
+    this.workingHours = this.workingHours.map((item: any) => ({
+      ...item,
+      fromTime: from,
+      toTime: to
+    }));
+  }
 }
+
+

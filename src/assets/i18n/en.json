@@ -242,6 +242,7 @@
     "car_type": "car type",
     "driver_name": "Driver Name",
     "insurance_fee": "Insurance Premium",
+    "transaction_fee": "Transaction Fee",
     "other_fees": "Other Fees",
     "discount": "Discount",
     "tax": "Tax",
@@ -429,7 +430,7 @@
         "dl_effective_date": "Driver License Effective Date",
         "dl_expiration_date": "Driver License Expiration Date",
         "edit": "Edit Info",
-        "completed_msg": "Your kyc verification is successfully completed."
+        "completed_msg": "Your KYC verification is successfully completed."
       },
       "foreign_drv_lics_info": {
         "title": "Do you have foreign driver license",
@@ -652,6 +653,13 @@
         "payment_wallet": "My Wallet",
         "sn": "Sn#",
         "type": "Type",
+        "status": "Status",
+        "action": "Action"
+      },
+      "upload_document": {
+        "name": "Document Name",
+        "upload": "Upload",
+        "filename": "File Name",
         "status": "Status",
         "action": "Action"
       }

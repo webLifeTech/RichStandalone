@@ -41,6 +41,7 @@ import { AdminMyProfileComponent } from './modules/admin-dashboard/admin-my-prof
 import { ServiceDetailsComponent } from './modules/services/service-details/service-details.component';
 import { ForgotPasswordComponent } from './modules/auth/forgot-password/forgot-password.component';
 import { UserVehicleRiskRatingComponent } from './modules/user-dashboard/user-vehicle-risk-rating/user-vehicle-risk-rating.component';
+import { UserDocumentsComponent } from './modules/user-dashboard/user-documents/user-documents.component';
 
 export const routes: Routes = [
   {
@@ -183,6 +184,10 @@ export const routes: Routes = [
       {
         path: 'setting',
         component: UserSettingsComponent
+      },
+      {
+        path: 'document',
+        component: UserDocumentsComponent
       },
       {
         path: 'enquiries',

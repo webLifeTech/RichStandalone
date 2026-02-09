@@ -740,7 +740,7 @@ export class UserDashboardKycComponent {
     }
 
     if (this.activeKycTab === 1 || this.activeKycTab === 12 || this.activeKycTab === 5) {
-      let massage = "Your kyc verification is successfully completed."
+      let massage = "Your KYC verification is successfully completed."
       const modalRef = this.modalService.open(VerificationSuccessModalComponent, {
         centered: true,
         backdrop: 'static',

@@ -1,0 +1,90 @@
+<div class="row my-kyc">
+  <div class="col-lg-3">
+    <div class="dashboard-sidebar mb-3">
+      <div class="profile-top">
+        <div class="profile-detail">
+          <h5>{{'Documents' | translate}}</h5>
+        </div>
+      </div>
+      <div class="faq-tab">
+        <ul class="nav nav-tabs" id="top-tab" role="tablist">
+
+          @for(tab of sidebarTabs; track tab){
+          <li class="nav-item">
+            <!-- <a data-bs-toggle="tab" class="nav-link" [routerLink]="tab.route" routerLinkActive="active"> -->
+            <a data-bs-toggle="tab" class="nav-link" [class.active]="activeTab == tab.formId"
+              (click)="changeKycTab(tab)">
+              <i class={{tab.formIcon}}></i> {{ tab.formName | translate }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-lg-9">
+    <h4 class="mb-3">
+      <b>{{activeTabName}}</b>
+    </h4>
+    <div class="table-responsive dashboard-table mb-4">
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th>Document Name</th>
+            <th>Document</th>
+            <!-- <th class="text-center">{{'userDashboard.kyc.upload_document.action' | translate}}</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+            <td>
+              <div class="table-avatar">
+                <div class="table-head-name flex-grow-1">
+                  {{data.documentType}}
+                </div>
+              </div>
+            </td>
+            <!-- <td>
+              <a (click)="gs.viewDocumentFile(data.documentPath)">
+                <i class="feather icon-eye"></i>
+              </a>
+            </td> -->
+            <td class="text-center">
+              <button (click)="gs.viewDocumentFile(data.documentPath)" class="btn btn-theme no-text-transorm ms-2">
+                <i class="feather icon-file-text me-2"></i> <span>View</span>
+              </button>
+            </td>
+            <!-- <td class="text-center">
+              <button [disabled]="!data.filename" class="btn btn-solid color3 no-text-transorm ms-2">
+                View
+              </button>
+              <button [disabled]="!data.filename" class="btn btn-theme no-text-transorm ms-2" title="Download">
+                <i class="feather icon-download"></i>
+              </button>
+            </td> -->
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!tableData.length" class="col-md-12">
+      <p class="text-center mt-3">
+        <b>No records found</b>
+      </p>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    <!-- <div *ngIf="activeKycTab === 9">
+      <app-security></app-security>
+    </div>
+    <div *ngIf="activeKycTab === 10">
+      <app-preferences></app-preferences>
+    </div>
+    <div *ngIf="activeKycTab === 11">
+      <app-notifications></app-notifications>
+    </div> -->
+    <!-- <router-outlet></router-outlet> -->
+  </div>
+</div>

@@ -11,7 +11,7 @@
           <ng-container *ngFor="let item of settingsDetails">
             <li *ngIf="item.ControlType === 'CheckBox'">
               <label class="custom_check">
-                <input type="checkbox" name="offers" [checked]="item.IsActive">
+                <input type="checkbox" name="offers" [checked]="item.IsActive" (change)="updateSettingsDetails(item)">
                 <span class="checkmark"></span>
                 {{item.Name}}
               </label>

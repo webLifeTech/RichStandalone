@@ -175,6 +175,7 @@ export class BookingComponent {
       "insuranceFee": this.gs.bookingSummaryDetails.insuranceFee,
       "siteFee": 0,
       "otherFee": this.gs.bookingSummaryDetails.otherFee,
+      "transactionFee": this.gs.bookingSummaryDetails.transactionFee,
       "bookingStatus": null,
       "bookingStatusRemarks": null,
       "remarks": null

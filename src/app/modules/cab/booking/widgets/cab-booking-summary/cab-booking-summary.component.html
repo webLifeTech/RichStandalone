@@ -65,6 +65,10 @@
             <td>{{ bookingSummaryDetails.insuranceFee | currencyPipe: cabService.currency }}</td>
           </tr>
           <tr>
+            <td>{{'booking_summary.transaction_fee' | translate}}</td>
+            <td>{{ bookingSummaryDetails.transactionFee | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
             <td>{{'booking_summary.other_fees' | translate}}</td>
             <td>{{ bookingSummaryDetails.otherFee | currencyPipe: cabService.currency || "-" }}</td>
           </tr>

@@ -223,7 +223,8 @@ export class CommanLoginFormComponent {
         this.gs.isSpinnerShow = false;
         if (res && res.statusCode == "200") {
           this.toast.successToastr(res.message);
-          this.router.navigateByUrl('/auth/log-in');
+          this.authUser(frm, "login");
+          // this.router.navigateByUrl('/auth/log-in');
         } else {
           this.toast.errorToastr(res.message);
         }

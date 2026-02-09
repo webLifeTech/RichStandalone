@@ -31,7 +31,7 @@ export class SignalRService {
 
       console.log('Connecting to SignalR...');
 
-      this.connection = $.hubConnection("http://209.10.88.76:2025/TLHUB_API_DEMO/");
+      this.connection = $.hubConnection(this.baseUrl1);
 
       // Add Bearer Token
       this.connection.starting(() => {

@@ -117,6 +117,9 @@
                   {{'booking_summary.insurance_fee' | translate}}
                   <span>+ {{invoiceDetails.bookingDetails.insurnaceFee | currencyPipe: gs.currency}}</span>
                 </p>
+                <p>{{'booking_summary.transaction_fee' | translate}}
+                  <span>+ {{invoiceDetails.bookingDetails.transactionFee | currencyPipe: gs.currency}}</span>
+                </p>
                 <p>{{'booking_summary.other_fees' | translate}}
                   <span>+ {{invoiceDetails.bookingDetails.otherFee | currencyPipe: gs.currency}}</span>
                 </p>
