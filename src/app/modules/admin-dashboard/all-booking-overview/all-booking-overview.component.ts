@@ -58,6 +58,8 @@ export class AllBookingOverviewComponent {
   public activeTab = '';
   public activeTypes = '';
   public selectedMenuID = '';
+  activeTabName: any = '';
+  params: any = {};
   sortColumn: any = "";
   sortOrder: any = "DESC";
 
@@ -81,6 +83,7 @@ export class AllBookingOverviewComponent {
     { name: "Cancelled", value: "Cancelled" },
   ]
 
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -97,8 +100,9 @@ export class AllBookingOverviewComponent {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("BKOV");
     this.route.queryParams.subscribe((params) => {
-      this.activeTypes = params['activeTypes'] ? params['activeTypes'] : "Vehicle";
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Bookings";
+      this.params = params;
+      this.activeTypes = this.params['activeTypes'] ? this.params['activeTypes'] : "Vehicle";
+      this.activeTab = this.params['activeTab'] ? this.params['activeTab'] : "All Bookings";
       if (this.bookTypes.length && this.tabs.length) {
         this.getTableData();
       } else {
@@ -171,12 +175,15 @@ export class AllBookingOverviewComponent {
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
       this.gs.isSpinnerShow = false;
       this.tabs = response || [];
+      this.activeTab = this.params['activeTab'] ? this.params['activeTab'] : this.tabs[0].menuName;
+      this.activeTabName = this.tabs.find((m: any) => m.menuName === this.activeTab)?.name || '';
       this.getTableData();
     })
   }
 
   changeBookTab(item: any) {
-    this.activeTab = item.name;
+    this.activeTab = item.menuName;
+    this.activeTabName = item.name;
     this.currentPage = 1;
 
     let params = {
@@ -194,7 +201,7 @@ export class AllBookingOverviewComponent {
     this.selectedMenuID = item.menuID;
     this.activeTypes = item.menuID == '41' ? 'Vehicle' : 'Driver';
     this.currentPage = 1;
-    this.activeTab = "All Bookings";
+    this.activeTab = this.tabs[0].menuName;
 
     let params = {
       activeTypes: this.activeTypes,
@@ -393,15 +400,15 @@ export class AllBookingOverviewComponent {
           },
           "Booked On": {
             ...style,
-            value: this.transformDate(tableData[i].bookingDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].bookingDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "Pickup Date": {
             ...style,
-            value: this.transformDate(tableData[i].pickUpDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].pickUpDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "End Date": {
             ...style,
-            value: this.transformDate(tableData[i].endDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].endDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "Duration": {
             ...style,

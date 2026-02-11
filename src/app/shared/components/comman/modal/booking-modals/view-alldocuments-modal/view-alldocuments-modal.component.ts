@@ -65,7 +65,7 @@ export class ViewAllDocumentsModalComponent {
       "documentId": documentId,
     }).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String)
+      this.gs.downloadBase64File(res.fileName, res.base64String, res.fileType);
     }, (error: any) => {
       this.gs.isSpinnerShow = false;
     });

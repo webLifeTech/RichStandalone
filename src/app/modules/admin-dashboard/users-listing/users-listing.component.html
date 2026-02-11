@@ -17,7 +17,7 @@
               <div class="booking-lists">
                 <ul class="nav">
                   <li *ngFor="let item of tabs">
-                    <a [class.active]="activeTab == item.name" (click)="changeBookTab(item)">{{item.name}}</a>
+                    <a [class.active]="activeTab == item.menuName" (click)="changeBookTab(item)">{{item.name}}</a>
                   </li>
                 </ul>
               </div>
@@ -43,7 +43,7 @@
           <div class="card-header">
             <div class="row align-items-center">
               <div class="col-md-12">
-                <h4>{{activeTab}} <span>{{totalData}}</span></h4>
+                <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
               </div>
             </div>
             <div class="row align-items-center">

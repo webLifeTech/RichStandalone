@@ -20,7 +20,7 @@
             <h6 *ngIf="bookingDetails.rentaldetails?.driverName">
               {{bookingDetails.rentaldetails.driverName}}
             </h6>
-            <h6>Booked On : {{bookingDetails.bookingDetails.bookingDate | date : 'MMM d, y, h:mm a'}}</h6>
+            <h6>Booked On : {{bookingDetails.bookingDetails.bookingDate | date : 'MM/dd/yyyy, h:mm a'}}</h6>
             <h6>Duration : {{bookingDetails.bookingDetails.duration}}</h6>
           </div>
         </div>
@@ -73,7 +73,7 @@
             *ngIf="bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed'">
             <div class="cancel-box mb-3">
               <p>
-                Cancelled on {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
+                Cancelled on {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'MM/dd/yyyy'}},
                 <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
                   Amount
                   <strong>
@@ -86,7 +86,7 @@
                   <strong>
                     {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
                   </strong> Refund is deposited
-                  in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'd MMM y'}}
+                  in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'MM/dd/yyyy'}}
                 </ng-container>
               </p>
             </div>
@@ -96,7 +96,7 @@
 
             <div class="timeline-time">
               <span class="time-text">{{ event.bookingTrackDate | date:'shortTime' }}</span>
-              <span class="date-text">{{ event.bookingTrackDate | date:'MMM d, yy' }}</span>
+              <span class="date-text">{{ event.bookingTrackDate | date:'MM/dd/yyyy' }}</span>
             </div>
 
             <div class="timeline-marker">

@@ -160,7 +160,7 @@ export class UserRecentActivityComponent {
           },
           "Date": {
             ...style,
-            value: this.transformDate(tableData[i].timestamp, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].timestamp, 'MM/dd/yyyy, h:mm a') || '-',
           },
         });
       }

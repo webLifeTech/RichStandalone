@@ -133,7 +133,7 @@ export class UserDashboardBookingComponent {
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
       this.booktabs = response || [];
       this.activeTab = this.booktabs[0].menuName;
-      this.activeTabName = this.booktabs[0].name;;
+      this.activeTabName = this.booktabs[0].name;
       this.getTableData();
     })
   }
@@ -470,7 +470,7 @@ export class UserDashboardBookingComponent {
           },
           "Pickup Date": {
             ...style,
-            value: this.transformDate(tableData[i].pickUpDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].pickUpDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "Duration": {
             ...style,

@@ -55,7 +55,7 @@ export class InvoiceModalComponent {
       if (type === 'print') {
         this.printInvoice(res.base64String)
       } else {
-        this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String)
+        this.gs.downloadBase64File(res.fileName, res.base64String, res.fileType);
       }
     }, (error: any) => {
       this.gs.isSpinnerShow = false;
@@ -68,18 +68,9 @@ export class InvoiceModalComponent {
     const blobUrl = URL.createObjectURL(blob);
     const win = window.open(blobUrl);
     win?.print();
-
-    // const printContents = document.getElementById('invoice-bill')?.innerHTML;
-    // const originalContents = document.body.innerHTML;
-    // document.body.innerHTML = printContents!;
-    // setTimeout(() => {
-    //   window.print();
-    //   document.body.innerHTML = originalContents;
-    //   window.location.reload();
-    // }, 100);
   }
 
-  downloadPDF() {
+  downloadPDFbyHtml() {
     const invoiceElement = document.getElementById('invoice-bill');
 
     if (invoiceElement) {

@@ -333,7 +333,7 @@ export class UserDashboardPaymentsComponent {
           },
           "Payment Date": {
             ...style,
-            value: this.transformDate(tableData[i].createdDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].createdDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "Payment Mode": {
             ...style,

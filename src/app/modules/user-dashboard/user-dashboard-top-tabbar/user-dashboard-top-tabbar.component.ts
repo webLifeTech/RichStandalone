@@ -192,7 +192,7 @@ export class UserDashboardTopTabBarComponent {
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe((event: any) => {
-          this.activeTab = event.urlAfterRedirects;
+          this.activeTab = event.urlAfterRedirects?.split('?')[0]; // event.urlAfterRedirects;
         });
     }
   }
@@ -203,6 +203,7 @@ export class UserDashboardTopTabBarComponent {
       systemId: "tlcHubAuthApp"
     }).subscribe((res: any) => {
       this.menuItems = res.filter((tRow: any) => tRow.parentMenuId == 19);
+      this.menuItems = this.menuItems.sort((a: any, b: any) => a.sortPriority - b.sortPriority);
     })
   }
 

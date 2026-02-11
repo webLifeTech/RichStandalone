@@ -257,7 +257,7 @@
                       <td>
                         {{item.remarks || "-"}}
                       </td>
-                      <td>{{item.createdDate | date : 'MMM d, y, h:mm a'}}</td>
+                      <td>{{item.createdDate | date : 'MM/dd/yyyy, h:mm a'}}</td>
                       <td>
                         <span [ngClass]="{
                             'badge-light-success': item.status === 'SUCCESS',

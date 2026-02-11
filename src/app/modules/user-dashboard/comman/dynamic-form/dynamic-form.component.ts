@@ -317,7 +317,7 @@ export class DynamicFormComponent {
         let branchMasterDp: any = await this.branchService.GetBranchNames({
           "userId": this.gs.loggedInUserInfo.userId,
         });
-        branchMasterDp = branchMasterDp.map((item: any) => ({ Name: item.branch, ID: item.branchPersonNum.toString(), ...item }));
+        // branchMasterDp = branchMasterDp.map((item: any) => ({ Name: item.branch, ID: item.branchPersonNum.toString(), ...item }));
         console.log("branchMasterDp >>>>", branchMasterDp);
 
         this.masterDropdwonList["Branch"] = branchMasterDp;
@@ -1929,34 +1929,34 @@ export class DynamicFormComponent {
   async onSubmit() {
 
     const getFormInfo = this.findInvalidControls();
-    console.log("this.gs.loggedInUserInfo >>>>", this.gs.loggedInUserInfo);
-    console.log('sections >>>>', this.dynamicForm.value.sections);
-
-    // return;
     this.submitted = true;
 
-    const uploadDocumentsSctn = this.dynamicForm.value.sections.find((item: any) => item.sectionID == this.rolesDocSection) || null;
-    console.log("uploadDocumentsSctn >>>", uploadDocumentsSctn)
-    if (uploadDocumentsSctn) {
-      const invalid = this.documentList.find((doc: any) => !doc.documentPath || doc.documentPath.trim() === '');
-      if (invalid) {
-        this.toast.errorToastr(`Please upload document: ${invalid.Name}`);
-        return;
-      }
-    }
-    if (getFormInfo.valid) { // need to do
+    // if (uploadDocumentsSctn) { // Uploaded documents make not mandatory 09-20-26
+    //   const invalid = this.documentList.find((doc: any) => !doc.documentPath || doc.documentPath.trim() === '');
+    //   if (invalid) {
+    //     this.toast.errorToastr(`Please upload document: ${invalid.Name}`);
+    //     return;
+    //   }
+    // }
+
+    if (getFormInfo.valid) {
       let finalBody: any = {};
+      const uploadDocumentsSctn = this.dynamicForm.value.sections.find((item: any) => item.sectionID == this.rolesDocSection) || null;
       if (uploadDocumentsSctn) {
-        finalBody['kycMandatoryDocuments'] = this.documentList.map((doc: any) => {
+        const uploadedDocs = this.documentList.filter((doc: any) =>
+          doc.documentPath &&
+          doc.documentPath !== null &&
+          doc.documentPath !== ''
+        );
+        finalBody['kycMandatoryDocuments'] = uploadedDocs.map((doc: any) => {
           return {
             id: 0,
             documentTypeId: doc.ID,
             userId: this.gs.loggedInUserInfo.userId,
-            documentPath: doc.documentPath
+            documentPath: doc.documentPath,
           };
         });
       }
-
 
       if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch') {
         this.dynamicForm.value.sections.forEach((section: any) => {
@@ -2136,98 +2136,122 @@ export class DynamicFormComponent {
       }
 
       if (this.formType === 'fleetOwner') {
-        finalBody = {
-          "companyDetails": {
-            "contactInfo": {
-              "userId": this.gs.loggedInUserInfo.userId,
-              "contactId": null,
-              "entityTypeId": null,
-              "personNumber": null,
-            },
-            "fleetCompanyId": 0,
+        // finalBody = {
+        //   "companyDetails": {
+        //     "contactInfo": {
+        //       "userId": this.gs.loggedInUserInfo.userId,
+        //       "contactId": null,
+        //       "entityTypeId": null,
+        //       "personNumber": null,
+        //     },
+        //     "fleetCompanyId": 0,
+        //   },
+        //   "fleetOwnerDetails": {
+        //     "contactInfo": {
+        //       "userId": this.gs.loggedInUserInfo.userId,
+        //       "contactId": null,
+        //       "entityTypeId": null,
+        //       "personNumber": this.gs.loggedInUserInfo.contactId,
+        //     },
+        //     "maskDriverLicNum": "XXXXX0001",
+        //     "encryptedDriverLicNum": ""
+        //   },
+        //   "userId": null,
+        //   "driveInCity": 0
+        // }
+
+        finalBody["companyDetails"] = {
+          "contactInfo": {
+            "userId": this.gs.loggedInUserInfo.userId,
+            "contactId": null,
+            "entityTypeId": null,
+            "personNumber": null,
           },
-          "fleetOwnerDetails": {
-            "contactInfo": {
-              "userId": this.gs.loggedInUserInfo.userId,
-              "contactId": null,
-              "entityTypeId": null,
-              "personNumber": this.gs.loggedInUserInfo.contactId,
-            },
-            "maskDriverLicNum": "XXXXX0001",
-            "encryptedDriverLicNum": ""
+          "fleetCompanyId": 0,
+        };
+        finalBody["fleetOwnerDetails"] = {
+          "contactInfo": {
+            "userId": this.gs.loggedInUserInfo.userId,
+            "contactId": null,
+            "entityTypeId": null,
+            "personNumber": this.gs.loggedInUserInfo.contactId,
           },
-          "userId": null,
-          "driveInCity": 0
-        }
+          "maskDriverLicNum": "XXXXX0001",
+          "encryptedDriverLicNum": ""
+        };
+        finalBody["userId"] = null;
+        finalBody["driveInCity"] = 0;
 
         this.dynamicForm.value.sections.forEach((section: any) => {
           section.fields.forEach(async (field: any) => {
-            const keys = field.modalObject.split(".");
-            let sectionData: any = {};
+            if (field.modalObject) {
+              const keys = field.modalObject.split(".");
+              let sectionData: any = {};
 
-            if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
-              sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
-            } else {
-
-              if (field.modalValue) {
-                sectionData[field.modalValue] = field.value;
+              if (field.fieldType === "DATE" || field.fieldType === "date") { // Date MM/dd/yyyy
+                sectionData[field.modalValue] = this.transformDate(field.value, 'MM/dd/yyyy');;
               } else {
+
+                if (field.modalValue) {
+                  sectionData[field.modalValue] = field.value;
+                } else {
+                  sectionData[field.valueCode] = field.valueCd;
+                }
+              }
+
+              if (field.county) { // set county
+                sectionData["county"] = field.county;
+              }
+              if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
                 sectionData[field.valueCode] = field.valueCd;
               }
-            }
 
-            if (field.county) { // set county
-              sectionData["county"] = field.county;
-            }
-            if (field.fieldType === "DROPDOWN" && field.modalValue) { // Dropdown set Cd
-              sectionData[field.valueCode] = field.valueCd;
-            }
-
-            if (field.fieldType === "TEXTMASK") {
-              sectionData[field.modalValue] = field.valueCd;
-              sectionData[field.valueCode] = field.value;
-            }
-
-            if (keys.length == 1) {
-              finalBody[keys[0]] = { ...finalBody[keys[0]], ...sectionData }
-            }
-            if (keys.length == 2) {
-              finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
-            }
-            if (keys.length == 3) {
-              if (!(finalBody[keys[0]][keys[1]][keys[2]] && finalBody[keys[0]][keys[1]][keys[2]]?.length)) {
-                finalBody[keys[0]][keys[1]][keys[2]] = [{}];
-
-                let createObj: any = {};
-
-                if (keys[2] == 'addresses') {
-                  createObj.addressId = null;
-                  createObj.addressTypeId = null; // field?.MasterTypeIds?.ID
-                  createObj.isPrimaryAddress = true;
-                  createObj.currentInd = true;
-                }
-
-                if (keys[2] == 'emails') {
-                  createObj.personEmailId = null;
-                  createObj.emailTypeId = null; // field.MasterTypeIds.ID
-                  createObj.primaryEmailFlag = true;
-                  createObj.currentInd = true;
-                  createObj.isEmailVerified = field.isVerified;
-                }
-
-                if (keys[2] == 'phoneNumbers') {
-                  createObj.phoneId = null;
-                  createObj.phoneTypeId = null; // field.MasterTypeIds.ID
-                  createObj.extension = 4;
-                  createObj.primaryPhoneFlag = true;
-                  createObj.currentInd = true;
-                  createObj.isPhoneNumberVerified = field.isVerified; // field.isVerified; // need to do
-                }
-
-                finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
-
+              if (field.fieldType === "TEXTMASK") {
+                sectionData[field.modalValue] = field.valueCd;
+                sectionData[field.valueCode] = field.value;
               }
-              finalBody[keys[0]][keys[1]][keys[2]][0] = { ...finalBody[keys[0]][keys[1]][keys[2]][0], ...sectionData };
+
+              if (keys.length == 1) {
+                finalBody[keys[0]] = { ...finalBody[keys[0]], ...sectionData }
+              }
+              if (keys.length == 2) {
+                finalBody[keys[0]][keys[1]] = { ...finalBody[keys[0]][keys[1]], ...sectionData }
+              }
+              if (keys.length == 3) {
+                if (!(finalBody[keys[0]][keys[1]][keys[2]] && finalBody[keys[0]][keys[1]][keys[2]]?.length)) {
+                  finalBody[keys[0]][keys[1]][keys[2]] = [{}];
+
+                  let createObj: any = {};
+
+                  if (keys[2] == 'addresses') {
+                    createObj.addressId = null;
+                    createObj.addressTypeId = null; // field?.MasterTypeIds?.ID
+                    createObj.isPrimaryAddress = true;
+                    createObj.currentInd = true;
+                  }
+
+                  if (keys[2] == 'emails') {
+                    createObj.personEmailId = null;
+                    createObj.emailTypeId = null; // field.MasterTypeIds.ID
+                    createObj.primaryEmailFlag = true;
+                    createObj.currentInd = true;
+                    createObj.isEmailVerified = field.isVerified;
+                  }
+
+                  if (keys[2] == 'phoneNumbers') {
+                    createObj.phoneId = null;
+                    createObj.phoneTypeId = null; // field.MasterTypeIds.ID
+                    createObj.extension = 4;
+                    createObj.primaryPhoneFlag = true;
+                    createObj.currentInd = true;
+                    createObj.isPhoneNumberVerified = field.isVerified; // field.isVerified; // need to do
+                  }
+
+                  finalBody[keys[0]][keys[1]][keys[2]][0] = createObj;
+
+                }
+                finalBody[keys[0]][keys[1]][keys[2]][0] = { ...finalBody[keys[0]][keys[1]][keys[2]][0], ...sectionData };
+              }
             }
           });
 
@@ -2242,6 +2266,8 @@ export class DynamicFormComponent {
         finalBody.driveInCity = this.kycForm.state;
         finalBody.userId = this.gs.loggedInUserInfo.userId;
         console.log("finalBody >>>>>>", finalBody);
+
+        // return;
 
         this.gs.isSpinnerShow = true;
         this.profileService.insertAndUpdateCompanyKyc(finalBody, {

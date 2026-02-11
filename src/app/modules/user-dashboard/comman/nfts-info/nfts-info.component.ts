@@ -102,7 +102,9 @@ export class NftsInfoComponent {
         this.totalRecord = res.viewModel?.totalCount || 0;
         this.pageHeading = res.viewModel?.pageHeading || 0;
       }
-
+    }, (err: any) => {
+      console.log(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
     })
   }
 

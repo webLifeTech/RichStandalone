@@ -229,7 +229,7 @@ export class UserCancellationRefundComponent {
           },
           "Requested Date": {
             ...style,
-            value: this.transformDate(tableData[i].requestedDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].requestedDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
           "Total Amount": {
             ...style,

@@ -77,6 +77,7 @@ export class UserCarsListingComponent {
   filterTypes: any = [];
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     public cabService: CabService,
     private adminService: AdminService,
@@ -91,10 +92,7 @@ export class UserCarsListingComponent {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("AVEH");
     this.route.queryParams.subscribe((params) => {
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Vehicles";
-      this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
-      this.getGridTabsDetails();
-      this.getTableData();
+      this.getGridTabsDetails(params);
       this.getFilterParameters();
     })
   }
@@ -122,7 +120,7 @@ export class UserCarsListingComponent {
         this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
         // this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
-        this.getOwnerVehicles(this.tableData[0].userId)
+        this.getOwnerVehicles(this.tableData[0].userId);
       } else {
         this.toast.errorToastr(response.message);
       }
@@ -164,13 +162,22 @@ export class UserCarsListingComponent {
     })
   }
 
-  getGridTabsDetails() {
+  getGridTabsDetails(params: any) {
     const body = {
       roleId: this.gs.loggedInUserInfo.roleName,
       menuId: "37",
     }
+    this.gs.isSpinnerShow = true;
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
+
       this.tabs = response || [];
+      this.activeTab = params['activeTab'] ? params['activeTab'] : this.tabs[0].menuName;
+      this.activeTabName = this.tabs.find((m: any) => m.menuName === this.activeTab)?.name || '';
+      this.getTableData();
+
+    }, (err: any) => {
+      console.log(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
     })
   }
 
@@ -183,8 +190,20 @@ export class UserCarsListingComponent {
   }
 
   changeBookTab(item: any) {
-    this.activeTab = item.name;
-    this.getTableData();
+    this.activeTab = item.menuName;
+    this.activeTabName = item.name;
+
+    this.currentPage = 1;
+    let params = {
+      activeTab: this.activeTab,
+      status: "All Status"
+    }
+    // this.getTableData();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: params,
+      queryParamsHandling: "merge"
+    });
   }
 
   pageChanged(event: any) {

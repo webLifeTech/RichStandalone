@@ -211,6 +211,16 @@ export class GlobalService {
     });
   }
 
+  downloadBase64File(fileName: any, base64String: any, contentType: any) {
+    const linkSource = `data:${contentType};base64,${base64String}`;// `data:${res.fileType};base64,` base64String;
+    const downloadLink = document.createElement('a');
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
   public getEnquiries() {
     return this.http.get('assets/json/pages/enquiries.json').pipe(
       map((res: any) => {

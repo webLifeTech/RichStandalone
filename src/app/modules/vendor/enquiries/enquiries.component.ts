@@ -285,7 +285,7 @@ export class EnquiriesComponent {
           },
           "Date": {
             ...style,
-            value: this.transformDate(tableData[i].enquiryDate, 'MMM d, y, h:mm a') || '-',
+            value: this.transformDate(tableData[i].enquiryDate, 'MM/dd/yyyy, h:mm a') || '-',
           },
         });
       }

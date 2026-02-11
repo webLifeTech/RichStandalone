@@ -577,12 +577,12 @@
                         <td>
                           <div class="table-avatar">
                             <div class="table-head-name flex-grow-1">
-                              {{item.Description}} <span class="mandatory">*</span>
+                              {{item.Description}}
+                              <!-- <span class="mandatory">*</span> -->
                             </div>
                           </div>
                         </td>
                         <td>
-                          <!-- <div class="form-group"> -->
                           <div class="input-group">
                             <div class="custom-file-upload">
                               <input (change)="uploadDocument($event, item)" type="file" [id]="'uploaddocument'+inx"
@@ -597,32 +597,10 @@
                               </span>
                             </div>
                           </div>
-                          <div class="text-danger mt-2 text-start" *ngIf="(!item.documentPath && submitted)">
+                          <!-- <div class="text-danger mt-2 text-start" *ngIf="(!item.documentPath && submitted)">
                             <div>This field is required.</div>
-                          </div>
-                          <!-- </div> -->
-                          <!-- <div class="input-group mb-3">
-                            <input type="file" [id]="'uploaddocument'+inx" class="file-input"
-                              (change)="uploadDocument($event, item)" />
-                              <div class="text-danger mt-2"
-                            *ngIf="(item.documentPath || submitted)">
-                            <div>This field is required.</div>
-                          </div>
                           </div> -->
                         </td>
-                        <!-- <td>
-                          -
-                        </td>
-                        <td class="text-center">
-                          <button [disabled]="!item.filename" class="btn btn-solid color3 no-text-transorm ms-2">
-                            View
-                          </button>
-                          <button [disabled]="!item.filename" class="btn btn-theme no-text-transorm ms-2"
-                            title="Download">
-                            <i class="feather icon-download"></i>
-                          </button>
-                        </td> -->
-
                       </tr>
                     </tbody>
                   </table>

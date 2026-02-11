@@ -5,7 +5,7 @@
       <div class="timeline-item">
         <div class="timeline-icon"></div>
         <div class="timeline-content">
-          <p class="mb-1 text-muted">{{this.gs.lastSearch.pick_time | date : 'MMM d, y, h:mm a'}}</p>
+          <p class="mb-1 text-muted">{{this.gs.lastSearch.pick_time | date : 'MM/dd/yyyy, h:mm a'}}</p>
           <p class="fw-bold timeline-location">{{this.bookingDetails?.bookingLocationDetails?.location}}</p>
           <!-- // comment on 07-11-26 not hire required -->
           <!-- <a *ngIf="this.bookingDetails?.bookingLocationDetails?.dropInstruction" (click)="instructionDialog('pick_up')"
@@ -17,7 +17,7 @@
       <div class="timeline-item2">
         <div class="timeline-icon"></div>
         <div class="timeline-content">
-          <p class="mb-1 text-muted">{{this.gs.lastSearch.drop_time | date : 'MMM d, y, h:mm a'}}</p>
+          <p class="mb-1 text-muted">{{this.gs.lastSearch.drop_time | date : 'MM/dd/yyyy, h:mm a'}}</p>
           <p class="fw-bold timeline-location">{{this.bookingDetails?.bookingLocationDetails?.location}}</p>
           <!-- <a *ngIf="this.bookingDetails?.bookingLocationDetails?.pickUpInstruction"
             (click)="instructionDialog('prop_off')" class="text-primary">

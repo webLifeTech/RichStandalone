@@ -50,6 +50,7 @@ export class UsersListingComponent {
     status: 'All Status',
   };
   public activeTab = '';
+  activeTabName: any = '';
   sortColumn: any = "";
   sortOrder: any = "DESC";
 
@@ -81,10 +82,7 @@ export class UsersListingComponent {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("AUSR");
     this.route.queryParams.subscribe((params) => {
-      this.activeTab = params['activeTab'] ? params['activeTab'] : "All Users";
-      this.searchFilter.status = params['status'] ? params['status'] : 'All Status';
-      this.getGridTabsDetails();
-      this.getTableData();
+      this.getGridTabsDetails(params);
       this.getFilterParameters();
     })
   }
@@ -124,16 +122,27 @@ export class UsersListingComponent {
     }
     this.bookingService.GetFilterParameters(body).subscribe(async (response: any) => {
       this.filterTypes = response || [];
+    }, (err: any) => {
+      console.log(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
     })
   }
 
-  getGridTabsDetails() {
+  getGridTabsDetails(params: any) {
     const body = {
       roleId: this.gs.loggedInUserInfo.roleName,
       menuId: "36",
     }
+    this.gs.isSpinnerShow = true;
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
       this.tabs = response || [];
+      console.log("this.tabs >>>", this.tabs);
+      this.activeTab = params['activeTab'] ? params['activeTab'] : this.tabs[0].menuName;
+      this.activeTabName = this.tabs.find((m: any) => m.menuName === this.activeTab)?.name || '';
+      this.getTableData();
+    }, (err: any) => {
+      console.log(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
     })
   }
 
@@ -147,7 +156,9 @@ export class UsersListingComponent {
 
 
   changeBookTab(item: any) {
-    this.activeTab = item.name;
+    this.activeTab = item.menuName;
+    this.activeTabName = item.name;
+
     this.currentPage = 1;
     let params = {
       activeTab: this.activeTab,

@@ -37,7 +37,7 @@
               Pickup Instructions
             </h5>
             <h6 class="fw-bold">
-              {{bookingDetails.bookingDetails?.pickupInstruction}}
+              • {{bookingDetails.bookingDetails?.pickupInstruction}}
             </h6>
           </div>
 
@@ -47,7 +47,7 @@
               Drop Instructions
             </h5>
             <h6 class="fw-bold">
-              {{bookingDetails.bookingDetails?.dropInstruction}}
+              • {{bookingDetails.bookingDetails?.dropInstruction}}
             </h6>
           </div>
 
@@ -57,7 +57,7 @@
             <b>{{alertMessages.alertMessage}}</b>
             <br *ngIf="bookingDetails.cancellationRefundDetails.approvedDate" />
             <span *ngIf="bookingDetails.cancellationRefundDetails.approvedDate">
-              Approved By Admin on {{bookingDetails.cancellationRefundDetails.approvedDate | date : 'd MMM y'}}
+              Approved By Admin on {{bookingDetails.cancellationRefundDetails.approvedDate | date : 'MM/dd/yyyy'}}
             </span>
           </div>
         </div> -->
@@ -79,7 +79,7 @@
           <div *ngIf="bookingDetails.isBooker" class="cancel-box mb-3">
             <p>
               Cancelled By {{bookingDetails.cancellationRefundDetails.cancelledBy}} on
-              {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'd MMM y'}},
+              {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'MM/dd/yyyy'}},
               <!-- refundStatusCd == 4 = 'Processed'  -->
               <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
                 Amount
@@ -93,7 +93,7 @@
                 <strong>
                   {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
                 </strong> Refund is deposited
-                in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'd MMM y'}}
+                in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'MM/dd/yyyy'}}
               </ng-container>
             </p>
           </div>
@@ -142,19 +142,19 @@
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Booked On</h6>
-                <p>{{bookingDetails.bookingDetails.bookingDate}}</p>
+                <p>{{bookingDetails.bookingDetails.bookingDate | date : 'MM/dd/yyyy, h:mm a'}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>Start Date</h6>
-                <p>{{bookingDetails.bookingDetails.startDate}}</p>
+                <p>{{bookingDetails.bookingDetails.startDate | date : 'MM/dd/yyyy, h:mm a'}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">
               <div class="booking-view">
                 <h6>End Date</h6>
-                <p>{{bookingDetails.bookingDetails.endDate}}</p>
+                <p>{{bookingDetails.bookingDetails.endDate | date : 'MM/dd/yyyy, h:mm a'}}</p>
               </div>
             </div>
             <div class="col-lg-4 col-md-6">

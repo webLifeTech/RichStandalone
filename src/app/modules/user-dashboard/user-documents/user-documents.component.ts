@@ -1,35 +1,33 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ToastService } from '../../../shared/services/toast.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '../../../shared/services/global.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../../shared/services/profile.service';
-// import { SecurityComponent } from './security/security.component';
-// import { PreferencesComponent } from './preferences/preferences.component';
-// import { NotificationsComponent } from './notifications/notifications.component';
-import { SettingsService } from '../../../shared/services/setting.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-user-documents',
   standalone: true,
   imports: [
-    // SecurityComponent,
-    // PreferencesComponent,
-    // NotificationsComponent,
     CommonModule,
     FormsModule,
     NgbModule,
     TranslateModule,
     NgxPaginationModule,
+    NgSelectModule,
+  ],
+  providers: [
+    DatePipe,
   ],
   templateUrl: './user-documents.component.html',
   styleUrl: './user-documents.component.scss'
 })
 export class UserDocumentsComponent {
+  @ViewChild('fileInput') fileInput!: ElementRef;
   public searchDataValue = '';
   public pageSize = 10;
   public totalData = 0;
@@ -42,14 +40,20 @@ export class UserDocumentsComponent {
   activeTabName: any = '';
   sidebarTabs: any = [];
 
+  documentList: any = [];
+  documentTypeCode: any = null;
+
+
 
   constructor(
     private route: ActivatedRoute,
     public gs: GlobalService,
     private profileService: ProfileService,
+    private datePipe: DatePipe,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getConfigUIForms();
+      this.getDocumentTypes();
     })
   }
 
@@ -74,6 +78,16 @@ export class UserDocumentsComponent {
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
     })
+  }
+
+  async getDocumentTypes() {
+    let todayDate = new Date();
+    const effectiveDate = this.transformDate(todayDate, 'MM/dd/yy');
+    this.documentList = await this.profileService.getMasterTypeIds({
+      "stateCode": "42",
+      "typeCode": 26,
+      "effectiveDate": effectiveDate,
+    });
   }
 
   changeKycTab(tab: any) {
@@ -149,4 +163,27 @@ export class UserDocumentsComponent {
     })
   }
 
+  downloadDoc(documentId: any) {
+    this.gs.isSpinnerShow = true;
+    this.gs.DownloadDocs({
+      "documentId": documentId,
+    }).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      this.gs.downloadBase64File(res.fileName, res.base64String, res.fileType)
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    });
+  }
+
+  onUpload() {
+
+  }
+  onReset() {
+    this.documentTypeCode = null;
+    this.fileInput.nativeElement.value = null;
+  }
+
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
 }
