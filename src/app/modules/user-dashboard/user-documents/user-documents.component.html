@@ -25,84 +25,103 @@
   </div>
 
   <div class="col-lg-9">
-    <h4 class="mb-3">
-      <b>{{activeTabName}}</b>
-    </h4>
-    <div *ngIf="activeTab === 38" class="col-lg-12 mb-3">
-      <form class="form-inline align-self-end">
-        <div class="form-group mb-0">
-          <div class="d-flex">
-            <ng-select class="form-control p-0" clearable="false" [items]="documentList" bindLabel="Description"
-              bindValue="TypeCode" placeholder="-- Select Document Type --" [(ngModel)]="documentTypeCode"
-              name="documentTypeCode">
-            </ng-select>
-            <input #fileInput type="file" class="form-control open-select mx-2" [disabled]="!documentTypeCode" />
-            <button [disabled]="!documentTypeCode" (click)="onUpload()" class="btn btn-theme no-text-transorm ms-2">
-              {{ 'Upload' | translate }}
-            </button>
-            <button [disabled]="!documentTypeCode" (click)="onReset()"
-              class="btn btn-solid color3 no-text-transorm ms-2">
-              {{ 'Reset' | translate }}
-            </button>
+
+    <div class="dashboard-box">
+      <div *ngIf="isShow" class="row mb-3">
+        <div class="col-lg-12 mb-3">
+          <form class="form-inline align-self-end">
+            <div class="form-group mb-0">
+              <div class="d-flex">
+                <ng-select class="form-control p-0" clearable="false" [items]="documentList" bindLabel="Description"
+                  bindValue="TypeCode" placeholder="-- Select Document Type --" [(ngModel)]="documentTypeCode"
+                  name="documentTypeCode">
+                </ng-select>
+                <input #fileInput type="file" class="form-control open-select mx-2" [disabled]="!documentTypeCode" />
+              </div>
+            </div>
+            <div class="text-end">
+              <button [disabled]="!documentTypeCode" (click)="onUpload()" class="btn btn-theme no-text-transorm ms-2">
+                {{ 'Save' | translate }}
+              </button>
+              <button (click)="onReset()" class="btn btn-solid color3 no-text-transorm ms-2">
+                {{ 'Cancel' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div *ngIf="!isShow">
+        <div class="row mb-3">
+          <div class="col-lg-12 mb-2">
+            <h5 class="title-5">{{activeTabName}}</h5>
+          </div>
+          <div class="col-lg-6">
+            <form class="form-inline align-self-end">
+              <div class="d-flex">
+                <input [(ngModel)]="searchDataValue" name="sub_menu_name" type="text"
+                  [placeholder]="'userDashboard.search_placeholder' | translate" class="form-control open-select" />
+                <button (click)="searchData()" class="btn btn-theme no-text-transorm ms-2">
+                  <i class="feather icon-search"></i> {{ 'userDashboard.search_btn' | translate }}
+                </button>
+              </div>
+            </form>
+          </div>
+          <div *ngIf="activeTab === 38" class="col-lg-6">
+            <div class="text-end">
+              <a (click)="onAddNew()" class="btn btn-solid color2 no-text-transorm">
+                <i class="feather icon-plus"></i> {{ 'Add' | translate }}
+              </a>
+            </div>
           </div>
         </div>
-      </form>
+        <div class="table-responsive dashboard-table mb-4">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>
+                  <span>SL</span>
+                </th>
+                <th>Document Name</th>
+                <th>Uploaded Date</th>
+                <th>Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData };; let idx = index;">
+                <td>
+                  <span>{{(idx+1) * currentPage}}</span>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="table-head-name flex-grow-1">
+                      {{data.documentType}}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{data.createdDate | date : 'MM/dd/yyyy'}}
+                </td>
+                <td class="text-center">
+                  <button (click)="gs.viewDocumentFile(data.documentPath)" class="btn btn-theme no-text-transorm ms-2">
+                    <i class="feather icon-file-text me-2"></i> <span>View</span>
+                  </button>
+                  <button (click)="downloadDoc(data.id)" class="btn btn-solid color3 no-text-transorm ms-2">
+                    <i class="feather icon-download"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="!tableData.length" class="col-md-12">
+          <p class="text-center mt-3">
+            <b>No records found</b>
+          </p>
+        </div>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
     </div>
-    <div class="table-responsive dashboard-table mb-4">
-      <table class="table">
-        <thead class="thead-light">
-          <tr>
-            <th>
-              <span>SL</span>
-            </th>
-            <th>Document Name</th>
-            <th>Uploaded Date</th>
-            <th>Document</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData };; let idx = index;">
-            <td>
-              <span>{{(idx+1) * currentPage}}</span>
-            </td>
-            <td>
-              <div class="table-avatar">
-                <div class="table-head-name flex-grow-1">
-                  {{data.documentType}}
-                </div>
-              </div>
-            </td>
-            <td>
-              {{data.createdDate | date : 'MM/dd/yyyy'}}
-            </td>
-            <td class="text-center">
-              <button (click)="gs.viewDocumentFile(data.documentPath)" class="btn btn-theme no-text-transorm ms-2">
-                <i class="feather icon-file-text me-2"></i> <span>View</span>
-              </button>
-              <button (click)="downloadDoc(data.id)" class="btn btn-solid color3 no-text-transorm ms-2">
-                <i class="feather icon-download"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngIf="!tableData.length" class="col-md-12">
-      <p class="text-center mt-3">
-        <b>No records found</b>
-      </p>
-    </div>
-    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-    <!-- <div *ngIf="activeKycTab === 9">
-      <app-security></app-security>
-    </div>
-    <div *ngIf="activeKycTab === 10">
-      <app-preferences></app-preferences>
-    </div>
-    <div *ngIf="activeKycTab === 11">
-      <app-notifications></app-notifications>
-    </div> -->
-    <!-- <router-outlet></router-outlet> -->
   </div>
 </div>

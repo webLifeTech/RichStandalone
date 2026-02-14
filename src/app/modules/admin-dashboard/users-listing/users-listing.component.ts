@@ -108,6 +108,9 @@ export class UsersListingComponent {
       if (response.response && response.response.statusCode == "200") {
         this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
+        if (this.activeTab == 'VENDOR') {
+          this.tableData = this.tableData.map((x: any) => ({ ...x, subCategoryList: JSON.parse(x.subCategoryName || '[]') }));
+        }
         // this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
       } else {
         this.toast.errorToastr(response.message);
@@ -159,10 +162,15 @@ export class UsersListingComponent {
     this.activeTab = item.menuName;
     this.activeTabName = item.name;
 
+    this.dateTimeRange = "";
+    this.selectedFilter = null;
+    this.searchDataValue = "";
+    this.searchFilter.status = 'All Status';
+
     this.currentPage = 1;
     let params = {
       activeTab: this.activeTab,
-      status: "All Status"
+      status: this.searchFilter.status
     }
     this.getTableData();
     this.router.navigate([], {

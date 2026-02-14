@@ -54,7 +54,8 @@ export class CabSearchComponent {
   locationArray: any = [];
   rentTypeList: any = [];
   todayDate = new Date();
-  minStartDate = new Date(Date.now() - 86400000); // yesterday
+  minStartDate: any = new Date(Date.now() - 86400000); // yesterday
+  minEndDate: any = null; // yesterday
   isDriverHireSearch: boolean = false;
   activeTab: any = 'tab1';
 
@@ -373,6 +374,14 @@ export class CabSearchComponent {
     this.searchObj.package = "2 Hours";
     this.searchObj.mainTripType = "one_way";
 
+
+    if (!this.searchObj.pick_time) {
+      this.searchObj.pick_time = new Date();
+    }
+    if (!this.searchObj.timeType) {
+      this.searchObj.timeType = "Daily";
+    }
+    this.setDropMinDate();
     console.log("eeeee .searchObj >>>>", this.searchObj);
   }
 
@@ -401,7 +410,7 @@ export class CabSearchComponent {
       this.searchObj.type = "driver";
       this.searchObj.timeType = "Daily";
       this.searchObj.pick_time = this.searchObj.timeSchedule == 'Now' ? this.todayDate.toISOString() : this.searchObj.pick_time;
-      this.searchObj.drop_time = "2025-08-19T12:53:24.000Z";
+      this.searchObj.drop_time = "";
     }
     if (searchType != "reset" && !this.isDriverHireSearch) {
       // if (!this.searchObj.same_location) {
@@ -539,8 +548,47 @@ export class CabSearchComponent {
   };
 
   onChangePickUpTime() {
-    this.searchObj.drop_time = null;
+    this.setDropMinDate();
   }
+
+  onChangeDropTime() {
+    // const pick = new Date(this.searchObj.pick_time);
+    // const drop = new Date(this.searchObj.drop_time);
+    // console.log("this.searchObj.drop_time >>>", this.searchObj.drop_time.toISOString());
+    // console.log("this.minEndDate >>>", this.minEndDate.toISOString());
+    // if (this.searchObj.drop_time.toISOString() < this.minEndDate.toISOString()) {
+    //   this.searchObj.drop_time = null;
+    // }
+
+    const drop = new Date(this.searchObj.drop_time).getTime();
+    const min = new Date(this.minEndDate).getTime();
+
+    console.log("drop >>>", drop);
+    console.log("min >>>", min);
+    console.log("drop < min >>>", drop < min);
+
+    if (drop < min) {
+      this.toast.errorToastr("Drop time must be at least 1 day + 1 second after pickup time.");
+      setTimeout(() => {
+        this.searchObj.drop_time = null;
+      }, 100);
+    }
+
+  }
+
+  setDropMinDate() {
+    if (this.searchObj.pick_time) {
+      const pick = new Date(this.searchObj.pick_time);
+
+      const nextDay = new Date(pick);
+      nextDay.setDate(pick.getDate() + 1);
+
+      this.minEndDate = nextDay;
+      console.log("this.minEndDate >>>", this.minEndDate);
+
+    }
+  }
+
 
   changeTab(item: any) {
     // item.isSelected = true;

@@ -284,6 +284,7 @@ export class DynamicGridComponent {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg'
           });
+          modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
           modalRef.componentInstance.kycForm = this.kycForm;

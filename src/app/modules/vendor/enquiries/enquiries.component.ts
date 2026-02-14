@@ -127,7 +127,7 @@ export class EnquiriesComponent {
       if (res.response && res.response.statusCode == "200") {
         this.tableData = res.gridList;
         this.totalData = res.viewModel.totalCount;
-        const aggFilters = JSON.parse(res.aggregateFilters);
+        const aggFilters = JSON.parse(res.filterList);
         this.providerList = aggFilters.filter((item: any) => item.CompanyName);
       }
     })

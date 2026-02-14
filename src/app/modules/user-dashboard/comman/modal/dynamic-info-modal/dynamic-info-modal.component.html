@@ -1,6 +1,6 @@
 <div class="new-modal">
   <div class="modal-content">
-    <div class="modal-header">
+    <div *ngIf="purpose !== 'approval'" class="modal-header">
       <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
     </div>
     <div class="modal-body">
@@ -19,7 +19,11 @@
                       <h6>{{ field.description }}</h6>
                       <ng-container
                         *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION' && field.fieldType !== 'TEXTMASK'">
-                        <p>{{field.defaultValue}}</p>
+                        <!-- <p>{{field.defaultValue}}</p> -->
+                        <p *ngIf="!isBoolean(field.defaultValue)">{{field.defaultValue}}</p>
+                        <p *ngIf="isBoolean(field.defaultValue)">
+                          {{field.defaultValue ? 'Yes' :'No'}}
+                        </p>
                       </ng-container>
 
                       <ng-container *ngIf="field.fieldType === 'TEXTMASK'">
@@ -70,6 +74,34 @@
                   </div>
                 </div>
               </ng-container>
+
+              <!-- Upload Document -->
+              <div *ngIf="item.sectionID == rolesDocSection" class="col-lg-12">
+                <div class="table-responsive dashboard-table">
+                  <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>{{'userDashboard.kyc.upload_document.name' | translate}}</th>
+                        <th>{{'userDashboard.kyc.upload_document.document' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let doc of viewInfoDetails.kycMandatoryDocuments; let inx = index">
+                        <td>
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{doc.documentTypeName}}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(doc.documentPath)"></i></p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -128,6 +160,24 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- // for HelpDeskrole -->
+      <div *ngIf="purpose == 'approval'" class="col-lg-12 text-center">
+        <button (click)="approveKyc()" type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+          Approve
+        </button>
+        <button (click)="approveDeclineRevert('Decline')" type="button"
+          class="btn btn-solid color4 no-text-transorm mx-2 mb-2">
+          Decline
+        </button>
+        <button (click)="approveDeclineRevert('Revert Back')" type="button"
+          class="btn btn-theme no-text-transorm mx-2 mb-2">
+          Revert Back
+        </button>
+        <button (click)="handleCancel()" type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+          Cancel
+        </button>
       </div>
     </div>
   </div>

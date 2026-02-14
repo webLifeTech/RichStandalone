@@ -18,8 +18,8 @@
                 <mat-label>Select Date Rang</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
                   <input [(ngModel)]="searchFilter.startDate" name="startDate" matStartDate placeholder="Start date" />
-                  <input (ngModelChange)="searchData()" [(ngModel)]="searchFilter.endDate" name="endDate" matEndDate
-                    placeholder="End date" />
+                  <input [(ngModel)]="searchFilter.endDate" name="endDate" matEndDate placeholder="End date"
+                    (ngModelChange)="searchData()" />
                 </mat-date-range-input>
                 <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>

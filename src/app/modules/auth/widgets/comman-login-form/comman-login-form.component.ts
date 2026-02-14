@@ -160,6 +160,7 @@ export class CommanLoginFormComponent {
           ["Administrator"]: "admin",
           ["Vendor"]: "Vendor",
           ["Accountant"]: "Accountant",
+          ["Helpdesk"]: "helpdesk",
         }
 
         this.loginForm = {

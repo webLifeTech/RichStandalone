@@ -605,6 +605,12 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="text-end">
+                  <button *ngIf="isEditInfo" (click)="updateKycUploadedDocuments(section)"
+                    class="btn btn-solid color2 no-text-transorm my-2" type="button">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </mat-expansion-panel>

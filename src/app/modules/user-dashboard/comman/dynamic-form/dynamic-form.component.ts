@@ -185,6 +185,9 @@ export class DynamicFormComponent {
           if (this.formArray[i].fieldId == 397 || this.formArray[i].fieldId == 399 || this.formArray[i].fieldId == 398 || this.formArray[i].fieldId == 400) { // Upload Document -> Sample field
             this.formArray[i].isVisible = false;
           }
+          // if (this.formArray[i].fieldId == 343) {
+          //   this.formArray[i].validationType = "^.{1,400}$";
+          // }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
           this.formArray[i].fValueCode = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValueCode);
@@ -218,6 +221,41 @@ export class DynamicFormComponent {
         if (this.formType === 'vehicleUpload') {
           this.getMasterVehicleCodes();
         }
+
+        let todayDate = new Date();
+        const effectiveDate = this.transformDate(todayDate, 'MM/dd/yy');
+        this.documentList = await this.profileService.getMasterTypeIds({
+          "stateCode": this.kycForm.state || "42",
+          "typeCode": 26,
+          "effectiveDate": effectiveDate,
+        });
+        console.log("UploadDocument >>>>", this.documentList);
+
+        if (this.isEditInfo && this.singleDetailInfo.kycMandatoryDocuments) {
+          // this.documentList = this.documentList.map((doc: any) => {
+          //   const matched = this.singleDetailInfo.kycMandatoryDocuments.find((kyc: any) => Number(kyc.documentTypeId) === Number(doc.ID));
+          //   return {
+          //     ...doc,
+          //     documentPath: matched ? matched.documentPath : null,
+          //     isEdit: matched ? matched.isEdit : false
+          //   };
+          // });
+
+          // Can update only if document uplaoded while KYC
+          const kycIds = this.singleDetailInfo.kycMandatoryDocuments.map((x: any) => Number(x.documentTypeId));
+          this.documentList = this.documentList.filter((docs: any) => kycIds.includes(Number(docs.ID))).map((doc: any) => {
+            const matched = this.singleDetailInfo.kycMandatoryDocuments.find((kyc: any) => Number(kyc.documentTypeId) === Number(doc.ID));
+            return {
+              ...doc,
+              kycSaved: matched,
+              documentPath: matched?.documentPath ?? null,
+              isEdit: matched?.isEdit ?? false
+            };
+          });
+
+        }
+
+
       } else {
         this.gs.isSpinnerShow = false;
         this.toast.errorToastr("Something went wrong");
@@ -270,15 +308,6 @@ export class DynamicFormComponent {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("masterDropdwonList >>>>", this.masterDropdwonList);
-        this.documentList = await this.profileService.getMasterTypeIds({
-          "stateCode": this.kycForm.state || "42",
-          "typeCode": 26,
-          "effectiveDate": effectiveDate,
-        });
-        console.log("UploadDocument >>>>", this.documentList);
-        console.log("['ShiftStatus'] >>>>", this.masterDropdwonList['ShiftStatus']);
-
-
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -302,11 +331,6 @@ export class DynamicFormComponent {
     }
     this.profileService.getMasterVehicleCodes(body).subscribe(async (res: any) => {
       if (res && res.length) {
-        this.documentList = await this.profileService.getMasterTypeIds({
-          "stateCode": this.kycForm.state || "42",
-          "typeCode": 26,
-          "effectiveDate": effectiveDate,
-        });
 
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
@@ -317,9 +341,6 @@ export class DynamicFormComponent {
         let branchMasterDp: any = await this.branchService.GetBranchNames({
           "userId": this.gs.loggedInUserInfo.userId,
         });
-        // branchMasterDp = branchMasterDp.map((item: any) => ({ Name: item.branch, ID: item.branchPersonNum.toString(), ...item }));
-        console.log("branchMasterDp >>>>", branchMasterDp);
-
         this.masterDropdwonList["Branch"] = branchMasterDp;
         this.createForm();
       } else {
@@ -1910,6 +1931,10 @@ export class DynamicFormComponent {
       console.log("res >>>" + item.TypeCode, res)
       if (res) {
         item.documentPath = res;
+        if (this.isEditInfo) {
+          item.isEdit = true;
+          // this.updateKycUploadedDocuments(item);
+        }
       }
 
       // if (this.submitted) {
@@ -1954,6 +1979,7 @@ export class DynamicFormComponent {
             documentTypeId: doc.ID,
             userId: this.gs.loggedInUserInfo.userId,
             documentPath: doc.documentPath,
+            isEdit: false,
           };
         });
       }
@@ -3108,6 +3134,33 @@ export class DynamicFormComponent {
         // this.gs.loggedInUserInfo.isKYCCompleted = true;
         localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
         this.handleCancel();
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateKycUploadedDocuments
+  async updateKycUploadedDocuments(section: any) {
+    let Body = this.documentList.map((doc: any) => {
+      return {
+        id: doc?.kycSaved?.id,
+        documentTypeName: doc.Description,
+        documentTypeId: doc?.kycSaved?.documentTypeId,
+        userId: this.gs.loggedInUserInfo.userId,
+        documentPath: doc.documentPath,
+        isEdit: doc.isEdit,
+      };
+    });
+
+    this.gs.isSpinnerShow = true;
+    this.profileService.UpdateKycUploadedDocuments(Body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(res.message);
       } else {
         this.toast.errorToastr(res.message);
       }

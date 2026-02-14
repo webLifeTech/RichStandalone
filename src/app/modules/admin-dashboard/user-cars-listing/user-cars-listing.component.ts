@@ -193,6 +193,11 @@ export class UserCarsListingComponent {
     this.activeTab = item.menuName;
     this.activeTabName = item.name;
 
+    this.dateTimeRange = "";
+    this.selectedFilter = null;
+    this.searchDataValue = "";
+    this.searchFilter.status = 'All Status';
+
     this.currentPage = 1;
     let params = {
       activeTab: this.activeTab,

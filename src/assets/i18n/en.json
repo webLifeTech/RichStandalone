@@ -388,7 +388,7 @@
     "phone_no": "Phone No"
   },
   "userDashboard": {
-    "search_placeholder": "search here..",
+    "search_placeholder": "Search Here..",
     "search_btn": "",
     "back_btn": "Back",
     "add": "Add",
@@ -660,6 +660,7 @@
         "name": "Document Name",
         "upload": "Upload",
         "filename": "File Name",
+        "document": "Document",
         "status": "Status",
         "action": "Action"
       }

@@ -47,7 +47,7 @@ export class MenuComponent {
         this.menuItems[i].path = pathObj.path;
         this.menuItems[i].queryParams = pathObj.queryParams;
       }
-      if (this.authService.isLoggedIn && this.gs.loggedInUserInfo.role !== 'user') {
+      if (this.authService.isLoggedIn && this.gs.loggedInUserInfo.role !== 'user' && this.gs.loggedInUserInfo.role !== 'helpdesk') {
         this.menuItems.push({
           path: "/cab/hire-drivers/list-view",
           queryParams: { type: 'driver' },

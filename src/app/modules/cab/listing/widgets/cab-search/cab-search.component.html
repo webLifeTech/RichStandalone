@@ -59,8 +59,8 @@
         <label>{{ 'global.drop_off_time' | translate }}</label>
         <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
           placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}" type="text"
-          [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [owlDateTimeFilter]="dropTimeFilter"
-          [min]="searchObj.pick_time" [disabled]="!searchObj.pick_time">
+          [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [owlDateTimeFilter]="dropTimeFilter" [min]="minEndDate"
+          [disabled]="!searchObj.pick_time" (ngModelChange)="onChangeDropTime()">
         <owl-date-time #drop></owl-date-time>
       </div>
     </div>

@@ -42,6 +42,7 @@ export class UserDocumentsComponent {
 
   documentList: any = [];
   documentTypeCode: any = null;
+  isShow: boolean = false;
 
 
 
@@ -175,10 +176,25 @@ export class UserDocumentsComponent {
     });
   }
 
+  searchData() {
+    this.currentPage = 1;
+    if (this.activeTab === 38) {
+      this.getUploadedDocuments();
+    }
+    if (this.activeTab === 39) {
+      this.getGeneratedDocuments();
+    }
+  }
+
+  onAddNew() {
+    this.isShow = true;
+  }
+
   onUpload() {
 
   }
   onReset() {
+    this.isShow = false;
     this.documentTypeCode = null;
     this.fileInput.nativeElement.value = null;
   }

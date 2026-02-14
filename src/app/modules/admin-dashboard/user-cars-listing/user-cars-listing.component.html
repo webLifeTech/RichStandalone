@@ -168,7 +168,7 @@
                           <td>
                             <span class="badge" [ngClass]="{
                           'badge-light-warning': data.vehicleStatus === 'Booked',
-                          'badge-light-danger': data.vehicleStatus === 'KYC Pending',
+                          'badge-light-danger': data.vehicleStatus === 'KYC Pending' || data.vehicleStatus === 'In Active',
                           'badge-light-success': data.vehicleStatus === 'Available'}">
                               {{data.vehicleStatus}}
                             </span>

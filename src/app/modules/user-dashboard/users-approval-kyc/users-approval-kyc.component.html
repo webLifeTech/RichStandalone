@@ -1,0 +1,350 @@
+<div class="content">
+  <div class="container">
+
+    <!-- <div class="content-header">
+      <div class="row">
+        <div class="col-lg-4">
+          <h4>All Users</h4>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="sorting-info">
+          <div class="wallet-section">
+            <div class="row">
+              <div class="col-lg-12 content-header text-center pb-3">
+                <h4>KYC Overview</h4>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner badge-light-warning mb-0">
+                  <h6>12</h6>
+                  <p class="fw-bold">Review Pending</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner badge-light-success mb-0">
+                  <h6>08</h6>
+                  <p class="fw-bold">Approved</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner badge-light-secondary mb-0">
+                  <h6>04</h6>
+                  <p class="fw-bold">Sent Back</p>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex">
+                <div class="balance-inner badge-light-danger mb-0">
+                  <h6>02</h6>
+                  <p class="fw-bold">Decline</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!isApproval">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="sorting-info">
+            <div class="row d-flex align-items-center">
+              <div class="col-lg-10 col-sm-12 col-12">
+                <div class="booking-lists">
+                  <ul class="nav">
+                    <li *ngFor="let item of tabs">
+                      <a [class.active]="activeTab == item.menuName" (click)="changeBookTab(item)">{{item.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-2 col-sm-12 col-12 text-end">
+                <div class="filter-group">
+                  <select class="form-select" [(ngModel)]="searchFilter.status" (change)="selectStatus()">
+                    <ng-container *ngFor="let item of vehicleStatusList">
+                      <option [value]="item.value">{{item.name}}</option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-lg-12 d-flex">
+          <div class="card book-card flex-fill mb-0">
+            <div class="card-header">
+              <div class="row align-items-center">
+                <div class="col-md-12">
+                  <h4>{{activeTabName}} <span>{{totalData}}</span></h4>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-md-12 text-md-end">
+                  <div class="table-search">
+                    <div class="mb-1 me-3">
+                      <input placeholder="Date Filter Range:" class="form-control datetimepicker-input digits"
+                        [(ngModel)]="dateTimeRange" [selectMode]="'range'" [owlDateTimeTrigger]="dtRange1"
+                        [owlDateTime]="dtRange1" (ngModelChange)="searchData()" />
+                      <owl-date-time [pickerType]="'calendar'" #dtRange1></owl-date-time>
+                    </div>
+                    <div class="me-3 text-start">
+                      <ng-select clearable="false" [items]="filterTypes" bindLabel="name" bindValue="id"
+                        placeholder="-- Select Search Type --" [(ngModel)]="selectedFilter" name="selectedFilter"
+                        class="min-width-250">
+                      </ng-select>
+                    </div>
+                    <div id="tablefilter">
+                      <div class="dataTables_filter">
+                        <label>
+                          <input [(ngModel)]="searchDataValue" type="search" class="form-control"
+                            placeholder="Search" />
+                        </label>
+                      </div>
+                    </div>
+                    <a *ngIf="roleService.permissions['AUSEARCH']"
+                      [class]="roleService.permissions['AUSEARCH'].Class || 'btn btn-theme btn-add me-2'"
+                      [title]="roleService.permissions['AUSEARCH'].Name" (click)="searchData()">
+                      <i [class]="roleService.permissions['AUSEARCH'].ActionIcon"></i>
+                      {{roleService.permissions['AUSEARCH'].Name}}
+                    </a>
+                    <button *ngIf="roleService.permissions['AUEXP']"
+                      [class]="roleService.permissions['AUEXP'].Class || 'btn btn-add'"
+                      [title]="roleService.permissions['AUEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                      (click)="exportToExcel()">
+                      <i [class]="roleService.permissions['AUEXP'].ActionIcon"></i>
+                      <img *ngIf="!roleService.permissions['AUEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                        width="24px" class="me-2">
+                      {{roleService.permissions['AUEXP'].Name}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="activeTab !== 'VEHICLE'" class="card-body">
+              <div class="table-responsive dashboard-table mb-4">
+                <table class="table datatable">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>
+                        <span>SL</span>
+                      </th>
+                      <th class="text-center pointer" (click)="onSort('rolename')">
+                        Unique ID
+                        <span *ngIf="sortColumn === 'rolename'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-start pointer" (click)="onSort('userName')">
+                        Name
+                        <span *ngIf="sortColumn === 'userName'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-center pointer" (click)="onSort('userName')">
+                        Date
+                        <span *ngIf="sortColumn === 'userName'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-center pointer" (click)="onSort('kycStatus')">
+                        KYC status
+                        <span *ngIf="sortColumn === 'kycStatus'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th class="text-center">
+                        Action
+                      </th>
+                      <!-- <th class="text-center pointer" (click)="onSort('status')">
+                      Status
+                      <span *ngIf="sortColumn === 'status'">
+                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                      </span>
+                    </th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let data of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index;">
+                      <td>
+                        <span>{{idx+1}}</span>
+                      </td>
+                      <td class="text-center">
+                        <span>{{"XXXXX000" +idx+1}}</span>
+                      </td>
+                      <td class="text-start">
+                        <div class="table-avatar">
+                          <a class="avatar avatar-lg flex-shrink-0">
+                            <img class="avatar-img" [src]="data.profilePath || 'assets/images/driver/Male.jpg'"
+                              alt="Booking">
+                          </a>
+                          <div class="table-head-name flex-grow-1">
+                            <a>{{data.userName}}</a>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <span>{{data.createdDate | date : 'MM/dd/yyyy'}}</span>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                        'text-tangerine': data.statusCode == '1',
+                        'text-success-light': data.statusCode == '2',
+                        'text-cyan': data.statusCode == '3',
+                        'text-red': data.statusCode == '4' }">
+                          {{data.status}}
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <button (click)="checkKyc(data, idx)" class="btn btn-theme no-text-transorm ms-2">
+                          <i class="feather icon-file-text me-2"></i> <span>Check KYC Details</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="!tableData.length" class="col-md-12">
+                <p class="text-center mt-3">
+                  <b>No records found</b>
+                </p>
+              </div>
+              <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+            </div>
+
+            <div *ngIf="activeTab === 'VEHICLE'" class="card-body">
+              <mat-accordion *ngIf="tableData.length" class="accordion-align">
+                <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
+                  (closed)="onToggle(false, section)"
+                  *ngFor="let section of tableData | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="justify-content-between me-5">
+                      <span>
+                        {{ section.ownerName }} :
+                        <span
+                          [ngClass]="{'text-green': section.userStatus == 'Active', 'text-red': section.userStatus != 'Active'}">
+                          {{ section.userStatus }}
+                        </span>
+                      </span>
+                      <span>
+                        {{ section.roleName }}
+                      </span>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      <i class="feather " [ngClass]="{'icon-minus': section.isOpen, 'icon-plus': !section.isOpen}"></i>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+
+                  <div class="col-md-12 mt-4">
+                    <div class="table-responsive dashboard-table mb-4">
+                      <table class="table datatable">
+                        <thead class="thead-light">
+                          <tr>
+                            <th>
+                              <span>SL</span>
+                            </th>
+                            <th>Unique ID</th>
+                            <th class="text-center">Vin Number</th>
+                            <th class="text-start">Car Name</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">KYC status</th>
+                            <th class="text-center">
+                              Action
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="let data of tableDataSecond | paginate: { id: section.userId, itemsPerPage: pageSizeSecond, currentPage: currentPageSecond, totalItems: totalDataSecond }; let idx = index;">
+                            <td>
+                              <span>{{idx+1}}</span>
+                            </td>
+                            <td class="text-center">
+                              <span>{{"XXXXX000" +idx+1}}</span>
+                            </td>
+                            <td>{{data.vin}}</td>
+                            <td class="text-start">
+                              <div class="table-avatar">
+                                <a class="avatar avatar-lg flex-shrink-0 d-flex">
+                                  <img class="car-img" [src]="data.carImage" alt="Booking">
+                                </a>
+                                <div class="table-head-name flex-grow-1">
+                                  <a>{{data.carName}}</a>
+                                </div>
+                              </div>
+                            </td>
+                            <td class="text-center">
+                              <span>{{data.createdDate | date : 'MM/dd/yyyy'}}</span>
+                            </td>
+                            <td>
+                              <span class="badge" [ngClass]="{
+                                'text-tangerine': data.statusCode == '1',
+                                'text-success-light': data.statusCode == '2',
+                                'text-cyan': data.statusCode == '3',
+                                'text-red': data.statusCode == '4' }">
+                                {{data.status}}
+                              </span>
+                            </td>
+                            <td class="text-center">
+                              <button (click)="checkKyc(data, idx)" class="btn btn-theme no-text-transorm ms-2">
+                                <i class="feather icon-file-text me-2"></i> <span>Check KYV Details</span>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div *ngIf="!tableDataSecond.length" class="col-md-12">
+                      <p class="text-center mt-3">
+                        <b>Vehicle Not Found</b>
+                      </p>
+                    </div>
+                    <pagination-controls [id]="section.userId" (pageChange)="pageChangedSecond($event, section)">
+                    </pagination-controls>
+                  </div>
+                </mat-expansion-panel>
+
+                <pagination-controls [id]="'first'" (pageChange)="pageChanged($event)"></pagination-controls>
+              </mat-accordion>
+
+              <div *ngIf="!tableData.length" class="col-md-12">
+                <p class="text-center">
+                  <b>Data Not Found</b>
+                </p>
+              </div>
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isApproval">
+      <div class="card book-card ">
+        <ng-container *ngIf="activeTab !== 'VEHICLE'">
+          <app-dynamic-info-modal [purpose]="'approval'" [formType]="type" [viewInfoDetails]="viewInfoDetails"
+            [groupedSectionsData]="[]" [kycForm]="kycForm" (onConfirm)="onConfirm($event)"
+            (onCancel)="cancelApproval()"></app-dynamic-info-modal>
+        </ng-container>
+        <ng-container *ngIf="activeTab === 'VEHICLE'">
+          <app-dynamic-info-modal [purpose]="'approval'" [formType]="vctype" [viewInfoDetails]="vcViewInfoDetails"
+            [groupedSectionsData]="[]" [kycForm]="kycForm" (onConfirm)="onConfirm($event)"
+            (onCancel)="cancelApproval()"></app-dynamic-info-modal>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>

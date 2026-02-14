@@ -640,4 +640,13 @@ export class ProfileService {
       })
     );
   }
+
+  // COMMON -> UpdateKycUploadedDocuments
+  public UpdateKycUploadedDocuments(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateKycUploadedDocuments`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

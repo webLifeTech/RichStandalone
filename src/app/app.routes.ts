@@ -42,6 +42,7 @@ import { ServiceDetailsComponent } from './modules/services/service-details/serv
 import { ForgotPasswordComponent } from './modules/auth/forgot-password/forgot-password.component';
 import { UserVehicleRiskRatingComponent } from './modules/user-dashboard/user-vehicle-risk-rating/user-vehicle-risk-rating.component';
 import { UserDocumentsComponent } from './modules/user-dashboard/user-documents/user-documents.component';
+import { UsersApprovalKycComponent } from './modules/user-dashboard/users-approval-kyc/users-approval-kyc.component';
 
 export const routes: Routes = [
   {
@@ -218,6 +219,10 @@ export const routes: Routes = [
             component: SecurityComponent
           }
         ]
+      },
+      {
+        path: 'approval',
+        component: UsersApprovalKycComponent
       },
     ]
   },
