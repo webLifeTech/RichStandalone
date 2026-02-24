@@ -101,6 +101,22 @@
           <app-step-progress></app-step-progress>
         </div>
 
+        <div
+          *ngIf="isKYCCompleted && !isFormEdit && (activeKycTab === 1 || activeKycTab === 5 || activeKycTab === 12 || activeKycTab === 19)"
+          class="alert-msg">
+          <div class="alert alert-success py-2 alert-dismissible mb-0" role="alert" [ngClass]="{ 'alert-warning': kycStatus == '1' || kycStatus == '4',
+            'alert-success': kycStatus == '2' || kycStatus == '5',
+            'alert-danger': kycStatus == '3'|| kycStatus == '6',
+            }">
+            <span class="kyc-status-msg">
+              {{ kycMassage | translate }}
+            </span>
+            <div *ngIf="driverInfoData && driverInfoData[0]?.kycRemarks" class="fw-bold">
+              Status Remark : {{ driverInfoData[0].kycRemarks | translate }}
+            </div>
+          </div>
+        </div>
+
         <div *ngIf="activeKycTab === 1">
           <div *ngIf="!isKYCCompleted || isFormEdit">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'driver'" [isEditInfo]="isFormEdit"
@@ -109,9 +125,9 @@
           </div>
           <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
-              <h2 class="completed-msg">
-                {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
-              </h2>
+              <!-- <h2 class="completed-msg">
+                {{ kycMassage | translate }}
+              </h2> -->
               <app-dynamic-grid [type]="'driver'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
                 [columns]="driverColumns" [actions]="driverActions"
                 (actionEvent)="handleAction($event, 'driver')"></app-dynamic-grid>
@@ -129,9 +145,9 @@
 
           <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
-              <h2 class="completed-msg">
-                {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
-              </h2>
+              <!-- <h2 class="completed-msg">
+                {{ kycMassage | translate }}
+              </h2> -->
               <app-dynamic-grid [type]="'fleetOwner'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
                 [columns]="fleetOwnerColumns" [actions]="driverActions"
                 (actionEvent)="handleAction($event, 'fleetOwner')"></app-dynamic-grid>
@@ -331,9 +347,9 @@
 
           <div *ngIf="isKYCCompleted && !isFormEdit" class="col-lg-12">
             <div class="dashboard-box">
-              <h2 class="completed-msg">
-                {{ 'userDashboard.kyc.driverInfo.completed_msg' | translate }}
-              </h2>
+              <!-- <h2 class="completed-msg">
+                {{ kycMassage | translate }}
+              </h2> -->
               <app-dynamic-grid [type]="'individualCarOwner'" [selectedTabObj]="selectedTabObj" [data]="driverInfoData"
                 [columns]="driverColumns" [actions]="driverActions"
                 (actionEvent)="handleAction($event, 'individualCarOwner')"></app-dynamic-grid>
@@ -347,7 +363,7 @@
 
         <div *ngIf="activeKycTab === 19">
           <ng-container *ngIf="!isAddEditVendor && isLoadVendorDetail">
-            <app-dynamic-grid [type]="'vendor-profile'" [data]="gridInfoData" [kycForm]="kycForm"
+            <app-dynamic-grid [type]="'vendor-profile'" [data]="driverInfoData" [kycForm]="kycForm"
               [selectedTabObj]="selectedTabObj" [columns]="vendorInfoColumns" [actions]="vendorInfoActions"
               (actionEvent)="handleAction($event, 'vendor-profile')"></app-dynamic-grid>
           </ng-container>

@@ -67,7 +67,7 @@
               </div>
             </form>
           </div>
-          <div *ngIf="activeTab === 38" class="col-lg-6">
+          <div *ngIf="activeTab === 38 && this.gs.loggedInUserInfo.role !== 'helpdesk'" class="col-lg-6">
             <div class="text-end">
               <a (click)="onAddNew()" class="btn btn-solid color2 no-text-transorm">
                 <i class="feather icon-plus"></i> {{ 'Add' | translate }}
@@ -82,7 +82,9 @@
                 <th>
                   <span>SL</span>
                 </th>
-                <th>Document Name</th>
+                <th *ngIf="this.gs.loggedInUserInfo.role === 'helpdesk'">AC Number</th>
+                <th class="text-start">Document Name</th>
+                <th *ngIf="this.gs.loggedInUserInfo.role === 'helpdesk'" class="text-start">User Name</th>
                 <th>Uploaded Date</th>
                 <th>Document</th>
               </tr>
@@ -93,12 +95,18 @@
                 <td>
                   <span>{{(idx+1) * currentPage}}</span>
                 </td>
-                <td>
+                <td *ngIf="this.gs.loggedInUserInfo.role === 'helpdesk'">
+                  {{data.userAccountNumber || '-'}}
+                </td>
+                <td class="text-start">
                   <div class="table-avatar">
                     <div class="table-head-name flex-grow-1">
                       {{data.documentType}}
                     </div>
                   </div>
+                </td>
+                <td *ngIf="this.gs.loggedInUserInfo.role === 'helpdesk'" class="text-start">
+                  {{data.userName || '-'}}
                 </td>
                 <td>
                   {{data.createdDate | date : 'MM/dd/yyyy'}}

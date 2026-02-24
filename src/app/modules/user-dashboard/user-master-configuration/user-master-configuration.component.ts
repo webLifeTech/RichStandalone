@@ -75,7 +75,9 @@ export class UserMasterConfigurationComponent {
     { header: 'VIN Number', fieldObject: null, field: 'vinNumber' },
     { header: 'PLATE NUMBER', fieldObject: null, field: 'plateNumber' },
     { header: 'PRICE PER DAY', fieldObject: null, field: 'pricePerDay' },
-    { header: 'VEHICLE STATUS', fieldObject: null, field: 'vehicleStatus' },
+    { header: 'Vehicle Status', fieldObject: null, field: 'vehicleStatus' },
+    { header: 'KYV Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
+    // { header: 'Status Remark', fieldObject: null, field: 'kycRemarks' },
   ];
 
   // Actions grids

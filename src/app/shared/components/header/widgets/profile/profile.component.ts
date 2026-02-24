@@ -44,10 +44,13 @@ export class ProfileComponent {
     }).subscribe((response: any) => {
       const type: any = {
         "Driver": "driverkyc",
+        "Fleet owner": "companykyc",
+        "Individual car owner": "driverkyc",
         "Driver with owned car": "driverkyc",
         "Vendor": "providerkyc",
       }
-      this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+      this.isKYCCompleted = response[type[response.risktype]] == 2 ? true : false;
+      this.gs.loggedInUserInfo.isKYCCompleted = this.isKYCCompleted;
     })
   }
 
@@ -93,6 +96,10 @@ export class ProfileComponent {
   }
 
   goDashBoard() {
+    if (this.gs.loggedInUserInfo.role == 'helpdesk') {
+      this.router.navigateByUrl('/user/approval');
+      return;
+    }
     this.router.navigateByUrl('/user/profile');
   }
 

@@ -17,30 +17,30 @@
               <div class="col-lg-12 content-header text-center pb-3">
                 <h4>KYC Overview</h4>
               </div>
-              <div class="col-md-3 d-flex">
-                <div class="balance-inner badge-light-warning mb-0">
-                  <h6>12</h6>
-                  <p class="fw-bold">Review Pending</p>
+              <div *ngFor="let item of kycInfo" class="col-md-3 d-flex">
+                <div class="balance-inner badge-light-success mb-0">
+                  <h6>{{item.count}}</h6>
+                  <p class="fw-bold">{{item.label}}</p>
                 </div>
               </div>
-              <div class="col-md-3 d-flex">
+              <!-- <div class="col-md-3 d-flex">
                 <div class="balance-inner badge-light-success mb-0">
-                  <h6>08</h6>
+                  <h6>{{kycInfo.approved}}</h6>
                   <p class="fw-bold">Approved</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner badge-light-secondary mb-0">
-                  <h6>04</h6>
+                  <h6>{{kycInfo.sentBack}}</h6>
                   <p class="fw-bold">Sent Back</p>
                 </div>
               </div>
               <div class="col-md-3 d-flex">
                 <div class="balance-inner badge-light-danger mb-0">
-                  <h6>02</h6>
+                  <h6>{{kycInfo.decline}}</h6>
                   <p class="fw-bold">Decline</p>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -108,26 +108,26 @@
                         </label>
                       </div>
                     </div>
-                    <a *ngIf="roleService.permissions['AUSEARCH']"
-                      [class]="roleService.permissions['AUSEARCH'].Class || 'btn btn-theme btn-add me-2'"
-                      [title]="roleService.permissions['AUSEARCH'].Name" (click)="searchData()">
-                      <i [class]="roleService.permissions['AUSEARCH'].ActionIcon"></i>
-                      {{roleService.permissions['AUSEARCH'].Name}}
+                    <a *ngIf="roleService.permissions['APR_SRH']"
+                      [class]="roleService.permissions['APR_SRH'].Class || 'btn btn-theme btn-add me-2'"
+                      [title]="roleService.permissions['APR_SRH'].Name" (click)="searchData()">
+                      <i [class]="roleService.permissions['APR_SRH'].ActionIcon"></i>
+                      {{roleService.permissions['APR_SRH'].Name}}
                     </a>
-                    <button *ngIf="roleService.permissions['AUEXP']"
-                      [class]="roleService.permissions['AUEXP'].Class || 'btn btn-add'"
-                      [title]="roleService.permissions['AUEXP'].Name || 'Export To Excel'" [disabled]="!totalData"
+                    <button *ngIf="roleService.permissions['APR_EXP']"
+                      [class]="roleService.permissions['APR_EXP'].Class || 'btn btn-add'"
+                      [title]="roleService.permissions['APR_EXP'].Name || 'Export To Excel'" [disabled]="!totalData"
                       (click)="exportToExcel()">
-                      <i [class]="roleService.permissions['AUEXP'].ActionIcon"></i>
-                      <img *ngIf="!roleService.permissions['AUEXP'].ActionIcon" src="assets/images/icon/excel.png"
+                      <i [class]="roleService.permissions['APR_EXP'].ActionIcon"></i>
+                      <img *ngIf="!roleService.permissions['APR_EXP'].ActionIcon" src="assets/images/icon/excel.png"
                         width="24px" class="me-2">
-                      {{roleService.permissions['AUEXP'].Name}}
+                      {{roleService.permissions['APR_EXP'].Name}}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="activeTab !== 'VEHICLE'" class="card-body">
+            <div *ngIf="activeTab !== 'VEHICLES'" class="card-body">
               <div class="table-responsive dashboard-table mb-4">
                 <table class="table datatable">
                   <thead class="thead-light">
@@ -135,8 +135,8 @@
                       <th>
                         <span>SL</span>
                       </th>
-                      <th class="text-center pointer" (click)="onSort('rolename')">
-                        Unique ID
+                      <th class="text-center pointer" (click)="onSort('userAccountNumber')">
+                        AC Number
                         <span *ngIf="sortColumn === 'rolename'">
                           <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
@@ -149,9 +149,16 @@
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
                       </th>
-                      <th class="text-center pointer" (click)="onSort('userName')">
+                      <th class="text-center pointer" (click)="onSort('createdDate')">
                         Date
                         <span *ngIf="sortColumn === 'userName'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
+                      <th *ngIf="activeTab == 'VENDOR'" class="text-start pointer" (click)="onSort('categoryName')">
+                        Category Name
+                        <span *ngIf="sortColumn === 'categoryName'">
                           <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
@@ -166,13 +173,6 @@
                       <th class="text-center">
                         Action
                       </th>
-                      <!-- <th class="text-center pointer" (click)="onSort('status')">
-                      Status
-                      <span *ngIf="sortColumn === 'status'">
-                        <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
-                        <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
-                      </span>
-                    </th> -->
                     </tr>
                   </thead>
                   <tbody>
@@ -182,7 +182,7 @@
                         <span>{{idx+1}}</span>
                       </td>
                       <td class="text-center">
-                        <span>{{"XXXXX000" +idx+1}}</span>
+                        <span>{{data.userAccountNumber || '-'}}</span>
                       </td>
                       <td class="text-start">
                         <div class="table-avatar">
@@ -191,24 +191,33 @@
                               alt="Booking">
                           </a>
                           <div class="table-head-name flex-grow-1">
-                            <a>{{data.userName}}</a>
+                            <a>{{data.userName || '-'}}</a>
                           </div>
                         </div>
                       </td>
                       <td class="text-center">
-                        <span>{{data.createdDate | date : 'MM/dd/yyyy'}}</span>
+                        <span>{{(data.createdDate | date : 'MM/dd/yyyy') || '-'}}</span>
                       </td>
+                      <td *ngIf="activeTab == 'VENDOR'" class="text-start">
+                        <span>{{data.categoryName || '-'}}</span>
+                      </td>
+                      <!-- <td *ngIf="activeTab == 'VENDOR'" class="text-start">
+                        <span>
+                          {{ data?.subCategoryList?.join(', ') }}
+                        </span>
+                      </td> -->
                       <td>
                         <span class="badge" [ngClass]="{
-                        'text-tangerine': data.statusCode == '1',
-                        'text-success-light': data.statusCode == '2',
-                        'text-cyan': data.statusCode == '3',
-                        'text-red': data.statusCode == '4' }">
-                          {{data.status}}
+                        'text-tangerine': data.kycStatusCd == '1',
+                        'text-success-light': data.kycStatusCd == '2' || data.kycStatusCd == '5',
+                        'text-red': data.kycStatusCd == '3'|| data.kycStatusCd == '6',
+                        'text-cyan': data.kycStatusCd == '4' }">
+                          {{data.kycStatus || '-'}}
                         </span>
                       </td>
                       <td class="text-center">
-                        <button (click)="checkKyc(data, idx)" class="btn btn-theme no-text-transorm ms-2">
+                        <button (click)="checkKyc(data)" [disabled]="!data.riskId"
+                          class="btn btn-theme no-text-transorm ms-2">
                           <i class="feather icon-file-text me-2"></i> <span>Check KYC Details</span>
                         </button>
                       </td>
@@ -224,7 +233,7 @@
               <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
             </div>
 
-            <div *ngIf="activeTab === 'VEHICLE'" class="card-body">
+            <div *ngIf="activeTab === 'VEHICLES'" class="card-body">
               <mat-accordion *ngIf="tableData.length" class="accordion-align">
                 <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
                   (closed)="onToggle(false, section)"
@@ -255,7 +264,7 @@
                             <th>
                               <span>SL</span>
                             </th>
-                            <th>Unique ID</th>
+                            <th>AC Number</th>
                             <th class="text-center">Vin Number</th>
                             <th class="text-start">Car Name</th>
                             <th class="text-center">Date</th>
@@ -272,7 +281,7 @@
                               <span>{{idx+1}}</span>
                             </td>
                             <td class="text-center">
-                              <span>{{"XXXXX000" +idx+1}}</span>
+                              <span>{{data.userAccountNumber}}</span>
                             </td>
                             <td>{{data.vin}}</td>
                             <td class="text-start">
@@ -290,15 +299,16 @@
                             </td>
                             <td>
                               <span class="badge" [ngClass]="{
-                                'text-tangerine': data.statusCode == '1',
-                                'text-success-light': data.statusCode == '2',
-                                'text-cyan': data.statusCode == '3',
-                                'text-red': data.statusCode == '4' }">
-                                {{data.status}}
+                                'text-tangerine': data.kycStatusCd == '1',
+                                'text-success-light': data.kycStatusCd == '2' || data.kycStatusCd == '5',
+                                'text-red': data.kycStatusCd == '3'|| data.kycStatusCd == '6',
+                                'text-cyan': data.kycStatusCd == '4' }">
+                                {{data.kycStatus || '-'}}
                               </span>
                             </td>
                             <td class="text-center">
-                              <button (click)="checkKyc(data, idx)" class="btn btn-theme no-text-transorm ms-2">
+                              <button (click)="checkKyc(data)" [disabled]="!data.riskId"
+                                class="btn btn-theme no-text-transorm ms-2">
                                 <i class="feather icon-file-text me-2"></i> <span>Check KYV Details</span>
                               </button>
                             </td>
@@ -334,13 +344,13 @@
     </ng-container>
     <ng-container *ngIf="isApproval">
       <div class="card book-card ">
-        <ng-container *ngIf="activeTab !== 'VEHICLE'">
+        <ng-container *ngIf="activeTab !== 'VEHICLES'">
           <app-dynamic-info-modal [purpose]="'approval'" [formType]="type" [viewInfoDetails]="viewInfoDetails"
             [groupedSectionsData]="[]" [kycForm]="kycForm" (onConfirm)="onConfirm($event)"
             (onCancel)="cancelApproval()"></app-dynamic-info-modal>
         </ng-container>
-        <ng-container *ngIf="activeTab === 'VEHICLE'">
-          <app-dynamic-info-modal [purpose]="'approval'" [formType]="vctype" [viewInfoDetails]="vcViewInfoDetails"
+        <ng-container *ngIf="activeTab === 'VEHICLES'">
+          <app-dynamic-info-modal [purpose]="'approval'" [formType]="type" [viewInfoDetails]="viewInfoDetails"
             [groupedSectionsData]="[]" [kycForm]="kycForm" (onConfirm)="onConfirm($event)"
             (onCancel)="cancelApproval()"></app-dynamic-info-modal>
         </ng-container>

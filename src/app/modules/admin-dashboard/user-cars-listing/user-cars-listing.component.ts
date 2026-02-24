@@ -108,6 +108,7 @@ export class UserCarsListingComponent {
       "startDate": startDate,
       "endDate": endDate,
       "type": this.selectedFilter,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllVehicleOwners(body).subscribe((response: any) => {
@@ -119,7 +120,6 @@ export class UserCarsListingComponent {
         }
         this.tableData = response.gridList;
         this.totalData = response.viewModel?.totalCount || 0;
-        // this.tabs = response.filterList ? JSON.parse(response.filterList) : [];
         this.getOwnerVehicles(this.tableData[0].userId);
       } else {
         this.toast.errorToastr(response.message);
@@ -138,6 +138,7 @@ export class UserCarsListingComponent {
       "endDate": endDate,
       "userId": ownerUserId,
       "type": this.selectedFilter,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
     }
     this.tableDataSecond = [];
     this.gs.isSpinnerShow = true;
@@ -262,6 +263,7 @@ export class UserCarsListingComponent {
       "startDate": startDate,
       "endDate": endDate,
       "type": this.selectedFilter,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
     this.excelExport.exportToExcelPost(body, 'ExportAllVehiclesToExcel').subscribe((response: any) => {
@@ -275,8 +277,17 @@ export class UserCarsListingComponent {
         });
       }
       let title = 'Vehicles - ' + this.activeTab + ' - ' + this.searchFilter.status;
-      this.excelExport.exportToExcelWithNested(tableData, "Vehicles", title);
-
+      const columns = [
+        { header: 'SL', key: 'sl' },
+        { header: 'Vin Number', key: 'vin' },
+        { header: 'Car Name', key: 'carName' },
+        { header: 'Owner Name', key: 'ownerName' },
+        { header: 'Plate Number', key: 'plateNumber' },
+        { header: 'Per Day Price', key: 'perDayPrice' },
+        { header: 'Vehicle Status', key: 'vehicleStatus' },
+        { header: 'Status', key: 'status' }
+      ];
+      this.excelExport.exportToExcelWithNested(tableData, "Vehicles", title, columns);
     });
   }
 

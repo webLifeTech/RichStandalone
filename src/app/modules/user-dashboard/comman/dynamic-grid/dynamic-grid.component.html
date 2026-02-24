@@ -71,69 +71,86 @@
                 ({{ sortDirection === 'asc' ? '↑' : '↓' }})
               </span>
             </th>
-            <th *ngIf="this.type !== 'vendor-profile' && this.type !== 'my_vehicle'" class="text-center">
+            <!-- <th *ngIf="this.type !== 'vendor-profile' && this.type !== 'my_vehicle'" class="text-center">
               {{'userDashboard.kyc.upload_bulk_vehicle.kyc'
               | translate}}
+            </th> -->
             <th *ngIf="actions.length" class="sticky-action">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr
+          <ng-container
             *ngFor="let row of filteredData | paginate: { itemsPerPage: 5, currentPage: currentPage, totalItems: totalData }; let idx = index;">
-            <td *ngFor="let column of columns">
-              <span
-                *ngIf="column.fieldObject && (row[column.field]?.includes('.jpg') || row[column.field]?.includes('.jpeg') || row[column.field]?.includes('.png'))">
-                <img [src]="row[column.field]" alt="image" width="70px">
-              </span>
-              <span *ngIf="!column.fieldObject && column.field !== 'kycStatus'">
-                {{ row[column.field] }}
-              </span>
-              <span *ngIf="column.fieldObject">
-                {{ row[column.fieldObject][column.field] }}
-              </span>
-              <span
-                *ngIf="!column.fieldObject &&  column.field === 'vehicleStatus' || (column.field === 'status' && type === 'vendor-profile')"
-                class="custom-toggle">
-                <input [id]="row.vehicleId+'_vehicleStatus'" class="check" type="checkbox"
-                  [checked]="row[column.field] == 'Active'"
-                  [disabled]="!row[column.field] || row[column.field] == 'Pending'"
-                  (change)="changeStatus($event, row, column)" />
-                <label [for]="row.vehicleId+'_vehicleStatus'" class="checktoggle">checkbox</label>
-              </span>
-              <span *ngIf="!column.fieldObject && column.field === 'kycStatus'" class="badge" [ngClass]="{
-                            'badge-light-danger': row[column.field] === 'Pending',
-                            'badge-light-success': row[column.field] === 'Completed' }">
-                {{ row[column.field] }}
-              </span>
-            </td>
-            <td *ngIf="this.type !== 'vendor-profile' && this.type !== 'my_vehicle'" class="text-center">
-              <span class="badge badge-light-success">
-                Success
-              </span>
-            </td>
-            <td *ngIf="actions.length" class="text-center sticky-action">
-              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                <i class="feather icon-more-vertical"></i>
-              </button>
-              <img src="assets/images/icon/dashboard/click-action.gif" class="click-arrow" />
-              <mat-menu #menu="matMenu" xPosition="before">
-                <ng-container *ngFor="let action of actions">
-                  <button *ngIf="action === 'View'" (click)="onView(row)" type="button" mat-menu-item>
-                    <i class="feather icon-eye"></i>
-                    <span class="ms-2">View</span>
-                  </button>
-                  <button *ngIf="action === 'Edit'" (click)="onEdit(row)" mat-menu-item>
-                    <i class="feather icon-edit"></i>
-                    <span class="ms-2">Edit</span>
-                  </button>
-                  <button *ngIf="action === 'Delete'" (click)="onDelete(idx)" mat-menu-item>
-                    <i class="feather icon-trash"></i>
-                    <span class="ms-2">Delete</span>
-                  </button>
-                </ng-container>
-              </mat-menu>
-            </td>
-          </tr>
+
+            <tr>
+              <td *ngFor="let column of columns" [ngStyle]="row['kycRemarks'] ? {'border-bottom': 'none'} : null">
+                <span
+                  *ngIf="column.fieldObject && (row[column.field]?.includes('.jpg') || row[column.field]?.includes('.jpeg') || row[column.field]?.includes('.png'))">
+                  <img [src]="row[column.field]" alt="image" width="70px">
+                </span>
+                <span *ngIf="!column.fieldObject && column.field !== 'kycStatus'">
+                  {{ row[column.field] || '-' }}
+                </span>
+                <span *ngIf="column.fieldObject">
+                  {{ row[column.fieldObject][column.field] || '-' }}
+                </span>
+                <span
+                  *ngIf="!column.fieldObject &&  column.field === 'vehicleStatus' || (column.field === 'status' && type === 'vendor-profile')"
+                  class="custom-toggle">
+                  <input [id]="row.vehicleId+'_vehicleStatus'" class="check" type="checkbox"
+                    [checked]="row[column.field] == 'Active'"
+                    [disabled]="!row[column.field] || row[column.field] == 'Pending'"
+                    (change)="changeStatus($event, row, column)" />
+                  <label [for]="row.vehicleId+'_vehicleStatus'" class="checktoggle">checkbox</label>
+                </span>
+                <!-- [ngClass]="{ 'badge-light-danger': row[column.field] === 'Pending','badge-light-success': row[column.field] === 'Completed' }" -->
+                <span *ngIf="!column.fieldObject && column.field === 'kycStatus'" class="badge" [ngClass]="{
+                    'text-tangerine': row[column.fieldCode] == '1',
+                    'text-success-light': row[column.fieldCode] == '2' || row[column.fieldCode] == '5',
+                    'text-red': row[column.fieldCode] == '3'|| row[column.fieldCode] == '6',
+                    'text-cyan': row[column.fieldCode] == '4' }">
+                  {{ row[column.field] }}
+                </span>
+              </td>
+              <!-- <small>
+                Your KYC verification has been reverted back; please review your submitted documents and resubmit with
+                accurate and valid information to proceed.
+              </small> -->
+              <!-- <td *ngIf="this.type !== 'vendor-profile' && this.type !== 'my_vehicle'" class="text-center">
+              </td> -->
+              <td *ngIf="actions.length" class="text-center sticky-action"
+                [ngStyle]="row['kycRemarks'] ? {'border-bottom': 'none'} : null">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <i class="feather icon-more-vertical"></i>
+                </button>
+                <img src="assets/images/icon/dashboard/click-action.gif" class="click-arrow" />
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <ng-container *ngFor="let action of actions">
+                    <button *ngIf="action === 'View'" (click)="onView(row)" type="button" mat-menu-item>
+                      <i class="feather icon-eye"></i>
+                      <span class="ms-2">View</span>
+                    </button>
+                    <button *ngIf="action === 'Edit'" (click)="onEdit(row)" mat-menu-item>
+                      <i class="feather icon-edit"></i>
+                      <span class="ms-2">Edit</span>
+                    </button>
+                    <button *ngIf="action === 'Delete'" (click)="onDelete(idx)" mat-menu-item>
+                      <i class="feather icon-trash"></i>
+                      <span class="ms-2">Delete</span>
+                    </button>
+                  </ng-container>
+                </mat-menu>
+              </td>
+            </tr>
+            <tr *ngIf="row['kycRemarks'] && type === 'my_vehicle'">
+              <th [attr.colspan]="columns.length+1" class="pt-0 width-500">
+                <p class="mb-0">
+                  <span class="fw-bold">Note:- </span>
+                  <span class="text-red">{{row['kycRemarks']}}</span>
+                </p>
+              </th>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>

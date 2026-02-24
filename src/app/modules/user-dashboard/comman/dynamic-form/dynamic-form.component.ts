@@ -232,27 +232,27 @@ export class DynamicFormComponent {
         console.log("UploadDocument >>>>", this.documentList);
 
         if (this.isEditInfo && this.singleDetailInfo.kycMandatoryDocuments) {
-          // this.documentList = this.documentList.map((doc: any) => {
-          //   const matched = this.singleDetailInfo.kycMandatoryDocuments.find((kyc: any) => Number(kyc.documentTypeId) === Number(doc.ID));
-          //   return {
-          //     ...doc,
-          //     documentPath: matched ? matched.documentPath : null,
-          //     isEdit: matched ? matched.isEdit : false
-          //   };
-          // });
-
-          // Can update only if document uplaoded while KYC
-          const kycIds = this.singleDetailInfo.kycMandatoryDocuments.map((x: any) => Number(x.documentTypeId));
-          this.documentList = this.documentList.filter((docs: any) => kycIds.includes(Number(docs.ID))).map((doc: any) => {
+          this.documentList = this.documentList.map((doc: any) => {
             const matched = this.singleDetailInfo.kycMandatoryDocuments.find((kyc: any) => Number(kyc.documentTypeId) === Number(doc.ID));
             return {
               ...doc,
               kycSaved: matched,
-              documentPath: matched?.documentPath ?? null,
-              isEdit: matched?.isEdit ?? false
+              documentPath: matched ? matched.documentPath : null,
+              isEdit: matched ? matched.isEdit : false
             };
           });
 
+          // Can update only if document uplaoded while KYC
+          // const kycIds = this.singleDetailInfo.kycMandatoryDocuments.map((x: any) => Number(x.documentTypeId));
+          // this.documentList = this.documentList.filter((docs: any) => kycIds.includes(Number(docs.ID))).map((doc: any) => {
+          //   const matched = this.singleDetailInfo.kycMandatoryDocuments.find((kyc: any) => Number(kyc.documentTypeId) === Number(doc.ID));
+          //   return {
+          //     ...doc,
+          //     kycSaved: matched,
+          //     documentPath: matched?.documentPath ?? null,
+          //     isEdit: matched?.isEdit ?? false
+          //   };
+          // });
         }
 
 
@@ -1979,7 +1979,7 @@ export class DynamicFormComponent {
             documentTypeId: doc.ID,
             userId: this.gs.loggedInUserInfo.userId,
             documentPath: doc.documentPath,
-            isEdit: false,
+            isEdit: false
           };
         });
       }
@@ -3145,21 +3145,61 @@ export class DynamicFormComponent {
 
   // updateKycUploadedDocuments
   async updateKycUploadedDocuments(section: any) {
-    let Body = this.documentList.map((doc: any) => {
+    const rk: any = {
+      'driver': {
+        riskId: this.singleDetailInfo?.driverInfo?.driverId,
+        riskType: "Driver"
+      },
+      'individualCarOwner': {
+        riskId: 0,
+        riskType: "Driver"
+      },
+      'vehicleUpload': {
+        riskId: this.singleDetailInfo?.vehicleInfo?.vehicleId,
+        riskType: "Vehicle"
+      },
+      'fleetOwner': {
+        riskId: this.singleDetailInfo?.companyDetails?.fleetCompanyId,
+        riskType: "Fleet"
+      },
+    }
+
+    const uploadedDocs = this.documentList.filter((doc: any) =>
+      doc.documentPath &&
+      doc.documentPath !== null &&
+      doc.documentPath !== ''
+    );
+
+    let Body = uploadedDocs.map((doc: any) => {
       return {
-        id: doc?.kycSaved?.id,
+        id: doc?.kycSaved?.id || 0,
         documentTypeName: doc.Description,
-        documentTypeId: doc?.kycSaved?.documentTypeId,
+        documentTypeId: doc.ID,
         userId: this.gs.loggedInUserInfo.userId,
         documentPath: doc.documentPath,
-        isEdit: doc.isEdit,
+        isEdit: doc?.kycSaved?.id ? doc.isEdit : false,
+        riskId: rk[this.formType]?.riskId,
+        riskType: rk[this.formType]?.riskType,
       };
     });
+
+    console.log("Body >>>", Body);
 
     this.gs.isSpinnerShow = true;
     this.profileService.UpdateKycUploadedDocuments(Body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
+        // JSON.parse(res.responseData)
+        const parsed = JSON.parse(res.responseData || '[]');
+        parsed.forEach((savedDoc: any) => {
+          const match = this.documentList.find((doc: any) =>
+            Number(doc.ID) === Number(savedDoc.documentTypeId)
+          );
+          if (match) {
+            if (!match.kycSaved) match.kycSaved = {};
+            match.kycSaved.id = savedDoc.id;
+          }
+        });
         this.toast.successToastr(res.message);
       } else {
         this.toast.errorToastr(res.message);

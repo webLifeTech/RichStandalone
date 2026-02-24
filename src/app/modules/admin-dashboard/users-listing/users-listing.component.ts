@@ -100,6 +100,7 @@ export class UsersListingComponent {
       "startDate": startDate,
       "endDate": endDate,
       "type": this.selectedFilter,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
     }
     this.gs.isSpinnerShow = true;
     this.adminService.GetAllUsers(body).subscribe((response: any) => {
@@ -239,6 +240,7 @@ export class UsersListingComponent {
       "startDate": startDate,
       "endDate": endDate,
       "type": this.selectedFilter,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
     }
     this.excelExport.exportToExcelPost(body, 'ExportAllUsersToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

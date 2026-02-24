@@ -71,7 +71,7 @@ export class BookingChecklistComponent {
   ) {
     this.inspectionForm = this.bf.group({
       "inspectorName": [null, Validators.required],
-      "licensePlateNumber": ["", Validators.required],
+      "licensePlateNumber": [""],
       "vinNumber": ["", Validators.required],
       "odometerReading": ["", Validators.required],
     })

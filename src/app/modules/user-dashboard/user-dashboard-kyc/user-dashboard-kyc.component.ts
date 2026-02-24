@@ -198,12 +198,16 @@ export class UserDashboardKycComponent {
     ]
   };
 
+  kycStatus: any = 0;
+  kycMassage: any = "";
+
   // Driver List Columns and Data
   driverColumns = [
     { header: 'Last name', fieldObject: null, field: 'lastName' },
     { header: 'License Number', fieldObject: null, field: 'driverLicenseNumber' },
     { header: 'License effective date', fieldObject: null, field: 'driverLicenseEffectiveDate' },
     { header: 'License expiration date', fieldObject: null, field: 'driverLicenseExpirationDate' },
+    { header: 'KYC Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
   ];
 
   fleetOwnerColumns = [
@@ -211,6 +215,7 @@ export class UserDashboardKycComponent {
     { header: 'License Number', fieldObject: null, field: 'driverLicNum' },
     { header: 'License effective date', fieldObject: null, field: 'driverLicenceEffDate' },
     { header: 'License expiration date', fieldObject: null, field: 'driverLicenceExpDate' },
+    { header: 'KYC Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
   ];
 
   // Vehicle List Columns and Data
@@ -218,7 +223,8 @@ export class UserDashboardKycComponent {
     { header: 'VIN Number', fieldObject: null, field: 'vinNumber' },
     { header: 'Fuel Type', fieldObject: null, field: 'fuelType' },
     { header: 'Territory Code', fieldObject: null, field: 'territoryCode' },
-    { header: 'KYV Status', fieldObject: null, field: 'kycStatus' },
+    { header: 'KYV Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
+    // { header: 'Status Remark', fieldObject: null, field: 'kycRemarks' },
   ];
 
   // Vehicle List Columns and Data
@@ -335,12 +341,33 @@ export class UserDashboardKycComponent {
         "Fleet owner": "companykyc",
         "Individual car owner": "driverkyc",
         "Driver with owned car": "driverkyc",
+        "Vendor": "providerkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
+      this.kycStatus = response[type[response.risktype]]
+      this.kycMassage = this.getKycMessage(response[type[response.risktype]])
       this.nextStep(from);
       this.updateSteps()
     })
   }
+
+  getKycMessage(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Your KYC verification is under review.';
+      case 2:
+        return 'Your KYC has been approved.';
+      case 3:
+        return 'Your KYC verification was rejected';
+      case 4:
+        return 'Action required: Please update your documents and resubmit for verification.';
+      case 5:
+        return 'Your KYC verification is successfully completed.';
+      default:
+        return '';
+    }
+  }
+
 
   changeKycTab(tab: any) {
     console.log("this.isFormEdit >>>>>", this.isFormEdit);
@@ -471,7 +498,7 @@ export class UserDashboardKycComponent {
         this.gs.isLicenseVerified = true;
         this.isLoadVendorDetail = true;
         response.phoneNumber = response.contactInfo.phoneNumbers[0].phoneNumber;
-        this.gridInfoData = [response];
+        this.driverInfoData = [response];
       }
     })
   }

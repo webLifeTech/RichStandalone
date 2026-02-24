@@ -6,6 +6,7 @@ import { GlobalService } from '../../../../../shared/services/global.service';
 import { ProfileService } from '../../../../../shared/services/profile.service';
 import { ConfirmationModalComponent } from '../../../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { KycDeclineRevertModalComponent } from '../../../../../shared/components/comman/modal/kyc-decline-revert-modal/kyc-decline-revert-modal.component';
+import { ToastService } from '../../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-dynamic-info-modal',
@@ -3566,6 +3567,7 @@ export class DynamicInfoModalComponent {
     public gs: GlobalService,
     private profileService: ProfileService,
     private datePipe: DatePipe,
+    private toast: ToastService,
   ) {
   }
 
@@ -3602,18 +3604,22 @@ export class DynamicInfoModalComponent {
       "clientID": null,
       "stateCode": this.viewInfoDetails.driveInCity || "42",
       "languageId": 1,
-      "roleName": this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
+      "roleName": this.purpose == 'approval' ? this.kycForm.roleId : this.gs.loggedInUserInfo.roleName,// You can change this role from above role id
       "countryId": 230,
       "transactionId": 2,
       "formName": this.kycForm.formName,//THis is name you have send form names
       "menuId": this.kycForm.menuId || 27
     }
 
+    if (this.purpose == 'approval') {
+      delete body.menuId;
+    }
+
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       console.log("aaaaaaaaaaaa >>>>>>>>", response);
-      if (this.purpose == 'approval') {
-        response = this.formType == 'my_vehicle' ? this.tempVehicle : this.temp;
-      }
+      // if (this.purpose == 'approval') {
+      //   response = this.formType == 'my_vehicle' ? this.tempVehicle : this.temp;
+      // }
       const groupedSections = this.groupBy(response, 'sectionID');
 
       Object.keys(groupedSections).forEach((sectionID, index) => {
@@ -3846,28 +3852,60 @@ export class DynamicInfoModalComponent {
     modalRef.componentInstance.title = "Are you sure you want to Approve?";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        this.onConfirm.emit({
-          status: "Approved"
-        });
+        this.updateKycVerificationStatus(2);
+        // this.onConfirm.emit({
+        //   status: "Approved"
+        // });
       }
     }, () => { });
     return;
   }
 
-  approveDeclineRevert(type: any) {
+  approveDeclineRevert(typeCode: any) {
     const modalRef = this.modalService.open(KycDeclineRevertModalComponent, {
       centered: true,
     });
+    const type = typeCode == 3 ? 'Decline' : 'Revert Back';
     modalRef.componentInstance.mainTitle = type;
     modalRef.componentInstance.title = `Are you sure you want to ${type}?`;
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
-        this.onConfirm.emit({
-          status: type,
-          reason: res.reason
-        });
+        // this.onConfirm.emit({
+        //   status: type,
+        //   reason: res.reason
+        // });
+        this.updateKycVerificationStatus(typeCode, res.reason);
       }
     }, () => { });
     return;
+  }
+
+  updateKycVerificationStatus(status: any, reason?: any) {
+    const body = {
+      "userId": this.kycForm.userId,
+      "riskId": this.kycForm.riskId,
+      "riskType": this.kycForm.riskType,
+      "status": status,
+      "remarks": reason || "",
+      "modifiedBy": this.gs.loggedInUserInfo.userId
+    }
+    console.log("body >>>", body);
+
+    // return;
+    this.gs.isSpinnerShow = true;
+    this.profileService.UpdateKycVerificationStatus(body).subscribe((response: any) => {
+      console.log('UpdateKycVerificationStatus >>>', response);
+
+      this.gs.isSpinnerShow = false;
+      if (response && response.statusCode == "200") {
+        this.toast.successToastr(response.message);
+        this.onConfirm.emit(true);
+      } else {
+        this.toast.errorToastr(response.message);
+      }
+    }, (error) => {
+      this.toast.errorToastr(error.error.message);
+      this.gs.isSpinnerShow = false;
+    });
   }
 }

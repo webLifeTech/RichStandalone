@@ -649,4 +649,23 @@ export class ProfileService {
       })
     );
   }
+
+  // COMMON -> GetUserKycOverviewDetails
+  public GetUserKycOverviewDetails(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId).set('userType', dataParams.userType);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetUserKycOverviewDetails', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> UpdateKycVerificationStatus
+  public UpdateKycVerificationStatus(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateKycVerificationStatus`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

@@ -42,7 +42,7 @@
         </div>
       </div>
     </a>
-    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'user' && gs.loggedInUserInfo.role !== 'Vendor' && gs.loggedInUserInfo.role !== 'Accountant'"
+    <a *ngIf="gs.loggedInUserInfo.role !== 'admin' && gs.loggedInUserInfo.role !== 'user' && gs.loggedInUserInfo.role !== 'Vendor' && gs.loggedInUserInfo.role !== 'Accountant' && gs.loggedInUserInfo.role !== 'helpdesk'"
       class="dropdown-item" (click)="goConfiguration()">
       <img src="assets/images/icon/dashboard/booking-icon.svg" width="24" alt="Settings" />
       Cars Status

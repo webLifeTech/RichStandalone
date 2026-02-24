@@ -165,7 +165,7 @@ export class ExcelExportService {
     saveAs(new Blob([buffer]), `${fileName}.xlsx`);
   }
 
-  async exportToExcelWithNested(data: any[], fileName: string, title: string): Promise<void> {
+  async exportToExcelWithNested(data: any[], fileName: string, title: string, columns: { header: string; key: string }[],): Promise<void> {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Vehicles');
     let currentRow = 2;
@@ -177,16 +177,17 @@ export class ExcelExportService {
     }
 
     // Column Headers for Vehicles
-    const headers = [
-      'SL',
-      'Vin Number',
-      'Car Name',
-      'Owner Name',
-      'Plate Number',
-      'Per Day Price',
-      'Vehicle Status',
-      'Status'
-    ];
+    // const headers = [
+    //   'SL',
+    //   'Vin Number',
+    //   'Car Name',
+    //   'Owner Name',
+    //   'Plate Number',
+    //   'Per Day Price',
+    //   'Vehicle Status',
+    //   'Status'
+    // ];
+    const headers = columns.map(c => c.header);
 
     // Title Row
     const titleRow = worksheet.addRow([title]);
@@ -225,16 +226,21 @@ export class ExcelExportService {
 
       // Vehicle Rows
       owner.allVehicles.forEach((vehicle: any, idx: any) => {
-        const row = worksheet.addRow([
-          idx + 1,
-          vehicle.vin || '-',
-          vehicle.carName || '-',
-          vehicle.ownerName || '-',
-          vehicle.plateNumber || '-',
-          vehicle.perDayPrice || '-',
-          vehicle.vehicleStatus || '-',
-          vehicle.status || '-',
-        ]);
+        const rowData = columns.map(col => {
+          if (col.key === 'sl') return idx + 1;
+          return vehicle?.[col.key] ?? '-';
+        });
+        const row = worksheet.addRow(rowData);
+        // const row = worksheet.addRow([
+        //   idx + 1,
+        //   vehicle.vin || '-',
+        //   vehicle.carName || '-',
+        //   vehicle.ownerName || '-',
+        //   vehicle.plateNumber || '-',
+        //   vehicle.perDayPrice || '-',
+        //   vehicle.vehicleStatus || '-',
+        //   vehicle.status || '-',
+        // ]);
         row.eachCell(cell => {
           cell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
           cell.border = border;
