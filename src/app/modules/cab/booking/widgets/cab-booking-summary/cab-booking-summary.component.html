@@ -34,8 +34,7 @@
             <td>
               <input [(ngModel)]="searchObj.pick_time" (ngModelChange)="onChange('pick_time')" name="pick_time"
                 class="form-control datetimepicker-input digits" placeholder="{{ 'Choose Pickup Date' | translate }}"
-                value="02:05 12/13/2019" type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up"
-                [min]="minStartDate">
+                type="text" [owlDateTimeTrigger]="pick_up" [owlDateTime]="pick_up" [min]="minStartDate">
               <owl-date-time #pick_up></owl-date-time>
             </td>
           </tr>
@@ -43,8 +42,8 @@
             <td>{{'booking_summary.return_date' | translate}}</td>
             <td>
               <input [(ngModel)]="searchObj.drop_time" name="drop_time" class="form-control datetimepicker-input digits"
-                placeholder="{{ 'Choose Peturn Date' | translate }}" value="02:05 12/13/2019" type="text"
-                [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [min]="searchObj.pick_time" [disabled]="true">
+                placeholder="{{ 'Choose Peturn Date' | translate }}" type="text" [owlDateTimeTrigger]="drop"
+                [owlDateTime]="drop" [min]="searchObj.pick_time" [disabled]="true">
               <owl-date-time #drop></owl-date-time>
             </td>
           </tr>

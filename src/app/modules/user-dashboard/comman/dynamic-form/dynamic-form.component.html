@@ -570,6 +570,8 @@
                       <tr>
                         <th>{{'userDashboard.kyc.upload_document.name' | translate}}</th>
                         <th class="text-start">{{'userDashboard.kyc.upload_document.upload' | translate}}</th>
+                        <th>{{'Status' | translate}}</th>
+                        <th>{{'Remarks' | translate}}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -600,6 +602,18 @@
                           <!-- <div class="text-danger mt-2 text-start" *ngIf="(!item.documentPath && submitted)">
                             <div>This field is required.</div>
                           </div> -->
+                        </td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                                'text-tangerine': item?.kycSaved?.kycStatusCd == '1',
+                                'text-success-light': item?.kycSaved?.kycStatusCd == '2' || item?.kycSaved?.kycStatusCd == '5',
+                                'text-red': item?.kycSaved?.kycStatusCd == '3'|| item?.kycSaved?.kycStatusCd == '6',
+                                'text-cyan': item?.kycSaved?.kycStatusCd == '4' }">
+                            {{item?.kycSaved?.kycStatus || '-'}}
+                          </span>
+                        </td>
+                        <td>
+                          {{item?.kycSaved?.kycDescription || '-'}}
                         </td>
                       </tr>
                     </tbody>

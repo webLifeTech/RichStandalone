@@ -255,6 +255,7 @@ export class DynamicGridComponent {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         driverId: item.driverId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
@@ -277,6 +278,7 @@ export class DynamicGridComponent {
       const body = {
         userId: item.userId,
         fleetCompanyId: item.fleetCompanyId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
@@ -297,7 +299,8 @@ export class DynamicGridComponent {
     if (this.type === 'my_vehicle') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
-        vehicleId: item.vehicleId
+        vehicleId: item.vehicleId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {

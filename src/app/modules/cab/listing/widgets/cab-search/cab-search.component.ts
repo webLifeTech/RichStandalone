@@ -524,18 +524,13 @@ export class CabSearchComponent {
 
     switch (this.searchObj.timeType) {
       case 'Daily':
-        return true; // Allow all dates
+        return this.minEndDate || date.getTime() >= this.minEndDate.getTime(); // Allow all dates
 
       case 'Weekly':
-        // Allow same weekday in the upcoming weeks (e.g., if pickup is Monday, allow all future Mondays)
         return date.getDay() === pickTime.getDay() && date > pickTime;
-
       case 'Monthly':
-        // Allow same day-of-month in future months (e.g., 5th of each month)
         return date.getDate() === pickTime.getDate() && date > pickTime;
-
       case 'Yearly':
-        // Allow same month and day in future years (e.g., March 15 each year)
         return (
           date.getDate() === pickTime.getDate() &&
           date.getMonth() === pickTime.getMonth() &&
@@ -560,15 +555,13 @@ export class CabSearchComponent {
     //   this.searchObj.drop_time = null;
     // }
 
-    const drop = new Date(this.searchObj.drop_time).getTime();
-    const min = new Date(this.minEndDate).getTime();
+    const drop = new Date(this.searchObj.drop_time); // .getTime()
+    const min = new Date(this.minEndDate); // .getTime()
+    min.setMinutes(min.getMinutes() - 1);
 
-    console.log("drop >>>", drop);
-    console.log("min >>>", min);
-    console.log("drop < min >>>", drop < min);
 
     if (drop < min) {
-      this.toast.errorToastr("Drop time must be at least 1 day + 1 second after pickup time.");
+      this.toast.errorToastr("Drop time must be at least 1 day after pickup time.");
       setTimeout(() => {
         this.searchObj.drop_time = null;
       }, 100);
@@ -582,6 +575,7 @@ export class CabSearchComponent {
 
       const nextDay = new Date(pick);
       nextDay.setDate(pick.getDate() + 1);
+      nextDay.setMinutes(nextDay.getMinutes()); // +1 minute
 
       this.minEndDate = nextDay;
       console.log("this.minEndDate >>>", this.minEndDate);

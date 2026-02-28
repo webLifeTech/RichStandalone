@@ -163,8 +163,8 @@ export class BookingComponent {
       "bookingRefNumber": null,
       "pickupLocation": this.gs.bookingSummaryDetails.location,
       "dropLocation": this.gs.bookingSummaryDetails.location,
-      "pickupDate": this.transformDate(this.gs.bookingSummaryDetails.pickUpTime, 'MM/dd/yyyy HH:mm:ss.SSS'), // this.gs.lastSearch.pick_time
-      "dropDate": this.transformDate(this.gs.bookingSummaryDetails.dropTime, 'MM/dd/yyyy HH:mm:ss.SSS'), // this.gs.lastSearch.drop_time
+      "pickupDate": this.transformDate(this.gs.bookingSummaryDetails.pickUpTime, 'MM/dd/yyyy HH:mm:ss'), // this.gs.lastSearch.pick_time
+      "dropDate": this.transformDate(this.gs.bookingSummaryDetails.dropTime, 'MM/dd/yyyy HH:mm:ss'), // this.gs.lastSearch.drop_time
       "duration": parseInt(this.gs.lastSearch.timeDuration),
       "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
       "discountId": this.gs.bookingSummaryDetails.discountId,

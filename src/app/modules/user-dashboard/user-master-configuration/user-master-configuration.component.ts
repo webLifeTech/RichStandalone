@@ -313,7 +313,8 @@ export class UserMasterConfigurationComponent {
     if (type === 'my_vehicle') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
-        vehicleId: singleDetail.vehicleId
+        vehicleId: singleDetail.vehicleId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {

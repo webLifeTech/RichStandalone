@@ -86,8 +86,8 @@ export class CabBookingComponent {
   getBookingVehicleDetails() {
     let body = {
       "rentType": this.searchObj.timeType || "Daily",
-      "pickUpTime": this.searchObj.pick_time,
-      "dropTime": this.searchObj.drop_time,
+      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yyyy HH:mm:ss'),
+      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yyyy HH:mm:ss'),
       "vehicleId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
       "userId": this.gs.loggedInUserInfo.userId
@@ -111,8 +111,8 @@ export class CabBookingComponent {
   getBookingDriverDetails() {
     let body = {
       "rentType": this.searchObj.timeType || "Daily",
-      "pickUpTime": this.searchObj.pick_time,
-      "dropTime": this.searchObj.drop_time,
+      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yyyy HH:mm:ss'),
+      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yyyy HH:mm:ss'),
       "driverId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
       "userId": this.gs.loggedInUserInfo.userId

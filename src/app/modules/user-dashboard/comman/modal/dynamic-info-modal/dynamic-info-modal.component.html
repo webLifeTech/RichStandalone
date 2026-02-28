@@ -81,15 +81,25 @@
                   <table class="table">
                     <thead class="thead-light">
                       <tr>
-                        <th>{{'userDashboard.kyc.upload_document.name' | translate}}</th>
+                        <th class="text-start">{{'userDashboard.kyc.upload_document.name' | translate}}</th>
                         <th>{{'userDashboard.kyc.upload_document.document' | translate}}</th>
+                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Version' | translate}}</th>
+                        <th>{{'Status' | translate}}</th>
+                        <th>{{'Remarks' | translate}}</th>
+                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Date' | translate}}</th>
+                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Action' | translate}}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let doc of viewInfoDetails.kycMandatoryDocuments; let inx = index">
-                        <td>
+                        <td class="text-start">
                           <div class="table-avatar">
-                            <div class="table-head-name flex-grow-1">
+                            <span
+                              [ngClass]="{ 'badge-light-danger':!doc.isLatest, 'badge-light-secondary': doc.isLatest}"
+                              class="badge">
+                              {{doc.isLatest ? 'Latest' : 'Old'}}
+                            </span>
+                            <div class="table-head-name flex-grow-1 ms-2">
                               {{doc.documentTypeName}}
                             </div>
                           </div>
@@ -97,9 +107,51 @@
                         <td>
                           <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(doc.documentPath)"></i></p>
                         </td>
+                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{doc.version}}
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                                'text-tangerine': doc.kycStatusCd == '1',
+                                'text-success-light': doc.kycStatusCd == '2' || doc.kycStatusCd == '5',
+                                'text-red': doc.kycStatusCd == '3'|| doc.kycStatusCd == '6',
+                                'text-cyan': doc.kycStatusCd == '4' }">
+                            {{doc.kycStatus || '-'}}
+                          </span>
+                        </td>
+                        <td>
+                          {{doc.kycDescription || '-'}}
+                        </td>
+                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                          <div class="table-avatar">
+                            <div class="table-head-name flex-grow-1">
+                              {{doc.createdDate | date : 'MM/dd/yyyy'}}
+                            </div>
+                          </div>
+                        </td>
+                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                          <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'" (click)="approveKyc('SINGLE', doc)"
+                            type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+                            Approve
+                          </button>
+                          <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'"
+                            (click)="approveDeclineRevert(4, 'SINGLE', doc)" type="button"
+                            class="btn btn-theme no-text-transorm mx-2 mb-2">
+                            Revert Back
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
+                  <div *ngIf="!viewInfoDetails.kycMandatoryDocuments?.length" class="col-md-12">
+                    <p class="text-center mt-3">
+                      <b>No records found</b>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -164,13 +216,16 @@
 
       <!-- // for HelpDeskrole -->
       <div *ngIf="purpose == 'approval'" class="col-lg-12 text-center">
-        <button (click)="approveKyc()" type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        <button [disabled]="viewInfoDetails.kycStatusCd == '2'" (click)="approveKyc('ENTIRE')" type="button"
+          class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
           Approve
         </button>
-        <button (click)="approveDeclineRevert(3)" type="button" class="btn btn-solid color4 no-text-transorm mx-2 mb-2">
+        <button (click)="approveDeclineRevert(3, 'ENTIRE')" type="button"
+          class="btn btn-solid color4 no-text-transorm mx-2 mb-2">
           Decline
         </button>
-        <button (click)="approveDeclineRevert(4)" type="button" class="btn btn-theme no-text-transorm mx-2 mb-2">
+        <button (click)="approveDeclineRevert(4, 'ENTIRE')" type="button"
+          class="btn btn-theme no-text-transorm mx-2 mb-2">
           Revert Back
         </button>
         <button (click)="handleCancel()" type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">

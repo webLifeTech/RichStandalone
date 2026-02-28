@@ -9,18 +9,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastService } from '../../../shared/services/toast.service';
 import { GlobalService } from '../../../shared/services/global.service';
-import { CarStatusChangeModalComponent } from '../../../shared/components/comman/modal/my-car-modals/car-status-change-modal/car-status-change-modal.component';
 import { AdminService } from '../../../shared/services/admin.service';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BookingService } from '../../../shared/services/booking.service';
-import { SettingsService } from '../../../shared/services/setting.service';
 import { DynamicInfoModalComponent } from '../comman/modal/dynamic-info-modal/dynamic-info-modal.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ProfileService } from '../../../shared/services/profile.service';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
+import { ViewAllDocumentsModalComponent } from '../../../shared/components/comman/modal/booking-modals/view-alldocuments-modal/view-alldocuments-modal.component';
 
 @Component({
   selector: 'app-users-approval-kyc',
@@ -63,7 +62,7 @@ export class UsersApprovalKycComponent {
   };
   public activeTab = '';
   activeTabName: any = '';
-  sortColumn: any = "";
+  sortColumn: any = "userAccountNumber";
   sortOrder: any = "DESC";
 
   tabs: any = [];
@@ -105,6 +104,7 @@ export class UsersApprovalKycComponent {
     private bookingService: BookingService,
     public profileService: ProfileService,
     private vendorService: VendorServService,
+    private modalService: NgbModal,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("APRVL");
@@ -328,6 +328,7 @@ export class UsersApprovalKycComponent {
       const body = {
         userId: data.userId,
         driverId: data.riskId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
@@ -349,6 +350,7 @@ export class UsersApprovalKycComponent {
       const body = {
         userId: data.userId,
         fleetCompanyId: data.riskId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
         if (response && response.response.statusCode == "200" && response.userId) {
@@ -375,7 +377,8 @@ export class UsersApprovalKycComponent {
     if (data.riskType === 'Vehicle') {
       const body = {
         userId: data.userId,
-        vehicleId: data.riskId
+        vehicleId: data.riskId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
         if (response.response && response.response.statusCode == "200") {
@@ -386,6 +389,14 @@ export class UsersApprovalKycComponent {
         }
       })
     }
+  }
+
+  onViewDocument(item: any) {
+    const modalRef = this.modalService.open(ViewAllDocumentsModalComponent, {
+      size: 'xl'
+    });
+    modalRef.componentInstance.bookingDetails = item;
+    modalRef.componentInstance.type = 'kycDocs';
   }
 
   cancelApproval() {

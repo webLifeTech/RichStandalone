@@ -708,6 +708,7 @@ export class UserDashboardKycComponent {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
         driverId: singleDetail.driverId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
         if (response && response.driveInCity) {
@@ -723,6 +724,7 @@ export class UserDashboardKycComponent {
       const body = {
         userId: singleDetail.userId,
         fleetCompanyId: singleDetail.fleetCompanyId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
@@ -737,7 +739,8 @@ export class UserDashboardKycComponent {
     if (type === 'my_vehicle') {
       const body = {
         userId: this.gs.loggedInUserInfo.userId,
-        vehicleId: singleDetail.vehicleId
+        vehicleId: singleDetail.vehicleId,
+        loginUserId: this.gs.loggedInUserInfo.userId
       }
 
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {

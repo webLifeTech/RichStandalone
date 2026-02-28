@@ -519,6 +519,7 @@ export class DynamicFormComponent {
       this.singleDetailInfo = await this.profileService.GetDriverDetailsByDriverId({
         "userId": this.gs.loggedInUserInfo.userId,
         "driverId": 1,
+        "loginUserId": this.gs.loggedInUserInfo.userId
       }).catch((err: any) => {
         this.toast.errorToastr(err?.error?.message || "Something went wrong");
       })
@@ -552,6 +553,7 @@ export class DynamicFormComponent {
       this.singleDetailInfo = await this.profileService.GetCompanyDetailsByCompanyId({
         "userId": this.gs.loggedInUserInfo.userId,
         "fleetCompanyId": 1,
+        "loginUserId": this.gs.loggedInUserInfo.userId
       });
     }
 
@@ -2782,6 +2784,7 @@ export class DynamicFormComponent {
           const body = {
             userId: this.gs.loggedInUserInfo.userId,
             driverId: this.singleDetailInfo.driverInfo.driverId,
+            loginUserId: this.gs.loggedInUserInfo.userId
           }
           this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
             if (response && response.driveInCity) {
@@ -3015,7 +3018,8 @@ export class DynamicFormComponent {
         this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
         this.profileService.getVehicleDetails({
           userId: this.gs.loggedInUserInfo.userId,
-          vehicleId: this.singleDetailInfo.vehicleInfo.vehicleId
+          vehicleId: this.singleDetailInfo.vehicleInfo.vehicleId,
+          loginUserId: this.gs.loggedInUserInfo.userId
         }).subscribe(async (response: any) => {
           if (response.response && response.response.statusCode == "200") {
             this.singleDetailInfo = response;
@@ -3151,7 +3155,7 @@ export class DynamicFormComponent {
         riskType: "Driver"
       },
       'individualCarOwner': {
-        riskId: 0,
+        riskId: this.singleDetailInfo?.driverInfo?.driverId,
         riskType: "Driver"
       },
       'vehicleUpload': {
@@ -3198,6 +3202,10 @@ export class DynamicFormComponent {
           if (match) {
             if (!match.kycSaved) match.kycSaved = {};
             match.kycSaved.id = savedDoc.id;
+            match.kycSaved.kycStatusCd = savedDoc.kycStatusCd;
+            match.kycSaved.kycStatus = savedDoc.kycStatus;
+            match.kycSaved.kycDescription = savedDoc.kycDescription;
+            match.isEdit = false;
           }
         });
         this.toast.successToastr(res.message);

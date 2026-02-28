@@ -112,7 +112,8 @@ export class ProfileService {
   public getDriverDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-      .set('driverId', dataParams.driverId);
+      .set('driverId', dataParams.driverId)
+      .set('loginUserId', dataParams.loginUserId);
     return this.http.get(this.baseUrl1 + 'TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).pipe(
       map((res: any) => {
         return res;
@@ -287,7 +288,8 @@ export class ProfileService {
   public getVehicleDetails(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-      .set('vehicleId', dataParams.vehicleId);
+      .set('vehicleId', dataParams.vehicleId)
+      .set('loginUserId', dataParams.loginUserId);
     return this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetVehicleDetails', { params }).pipe(
       map((res: any) => {
         return res;
@@ -368,6 +370,7 @@ export class ProfileService {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
       .set('fleetCompanyId', dataParams.fleetCompanyId)
+      .set('loginUserId', dataParams.loginUserId)
     return this.http.get(this.baseUrl1 + 'TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).pipe(
       map((res: any) => {
         return res;
@@ -576,7 +579,8 @@ export class ProfileService {
   public GetDriverDetailsByDriverId(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-      .set('driverId', dataParams.driverId);
+      .set('driverId', dataParams.driverId)
+      .set('loginUserId', dataParams.loginUserId);
 
     return new Promise((resolve, reject) => {
       this.http.get(this.baseUrl1 + 'TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).subscribe((result) => {
@@ -585,25 +589,14 @@ export class ProfileService {
         reject(err)
       })
     })
-
-    // return this.http.get(this.baseUrl1 + 'TLHUB/DriverKYC/GetDriverDetailsByDriverId', { params }).pipe(
-    //   map((res: any) => {
-    //     return res;
-    //   })
-    // );
   }
 
   // CompanyKYC -> GetCompanyDetailsByCompanyId
   public GetCompanyDetailsByCompanyId(dataParams: any) {
     const params = new HttpParams()
       .set('userId', dataParams.userId)
-      .set('fleetCompanyId', dataParams.fleetCompanyId);
-
-    // return this.http.get(this.baseUrl1 + 'TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).pipe(
-    //   map((res: any) => {
-    //     return res;
-    //   })
-    // );
+      .set('fleetCompanyId', dataParams.fleetCompanyId)
+      .set('loginUserId', dataParams.loginUserId);
 
     return new Promise((resolve, reject) => {
       this.http.get(this.baseUrl1 + 'TLHUB/CompanyKYC/GetCompanyDetailsByCompanyId', { params }).subscribe((result) => {
@@ -663,6 +656,20 @@ export class ProfileService {
   // COMMON -> UpdateKycVerificationStatus
   public UpdateKycVerificationStatus(data: any) {
     return this.http.post(this.baseUrl1 + `TLHUB/COMMON/UpdateKycVerificationStatus`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> GetUserDocuments
+  public GetUserDocuments(dataParams: any) {
+    const params = new HttpParams()
+      .set('loginUserId', dataParams.loginUserId)
+      .set('userId', dataParams.userId)
+      .set('riskId', dataParams.riskId)
+      .set('riskType', dataParams.riskType);
+    return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetUserDocuments', { params }).pipe(
       map((res: any) => {
         return res;
       })

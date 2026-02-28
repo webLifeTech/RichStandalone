@@ -327,18 +327,16 @@ export class CabBookingSummaryComponent {
 
       switch (this.searchObj.timeType) {
         case "Daily":
-          this.searchObj.timeDuration = differenceInDays(dropTime, pickTime);
-          console.log("this.searchObj.timeDuration >>>>>", this.searchObj.timeDuration);
-
+          this.searchObj.timeDuration = differenceInDays(dropTime, pickTime) || 1;
           break;
         case "Weekly":
-          this.searchObj.timeDuration = differenceInWeeks(dropTime, pickTime);
+          this.searchObj.timeDuration = differenceInWeeks(dropTime, pickTime) || 1;
           break;
         case "Monthly":
-          this.searchObj.timeDuration = differenceInMonths(dropTime, pickTime);
+          this.searchObj.timeDuration = differenceInMonths(dropTime, pickTime) || 1;
           break;
         case "Yearly":
-          this.searchObj.timeDuration = differenceInYears(dropTime, pickTime);
+          this.searchObj.timeDuration = differenceInYears(dropTime, pickTime) || 1;
           break;
       }
 
@@ -422,8 +420,8 @@ export class CabBookingSummaryComponent {
     let body = {
       "rentType": this.searchObj.timeType,
       "duration": parseInt(this.searchObj.timeDuration),
-      "pickUpTime": this.localSelectedDate(this.searchObj.pick_time),
-      "dropTime": this.localSelectedDate(this.searchObj.drop_time),
+      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yyyy HH:mm:ss'),
+      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yyyy HH:mm:ss'),
       "vehicleId": this.searchObj.vehicleId,
       "summaryId": this.searchObj.summaryId,
       "couponCode": this.appliedCouponCode?.trim() || "",
@@ -439,8 +437,8 @@ export class CabBookingSummaryComponent {
       } else {
         this.gs.isSpinnerShow = false;
         this.gs.bookingSummaryDetails.isRestrict = true;
-        this.gs.bookingSummaryDetails.restrictMessage = res.responseResultDtos.message;
-        this.toast.errorToastr(res.responseResultDtos.message);
+        this.gs.bookingSummaryDetails.restrictMessage = res?.response?.message;
+        this.toast.errorToastr(res?.response?.message);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
@@ -467,8 +465,8 @@ export class CabBookingSummaryComponent {
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
       } else {
         this.gs.bookingSummaryDetails.isRestrict = true;
-        this.gs.bookingSummaryDetails.restrictMessage = res.responseResultDtos.message;
-        this.toast.errorToastr(res.responseResultDtos.message);
+        this.gs.bookingSummaryDetails.restrictMessage = res?.response?.message;
+        this.toast.errorToastr(res?.response?.message);
         this.gs.isSpinnerShow = false;
       }
     }, (err: any) => {
@@ -561,4 +559,5 @@ export class CabBookingSummaryComponent {
     const d = new Date(utcString);
     return this.datePipe.transform(d, 'MM/dd/yyyy HH:mm:ss');
   }
+
 }

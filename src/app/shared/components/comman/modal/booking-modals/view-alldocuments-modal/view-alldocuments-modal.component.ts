@@ -5,6 +5,7 @@ import { GlobalService } from '../../../../../services/global.service';
 import { BookingService } from '../../../../../services/booking.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ProfileService } from '../../../../../services/profile.service';
 
 @Component({
   selector: 'app-view-alldocuments-modal',
@@ -21,19 +22,25 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class ViewAllDocumentsModalComponent {
   @Input() bookingDetails: any = {};
+  @Input() type: any = {};
   documentsList: any = [];
 
   constructor(
     private modalService: NgbModal,
     public gs: GlobalService,
     private bookingService: BookingService,
+    private profileService: ProfileService,
   ) { }
 
   ngOnInit() {
-    this.getAllDocuments();
+    if (this.type == 'kycDocs') {
+      this.getAllUserDocuments();
+    } else {
+      this.getAllBookingDocuments();
+    }
   }
 
-  getAllDocuments() {
+  getAllBookingDocuments() {
     const body = {
       "bookingId": this.bookingDetails.bookingId,
       "userId": this.gs.loggedInUserInfo.userId,
@@ -46,6 +53,24 @@ export class ViewAllDocumentsModalComponent {
       console.log("GetBookingAllDocuments >>>>>", res);
       this.gs.isSpinnerShow = false;
       this.documentsList = res['bookingDocuments'];
+    }, (error: any) => {
+      this.gs.isSpinnerShow = false;
+    });
+  }
+
+  getAllUserDocuments() {
+    const body = {
+      "loginUserId": this.gs.loggedInUserInfo.userId,
+      "userId": this.bookingDetails.userId,
+      "riskId": this.bookingDetails.riskId,
+      "riskType": this.bookingDetails.riskType,
+    }
+
+    this.gs.isSpinnerShow = true;
+    this.profileService.GetUserDocuments(body).subscribe((res: any) => {
+      console.log("GetUserDocuments >>>>>", JSON.parse(res));
+      this.gs.isSpinnerShow = false;
+      this.documentsList = JSON.parse(res);
     }, (error: any) => {
       this.gs.isSpinnerShow = false;
     });

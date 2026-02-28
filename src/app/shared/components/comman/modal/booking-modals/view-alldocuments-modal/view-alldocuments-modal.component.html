@@ -11,7 +11,7 @@
           </div>
           <div class="row px-3 pb-3">
             <div class="col-md-12">
-              <div class="table-responsive dashboard-table">
+              <div *ngIf="type !== 'kycDocs'" class="table-responsive dashboard-table">
                 <table class="table">
                   <thead class="thead-light">
                     <tr>
@@ -47,68 +47,53 @@
                   </tbody>
                 </table>
               </div>
+
+              <div *ngIf="type === 'kycDocs'" class="table-responsive dashboard-table">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th class="text-center">SL</th>
+                      <th>AC Number</th>
+                      <th>Document Name</th>
+                      <th>User Name</th>
+                      <th>Uploaded Date</th>
+                      <th class="text-center sticky-action">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of documentsList; let idx = index">
+                      <td class="text-center">{{idx+1}}</td>
+                      <td>
+                        {{item.userAccountNumber || '-'}}
+                      </td>
+                      <td class="text-start">
+                        <div class="table-avatar">
+                          <div class="table-head-name flex-grow-1">
+                            {{item.documentType}}
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-start">
+                        {{item.userName || '-'}}
+                      </td>
+                      <td>
+                        {{item.createdDate | date : 'MM/dd/yyyy'}}
+                      </td>
+                      <td class="text-center">
+                        <button (click)="gs.viewDocumentFile(item.documentPath)"
+                          class="btn btn-theme no-text-transorm ms-2">
+                          <i class="feather icon-file-text me-2"></i> <span>View</span>
+                        </button>
+                        <button (click)="downloadDoc(item.id)" class="btn btn-solid color3 no-text-transorm ms-2">
+                          <i class="feather icon-download"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <!-- <div class="row container mt-3">
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Reference Number</h6>
-                <p>{{bookingDetails.bookingReferenceNumber}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Status Remarks</h6>
-                <p>
-                  {{bookingDetails.bookingStatusRemarks}}
-                </p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Status</h6>
-                <span class="badge" [ngClass]="{
-                  'badge-light-secondary': bookingDetails.bookingStatus === 'Confirmed',
-                  'badge-light-warning': bookingDetails.bookingStatus === 'Inprogress' || bookingDetails.bookingStatus ===  'Pending Request',
-                  'badge-light-danger': bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingStatus === 'Refund Completed' || bookingDetails.bookingStatus === 'Refund Rejected',
-                  'badge-light-success': bookingDetails.bookingStatus === 'Completed'}
-                ">
-                  {{bookingDetails.bookingStatus}}
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-12 col-md-12">
-              <div class="booking-view">
-                <h6>Location</h6>
-                <p>{{bookingDetails.location}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Booking Date</h6>
-                <p>{{bookingDetails.bookingDate}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Start Date</h6>
-                <p>{{bookingDetails.startDate}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>End Date</h6>
-                <p>{{bookingDetails.endDate}}</p>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="booking-view">
-                <h6>Duration</h6>
-                <p>{{bookingDetails.duration}}</p>
-              </div>
-            </div>
-
-          </div> -->
         </div>
       </div>
     </div>

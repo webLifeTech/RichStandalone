@@ -13,7 +13,7 @@ import { ImportantNoticeDialogComponent } from '../../../dialoge/important-notic
 import { EmailQuoteDialogComponent } from '../../../dialoge/email-quote-dialog/email-quote-dialog.component';
 import { GlobalService } from '../../../../services/global.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CurrencySymbolPipe } from '../../../../pipe/currency.pipe';
 import { NoDataComponent } from '../../../ui/no-data/no-data.component';
 import { PaginationComponent } from '../../../ui/pagination/pagination.component';
@@ -46,6 +46,7 @@ import { differenceInDays, differenceInMonths, differenceInWeeks, differenceInYe
     NgbPopoverModule,
     ApexchartsComponent
   ],
+  providers: [DatePipe],
   templateUrl: './cab-list-details.component.html',
   styleUrl: './cab-list-details.component.scss'
 })
@@ -113,6 +114,7 @@ export class CabListDetailsComponent {
     private nftService: NftService,
     private dialog: MatDialog,
     private favoriteService: FavoriteService,
+    private datePipe: DatePipe,
   ) {
 
     this.route.queryParams.subscribe((params) => {
@@ -473,8 +475,8 @@ export class CabListDetailsComponent {
     let body = {
       "rentType": this.searchObj.timeType,
       "duration": this.searchObj.timeDuration,
-      "pickUpTime": this.searchObj.pick_time,
-      "dropTime": this.searchObj.drop_time,
+      "pickUpTime": this.transformDate(this.searchObj.pick_time, 'MM/dd/yyyy HH:mm:ss'),
+      "dropTime": this.transformDate(this.searchObj.drop_time, 'MM/dd/yyyy HH:mm:ss'),
       "vehicleId": item.vehicleId,
       "summaryId": item.summaryId,
       "couponCode": "",
@@ -504,4 +506,7 @@ export class CabListDetailsComponent {
     })
   }
 
+  transformDate(date: any, format: any) {
+    return this.datePipe.transform(date, format);
+  }
 }

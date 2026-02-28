@@ -348,7 +348,7 @@ export class UserDashboardBookingComponent {
     const todayDate = new Date();
     this.bookingService.GetCarBookingCancellationInfo({
       bookingId: this.singleBookingDetail.bookingId,
-      cancelDate: todayDate.toISOString(),
+      cancelDate: this.transformDate(todayDate, 'MM/dd/yyyy HH:mm:ss'),
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;

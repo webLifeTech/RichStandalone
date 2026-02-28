@@ -220,6 +220,10 @@
                           class="btn btn-theme no-text-transorm ms-2">
                           <i class="feather icon-file-text me-2"></i> <span>Check KYC Details</span>
                         </button>
+                        <button *ngIf="activeTab !== 'VENDOR'" (click)="onViewDocument(data)" [disabled]="!data.riskId"
+                          class="btn btn-solid color3 no-text-transorm ms-2">
+                          <i class="feather icon-file-text me-2"></i> <span>Documents</span>
+                        </button>
                       </td>
                     </tr>
                   </tbody>
@@ -241,7 +245,7 @@
                   <mat-expansion-panel-header>
                     <mat-panel-title class="justify-content-between me-5">
                       <span>
-                        {{ section.ownerName }} :
+                        AC Number : {{section.userAccountNumber}} - {{ section.ownerName }} :
                         <span
                           [ngClass]="{'text-green': section.userStatus == 'Active', 'text-red': section.userStatus != 'Active'}">
                           {{ section.userStatus }}
@@ -310,6 +314,10 @@
                               <button (click)="checkKyc(data)" [disabled]="!data.riskId"
                                 class="btn btn-theme no-text-transorm ms-2">
                                 <i class="feather icon-file-text me-2"></i> <span>Check KYV Details</span>
+                              </button>
+                              <button (click)="onViewDocument(data)" [disabled]="!data.riskId"
+                                class="btn btn-solid color3 no-text-transorm ms-2">
+                                <i class="feather icon-file-text me-2"></i> <span>Documents</span>
                               </button>
                             </td>
                           </tr>
