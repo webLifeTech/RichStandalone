@@ -18,6 +18,7 @@ import { RefundApproveRejectModalComponent } from '../../../shared/components/co
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
+import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
 
 @Component({
   selector: 'app-user-cancellation-refund',
@@ -60,6 +61,7 @@ export class UserCancellationRefundComponent {
     private datePipe: DatePipe,
     private excelExport: ExcelExportService,
     public roleService: RolePermissionService,
+    private paymentService: PaymentService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
     this.roleService.getButtons("PAYM");
@@ -116,6 +118,23 @@ export class UserCancellationRefundComponent {
 
     }, () => {
     });
+  }
+
+  onViewInvoice(item: any) {
+    const body = {
+      "bookingRefNo": item.bookingReferenceNumber,
+      "loginUserId": this.gs.loggedInUserInfo.userId
+    }
+    this.gs.isSpinnerShow = true;
+    this.paymentService.GetBookingByBookingRefNo(body).subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      if (response.response && response.response.statusCode == "200") {
+        const modalRef = this.modalService.open(InvoiceModalComponent, {
+          size: 'xl'
+        });
+        modalRef.componentInstance.invoiceDetails = response;
+      }
+    })
   }
 
   changeBookTab(row: any) {

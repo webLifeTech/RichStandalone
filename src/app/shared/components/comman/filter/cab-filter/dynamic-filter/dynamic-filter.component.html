@@ -18,6 +18,19 @@
             option.name | translate }}</label>
           <label class="form-check-count" for="{{ option.checkID }}">{{ option.count || 0 }}</label>
         </div>
+
+        <!-- CHILD SUB FILTER -->
+        <div *ngIf="option.subfilters?.length && checked(option.value)" class="ms-4 mt-1">
+          <div class="form-check collection-filter-checkbox sub-filter" *ngFor="let sub of option.subfilters">
+            <input type="checkbox" class="form-check-input" [id]="option.checkID + '_' + sub.value" [value]="sub.value"
+              [checked]="checkedSub(filterOBj.key, sub.value)" (change)="applySubFilter($event, filterOBj.key)"
+              [disabled]="!sub.count" />
+            <label class="form-check-label" [for]="option.checkID + '_' + sub.value">
+              {{ sub.name }}
+            </label>
+            <label class="form-check-count">{{ sub.count || 0 }}</label>
+          </div>
+        </div>
       </ng-container>
       <!-- @for(option of filterOBj.value.FilterList; track option){
       } -->

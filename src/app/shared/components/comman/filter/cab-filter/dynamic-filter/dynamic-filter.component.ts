@@ -22,6 +22,7 @@ export class DynamicFilterComponent {
   public isOpenOption: boolean = true;
   public selectedCarOption: any = {};
   @Input() filterOBj: any = {};
+  public selectedSubOptions: any = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +57,31 @@ export class DynamicFilterComponent {
       queryParamsHandling: 'merge', // preserve the existing query params in the route
       skipLocationChange: false  // do trigger navigation
     });
+  }
+
+  applySubFilter(event: Event, key: string) {
+    const value = (event.target as HTMLInputElement).value;
+    if (!this.selectedSubOptions[key]) this.selectedSubOptions[key] = [];
+    const index = this.selectedSubOptions[key].indexOf(value);
+    if ((event.target as HTMLInputElement).checked) {
+      this.selectedSubOptions[key].push(value);
+    } else {
+      this.selectedSubOptions[key].splice(index, 1);
+    }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { // key + "_SUB"
+        ['FLEETCOMPANY']: this.selectedSubOptions[key].length
+          ? this.selectedSubOptions[key].join(",")
+          : null,
+        page: 1
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  checkedSub(key: string, value: string) {
+    return this.selectedSubOptions[key]?.includes(value);
   }
 
   // check if the item are selected

@@ -33,6 +33,7 @@ export class CabCardViewComponent {
   @Input() from: string = "";
   @Input() singleItem: any = {};
   @Input() couponDetails: any = {};
+  @Input() searchFilter: any = {};
   @Output() onCheckAvailability = new EventEmitter<any>();
 
   public params: Params;
@@ -128,8 +129,8 @@ export class CabCardViewComponent {
     tomorrow.setDate(tomorrow.getDate() + 1);
     searchObj.type = "driver";
     searchObj.timeType = "Daily";
-    searchObj.pick_time = today.toISOString();
-    searchObj.drop_time = tomorrow.toISOString();
+    searchObj.pick_time = this.searchFilter.pickUpTime; // form wishlist today.toISOString()
+    searchObj.drop_time = this.searchFilter.dropTime; // form wishlist tomorrow.toISOString()
     searchObj.same_location = details.location;
     localStorage.setItem('lastSearch', JSON.stringify(searchObj));
     this.gs.lastSearch = searchObj;

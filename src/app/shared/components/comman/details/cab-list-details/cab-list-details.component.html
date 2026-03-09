@@ -296,11 +296,11 @@
               </div>
             </div>
             <div class="col-md-6 end">
-              <a *ngIf="!details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+              <a *ngIf="!details.favorite" class="btn btn-subscribe btn1 no-text-transorm"
                 (click)="addRemoveWishlist(details)">
                 <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
               </a>
-              <a *ngIf="details.isAddWishlist" class="btn btn-subscribe btn1 no-text-transorm"
+              <a *ngIf="details.favorite" class="btn btn-subscribe btn1 no-text-transorm"
                 (click)="addRemoveWishlist(details)">
                 <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
               </a>

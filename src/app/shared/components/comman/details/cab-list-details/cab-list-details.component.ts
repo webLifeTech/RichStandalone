@@ -235,8 +235,10 @@ export class CabListDetailsComponent {
       this.favoriteService.insertUpdateFavourite(Body).subscribe((res: any) => {
         this.gs.isSpinnerShow = false;
         if (Body.isActive) {
+          item.favorite = true;
           this.toast.successToastr("Added to your Favourite");
         } else {
+          item.favorite = false;
           this.toast.successToastr("Removed from your Favourite");
         }
         item.isAddWishlist = !item.isAddWishlist;

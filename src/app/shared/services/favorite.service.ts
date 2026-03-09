@@ -14,11 +14,17 @@ export class FavoriteService {
   constructor(private http: HttpClient) { }
 
   // Favorite -> getAllFavourite
-  public getAllFavourite(dataParams: any) {
-    const params = new HttpParams()
-      .set('userId', dataParams.userId)
-      .set('riskType', dataParams.riskType)
-    return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetAllFavourite', { params }).pipe(
+  public getAllFavourite(data: any) {
+    // const params = new HttpParams()
+    //   .set('userId', dataParams.userId)
+    //   .set('riskType', dataParams.riskType)
+    // return this.http.get(this.baseUrl1 + 'TLHUB/Favorite/GetAllFavourite', { params }).pipe(
+    //   map((res: any) => {
+    //     return res;
+    //   })
+    // );
+
+    return this.http.post(this.baseUrl1 + 'TLHUB/Favorite/GetAllFavourite', data).pipe(
       map((res: any) => {
         return res;
       })

@@ -166,6 +166,15 @@ export class CabListLeftSidebarComponent {
               }
             }
 
+            this.aggregateFilters = this.aggregateFilters.map((group: any) => ({
+              ...group,
+              filterlist: group.filterlist.map((option: any) => ({
+                ...option,
+                key: "FLEETCOMPANY",
+                subfilters: option.Subfilterlist ? JSON.parse(option.Subfilterlist) : []
+              }))
+            }));
+
             console.log("this.aggregateFilters >>>", this.aggregateFilters);
 
             this.vehicleType = aggFilters['VEHICLETYPE'] ? aggFilters['VEHICLETYPE'].filterlist : [];

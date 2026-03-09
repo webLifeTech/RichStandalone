@@ -155,6 +155,10 @@
                       <i class="feather icon-eye"></i>
                       <span class="ms-2">View</span>
                     </button>
+                    <button (click)="onViewInvoice(data)" type="button" mat-menu-item>
+                      <i class="feather icon-eye"></i>
+                      <span class="ms-2">View Invoice</span>
+                    </button>
                     <ng-container *ngFor="let item of statusList">
                       <button *ngIf="item.id == 2 || item.id == 3" (click)="changeStatus(data,item)" type="button"
                         mat-menu-item>

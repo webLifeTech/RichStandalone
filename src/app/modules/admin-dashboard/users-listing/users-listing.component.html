@@ -185,9 +185,11 @@
                     </td>
                     <td *ngIf="activeTab != 'VENDOR'">
                       <span class="badge" [ngClass]="{
-                          'badge-light-danger': data.kycStatus === 'KYC Pending',
-                          'badge-light-success': data.kycStatus === 'Completed'}">
-                        {{data.kycStatus}}
+                        'text-tangerine': data.kycStatusCd == '1',
+                        'text-success-light': data.kycStatusCd == '2' || data.kycStatusCd == '5',
+                        'text-red': data.kycStatusCd == '3'|| data.kycStatusCd == '6',
+                        'text-cyan': data.kycStatusCd == '4' }">
+                        {{data.kycStatus || '-'}}
                       </span>
                     </td>
                     <td *ngIf="activeTab == 'VENDOR'" class="text-start">

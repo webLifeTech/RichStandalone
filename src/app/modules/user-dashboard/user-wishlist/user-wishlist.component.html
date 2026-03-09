@@ -21,12 +21,59 @@
         </div>
       </div>
 
+      <div class="row mb-3">
+        <div class="col-lg-12 rental-section">
+          <div class="flight-search">
+            <div class="flight-search-detail position-relative show">
+              <div class="row m-0">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>{{ 'global.pick_up_time' | translate }}</label>
+                    <input [(ngModel)]="this.searchFilter.pickUpTime" name="pick_time"
+                      class="form-control datetimepicker-input digits"
+                      placeholder="{{ 'global.pick_up' | translate }} {{ 'global.date_and_time' | translate }}"
+                      type="text" [owlDateTimeTrigger]="pickup" [owlDateTime]="pickup" [min]="minStartDate"
+                      (ngModelChange)="onChangePickUpTime()">
+                    <owl-date-time #pickup></owl-date-time>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>{{ 'global.drop_off_time' | translate }}</label>
+                    <input [(ngModel)]="this.searchFilter.dropTime" name="drop_time"
+                      class="form-control datetimepicker-input digits"
+                      placeholder="{{ 'global.drop_off' | translate }} {{ 'global.date_and_time' | translate }}"
+                      type="text" [owlDateTimeTrigger]="drop" [owlDateTime]="drop" [owlDateTimeFilter]="dropTimeFilter"
+                      [min]="minEndDate" [disabled]="!this.searchFilter.pickUpTime"
+                      (ngModelChange)="onChangeDropTime()">
+                    <owl-date-time #drop></owl-date-time>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="search-btn">
+                    <a class="btn btn-theme" (click)="searchData()">
+                      Check Availability
+                    </a>
+                    <a class="btn btn-solid color3 ms-2" (click)="resetFilter()">
+                      Reset
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div *ngIf="!isLoader" class="row">
         <ng-container *ngIf="activeTab === 'car' || activeTab === 'driver'">
-          <div *ngFor="let item of myWishlist" class="col-md-12">
-            <app-cab-card-view [from]="'wishlist'" [type]="activeTab" [singleItem]="item"
+          <div
+            *ngFor="let item of myWishlist | paginate: { id: 'f_first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: myWishlistTotalData }; let i = index"
+            class="col-md-12">
+            <app-cab-card-view [from]="'wishlist'" [type]="activeTab" [singleItem]="item" [searchFilter]="searchFilter"
               (onCheckAvailability)="onCheckAvailability(item)"></app-cab-card-view>
           </div>
+          <pagination-controls id="f_first" (pageChange)="pageChanged($event)"></pagination-controls>
           <div *ngIf="!myWishlist.length" class="col-md-12">
             <p class="text-center">
               <b>No Favourite</b>
@@ -35,7 +82,7 @@
         </ng-container>
 
         <ng-container *ngIf="activeTab === 'car_owner_interest'">
-          <mat-accordion *ngIf="tableData.length" class="accordion-align">
+          <mat-accordion *ngIf="tableData && tableData.length" class="accordion-align">
             <mat-expansion-panel hideToggle [expanded]="section.isOpen" (opened)="onToggle(true, section)"
               (closed)="onToggle(false, section)"
               *ngFor="let section of tableData | paginate: { id: 'first', itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let i = index">

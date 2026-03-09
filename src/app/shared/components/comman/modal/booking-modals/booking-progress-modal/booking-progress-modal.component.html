@@ -61,79 +61,104 @@
         </div>
       </div>
 
-      <div class="booking-group m-3">
-        <div class="text-end">
-          <a (click)="checkUpdate()" class="btn btn-theme px-3 pt-2 pb-1" title="Check Update">
-            <mat-icon>autorenew</mat-icon>
-          </a>
+      <div class="booking-group">
+        <div *ngIf="bookingDetails.bookingDetails?.pickupInstruction || bookingDetails.bookingDetails?.dropInstruction"
+          class="alert-msg">
+          <div *ngIf="bookingDetails.bookingDetails?.pickupInstruction"
+            class="alert alert-success py-1 alert-dismissible fade show" role="alert">
+            <h6 class="fw-bold mb-0">
+              Pickup Instructions
+            </h6>
+            <h6 class="fw-bold mb-0">
+              • {{bookingDetails.bookingDetails?.pickupInstruction}}
+            </h6>
+          </div>
+
+          <div *ngIf="bookingDetails.bookingDetails?.dropInstruction"
+            class="alert alert-success py-1 alert-dismissible fade show" role="alert">
+            <h6 class="fw-bold mb-0">
+              Drop Instructions
+            </h6>
+            <h6 class="fw-bold mb-0">
+              • {{bookingDetails.bookingDetails?.dropInstruction}}
+            </h6>
+          </div>
+
         </div>
-        <div *ngIf="timelineEvents.length" class="timeline-container mt-3">
 
-          <ng-container
-            *ngIf="bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed'">
-            <div class="cancel-box mb-3">
-              <p>
-                Cancelled on {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'MM/dd/yyyy'}},
-                <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
-                  Amount
-                  <strong>
-                    {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
-                  </strong>
-                  Refund Approval Pending By Admin
-                </ng-container>
-                <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd == 4">
-                  Amount
-                  <strong>
-                    {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
-                  </strong> Refund is deposited
-                  in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'MM/dd/yyyy'}}
-                </ng-container>
-              </p>
-            </div>
-          </ng-container>
+        <div class="booking-group m-3">
+          <div class="text-end">
+            <a (click)="checkUpdate()" class="btn btn-theme px-3 pt-2 pb-1" title="Check Update">
+              <mat-icon>autorenew</mat-icon>
+            </a>
+          </div>
+          <div *ngIf="timelineEvents.length" class="timeline-container mt-3">
 
-          <div class="timeline-item" *ngFor="let event of timelineEvents; let last = last">
-
-            <div class="timeline-time">
-              <span class="time-text">{{ event.bookingTrackDate | date:'shortTime' }}</span>
-              <span class="date-text">{{ event.bookingTrackDate | date:'MM/dd/yyyy' }}</span>
-            </div>
-
-            <div class="timeline-marker">
-              <div class="icon-circle-r badge-light-{{event.color}}">
-                <mat-icon>{{event.icon}}</mat-icon>
+            <ng-container
+              *ngIf="bookingDetails.bookingDetails.bookingStatus === 'Cancelled' || bookingDetails.bookingDetails.bookingStatus === 'Refund Started' || bookingDetails.bookingDetails.bookingStatus === 'Refund Completed'">
+              <div class="cancel-box mb-3">
+                <p>
+                  Cancelled on {{bookingDetails.cancellationRefundDetails.cancellationDate | date : 'MM/dd/yyyy'}},
+                  <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd != 4">
+                    Amount
+                    <strong>
+                      {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
+                    </strong>
+                    Refund Approval Pending By Admin
+                  </ng-container>
+                  <ng-container *ngIf="bookingDetails.cancellationRefundDetails.refundStatusCd == 4">
+                    Amount
+                    <strong>
+                      {{bookingDetails.cancellationRefundDetails.refundAmount | currencyPipe: gs.currency}}
+                    </strong> Refund is deposited
+                    in user account on {{bookingDetails.cancellationRefundDetails.refundDate | date : 'MM/dd/yyyy'}}
+                  </ng-container>
+                </p>
               </div>
-              <div class="line" *ngIf="!last"></div>
-            </div>
+            </ng-container>
 
-            <div class="timeline-content pb-4">
-              <div class="card p-3">
-                <div class="d-flex justify-content-between mb-1">
-                  <h6 class="fw-bold mb-0">
-                    <span class="badge badge-light-{{event.color}}">{{ event.bookingStatusRemarks }}</span>
-                  </h6>
-                  <span>
-                    <!-- <div>Booking Status : </div> -->
-                    <span class="badge badge-light-{{event.statusColor}}">
-                      {{ event.bookingStatus }}
+            <div class="timeline-item" *ngFor="let event of timelineEvents; let last = last">
+
+              <div class="timeline-time">
+                <span class="time-text">{{ event.bookingTrackDate | date:'shortTime' }}</span>
+                <span class="date-text">{{ event.bookingTrackDate | date:'MM/dd/yyyy' }}</span>
+              </div>
+
+              <div class="timeline-marker">
+                <div class="icon-circle-r badge-light-{{event.color}}">
+                  <mat-icon>{{event.icon}}</mat-icon>
+                </div>
+                <div class="line" *ngIf="!last"></div>
+              </div>
+
+              <div class="timeline-content pb-4">
+                <div class="card p-3">
+                  <div class="d-flex justify-content-between mb-1">
+                    <h6 class="fw-bold mb-0">
+                      <span class="badge badge-light-{{event.color}}">{{ event.bookingStatusRemarks }}</span>
+                    </h6>
+                    <span>
+                      <!-- <div>Booking Status : </div> -->
+                      <span class="badge badge-light-{{event.statusColor}}">
+                        {{ event.bookingStatus }}
+                      </span>
                     </span>
-                  </span>
-                </div>
-                <p class="text-muted mb-2 small">{{ event.bookingStatus }}</p>
-
-                <div class="d-flex align-items-center gap-2 mt-2">
-                  <div class="avatar-circle">
-                    {{ event.updatedBy?.charAt(0) }}
-                    <!-- .charAt(0) -->
                   </div>
-                  <small class="text-secondary">Updated by <strong>{{ event.updatedBy }}</strong></small>
+                  <p class="text-muted mb-2 small">{{ event.bookingStatus }}</p>
+
+                  <div class="d-flex align-items-center gap-2 mt-2">
+                    <div class="avatar-circle">
+                      {{ event.updatedBy?.charAt(0) }}
+                      <!-- .charAt(0) -->
+                    </div>
+                    <small class="text-secondary">Updated by <strong>{{ event.updatedBy }}</strong></small>
+                  </div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
