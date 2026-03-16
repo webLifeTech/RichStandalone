@@ -317,13 +317,6 @@ export class CabBookingSummaryComponent {
       this.type = this.params['type'];
       const pickTime = new Date(this.searchObj.pick_time);
       const dropTime = new Date(this.searchObj.drop_time);
-      // this.searchObj.timeType = "Daily";
-      // const durationInDays = differenceInDays(dropTime, pickTime);
-      // console.log("durationInDays >>>>>>", durationInDays);
-      // for (let step = 0; step < durationInDays; step++) {
-      //   this.duration.push({ value: step + 1 })
-      // }
-      // this.searchObj.timeDuration = durationInDays;
 
       switch (this.searchObj.timeType) {
         case "Daily":
@@ -342,16 +335,16 @@ export class CabBookingSummaryComponent {
 
       let range = 0;
       if (this.searchObj.timeType == 'Daily') {
-        range = 31;
+        range = this.searchObj.timeDuration > 31 ? this.searchObj.timeDuration : 31;
       }
       if (this.searchObj.timeType == 'Weekly') {
-        range = 4;
+        range = this.searchObj.timeDuration > 4 ? this.searchObj.timeDuration : 4;
       }
       if (this.searchObj.timeType == 'Monthly') {
-        range = 12;
+        range = this.searchObj.timeDuration > 12 ? this.searchObj.timeDuration : 12;
       }
       if (this.searchObj.timeType == 'Yearly') {
-        range = 20;
+        range = this.searchObj.timeDuration > 20 ? this.searchObj.timeDuration : 20;
       }
 
       for (let step = 0; step < range; step++) {

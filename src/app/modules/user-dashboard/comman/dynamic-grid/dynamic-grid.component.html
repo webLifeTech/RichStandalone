@@ -107,7 +107,7 @@
                 <span *ngIf="!column.fieldObject && column.field === 'kycStatus'" class="badge" [ngClass]="{
                     'text-tangerine': row[column.fieldCode] == '1',
                     'text-success-light': row[column.fieldCode] == '2' || row[column.fieldCode] == '5',
-                    'text-red': row[column.fieldCode] == '3'|| row[column.fieldCode] == '6',
+                    'text-red': row[column.fieldCode] == '3'|| row[column.fieldCode] == '6' || row[column.fieldCode] == '7',
                     'text-cyan': row[column.fieldCode] == '4' }">
                   {{ row[column.field] }}
                 </span>

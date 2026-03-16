@@ -144,9 +144,9 @@ export class CabListDetailsComponent {
     }
     this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
     this.searchInfo = this.gs.getLastSearch();
-    if (this.auth.isLoggedIn) {
-      this.checkFav();
-    }
+    // if (this.auth.isLoggedIn) {
+    //   this.checkFav();
+    // }
   }
 
   setPage(page: number) {
@@ -229,7 +229,7 @@ export class CabListDetailsComponent {
         "userId": this.gs.loggedInUserInfo.userId,
         "riskId": this.type === 'car' ? item.vehicleId : item.driverId,
         "risktype": this.type === 'car' ? 'Vehicle' : 'Driver',
-        "isActive": !item.isAddWishlist
+        "isActive": !item.favorite
       }
 
       this.favoriteService.insertUpdateFavourite(Body).subscribe((res: any) => {
@@ -241,7 +241,7 @@ export class CabListDetailsComponent {
           item.favorite = false;
           this.toast.successToastr("Removed from your Favourite");
         }
-        item.isAddWishlist = !item.isAddWishlist;
+        // item.isAddWishlist = !item.isAddWishlist;
       }, (err: any) => {
         this.toast.errorToastr("Something went wrong");
         this.gs.isSpinnerShow = false;
@@ -259,25 +259,25 @@ export class CabListDetailsComponent {
     }
   }
 
-  checkFav() {
-    this.favoriteService.getAllFavourite({
-      "userId": this.gs.loggedInUserInfo.userId,
-      "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
-    }).subscribe((response: any) => {
-      if (response.response && response.response.statusCode == "200") {
-        for (let i in this.searchResult.searchList) {
-          for (let j in response.favoriteList) {
-            if (this.type === 'car' && this.searchResult.searchList[i].vehicleId == response.favoriteList[j].vehicleId) {
-              this.searchResult.searchList[i].isAddWishlist = true;
-            }
-            if (this.type === 'driver' && this.searchResult.searchList[i].driverId == response.favoriteList[j].driverId) {
-              this.searchResult.searchList[i].isAddWishlist = true;
-            }
-          }
-        }
-      }
-    })
-  }
+  // checkFav() {
+  //   this.favoriteService.getAllFavourite({
+  //     "userId": this.gs.loggedInUserInfo.userId,
+  //     "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
+  //   }).subscribe((response: any) => {
+  //     if (response.response && response.response.statusCode == "200") {
+  //       for (let i in this.searchResult.searchList) {
+  //         for (let j in response.favoriteList) {
+  //           if (this.type === 'car' && this.searchResult.searchList[i].vehicleId == response.favoriteList[j].vehicleId) {
+  //             this.searchResult.searchList[i].isAddWishlist = true;
+  //           }
+  //           if (this.type === 'driver' && this.searchResult.searchList[i].driverId == response.favoriteList[j].driverId) {
+  //             this.searchResult.searchList[i].isAddWishlist = true;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
 
   openImportantNoticeDialog(): void {
     this.dialog.open(ImportantNoticeDialogComponent, {
