@@ -9,7 +9,7 @@
           <div class="d-flex">
             <input [(ngModel)]="searchText" name="sub_menu_name" type="text"
               [placeholder]="'userDashboard.search_placeholder' | translate" class="form-control open-select" />
-            <button class="btn btn-theme no-text-transorm ms-2">
+            <button (click)="searchData()" class="btn btn-theme no-text-transorm ms-2">
               <i class="feather icon-search"></i> {{ 'userDashboard.search_btn' | translate }}
             </button>
           </div>
@@ -18,7 +18,7 @@
       <div class="col-lg-6">
         <div *ngIf="!isAdd" class="text-end">
           <a (click)="onAdd()" class="btn btn-solid color2 no-text-transorm">
-            <i class="feather icon-plus"></i> {{ 'userDashboard.kyc.branch_info.add_more' | translate }}
+            <i class="feather icon-plus"></i> {{ 'userDashboard.add_more' | translate }}
           </a>
         </div>
       </div>
@@ -80,7 +80,7 @@
         </thead>
         <tbody>
           <ng-container
-            *ngFor="let row of filteredData | paginate: { itemsPerPage: 5, currentPage: currentPage, totalItems: totalData }; let idx = index;">
+            *ngFor="let row of filteredData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }; let idx = index;">
 
             <tr>
               <td *ngFor="let column of columns" [ngStyle]="row['kycRemarks'] ? {'border-bottom': 'none'} : null">

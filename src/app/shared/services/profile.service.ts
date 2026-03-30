@@ -298,9 +298,8 @@ export class ProfileService {
   }
 
   // Vehicle KYC -> All getAllVehicles
-  public getAllVehicles(dataParams: any) {
-    const params = new HttpParams().set('userId', dataParams.userId);
-    return this.http.get(this.baseUrl1 + 'TLHUB/VehicleKYC/GetAllVehicles', { params }).pipe(
+  public getAllVehicles(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/VehicleKYC/GetAllVehicles`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -670,6 +669,15 @@ export class ProfileService {
       .set('riskId', dataParams.riskId)
       .set('riskType', dataParams.riskType);
     return this.http.get(this.baseUrl1 + 'TLHUB/COMMON/GetUserDocuments', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // COMMON -> GetMasterBulkUploadTemplateDetails
+  public GetMasterBulkUploadTemplateDetails() {
+    return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterBulkUploadTemplateDetails', {}).pipe(
       map((res: any) => {
         return res;
       })

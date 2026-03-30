@@ -280,6 +280,7 @@ export class UserDashboardKycComponent {
     "12": "D_KYC_TC", // 12 = formId
     "5": "F_KYC_TC", // 5 = formId
     "7": "V_KYC_TC", // 7 = formId
+    "8": "V_KYC_TC", // 8 = formId
   }
 
   constructor(

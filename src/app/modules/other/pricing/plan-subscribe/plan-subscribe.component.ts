@@ -212,11 +212,18 @@ export class PlanSubscribeComponent {
   }
 
   viewTermsConditions() {
+    const rolesPackageCode: any = {
+      "user": "DRIVER_PACKAGE_TC",
+      "user_2": "CAROWNER_PACKAGE_TC",
+      "user_3": "FEELT_PACKAGE_TC",
+      "user_4": "DRIVER_CAR_PACKAGE_TC",
+    }
+
     const modalRef = this.modalService.open(TermsAndCModalComponent, {
       size: 'lg',
       scrollable: true,
     });
-    modalRef.componentInstance.termCode = "D_KYC_TC";
+    modalRef.componentInstance.termCode = rolesPackageCode[this.gs.loggedInUserInfo.role]; // "D_KYC_TC"
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
         this.isAgreeTerms = true;

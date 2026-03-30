@@ -148,14 +148,18 @@
             </div>
           </div>
           <div class="col-md-5 end">
-            <a *ngIf="details.favorite && from === 'wishlist'" class="btn btn-subscribe btn1 no-text-transorm"
-              (click)="addRemoveWishlist(details)">
+            <a *ngIf="details.favorite && (from === 'wishlist' || from === 'owner_interest')"
+              class="btn btn-subscribe btn1 no-text-transorm" (click)="addRemoveWishlist(details)">
               <i class="fa fa-heart" aria-hidden="true"></i> {{'car_list_page.remove_to_wishlist' | translate}}
+            </a>
+            <a *ngIf="!details.favorite &&  (from === 'wishlist' || from === 'owner_interest')"
+              class="btn btn-subscribe btn1 no-text-transorm" (click)="addRemoveWishlist(details)">
+              <i class="feather icon-heart"></i> {{'car_list_page.add_to_wishlist' | translate}}
             </a>
             <a class="btn btn-subscribe btn1 no-text-transorm" (click)="openImportantNoticeDialog()">
               <i class="fas fa-exclamation-circle"></i> {{'car_list_page.important_info' | translate}}
             </a>
-            <a *ngIf="from === 'owner_interest'" class="btn btn-subscribe btn1 no-text-transorm"
+            <a *ngIf="from === 'owner_interest' || from === 'wishlist'" class="btn btn-subscribe btn1 no-text-transorm"
               (click)="openEmailQuoteDialog(details)">
               <i class="fas fa-envelope"></i> {{'car_list_page.send_enquiry' | translate}}
             </a>

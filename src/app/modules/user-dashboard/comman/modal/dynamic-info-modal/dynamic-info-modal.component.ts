@@ -314,13 +314,8 @@ export class DynamicInfoModalComponent {
   }
 
   getSuffix(tblItem: any, row: any) {
-    // console.log("field ======>", row);
-    // console.log("FeeRules ======>", this.masterDropdwonList["FeeRules"]);
-
     if (row.fieldId == "344") {
-      const slctFeeMasterDp = this.masterDropdwonList["FeeRules"].find((i: any) => i.Description == tblItem[row.modalValue]) || {};
-      console.log("row.value >>>>>>", row.defaultValue);
-
+      const slctFeeMasterDp = this.masterDropdwonList["FeeRules"]?.find((i: any) => i.Description == tblItem[row.modalValue]) || {};
       return "(Between " + slctFeeMasterDp['AdvanceHoursMin'] + " to " + slctFeeMasterDp['AdvanceHoursMax'] + ' Hours)';
     }
     return null;

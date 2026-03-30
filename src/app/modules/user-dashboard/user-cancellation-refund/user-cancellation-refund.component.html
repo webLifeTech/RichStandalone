@@ -159,18 +159,15 @@
                       <i class="feather icon-eye"></i>
                       <span class="ms-2">View Invoice</span>
                     </button>
-                    <ng-container *ngFor="let item of statusList">
-                      <button *ngIf="item.id == 2 || item.id == 3" (click)="changeStatus(data,item)" type="button"
-                        mat-menu-item>
-                        <i class="feather icon-send"></i>
-                        <span class="ms-2">{{item.name}}</span>
-                      </button>
+                    <ng-container *ngIf="data.refundStatus === 'Pending'">
+                      <ng-container *ngFor="let item of statusList">
+                        <button *ngIf="item.id == 2 || item.id == 3" (click)="changeStatus(data,item)" type="button"
+                          mat-menu-item>
+                          <i class="feather icon-send"></i>
+                          <span class="ms-2">{{item.name}}</span>
+                        </button>
+                      </ng-container>
                     </ng-container>
-                    <!-- <button *ngIf="data.admin_status === 'Pending Disburse'" (click)="changeStatus(data,'Disburse')"
-                      type="button" mat-menu-item>
-                      <i class="feather icon-send"></i>
-                      <span class="ms-2">Rejected</span>
-                    </button> -->
                   </mat-menu>
                 </td>
               </tr>

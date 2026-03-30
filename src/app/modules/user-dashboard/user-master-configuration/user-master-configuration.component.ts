@@ -69,6 +69,16 @@ export class UserMasterConfigurationComponent {
   isLoadDriverDetail: boolean = false;
   isAddEditDriverDetail: boolean = false;
   isNextStepShow: boolean = false;
+  isAddEditGarage: boolean = false;
+  isLoadGarage: boolean = false;
+
+  sortColumn: any = "";
+  sortOrder: any = "DESC"; // ASC
+  public tableData: any = [];
+  public searchDataValue = '';
+  public pageSize = 10;
+  public totalData = 0;
+  public currentPage = 1;
 
   // Vehicle List Columns and Data
   myVehicleColumns = [
@@ -174,6 +184,9 @@ export class UserMasterConfigurationComponent {
       if (sidebarTab.formId == 3) {
         this.getDriverWorkingHours();
       }
+      // if (sidebarTab.formId == 41) {
+      //   this.getGarageInformations();
+      // }
 
       this.isNextStepShow = true;
     }, 200);
@@ -191,23 +204,8 @@ export class UserMasterConfigurationComponent {
         this.gs.isLicenseVerified = true;
       }
       this.kycForm.isAddSearchSection = true;
-      this.getCompanyBranches();
+      // this.getCompanyBranches();
       console.log("getAllDrivers >>>>>", response);
-    })
-  }
-
-  getCompanyBranches() {
-    this.gs.isLicenseVerified = false;
-    this.isLoadBranch = false;
-    this.gridInfoData = [];
-    this.branchService.GetAllCompanyBranches({
-      "userId": this.gs.loggedInUserInfo.userId,
-    }).subscribe((response: any) => {
-      console.log("getAllDrivers >>>>>", response);
-      if (response && response.length) {
-        this.gridInfoData = response;
-      }
-      this.isLoadBranch = true;
     })
   }
 
@@ -246,6 +244,9 @@ export class UserMasterConfigurationComponent {
       if (this.selectedTabObj.formId == 3) {
         this.getDriverWorkingHours();
       }
+      if (this.selectedTabObj.formId == 41) {
+        this.kycForm.isAddSearchSection = true;
+      }
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 
@@ -264,6 +265,7 @@ export class UserMasterConfigurationComponent {
           this.isAddEditDriverDetail = false;
           this.isAddEditBranch = false;
           this.isVehicleInfoEdit = false;
+          this.isAddEditGarage = false;
           confirm();
         }
       }, () => { });
@@ -280,10 +282,16 @@ export class UserMasterConfigurationComponent {
   handleSubmit() {
     // this.getDriverDetails();
     this.isAddEditBranch = false;
-    if (this.selectedTabObj.formId == 6) {
-      this.gs.isModificationOn = false;
-      this.getCompanyBranches();
-    }
+    this.isAddEditGarage = false;
+    this.gs.isModificationOn = false;
+    // if (this.selectedTabObj.formId == 6) {
+    //   this.gs.isModificationOn = false;
+    //   this.getCompanyBranches();
+    // }
+    // if (this.selectedTabObj.formId == 41) {
+    //   this.gs.isModificationOn = false;
+    //   this.getGarageInformations();
+    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -293,20 +301,28 @@ export class UserMasterConfigurationComponent {
     this.isAddEditDriverDetail = false;
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
-    if (this.selectedTabObj.formId == 6) {
-      this.getCompanyBranches();
-    }
+    this.isAddEditGarage = false;
+    // if (this.selectedTabObj.formId == 6) {
+    //   this.getCompanyBranches();
+    // }
     if (this.selectedTabObj.formId == 3) {
       this.getDriverWorkingHours();
     }
+    // if (this.selectedTabObj.formId == 41) {
+    //   this.getGarageInformations();
+    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleAction(event: any, type: any) {
     console.log("event >>>>>>", event);
 
-    if (event.add) {
+    if (event.add && event.type === 'branch') {
       this.isAddEditBranch = true;
+      return;
+    }
+    if (event.add && event.type === 'garage') {
+      this.isAddEditGarage = true;
       return;
     }
     const singleDetail = event.singleDetail;
@@ -337,6 +353,21 @@ export class UserMasterConfigurationComponent {
         if (response.response && response.response.statusCode == "200") {
           this.isFormEdit = true;
           this.isAddEditBranch = true;
+          this.singleDetailInfo = response;
+        }
+      })
+    }
+
+    if (type === 'garage') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+        garagePersonNum: singleDetail.garagePersonNum
+      }
+
+      this.branchService.GetGarageInfoByGarageId(body).subscribe(async (response: any) => {
+        if (response.response && response.response.statusCode == "200") {
+          this.isFormEdit = true;
+          this.isAddEditGarage = true;
           this.singleDetailInfo = response;
         }
       })

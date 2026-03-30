@@ -20,6 +20,7 @@ import { InformationModalComponent } from '../../../../shared/components/comman/
 import { PendingVehicleModalComponent } from '../../../../shared/components/comman/modal/pending-vehicle-modal/pending-vehicle-modal.component';
 import { RolePermissionService } from '../../../../shared/services/rolepermission.service';
 import { BulkUploadVcModalComponent } from '../../../../shared/components/comman/modal/bulk-upload-vc-modal/bulk-upload-vc-modal.component';
+import { ExcelExportService } from '../../../../shared/services/excel-export.service';
 
 @Component({
   selector: 'app-dynamic-grid',
@@ -52,7 +53,7 @@ export class DynamicGridComponent {
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   currentPage = 1;
-  pageSize = 1;
+  pageSize = 5;
   totalData: any = 0;
   filteredData: any[] = [];
   paginatedData: any[] = [];
@@ -76,6 +77,7 @@ export class DynamicGridComponent {
     public gs: GlobalService,
     private branchService: BranchService,
     public roleService: RolePermissionService,
+    private excelExport: ExcelExportService,
   ) {
   }
 
@@ -97,7 +99,7 @@ export class DynamicGridComponent {
       if (this.type === 'fleetOwner') {
         this.kycForm.formName = this.selectedTabObj.formName || 'COMPANY INFO';
       }
-      if (this.type === 'branch' || this.type === 'driver_details' || this.type === 'vendor-profile') {
+      if (this.type === 'branch' || this.type === 'driver_details' || this.type === 'vendor-profile' || this.type === 'garage') {
         this.kycForm.formName = this.selectedTabObj.formName;
       }
       this.filteredData = this.data;
@@ -112,16 +114,24 @@ export class DynamicGridComponent {
   getSearchData() {
     if (this.type === 'my_vehicle') {
       const body = {
-        userId: this.gs.loggedInUserInfo.userId
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": this.currentPage,
+        "pagesize": this.pageSize,
+        "sortColumn": this.sortColumn,
+        "sortOrder": this.sortDirection,
+        "globalSearch": this.searchText?.trim() || "",
       }
+      this.gs.isSpinnerShow = true;
       this.profileService.getAllVehicles(body).subscribe(async (response: any) => {
-        if (response && response.length) {
-          this.filteredData = response;
-          this.totalData = response.length;
+        this.gs.isSpinnerShow = false;
+        if (response.response && response.response.statusCode == "200") {
+          this.filteredData = response.gridList;
+          this.totalData = response.viewModel.totalCount;
           if (this.selectedTabObj.formId == 14) {
             const totalVehicles = this.totalData;
-            const completedVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Active")?.length;  // || 0 from API
-            if (completedVehicles < totalVehicles) {
+            const completedVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Active")?.length;
+            const pendingVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Pending")?.length;
+            if (pendingVehicles) {
               const modalRef = this.modalService.open(PendingVehicleModalComponent, {
                 centered: true,
                 backdrop: 'static',
@@ -130,6 +140,7 @@ export class DynamicGridComponent {
               });
               modalRef.componentInstance.totalVehicles = totalVehicles;
               modalRef.componentInstance.completedVehicles = completedVehicles;
+              modalRef.componentInstance.pendingVehicles = pendingVehicles;
               modalRef.result.then((res: any) => {
                 if (res.confirmed) {
                   this.router.navigate(['/user/configuration']);
@@ -138,7 +149,52 @@ export class DynamicGridComponent {
             }
           }
         }
+      }, err => {
+        this.gs.isSpinnerShow = false;
       })
+    } if (this.type === 'garage') {
+      const body = {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": this.currentPage,
+        "pagesize": this.pageSize,
+        "sortColumn": this.sortColumn,
+        "sortOrder": this.sortDirection,
+        "globalSearch": this.searchText?.trim() || "",
+      }
+      this.gs.isSpinnerShow = true;
+      this.branchService.GetGarageInformations(body).subscribe((response: any) => {
+        console.log("GetGarageInformations >>>>>", response);
+        this.gs.isSpinnerShow = false;
+        if (response.response && response.response.statusCode == "200") {
+          this.filteredData = response.gridList;
+          this.totalData = response.viewModel.totalCount;
+        }
+      }, err => {
+        this.gs.isSpinnerShow = false;
+      })
+
+    } if (this.type === 'branch') {
+      const body = {
+        "userId": this.gs.loggedInUserInfo.userId,
+        "pageNumber": this.currentPage,
+        "pagesize": this.pageSize,
+        "sortColumn": this.sortColumn,
+        "sortOrder": this.sortDirection,
+        "globalSearch": this.searchText?.trim() || "",
+      }
+      this.gs.isSpinnerShow = true;
+      this.branchService.GetAllCompanyBranches(body).subscribe((response: any) => {
+        this.gs.isSpinnerShow = false;
+        console.log("GetAllCompanyBranches >>>>>", response);
+        if (response.response && response.response.statusCode == "200") {
+          this.filteredData = response.gridList;
+          this.totalData = response.viewModel.totalCount;
+        }
+      }, err => {
+        this.gs.isSpinnerShow = false;
+      })
+    } else {
+      this.gs.isSpinnerShow = false;
     }
   }
 
@@ -185,7 +241,6 @@ export class DynamicGridComponent {
       });
 
       this.getSearchData();
-      this.gs.isSpinnerShow = false;
     }, (err: any) => {
       this.gs.isSpinnerShow = false;
       this.toast.errorToastr(err || "Something went wrong");
@@ -202,7 +257,7 @@ export class DynamicGridComponent {
   }
 
   onAdd() {
-    this.actionEvent.emit({ add: true });
+    this.actionEvent.emit({ add: true, type: this.type });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   onAddVehicle() {
@@ -227,6 +282,15 @@ export class DynamicGridComponent {
   }
 
   onDownloadExcelSample() {
+    this.gs.isSpinnerShow = true;
+    this.profileService.GetMasterBulkUploadTemplateDetails().subscribe((response: any) => {
+      this.gs.isSpinnerShow = false;
+      const data = JSON.parse(response);
+      this.excelExport.generateExcel(data);
+    }, error => {
+      this.gs.isSpinnerShow = false;
+    });
+    return
     fetch('assets/excel/Bulk_Vehicles_Template.xlsx')
       .then(res => res.blob())
       .then(blob => {
@@ -338,6 +402,26 @@ export class DynamicGridComponent {
       })
     }
 
+    if (this.type === 'garage') {
+      const body = {
+        userId: this.gs.loggedInUserInfo.userId,
+        garagePersonNum: item.garagePersonNum
+      }
+
+      this.branchService.GetGarageInfoByGarageId(body).subscribe(async (response: any) => {
+        if (response.response && response.response.statusCode == "200") {
+          const modalRef = this.modalService.open(DynamicInfoModalComponent, {
+            size: 'lg'
+          });
+          modalRef.componentInstance.viewInfoDetails = response;
+          modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
+          modalRef.componentInstance.kycForm = this.kycForm;
+          modalRef.result.then((res: any) => {
+          });
+        }
+      })
+    }
+
     if (this.type === 'driver_details') {
       const modalRef = this.modalService.open(DynamicInfoModalComponent, {
         size: 'lg'
@@ -384,6 +468,7 @@ export class DynamicGridComponent {
 
   pageChanged(event: any) {
     this.currentPage = event;
+    this.getSearchData();
   }
 
   onSort(column: string) {
@@ -458,6 +543,11 @@ export class DynamicGridComponent {
         this.gs.isSpinnerShow = false;
       })
     }
+  }
+
+  searchData() {
+    this.currentPage = 1;
+    this.getSearchData();
   }
 
 }

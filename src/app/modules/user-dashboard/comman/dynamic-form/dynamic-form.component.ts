@@ -21,6 +21,7 @@ import { ConfirmationModalComponent } from '../../../../shared/components/comman
 import { VendorServService } from '../../../../shared/services/vendor-service.service';
 import { OtpVerificationModalComponent } from '../../user-settings/modals/otp-verification-modal/otp-verification-modal.component';
 import { AuthService } from '../../../../shared/services/auth.service';
+import { SubDynamicFormModalComponent } from '../modal/sub-dynamicform-modal/sub-dynamicform-modal.component';
 
 
 @Component({
@@ -113,7 +114,7 @@ export class DynamicFormComponent {
     console.log("this.formType >>>>>>", this.formType);
     this.getConfigUIFields();
     this.gs.isModificationOn = true;
-    if (this.formType === 'branch' || this.formType === 'vendor-profile') {
+    if (this.formType === 'branch' || this.formType === 'garage' || this.formType === 'vendor-profile') {
       this.isRequiredTermsAgree = false;
     }
     if (this.formType === 'driver_details') {
@@ -187,6 +188,9 @@ export class DynamicFormComponent {
           }
           // if (this.formArray[i].fieldId == 343) {
           //   this.formArray[i].validationType = "^.{1,400}$";
+          // }
+          // if (this.formArray[i].fieldId == 447) {
+          //   this.formArray[i].modalObject = "vehicleOtherDetails.location";
           // }
 
           this.formArray[i].fValue = this.getFieldValue(this.singleDetailInfo, this.formArray[i].modalObject, this.formArray[i].modalValue);
@@ -342,6 +346,12 @@ export class DynamicFormComponent {
           "userId": this.gs.loggedInUserInfo.userId,
         });
         this.masterDropdwonList["Branch"] = branchMasterDp;
+
+        let garageMasterDp: any = await this.branchService.GetGarageAddresses({
+          "userId": this.gs.loggedInUserInfo.userId,
+        });
+        this.masterDropdwonList["GarageAddress"] = garageMasterDp;
+
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -1986,7 +1996,7 @@ export class DynamicFormComponent {
         });
       }
 
-      if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch') {
+      if (this.formType === 'driver' || this.formType === 'individualCarOwner' || this.formType === 'vehicleUpload' || this.formType === 'branch' || this.formType === 'garage') {
         this.dynamicForm.value.sections.forEach((section: any) => {
           section.fields.forEach((field: any) => {
             let sectionData: any = {};
@@ -2114,7 +2124,7 @@ export class DynamicFormComponent {
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
             this.toast.successToastr(res.message);
-            this.onHandleSubmit.emit(null)
+            this.onHandleSubmit.emit(null);
           } else {
             this.toast.errorToastr(res.message);
           }
@@ -2309,6 +2319,36 @@ export class DynamicFormComponent {
             this.gs.loggedInUserInfo.isKYCCompleted = true;
             localStorage.setItem('loggedInUser', JSON.stringify(this.gs.loggedInUserInfo));
             this.onHandleSubmit.emit(null)
+          } else {
+            this.toast.errorToastr(res.message);
+          }
+        }, (err: any) => {
+          this.toast.errorToastr(err?.error?.message || "Something went wrong");
+          this.gs.isSpinnerShow = false;
+        })
+      }
+
+      if (this.formType === 'garage') {
+        finalBody.garage["phoneTypeId"] = "";
+        finalBody.garage["emailTypeId"] = "";
+        finalBody.garage["mapLocation"] = "";
+        finalBody.garage["addressTypeId"] = "";
+        finalBody.garage["addressId"] = "";
+        finalBody.garage["currentInd"] = true;
+        finalBody.garage["isPrimaryAddress"] = true;
+        finalBody.garage["contactPersonId"] = 0;
+        finalBody.garage["userId"] = this.gs.loggedInUserInfo.userId;
+        finalBody.garage["garagePersonNum"] = 0;
+        finalBody.garage["dbaName"] = "";
+        finalBody.garage["IsUpdateOperation"] = false;
+
+        // return;
+        this.gs.isSpinnerShow = true;
+        this.branchService.InsertAndUpdateGarageInformation(finalBody).subscribe((res: any) => {
+          this.gs.isSpinnerShow = false;
+          if (res && res.statusCode == "200") {
+            this.toast.successToastr(res.message);
+            this.onHandleSubmit.emit(null);
           } else {
             this.toast.errorToastr(res.message);
           }
@@ -2598,6 +2638,9 @@ export class DynamicFormComponent {
     }
     if (section.value.sectionID == "32") {
       this.updateCancellationPolicy(finalBody, section);
+    }
+    if (section.value.sectionID == "55") {
+      this.updateCompanyGarage(finalBody, section);
     }
 
   }
@@ -3013,7 +3056,6 @@ export class DynamicFormComponent {
     // return;
     this.gs.isSpinnerShow = true;
     this.profileService.AddRiskCancellationFeeRules(Body).subscribe(async (res: any) => {
-      this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
         this.profileService.getVehicleDetails({
@@ -3021,11 +3063,15 @@ export class DynamicFormComponent {
           vehicleId: this.singleDetailInfo.vehicleInfo.vehicleId,
           loginUserId: this.gs.loggedInUserInfo.userId
         }).subscribe(async (response: any) => {
+          this.gs.isSpinnerShow = false;
           if (response.response && response.response.statusCode == "200") {
             this.singleDetailInfo = response;
           }
+        }, err => {
+          this.gs.isSpinnerShow = false;
         })
       } else {
+        this.gs.isSpinnerShow = false;
         this.toast.errorToastr(res.message);
       }
     }, (err: any) => {
@@ -3209,6 +3255,44 @@ export class DynamicFormComponent {
           }
         });
         this.toast.successToastr(res.message);
+      } else {
+        this.toast.errorToastr(res.message);
+      }
+    }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
+  }
+
+  // updateVehicleInfo
+  async updateCompanyGarage(finalBody: any, section: any) {
+    console.log("singleDetailInfo >>>>>>", this.singleDetailInfo);
+
+    let Body = {
+      "garage": {
+        "phoneTypeId": this.singleDetailInfo.garage.phoneTypeId,
+        "emailTypeId": this.singleDetailInfo.garage.emailTypeId,
+        "mapLocation": this.singleDetailInfo.garage.mapLocation,
+        "addressTypeId": this.singleDetailInfo.garage.addressTypeId,
+        "addressId": this.singleDetailInfo.garage.addressId,
+        "currentInd": this.singleDetailInfo.garage.currentInd,
+        "isPrimaryAddress": this.singleDetailInfo.garage.isPrimaryAddress,
+        "contactPersonId": this.singleDetailInfo.garage.contactPersonId,
+        "userId": this.gs.loggedInUserInfo.userId,
+        "garagePersonNum": this.singleDetailInfo.garage.garagePersonNum,
+        "dbaName": this.singleDetailInfo.garage.dbaName,
+        "IsUpdateOperation": this.singleDetailInfo.garage.IsUpdateOperation,
+        ...finalBody
+      },
+    }
+
+    this.gs.isSpinnerShow = true;
+    this.branchService.InsertAndUpdateGarageInformation(Body).subscribe((res: any) => {
+      console.log("res >>>>>", res);
+      this.gs.isSpinnerShow = false;
+      if (res && res.statusCode == "200") {
+        this.toast.successToastr(section.value.sectionName + " UPDATED SUCCESSFULLY");
+        this.handleCancel();
       } else {
         this.toast.errorToastr(res.message);
       }
@@ -3467,6 +3551,75 @@ export class DynamicFormComponent {
       fromTime: from,
       toTime: to
     }));
+  }
+
+  openSubDynamicForm(field: any, section: any) {
+    this.isAgreeTerms = false;
+    console.log("field >>>>>", field);
+    console.log("section >>>>>", section);
+    console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
+
+    // this.formType === 'branch'  || this.formType === 'garage'
+    let slTab: any = {};
+    let formType: any = "";
+    if (field.value.fieldCode === 'FLD_VIN_OTH_BRN') {
+      formType = 'branch';
+      slTab = {
+        "formId": 6,
+        "formName": "Branch Information",
+        "roleName": this.gs.loggedInUserInfo.roleName,
+        "transactionId": 1,
+      }
+    }
+    if (field.value.fieldCode === 'FLD_VIN_OTH_GRG') {
+      formType = 'garage';
+      slTab = {
+        "formId": 41,
+        "formName": "Garage Information",
+        "roleName": this.gs.loggedInUserInfo.roleName,
+        "transactionId": 1,
+      }
+    }
+    const kycForm: any = {
+      "menuId": 29,
+      "state": this.gs.loggedInUserInfo.driveInCity,
+      "contactId": 0, // this.gs.loggedInUserInfo.driveInCity
+    }
+
+    const modalRef = this.modalService.open(SubDynamicFormModalComponent, {
+      size: 'xl',
+      scrollable: true,
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.selectedTabObj = slTab;
+    modalRef.componentInstance.kycForm = kycForm;
+    modalRef.componentInstance.formType = formType;
+    modalRef.result.then((res: any) => {
+      console.log("res >>>", res);
+      if (res.confirmed) {
+      }
+    }, async (reason) => {
+      console.log(`Dismissed with: ${reason}`);
+      if (reason === 'confirmed') {
+        console.log(`reasonreasonreasonreason`);
+        if (field.value.fieldCode === 'FLD_VIN_OTH_BRN') {
+          let branchMasterDp: any = await this.branchService.GetBranchNames({
+            "userId": this.gs.loggedInUserInfo.userId,
+          });
+          console.log("branchMasterDp >>>", branchMasterDp);
+          field.get('dropdownList').setValue(branchMasterDp);
+        }
+        if (field.value.fieldCode === 'FLD_VIN_OTH_GRG') {
+          let garageMasterDp: any = await this.branchService.GetGarageAddresses({
+            "userId": this.gs.loggedInUserInfo.userId,
+          });
+          console.log("garageMasterDp >>>", garageMasterDp);
+          field.get('dropdownList').setValue(garageMasterDp);
+        }
+      }
+    });
+
+
   }
 }
 

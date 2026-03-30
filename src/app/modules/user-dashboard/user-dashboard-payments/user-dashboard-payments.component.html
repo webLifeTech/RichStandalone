@@ -141,8 +141,16 @@
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
                       </th>
+                      <th class="text-start pointer" (click)="onSort('vehicleOwnerName')"
+                        *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4' || gs.loggedInUserInfo['role'] === 'admin'">
+                        Owner Name
+                        <span *ngIf="sortColumn === 'vehicleOwnerName'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <th class="text-start pointer" (click)="onSort('driverName')"
-                        *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'">
+                        *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || gs.loggedInUserInfo['role'] === 'user_4' || gs.loggedInUserInfo['role'] === 'admin'">
                         Driver Name
                         <span *ngIf="sortColumn === 'driverName'">
                           <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
@@ -202,16 +210,15 @@
                           </div>
                         </div>
                       </td>
-                      <td *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3'"
+                      <td
+                        *ngIf="gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4' || gs.loggedInUserInfo['role'] === 'admin'"
                         class="text-start">
-                        <div class="table-avatar">
-                          <a class="avatar avatar-lg flex-shrink-0">
-                            <img class="avatar-img" [src]="data.driverprofilepath" alt="Booking">
-                          </a>
-                          <div class="table-head-name flex-grow-1">
-                            <a>{{data.driverName}}</a>
-                          </div>
-                        </div>
+                        {{data.vehicleOwnerName}}
+                      </td>
+                      <td
+                        *ngIf="gs.loggedInUserInfo['role'] === 'user_2' || gs.loggedInUserInfo['role'] === 'user_3' || gs.loggedInUserInfo['role'] === 'user_4' || gs.loggedInUserInfo['role'] === 'admin'"
+                        class="text-start">
+                        {{data.driverName}}
                       </td>
                       <td class="text-center">
                         <span>{{data.createdDate | date : 'MM/dd/yyyy, h:mm a'}}

@@ -71,30 +71,51 @@ export class BulkUploadVcModalComponent {
     if (file) {
       this.uploadedBulkFile = file;
       this.gs.isSpinnerShow = true;
-      this.gs.readExcel(file).then((vinData) => {
-        this.profileService.bulkVehicleUpload(vinData, {
-          "userId": this.gs.loggedInUserInfo.userId,
-        }).subscribe((response: any) => {
-          this.gs.isSpinnerShow = false;
-          this.vinUploadResponse = response;
-          this.vinUploadResponse.allVinList = vinData;
-          this.fileInput.nativeElement.value = '';
-          this.gs.isProgressStepShow = false;
-          setTimeout(() => {
-            this.gs.isProgressStepShow = true;
-          }, 100);
-          if (response && response.statusCode == "200") {
-            this.toast.successToastr("VIN uploaded successfully");
-          }
-          if (response && response.successList.length == vinData.length) {
-            this.toast.successToastr("All VIN uploaded successfully");
-          }
-        }, (err: any) => {
-          this.fileInput.nativeElement.value = '';
-          this.gs.isSpinnerShow = false;
-          this.vinUploadResponse = err.error;
-          this.toast.errorToastr(err?.error?.message || "Something went wrong");
-        })
+      this.profileService.GetMasterBulkUploadTemplateDetails().subscribe((response: any) => {
+        const data = JSON.parse(response);
+        const headerMap = data.TableHeaders.reduce((acc: any, curr: any) => {
+          acc[curr.headerName] = curr.propertyName;
+          return acc;
+        }, {});
+        this.gs.readExcel(file).then((vinData) => {
+          vinData.splice(0, 1);
+          vinData = vinData.filter((i: any) => i.vinNumber || i['VIN Number']);
+          const formattedData = vinData.map((row: any) => {
+            const newRow: any = {};
+            Object.keys(row).forEach(key => {
+              const mappedKey = headerMap[key];
+              if (mappedKey) {
+                newRow[mappedKey] = row[key];
+              }
+            });
+            return newRow;
+          });
+          this.profileService.bulkVehicleUpload(formattedData, {
+            "userId": this.gs.loggedInUserInfo.userId,
+          }).subscribe((response: any) => {
+            this.gs.isSpinnerShow = false;
+            this.vinUploadResponse = response;
+            this.vinUploadResponse.allVinList = formattedData;
+            this.fileInput.nativeElement.value = '';
+            this.gs.isProgressStepShow = false;
+            setTimeout(() => {
+              this.gs.isProgressStepShow = true;
+            }, 100);
+            if (response && response.statusCode == "200") {
+              this.toast.successToastr("VIN uploaded successfully");
+            }
+            if (response && response.successList.length == vinData.length) {
+              this.toast.successToastr("All VIN uploaded successfully");
+            }
+          }, (err: any) => {
+            this.fileInput.nativeElement.value = '';
+            this.gs.isSpinnerShow = false;
+            this.vinUploadResponse = err.error;
+            this.toast.errorToastr(err?.error?.message || "Something went wrong");
+          })
+        });
+      }, error => {
+        this.gs.isSpinnerShow = false;
       });
     }
   }

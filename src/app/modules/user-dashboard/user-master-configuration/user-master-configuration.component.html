@@ -51,13 +51,27 @@
 
         <!-- Branch Info / Office Details -->
         <div *ngIf="activeKycTab === 6">
-          <ng-container *ngIf="!isAddEditBranch && isLoadBranch">
+          <ng-container *ngIf="!isAddEditBranch">
             <app-dynamic-grid [type]="'branch'" [data]="gridInfoData" [kycForm]="kycForm"
               [selectedTabObj]="selectedTabObj" [columns]="branchInfoColumns" [actions]="branchInfoActions"
               (actionEvent)="handleAction($event, 'branch')"></app-dynamic-grid>
           </ng-container>
           <ng-container *ngIf="isAddEditBranch">
             <app-dynamic-form [kycForm]="kycForm" [formType]="'branch'" [isEditInfo]="isFormEdit"
+              (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+              [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
+          </ng-container>
+        </div>
+
+        <!-- Garage Information -->
+        <div *ngIf="activeKycTab === 41">
+          <ng-container *ngIf="!isAddEditGarage">
+            <app-dynamic-grid [type]="'garage'" [data]="gridInfoData" [kycForm]="kycForm"
+              [selectedTabObj]="selectedTabObj" [columns]="branchInfoColumns" [actions]="branchInfoActions"
+              (actionEvent)="handleAction($event, 'garage')"></app-dynamic-grid>
+          </ng-container>
+          <ng-container *ngIf="isAddEditGarage">
+            <app-dynamic-form [kycForm]="kycForm" [formType]="'garage'" [isEditInfo]="isFormEdit"
               (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
               [singleDetailInfo]="singleDetailInfo"></app-dynamic-form>
           </ng-container>

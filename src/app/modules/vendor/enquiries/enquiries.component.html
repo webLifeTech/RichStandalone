@@ -32,7 +32,7 @@
                 (change)="searchData(); selectProvider($event)">
               </ng-select>
             </div>
-            <div class="col-lg-2 col-sm-12 col-12">
+            <div class="col-lg-2 col-sm-12 col-12" *ngIf="gs.loggedInUserInfo.role == 'admin'">
               <ng-select clearable="false" [items]="mainCatList" bindLabel="Name" bindValue="Name"
                 placeholder="-- Filter Category --" [(ngModel)]="searchFilter.category" name="service"
                 (change)="onChangeServices($event)">
@@ -107,7 +107,7 @@
                     <th>Contact Person</th>
                     <th>Mobile</th>
                     <th>Email</th>
-                    <th>Category</th>
+                    <th *ngIf="gs.loggedInUserInfo.role == 'admin'">Category</th>
                     <th>Sub Category</th>
                     <th>Date</th>
                   </tr>
@@ -130,7 +130,7 @@
                     <td>
                       <a>{{data.emailId || '-'}}</a>
                     </td>
-                    <td>
+                    <td *ngIf="gs.loggedInUserInfo.role == 'admin'">
                       <a>{{data.category || '-'}}</a>
                     </td>
                     <td>

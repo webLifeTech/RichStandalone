@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { saveAs } from 'file-saver';
 import * as ExcelJS from 'exceljs';
 
+import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
@@ -405,6 +406,323 @@ export class ExcelExportService {
     // --- Save ---
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), `${fileName}.xlsx`);
+  }
+
+  async generateExcel(excelSheetsData: any) {
+
+    const workbook = new ExcelJS.Workbook();
+
+    // ================================
+    // 1. Create Main Sheet
+    // ================================
+    const bulkSheet = workbook.addWorksheet('Bulk_Vehicle');
+
+    const headers = excelSheetsData['TableHeaders'].map((h: any) => h.headerName);
+    const exampleRow = excelSheetsData['TableHeaders'].map((h: any) => h.defaultValue || "");
+
+    // Add header first
+    bulkSheet.addRow(headers);
+
+    // Add example row
+    bulkSheet.addRow(exampleRow);
+
+    const columnIndexMap: any = {};
+
+    const getExcelColumn = (index: number) => {
+      let letter = '';
+      while (index > 0) {
+        let mod = (index - 1) % 26;
+        letter = String.fromCharCode(65 + mod) + letter;
+        index = Math.floor((index - mod) / 26);
+      }
+      return letter;
+    };
+
+    // ================================
+    // 2. Create Reference Sheets
+    // ================================
+    const TableHeaders = JSON.parse(JSON.stringify(excelSheetsData['TableHeaders']));
+    delete excelSheetsData['TableHeaders'];
+
+    const SheetsData = excelSheetsData;
+    console.log("SheetsData >>>>>", SheetsData);
+
+    Object.keys(SheetsData).forEach(sheetName => {
+      const sheet = workbook.addWorksheet(sheetName);
+
+      const data = SheetsData[sheetName];
+
+      if (data.length > 0) {
+        const headers = Object.keys(data[0]);
+        sheet.addRow(headers);
+
+        data.forEach((row: any) => {
+          sheet.addRow(Object.values(row));
+        });
+
+        sheet.columns.forEach((column: any) => {
+          let maxLength = 0;
+          column.eachCell({ includeEmpty: true }, (cell: any) => {
+            const columnLength = cell.value ? cell.value.toString().length : 10;
+            if (columnLength > maxLength) {
+              maxLength = columnLength;
+            }
+          });
+          column.width = maxLength + 4;
+        });
+      }
+    });
+
+    TableHeaders.forEach((h: any, index: any) => {
+      columnIndexMap[h.propertyName] = index + 1;
+    });
+
+    const applyValidation = (header: any, colLetter: string) => {
+      for (let i = 2; i <= 200; i++) {
+
+        let validation: any = {};
+
+        // ✅ Mandatory
+        if (header.isMandatory) {
+          validation.allowBlank = false;
+        } else {
+          validation.allowBlank = true;
+        }
+
+        // ✅ Dropdown (lookup)
+        if (header.lookupFromSheet && header.propertyName !== 'garagePostalCode' && header.propertyName !== 'postalCode') {
+          const [sheetName, col] = header.lookupFromSheet.split('.');
+
+          const rowCount = excelSheetsData[sheetName]?.length + 1;
+
+          if (sheetName && col && rowCount) {
+            validation = {
+              type: 'list',
+              allowBlank: !header.isMandatory,
+              formulae: [`'${sheetName}'!$${col}$2:$${col}$${rowCount}`],
+              showErrorMessage: true,
+              error: `${header.headerName} must be selected from list`
+            };
+          }
+        }
+
+        // ✅ Number validation
+        else if (header.validationType === 'number') {
+          validation = {
+            type: 'whole',
+            // operator: 'greaterThan',
+            // formulae: [0],
+            allowBlank: !header.isMandatory,
+            showErrorMessage: true,
+            error: `${header.headerName} must be a number`
+          };
+        }
+
+        // ✅ Text length validation
+        else if (header.validationType === 'text' || header.validationType === 'alphanumeric' || header.validationType === 'any' || !header.validationType) {
+          if (header.minLength || header.maxLength) {
+            validation = {
+              type: 'textLength',
+              operator: 'between',
+              formulae: [
+                Number(header.minLength || 0),
+                Number(header.maxLength || 999)
+              ],
+              allowBlank: !header.isMandatory,
+              showErrorMessage: true,
+              error: `${header.headerName} length must be between ${header.minLength} and ${header.maxLength}`
+            };
+          }
+        }
+
+        if (header.propertyName === 'postalCode') {
+          validation = {
+            type: 'textLength',
+            operator: 'equal',
+            formulae: [5], // exact 5 digits
+            allowBlank: false,
+            showErrorMessage: true,
+            error: 'Postal Code must be 5 digits'
+          };
+        }
+
+        if (header.propertyName.includes('Cd') && header.defaultValue === 'FALSE') {
+          validation = {
+            type: 'list',
+            formulae: ['"TRUE,FALSE"']
+          };
+        }
+
+        // Apply validation
+        bulkSheet.getCell(`${colLetter}${i}`).dataValidation = validation;
+      }
+    };
+
+    const applyVlookupFormula = (
+      propertyCd: string,
+      propertyName: string,
+      sheetName: string,
+      cellLookup: string = "A:B",
+      totalRows: number = 200,
+    ) => {
+
+      const cdColIndex = columnIndexMap[propertyCd];
+      const nameColIndex = columnIndexMap[propertyName];
+      const cdColLetter = getExcelColumn(cdColIndex);
+      const nameColLetter = getExcelColumn(nameColIndex);
+
+      for (let i = 2; i <= totalRows; i++) {
+        bulkSheet.getCell(`${nameColLetter}${i}`).value = {
+          formula: `IFERROR(VLOOKUP(${cdColLetter}${i}, '${sheetName}'!${cellLookup}, 2, FALSE), "")`
+        };
+      }
+    };
+
+    const getColumnNumber = (col: string) => {
+      return col.charCodeAt(0) - 64;
+    };
+
+    const applyPostalLookup = (targetProperty: string, targetCol: string) => {
+
+      const postalIndex = columnIndexMap['garagePostalCode'];
+      const targetIndex = columnIndexMap[targetProperty];
+
+      const postalLetter = getExcelColumn(postalIndex);
+      const targetLetter = getExcelColumn(targetIndex);
+
+      for (let i = 2; i <= 200; i++) {
+        bulkSheet.getCell(`${targetLetter}${i}`).value = {
+          formula: `IFERROR(VLOOKUP(TEXT(${postalLetter}${i},"0"), 'PostalCode'!A:G, ${getColumnNumber(targetCol)}, FALSE), "")`
+        };
+      }
+    };
+
+    const applyTerritoryLookup = () => {
+
+      const zipIndex = columnIndexMap['postalCode'];
+      const territoryIndex = columnIndexMap['territoryCode'];
+
+      const zipLetter = getExcelColumn(zipIndex);
+      const territoryLetter = getExcelColumn(territoryIndex);
+
+      for (let i = 2; i <= 200; i++) {
+        bulkSheet.getCell(`${territoryLetter}${i}`).value = {
+          formula: `IFERROR(VLOOKUP(TEXT(${zipLetter}${i},"0"), 'PostalCodeTerritoryCode'!A:C, ${getColumnNumber('B')}, FALSE), "")`
+        };
+      }
+    };
+
+    // Gross Vehicle Weight
+
+
+    TableHeaders.forEach((header: any) => {
+      const colIndex = columnIndexMap[header.propertyName];
+      const colLetter = getExcelColumn(colIndex);
+
+      if (header.isMandatory) {
+        bulkSheet.getColumn(colIndex).eachCell((cell, rowNumber) => {
+          if (rowNumber === 1) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffc7ce' } // light red header
+            };
+          }
+        });
+      }
+      applyValidation(header, colLetter);
+    });
+
+
+    TableHeaders.forEach((header: any) => {
+      if (header.lookupFromSheet) {
+        const [sheetName, col] = header.lookupFromSheet.split('.');
+        if (col === 'B') {
+          let newStr = header.propertyName.replace("Cd", "");
+          applyVlookupFormula(newStr, header.propertyName, sheetName, "A:B");
+        }
+        if (col === 'C') {
+          let newStr = header.propertyName.replace("Cd", "");
+          applyVlookupFormula(newStr, header.propertyName, sheetName, "B:C");
+        }
+      }
+
+    });
+
+    applyPostalLookup('city', 'B');
+    applyPostalLookup('state', 'D');
+    applyPostalLookup('stateCd', 'E');
+    applyPostalLookup('country', 'F');
+    applyPostalLookup('countryCd', 'G');
+    applyTerritoryLookup();
+
+    // applyVlookupFormula(
+    //   'grossVehicleWeight',
+    //   'grossVehicleWeightCd',
+    //   'GrossVehicleWeight'
+    // );
+
+    // bulkSheet.insertRow(1, [
+    //   "⚠️ Fill all required fields. Do not change auto-filled columns."
+    // ]);
+
+    // bulkSheet.mergeCells(`A1:${getExcelColumn(TableHeaders.length)}1`);
+
+    const exampleExcelRow = bulkSheet.getRow(2);
+
+    exampleExcelRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFDE9D9' } // light orange
+      };
+
+      cell.font = {
+        italic: true
+      };
+    });
+
+    exampleExcelRow.protection = {
+      locked: true
+    };
+
+
+
+    const lockColumn = (propertyName: string) => {
+      const colIndex = columnIndexMap[propertyName];
+
+      bulkSheet.getColumn(colIndex).eachCell((cell, rowNumber) => {
+        if (rowNumber > 1) {
+          cell.protection = { locked: true };
+        }
+      });
+    };
+
+    // lockColumn('grossVehicleWeight');
+
+    // ================================
+    // 4. Style Header
+    // ================================
+    bulkSheet.getRow(1).font = { bold: true };
+
+    bulkSheet.columns.forEach((column: any) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell: any) => {
+        const columnLength = cell.value ? cell.value.toString().length : 10;
+        if (columnLength > maxLength) {
+          maxLength = columnLength;
+        }
+      });
+      column.width = maxLength + 4;
+    });
+
+    // ================================
+    // 5. Download File
+    // ================================
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer]);
+
+    saveAs(blob, 'Bulk_Vehicle_Template.xlsx');
   }
 
 }

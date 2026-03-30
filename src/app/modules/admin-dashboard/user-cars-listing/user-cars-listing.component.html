@@ -125,6 +125,7 @@
                           <th *ngIf="activeTab === 'Fleet Company'" class="text-center">Company/Branch Name</th>
                           <th class="text-center">Plate Number</th>
                           <th class="text-center">Price Per Day</th>
+                          <th class="text-center">KYV Status</th>
                           <th class="text-center">Vehicle status</th>
                           <th class="text-center">Status</th>
                         </tr>
@@ -164,6 +165,15 @@
                           </td>
                           <td class="text-center text-red">
                             <span>{{data.perDayPrice | currencyPipe: gs.currency}}</span>
+                          </td>
+                          <td>
+                            <span class="badge" [ngClass]="{
+                            'text-tangerine': data.kycStatusCd == '1',
+                            'text-success-light': data.kycStatusCd == '2' || data.kycStatusCd == '5',
+                            'text-red': data.kycStatusCd == '3'|| data.kycStatusCd == '6',
+                            'text-cyan': data.kycStatusCd == '4' }">
+                              {{data.kycStatus || '-'}}
+                            </span>
                           </td>
                           <td>
                             <span class="badge" [ngClass]="{

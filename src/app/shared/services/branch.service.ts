@@ -14,10 +14,8 @@ export class BranchService {
   constructor(private http: HttpClient) { }
 
   // CompanyBranchKYC -> GetAllCompanyBranches
-  public GetAllCompanyBranches(dataParams: any) {
-    const params = new HttpParams()
-      .set('userId', dataParams.userId)
-    return this.http.get(this.baseUrl1 + 'TLHUB/CompanyBranchKYC/GetAllCompanyBranches', { params }).pipe(
+  public GetAllCompanyBranches(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/CompanyBranchKYC/GetAllCompanyBranches`, data).pipe(
       map((res: any) => {
         return res;
       })
@@ -57,4 +55,44 @@ export class BranchService {
     })
   }
 
+
+  // GarageInfo -> GetGarageInformations // get all garage
+  public GetGarageInformations(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/GarageInfo/GetGarageInformations`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // GarageInfo -> GetGarageInfoByGarageId
+  public GetGarageInfoByGarageId(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId).set('garagePersonNum', dataParams.garagePersonNum);
+    return this.http.get(this.baseUrl1 + 'TLHUB/GarageInfo/GetGarageInfoByGarageId', { params }).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // GarageInfo -> InsertAndUpdateGarageInformation
+  public InsertAndUpdateGarageInformation(data: any) {
+    return this.http.post(this.baseUrl1 + `TLHUB/GarageInfo/InsertAndUpdateGarageInformation`, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // GarageInfo -> GetGarageAddresses
+  public GetGarageAddresses(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/GarageInfo/GetGarageAddresses', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
 }

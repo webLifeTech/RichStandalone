@@ -1,0 +1,20 @@
+<div class="new-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="row my-kyc">
+        <div class="col-lg-12">
+          <div class="dashboard-box">
+            <div class="position-relative">
+
+              <app-dynamic-form [kycForm]="kycForm" [formType]="formType" [isEditInfo]="false"
+                (onHandleSubmit)="handleSubmit()" (onCancel)="handleCancel()" [selectedTabObj]="selectedTabObj"
+                [singleDetailInfo]="{}"></app-dynamic-form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
