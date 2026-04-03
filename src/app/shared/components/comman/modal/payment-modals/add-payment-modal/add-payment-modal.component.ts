@@ -252,6 +252,29 @@ export class AddPaymentModalComponent {
       return;
     }
 
+    if (this.type === 'CreditCard') {
+      if (!this.gs.paymentDetails.creditCard.valid) {
+        this.toast.errorToastr("Invalid Credit Card Details");
+        return;
+      }
+    }
+    if (this.type === 'ACH') {
+      if (!this.gs.paymentDetails.ach.valid) {
+        this.toast.errorToastr("Invalid ACH Details");
+        return;
+      }
+    }
+
+    if (this.type == 'Crypto') {
+      if (!this.selectedCoin) {
+        this.toast.errorToastr("Please select crypto coin");
+        return;
+      }
+
+      this.toast.errorToastr("Currently not able to withdrow with Crypto, Crypto is on Testing Mode!");
+      return;
+    }
+
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "walletId": this.walletId,

@@ -58,11 +58,11 @@ export class TermsAndCModalComponent {
     }
     this.profileService.getTermsAndConditions(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      if (response && response.description) {
+      if (response && response.template) {
         this.termsAndConditionsObj = response;
         console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
 
-        this.content = response.description;
+        this.content = response.template;
       }
     }, err => {
       this.gs.isSpinnerShow = false;

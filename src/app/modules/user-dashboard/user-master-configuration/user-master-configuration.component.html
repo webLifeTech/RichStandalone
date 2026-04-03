@@ -97,8 +97,8 @@
               (onHandleUpgradePlan)="onUpgradePlan()"></app-package-subscription>
           </ng-container>
           <ng-container *ngIf="subscriptionStep == 2">
-            <app-plan-subscribe [from]="'subscription'" (onHandleSubmit)="handleConfirm()"
-              (onHandleBack)="handleBack($event)"></app-plan-subscribe>
+            <app-plan-subscribe [from]="'subscription'" [packageTermsCode]="selectedTabObj.termsAndConditionCode"
+              (onHandleSubmit)="handleConfirm()" (onHandleBack)="handleBack($event)"></app-plan-subscribe>
           </ng-container>
           <ng-container *ngIf="subscriptionStep == 3">
             <app-payment-success (onHandleBack)="handleBack($event)"></app-payment-success>

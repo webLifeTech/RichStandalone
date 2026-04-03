@@ -139,7 +139,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 p-0 d-flex">
+              <div *ngIf="gs.loggedInUserInfo['role'] !== 'Vendor'" class="col-md-6 p-0 d-flex">
                 <div class="widget-box pb-5 flex-fill">
                   <div class="widget-header">
                     <div class="widget-content">
@@ -157,6 +157,28 @@
                   <div class="css-jlkw74"></div>
                 </div>
               </div>
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'Vendor'" class="col-md-6 p-0 d-flex">
+                <div class="widget-box pb-5 flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Package Subscription</h3>
+                      <div class="widget-icon">
+                        <span class="total-count pb-0">
+                          {{dashboardAllDetails?.packageSubscription?.packageName}}
+                        </span>
+                        <span class="total-count p-0">
+                          {{dashboardAllDetails?.packageSubscription?.price | currencyPipe: gs.currency}}
+                        </span>
+                      </div>
+                      <div class="text-center">
+                        <a class="btn view-btn mt-2" (click)="goConfiguration()">View</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+
               <div
                 *ngIf="dashboardAllDetails.driverRiskScore && (gs.loggedInUserInfo['role'] === 'user' || gs.loggedInUserInfo['role'] === 'user_4')"
                 class="col-md-6 p-0">
@@ -181,6 +203,33 @@
                   </div>
                   <div class="review-rating d-flex align-items-center mt-5 text-center">
                     <bar-rating [(rate)]="dashboardAllDetails.averageStartRating" readonly></bar-rating>
+                  </div>
+                  <div class="css-jlkw74"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="gs.loggedInUserInfo['role'] !== 'admin'" class="col-lg-4 mb-3">
+        <div class="card dash-box-card flex-fill mb-0 py-2">
+          <div class="card-body overview-box">
+            <div class="row">
+              <div *ngIf="gs.loggedInUserInfo['role'] === 'Vendor'" class="col-md-6 p-0 d-flex">
+                <div class="widget-box pb-5 flex-fill">
+                  <div class="widget-header">
+                    <div class="widget-content">
+                      <h3>Enquiries</h3>
+                      <div class="widget-icon">
+                        <span class="total-count">
+                          {{dashboardAllDetails.providerEnquiriesCounts}}
+                        </span>
+                      </div>
+                      <div class="text-center">
+                        <a class="btn view-btn mt-2" (click)="goEnquiries()">View</a>
+                      </div>
+                    </div>
                   </div>
                   <div class="css-jlkw74"></div>
                 </div>

@@ -47,6 +47,7 @@ import { CabPromoCodeComponent } from '../../../cab/booking/widgets/cab-promo-co
 })
 export class PlanSubscribeComponent {
   @Input() from: string;
+  @Input() packageTermsCode: string;
   @Output() onHandleBack = new EventEmitter<any>();
   @Output() onHandleSubmit = new EventEmitter<any>();
 
@@ -212,18 +213,11 @@ export class PlanSubscribeComponent {
   }
 
   viewTermsConditions() {
-    const rolesPackageCode: any = {
-      "user": "DRIVER_PACKAGE_TC",
-      "user_2": "CAROWNER_PACKAGE_TC",
-      "user_3": "FEELT_PACKAGE_TC",
-      "user_4": "DRIVER_CAR_PACKAGE_TC",
-    }
-
     const modalRef = this.modalService.open(TermsAndCModalComponent, {
       size: 'lg',
       scrollable: true,
     });
-    modalRef.componentInstance.termCode = rolesPackageCode[this.gs.loggedInUserInfo.role]; // "D_KYC_TC"
+    modalRef.componentInstance.termCode = this.packageTermsCode; // rolesPackageCode[this.gs.loggedInUserInfo.role]
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
         this.isAgreeTerms = true;
@@ -328,8 +322,8 @@ export class PlanSubscribeComponent {
       "otherFee": this.packageSummaryObj.otherFee,
       "subscrptionPackageDetails": {
         "packageId": this.packageSummaryObj.packageId,
-        "startDate": startDate,
-        "endDate": endDate,
+        "startDate": startDate ? this.transformDate(startDate, 'MM/dd/yyyy HH:mm:ss') : null,
+        "endDate": endDate ? this.transformDate(endDate, 'MM/dd/yyyy HH:mm:ss') : null,
         "noOfMonths": this.packageSummaryObj.noOfMonths,
         "payckageStatus": this.params.packageStatus
       }

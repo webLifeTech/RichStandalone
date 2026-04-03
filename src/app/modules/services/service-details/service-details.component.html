@@ -137,7 +137,32 @@
                       <h2 class="name">{{ singleDetailInfo.providerName }}</h2>
                       <div class="address">{{ singleDetailInfo.location }}</div>
 
-                      <div class="rating-row">
+                      <h5 class="fw-bold mt-4 mb-0">Your Review</h5>
+
+                      <div class="review-card">
+                        <div class="header">
+                          <img [src]="reviews[0]?.driver_img" alt="avatar" class="avatar" />
+                          <div class="user-info">
+                            <div class="name">{{ reviews[0]?.driver_name }}</div>
+                            <div class="meta">{{ reviews[0]?.meta }}</div>
+                            <div class="d-flex">
+                              <div class="stars mt-0 me-2">★★★★★</div>
+                              <div class="date" *ngIf="reviews[0]?.createdDate">{{ reviews[0]?.createdDate | date :
+                                'medium' }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <p class="message">{{ reviews[0]?.review }}</p>
+                        <a (click)="writeReview()" class="btn review-btn mt-2 mb-2 no-text-transorm">
+                          <i class="feather icon-edit-2 me-2"></i> Edit your review
+                        </a>
+                      </div>
+
+                      <div>
+                      </div>
+
+                      <div class="rating-row mt-3">
                         <div class="rating">{{ singleDetailInfo.rating || 5 }}</div>
                         <div class="stars">
                           <ng-container *ngFor="let star of fullStars">&#9733;</ng-container>

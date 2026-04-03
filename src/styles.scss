@@ -175,7 +175,7 @@ a {
 }
 
 .text-white {
-  color: #fd6193;
+  color: #ffffff;
 }
 
 .text-pink {
@@ -3739,6 +3739,16 @@ header {
 
     .message {
       margin: 4px 0 12px;
+    }
+
+    .review-btn {
+      border-radius: 40px;
+      box-sizing: border-box;
+      position: relative;
+      background-color: #d3f7ff;
+      border: 1px solid #d3f7ff;
+      color: #014f5a;
+      padding: 8px 14px;
     }
 
     .actions {

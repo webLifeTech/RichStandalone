@@ -3454,7 +3454,7 @@ export class DynamicFormComponent {
       size: 'lg',
       scrollable: true,
     });
-    modalRef.componentInstance.termCode = this.selectedTabObj.termCode;
+    modalRef.componentInstance.termCode = this.selectedTabObj.termsAndConditionCode; // this.selectedTabObj.termCode
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
         this.isAgreeTerms = true;

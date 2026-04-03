@@ -128,9 +128,7 @@ export class DynamicGridComponent {
           this.filteredData = response.gridList;
           this.totalData = response.viewModel.totalCount;
           if (this.selectedTabObj.formId == 14) {
-            const totalVehicles = this.totalData;
-            const completedVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Active")?.length;
-            const pendingVehicles = this.filteredData.filter((i: any) => i.vehicleStatus == "Pending")?.length;
+            const pendingVehicles = response.viewModel.pendingVehicleCount;
             if (pendingVehicles) {
               const modalRef = this.modalService.open(PendingVehicleModalComponent, {
                 centered: true,
@@ -138,8 +136,7 @@ export class DynamicGridComponent {
                 keyboard: false,
                 size: 'md'
               });
-              modalRef.componentInstance.totalVehicles = totalVehicles;
-              modalRef.componentInstance.completedVehicles = completedVehicles;
+              modalRef.componentInstance.totalVehicles = this.totalData;
               modalRef.componentInstance.pendingVehicles = pendingVehicles;
               modalRef.result.then((res: any) => {
                 if (res.confirmed) {

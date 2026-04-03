@@ -8,6 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ReviewService } from '../../../shared/services/review.service';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
 import { GlobalService } from '../../../shared/services/global.service';
+import { WriteReviewModalComponent } from '../../../shared/components/comman/modal/booking-modals/write-review-modal/write-review-modal.component';
 
 @Component({
   selector: 'app-service-details',
@@ -103,5 +104,17 @@ export class ServiceDetailsComponent {
 
   back() {
     this.backAction.emit(true);
+  }
+
+  writeReview() {
+    const modalRef = this.modalService.open(WriteReviewModalComponent, {
+      // centered: true,
+    });
+    modalRef.componentInstance.singleDetails = this.singleDetailInfo;
+    modalRef.result.then((res: any) => {
+      if (res.confirmed) {
+      }
+    }, () => {
+    });
   }
 }

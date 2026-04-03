@@ -362,7 +362,7 @@
                             <div class="custom-file-upload">
                               <input (change)="handleUpload($event, field)" [readonly]="field.get('isReadOnly')?.value"
                                 type="file" [attr.accept]="field.get('acceptedTypes')?.value" id="licenseUpload"
-                                class="file-input" />
+                                class="file-input" [title]="field.get('value')?.value || 'Click to Choose File'" />
                               <span class="choose-file">Choose File</span>
                               <span *ngIf="field.get('value')?.value"
                                 class="file-name">{{field.get('value')?.value}}</span>
@@ -592,7 +592,7 @@
                           <div class="input-group">
                             <div class="custom-file-upload">
                               <input (change)="uploadDocument($event, item)" type="file" [id]="'uploaddocument'+inx"
-                                class="file-input" />
+                                class="file-input" [title]="item.documentPath || 'Click to Choose File'" />
                               <span class="choose-file">Choose File</span>
                               <span *ngIf="item.documentPath" class="file-name">{{item.documentPath}}</span>
                               <span *ngIf="!item.documentPath" class="file-name">No file chosen</span>

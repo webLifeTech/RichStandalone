@@ -207,6 +207,9 @@ export class UserDashboardComponent {
         if (this.dashboardAllDetails?.alertMessages) {
           this.dashboardAllDetails.alertMessages = JSON.parse(this.dashboardAllDetails.alertMessages);
         }
+        if (this.dashboardAllDetails?.packageSubscription) {
+          this.dashboardAllDetails.packageSubscription = JSON.parse(this.dashboardAllDetails.packageSubscription);
+        }
 
         this.dashboardAllDetails.totalFavourite = this.dashboardAllDetails.favouriteCars + this.dashboardAllDetails.favouriteDrivers;
 
@@ -485,6 +488,14 @@ export class UserDashboardComponent {
   }
   goWishlist() {
     this.router.navigate(['/user/favourite']);
+  }
+
+  goConfiguration() {
+    this.router.navigate(['/user/configuration']);
+  }
+
+  goEnquiries() {
+    this.router.navigate(['/user/enquiries']);
   }
 
   getTabValue(value: string) {

@@ -28,10 +28,9 @@
       </ng-container>
     </ul>
     <div class="text-center">
-      <button *ngIf="item.purchased" readonly class="btn btn-theme  no-text-transorm"
-        [style.background-color]="item.color">
-        Purchased
-      </button>
+      <h4 *ngIf="item.purchased" class="text-goldenrod fw-bold">
+        <i class="feather icon-check-circle me-2 "></i> Current Plan
+      </h4>
       <a *ngIf="!item.purchased && !currentPlan.packageCode" (click)="subscribe(item, 'Subscribe')"
         class="btn btn-theme  no-text-transorm" [style.background-color]="item.color">
         Subscribe

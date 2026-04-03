@@ -270,19 +270,6 @@ export class UserDashboardKycComponent {
     }
   ];
 
-  tandcCodes: any = {
-    "DRIVER INFO": "D_KYC_TC",
-    "CAR OWNER INFO": "D_KYC_TC",
-    "COMPANY INFO": "F_KYC_TC",
-    "VEHICLE UPLOAD": "V_KYC_TC",
-
-    "1": "D_KYC_TC", // 1 = formId
-    "12": "D_KYC_TC", // 12 = formId
-    "5": "F_KYC_TC", // 5 = formId
-    "7": "V_KYC_TC", // 7 = formId
-    "8": "V_KYC_TC", // 8 = formId
-  }
-
   constructor(
     public gs: GlobalService,
     public route: ActivatedRoute,
@@ -361,7 +348,7 @@ export class UserDashboardKycComponent {
       case 3:
         return 'Your KYC verification was rejected';
       case 4:
-        return 'Action required: Please update your documents and resubmit for verification.';
+        return 'Action required: Please update your profile and resubmit for verification.';
       case 5:
         return 'Your KYC verification is successfully completed.';
       default:
@@ -380,7 +367,6 @@ export class UserDashboardKycComponent {
       if (tab.formId == 7 && !this.isKYCCompleted) {
         this.toast.errorToastr("KYC is pending, Able to vehicle upload once kyc done.");
       }
-      tab.termCode = this.tandcCodes[tab.formId];
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
       console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
       this.isStartGetKyc = false;
@@ -529,7 +515,6 @@ export class UserDashboardKycComponent {
   filter() {
     this.activeKycTab = "";
     setTimeout(() => {
-      this.sidebarTabs[0].termCode = this.tandcCodes[this.sidebarTabs[0].formId];
       this.selectedTabObj = this.sidebarTabs[0]; // need to do 0
       this.activeKycTab = this.sidebarTabs[0].formId; // need to do 0
       for (let i in this.sidebarTabs) {
@@ -637,6 +622,7 @@ export class UserDashboardKycComponent {
     this.isAddEditVendor = false;
 
     if (type === 'vendor-profile') {
+      this.GetKycByUserId();
       this.getProviderDetails();
     } else {
       this.getDriverDetails();

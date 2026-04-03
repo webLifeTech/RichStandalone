@@ -20,18 +20,11 @@ export class PendingVehicleModalComponent {
   @Input() confirmButton: string;
   @Input() cancelButton: string;
   @Input() totalVehicles!: number;
-  @Input() completedVehicles!: number;
   @Input() pendingVehicles!: number;
-
-  // get pendingVehicles(): number {
-  //   return this.totalVehicles - this.completedVehicles;
-  // }
 
   constructor(
     private modalService: NgbModal,
     public activeModal: NgbActiveModal,
-    // public dialogRef: MatDialogRef<InformationModalComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: any
   ) {
   }
 
