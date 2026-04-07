@@ -93,7 +93,7 @@ export class BookingComponent {
 
   getConfigUIForms() {
     let body = {
-      "menuId": 26,
+      "menuId": 21,
       "countryId": 230,
       "transactionId": 1,
       "stateCode": "42",
@@ -107,10 +107,10 @@ export class BookingComponent {
         this.paymentOptions[0].checked = true;
         this.firstPayOpt = this.paymentOptions[0];
         const types: any = {
-          "21": "CreditCard",
-          "22": "ACH",
-          "23": "Wallet",
-          "24": "Crypto"
+          "43": "CreditCard",
+          "44": "ACH",
+          "45": "Wallet",
+          "46": "Crypto"
         }
         for (let i in this.paymentOptions) {
           this.paymentOptions[i].type = types[this.paymentOptions[i].formId] || null;

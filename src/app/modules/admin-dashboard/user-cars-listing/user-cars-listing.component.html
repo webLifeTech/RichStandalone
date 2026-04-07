@@ -168,7 +168,7 @@
                           </td>
                           <td>
                             <span class="badge" [ngClass]="{
-                            'text-tangerine': data.kycStatusCd == '1',
+                            'text-tangerine': data.kycStatusCd == '1' || data.kycStatusCd == '8',
                             'text-success-light': data.kycStatusCd == '2' || data.kycStatusCd == '5',
                             'text-red': data.kycStatusCd == '3'|| data.kycStatusCd == '6',
                             'text-cyan': data.kycStatusCd == '4' }">

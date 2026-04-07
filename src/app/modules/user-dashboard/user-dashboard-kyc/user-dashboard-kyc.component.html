@@ -104,7 +104,7 @@
         <div
           *ngIf="isKYCCompleted && !isFormEdit && (activeKycTab === 1 || activeKycTab === 5 || activeKycTab === 12 || activeKycTab === 19)"
           class="alert-msg">
-          <div class="alert alert-success py-2 alert-dismissible mb-0" role="alert" [ngClass]="{ 'alert-warning': kycStatus == '1' || kycStatus == '4',
+          <div class="alert alert-success py-2 alert-dismissible mb-0" role="alert" [ngClass]="{ 'alert-warning': kycStatus == '1' || kycStatus == '4' || kycStatus == '8',
             'alert-success': kycStatus == '2' || kycStatus == '5',
             'alert-danger': kycStatus == '3'|| kycStatus == '6',
             }">

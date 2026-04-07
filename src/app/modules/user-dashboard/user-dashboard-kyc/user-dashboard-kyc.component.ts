@@ -351,6 +351,8 @@ export class UserDashboardKycComponent {
         return 'Action required: Please update your profile and resubmit for verification.';
       case 5:
         return 'Your KYC verification is successfully completed.';
+      case 8:
+        return 'Your Re KYC verification is under review.';
       default:
         return '';
     }

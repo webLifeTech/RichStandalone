@@ -609,7 +609,7 @@
                         </td>
                         <td>
                           <span class="badge" [ngClass]="{
-                                'text-tangerine': item?.kycSaved?.kycStatusCd == '1',
+                                'text-tangerine': item?.kycSaved?.kycStatusCd == '1' || item?.kycSaved?.kycStatusCd == '8',
                                 'text-success-light': item?.kycSaved?.kycStatusCd == '2' || item?.kycSaved?.kycStatusCd == '5',
                                 'text-red': item?.kycSaved?.kycStatusCd == '3'|| item?.kycSaved?.kycStatusCd == '6',
                                 'text-cyan': item?.kycSaved?.kycStatusCd == '4' }">
