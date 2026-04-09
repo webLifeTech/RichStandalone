@@ -187,11 +187,6 @@ export class DynamicInfoModalComponent {
     this.profileService.getMasterVehicleCodes(body).subscribe(async (res: any) => {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
-        const cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
-          "appliesto": "Risk",
-        });
-        this.masterDropdwonList["FeeRules"] = cancellationFeeMasterDp;
-        console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
 
         this.createForm();
       } else {

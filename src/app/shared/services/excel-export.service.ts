@@ -633,6 +633,27 @@ export class ExcelExportService {
       applyValidation(header, colLetter);
     });
 
+    const applyInsuranceValidation = () => {
+
+      const includedIndex = columnIndexMap['insuranceFeeIncluded'];
+      const feeIndex = columnIndexMap['insuranceFee'];
+
+      const includedLetter = getExcelColumn(includedIndex);
+      const feeLetter = getExcelColumn(feeIndex);
+
+      for (let i = 2; i <= 200; i++) {
+        bulkSheet.getCell(`${feeLetter}${i}`).dataValidation = {
+          type: 'custom',
+          allowBlank: true,
+          formulae: [
+            `${includedLetter}${i}="No"`
+          ],
+          showErrorMessage: true,
+          error: 'Insurance Fee is only allowed when "Insurance Fee Included" is No'
+        };
+      }
+    };
+
 
     TableHeaders.forEach((header: any) => {
       if (header.lookupFromSheet) {
@@ -655,6 +676,7 @@ export class ExcelExportService {
     applyPostalLookup('country', 'F');
     applyPostalLookup('countryCd', 'G');
     applyTerritoryLookup();
+    applyInsuranceValidation();
 
     // applyVlookupFormula(
     //   'grossVehicleWeight',

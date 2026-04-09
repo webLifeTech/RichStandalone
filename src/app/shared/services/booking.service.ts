@@ -143,7 +143,7 @@ export class BookingService {
     );
   }
 
-  // Master -> GetMasterInspectionLineItems
+  // Master -> GetMasterInspectiontypes
   public GetMasterInspectiontypes(dataParams: any) {
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectiontypes').pipe(
       map((res: any) => {
@@ -154,7 +154,7 @@ export class BookingService {
 
   // Master -> GetMasterInspectionLineItems
   public GetMasterInspectionLineItems(dataParams: any) {
-    const params = new HttpParams().set('userId', dataParams.userId).set('inspectiontype', dataParams.inspectiontype);
+    const params = new HttpParams().set('userId', dataParams.userId).set('inspectiontype', dataParams.inspectiontype).set('bookingId', dataParams.bookingId);
     return this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterInspectionLineItems', { params }).pipe(
       map((res: any) => {
         return res;

@@ -239,6 +239,9 @@
                             class="text-danger mt-2">
                             This field is required.
                           </div>
+                          <small *ngIf="field.get('note')?.value" class="text-danger mt-1 fw-bold">
+                            Note :- {{field.get('note')?.value}}
+                          </small>
                         </div>
                       </div>
 
@@ -459,8 +462,8 @@
                         <ng-container *ngFor="let row of section.value?.tableGrid; let subIdx = index">
                           <td *ngIf="row.modalValue !== 'status'"
                             [ngClass]="{'text-start': !subIdx,'text-center': subIdx}">
-                            {{getPrefix(item, row)}} {{item[row.modalValue] || '-'}} {{getSuffix(item, row)}}
-                            <!-- {{(item['suffixKey'] == row.modalValue) ? item['suffix'] : null}} -->
+                            <!-- {{getPrefix(item, row)}} {{item[row.modalValue] || '-'}} {{getSuffix(item, row)}} -->
+                            {{item[row.modalValue] || '-'}}
                           </td>
                           <td *ngIf="row.modalValue === 'status'" class="text-center">
                             <span class="badge" [ngClass]="{

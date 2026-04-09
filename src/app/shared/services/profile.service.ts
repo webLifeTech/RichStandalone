@@ -532,11 +532,14 @@ export class ProfileService {
     );
   }
 
-  // Master -> GetMasterCancellationFeeRules
-  public GetMasterCancellationFeeRules(dataParams: any) {
-    const params = new HttpParams().set('appliesto', dataParams.appliesto);
+  public GetMasterCancellationFeeRulesByFeeType(dataParams: any) {
+    const params = new HttpParams()
+      .set('appliesto', dataParams.appliesto)
+      .set('feeTypeName', dataParams.feeTypeName)
+      .set('feeTypeId', dataParams.feeTypeId)
+      ;
     return new Promise((resolve, reject) => {
-      this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterCancellationFeeRules', { params }).subscribe((result) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Master/GetMasterCancellationFeeRulesByFeeType', { params }).subscribe((result) => {
         resolve(result)
       }, (err) => {
         reject(err)

@@ -178,7 +178,9 @@ export class BookingComponent {
       "transactionFee": this.gs.bookingSummaryDetails.transactionFee,
       "bookingStatus": null,
       "bookingStatusRemarks": null,
-      "remarks": null
+      "remarks": null,
+      "couponId": this.gs.bookingSummaryDetails.couponId,
+      "couponAmount": this.gs.bookingSummaryDetails.coupon,
     }
 
     if (this.type === 'CreditCard') {

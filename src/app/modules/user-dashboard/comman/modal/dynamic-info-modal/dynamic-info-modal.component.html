@@ -64,7 +64,8 @@
                               <td
                                 *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
                                 [ngClass]="{'text-start': !j,'text-center': j}">
-                                {{getPrefix(tblItem, field)}} {{tblItem[field.modalValue]}} {{getSuffix(tblItem,field)}}
+                                <!-- {{getPrefix(tblItem, field)}} {{tblItem[field.modalValue]}} {{getSuffix(tblItem,field)}} -->
+                                {{tblItem[field.modalValue]}}
                               </td>
                             </ng-container>
                           </tr>

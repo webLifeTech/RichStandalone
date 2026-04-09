@@ -97,6 +97,7 @@ export class BookingChecklistComponent {
 
   GetMasterInspectionLineItems() {
     const body = {
+      "bookingId": this.bookingDetails.bookingId,
       "inspectiontype": (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') ? "PRE_RENTAL" : "POST_RENTAL",
       "userId": this.gs.loggedInUserInfo.userId,
     }

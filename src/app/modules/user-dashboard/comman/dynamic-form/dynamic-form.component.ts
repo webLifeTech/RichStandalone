@@ -338,10 +338,6 @@ export class DynamicFormComponent {
 
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
-        const cancellationFeeMasterDp = await this.profileService.GetMasterCancellationFeeRules({
-          "appliesto": "Risk",
-        });
-        this.masterDropdwonList["FeeRules"] = cancellationFeeMasterDp;
         let branchMasterDp: any = await this.branchService.GetBranchNames({
           "userId": this.gs.loggedInUserInfo.userId,
         });
@@ -699,6 +695,7 @@ export class DynamicFormComponent {
               acceptedTypes: [field.acceptedTypes],
               defaultValue: [field.defaultValue],
               isVerified: [""],
+              note: [""],
               value: [
                 field.fieldType === "DATE" ? this.parseDate(this.isEditInfo ? field.fValue : field.defaultValue ?? null)
                   : (this.isEditInfo ? (field.fValue ?? field.defaultValue) : field.fieldType === "CHECKBOX" ? JSON.parse(field.defaultValue) : (field.defaultValue ?? null)), this.getValidators(field)
@@ -1355,7 +1352,7 @@ export class DynamicFormComponent {
   }
 
   // On Change Dropdwon
-  onChangeDrop(event: any, field: any, section: any, isInitiated?: any) {
+  async onChangeDrop(event: any, field: any, section: any, isInitiated?: any) {
 
     if (field.get('valueCd')?.value || ('valueCd' in field.value)) {
       field.get('valueCd')?.setValue(event.ID);
@@ -1482,10 +1479,36 @@ export class DynamicFormComponent {
         this.isPrivateBooking = false;
       }
     }
-    if (field.value.fieldId === 344) { //fieldId 56 is "IS AVAILABLE FOR PRIVATE BOOKING?"
+    if (field.value.fieldId === 345) { //fieldId 345 is "Cancellation Fee Type"
+      this.gs.isSpinnerShow = true;
+      const cancellationFeeMasterDp: any = await this.profileService.GetMasterCancellationFeeRulesByFeeType({
+        "appliesto": "Risk",
+        "feeTypeName": event.Code,
+        "feeTypeId": event.ID,
+      }).catch((error) => {
+        this.gs.isSpinnerShow = false;
+        if (error.error.statusCode != "200") {
+          this.toast.errorToastr(error.error.message);
+          return;
+        }
+      });
+      this.updateValueByFieldId(section, 344, "value", null);
+      this.updateValueByFieldId(section, 346, "value", null);
+      this.gs.isSpinnerShow = false;
+      this.masterDropdwonList["FeeRules"] = JSON.parse(cancellationFeeMasterDp);
+      for (let i in this.masterDropdwonList["FeeRules"]) {
+        let cancelType = section.value.loopArray.find((subCatItem: any) => subCatItem.cancellationTime == this.masterDropdwonList["FeeRules"][i].Name) || {};
+        if (cancelType?.cancellationTime === this.masterDropdwonList["FeeRules"][i].Name) {
+          this.masterDropdwonList["FeeRules"][i].disabled = true;
+        }
+      }
+      this.updateValueByFieldId(section, 344, "dropdownList", this.masterDropdwonList["FeeRules"]);
+    }
+    if (field.value.fieldId === 344) {  //fieldId 344 is "Cancellation Type"
+      this.updateValueByFieldId(section, 344, "note", event.CancllationDescription);
       this.updateValueByFieldId(section, 345, "value", event.FeeType);
-      this.updateValueByFieldId(section, 345, "valueCd", event.FeeTypeCd);
       this.updateValueByFieldId(section, 346, "value", String(event.FeeValue));
+      this.updateValueByFieldId(section, 346, "isReadOnly", !event.IsEdit);
     }
 
     if (field.value.fieldId === 309 && !isInitiated) {
@@ -1762,11 +1785,11 @@ export class DynamicFormComponent {
     section.get('tableGrid').setValue(tableGridBySort);
     section.get('tableGridValueList').setValue(tempTableGridValueList);
 
-    if (this.isEditInfo) {
-      setTimeout(() => {
-        this.updateDetails(section);
-      }, 200)
-    }
+    // if (this.isEditInfo) {
+    //   setTimeout(() => {
+    //     this.updateDetails(section);
+    //   }, 200)
+    // }
   }
 
   // Table Edit
