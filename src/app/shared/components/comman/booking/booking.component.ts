@@ -166,7 +166,8 @@ export class BookingComponent {
       "pickupDate": this.transformDate(this.gs.bookingSummaryDetails.pickUpTime, 'MM/dd/yyyy HH:mm:ss'), // this.gs.lastSearch.pick_time
       "dropDate": this.transformDate(this.gs.bookingSummaryDetails.dropTime, 'MM/dd/yyyy HH:mm:ss'), // this.gs.lastSearch.drop_time
       "duration": parseInt(this.gs.lastSearch.timeDuration),
-      "rentType": this.gs.lastSearch.timeTypeId, // this.gs.lastSearch.timeType
+      "rentType": this.gs.lastSearch.timeType,
+      "rentTypeCd": this.gs.lastSearch.timeTypeId,
       "discountId": this.gs.bookingSummaryDetails.discountId,
       "totalAmount": this.gs.bookingSummaryDetails.totalFare,
       "basePrice": this.gs.bookingSummaryDetails.basePrice,
@@ -181,6 +182,8 @@ export class BookingComponent {
       "remarks": null,
       "couponId": this.gs.bookingSummaryDetails.couponId,
       "couponAmount": this.gs.bookingSummaryDetails.coupon,
+      "couponCode": this.gs.bookingSummaryDetails.appliedCouponCode,
+      "summaryId": this.gs.bookingSummaryDetails.summaryId
     }
 
     if (this.type === 'CreditCard') {

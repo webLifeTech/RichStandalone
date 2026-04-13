@@ -58,6 +58,23 @@ export class ReviewService {
     );
   }
 
+  // Provider -> ProviderRiskReview
+  public ProviderRiskReview(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/ProviderRiskReview', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Provider -> GetAllProviderRiskReviews
+  public GetAllProviderRiskReviews(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/GetAllProviderRiskReviews', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
 
 

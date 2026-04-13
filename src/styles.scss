@@ -3273,6 +3273,15 @@ header {
     font-size: 0.9rem;
   }
 
+  .br-units {
+    margin-top: 8px;
+    margin-bottom: 6px;
+
+    .br-unit {
+      font-size: 20px;
+    }
+  }
+
   .preference img {
     height: 24px;
   }
@@ -3303,7 +3312,7 @@ header {
   .contact-options {
     display: flex;
     gap: 1rem;
-    margin: 1rem 0;
+    margin: 0 0 1rem 0;
   }
 
   .call-btn {

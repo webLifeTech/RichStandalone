@@ -112,7 +112,8 @@ export class BookingCancellationComponent {
             "riskId": this.singleBookingDetail.riskId,
             "riskType": this.singleBookingDetail.riskType,
             "cancellationReason": this.cancellationForm.value.reason || null,
-            "remarks": this.cancellationForm.value.remarks
+            "remarks": this.cancellationForm.value.remarks,
+            "modifiedBy": this.gs.loggedInUserInfo.userId,
           }
           console.log("body >>>>", body);
           // return;

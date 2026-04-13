@@ -9,6 +9,9 @@ import { ReviewService } from '../../../shared/services/review.service';
 import { VendorServService } from '../../../shared/services/vendor-service.service';
 import { GlobalService } from '../../../shared/services/global.service';
 import { WriteReviewModalComponent } from '../../../shared/components/comman/modal/booking-modals/write-review-modal/write-review-modal.component';
+import { ToastService } from '../../../shared/services/toast.service';
+import { BarRating } from 'ngx-bar-rating';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-service-details',
@@ -17,6 +20,8 @@ import { WriteReviewModalComponent } from '../../../shared/components/comman/mod
     CommonModule,
     TranslateModule,
     MatTabsModule,
+    BarRating,
+    NgxPaginationModule,
   ],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.scss'
@@ -38,17 +43,24 @@ export class ServiceDetailsComponent {
   ];
 
   reviews: any = [];
-
   selectedDay = '';
   fullStars = Array(5).fill(0);
+  public tableData: any = [];
+  public searchDataValue = '';
+  sortColumn: any = "";
+  sortOrder: any = "DESC";
+  pageSize: any = 5;
+  totalData: any = 0;
+  currentPage: any = 1;
+  selfReviewData: any = {};
 
   constructor(
     private modalService: NgbModal,
     private reviewService: ReviewService,
     private vendorService: VendorServService,
+    private toast: ToastService,
     public gs: GlobalService,
   ) {
-    this.getReview();
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const d = new Date();
     this.selectedDay = weekday[d.getUTCDay()];
@@ -58,6 +70,7 @@ export class ServiceDetailsComponent {
 
   ngOnInit() {
     this.get();
+    this.getReview();
   }
 
   get() {
@@ -80,12 +93,31 @@ export class ServiceDetailsComponent {
   }
 
   getReview() {
-    this.reviewService.getUserReview().subscribe((apiRes: any) => {
-      // this.totalData = apiRes.totalData;
-      this.reviews = apiRes.data;
-      console.log("this.reviews >>>>>>", this.reviews);
+    const body = {
+      "providerUserId": this.singleDetailInfo.userId,
+      "loginUserId": this.gs.loggedInUserInfo.userId,
+      "pageNumber": this.currentPage,
+      "pagesize": this.pageSize,
+      "globalSearch": this.searchDataValue?.trim() || "",
+      "sortColumn": this.sortColumn,
+      "sortOrder": this.sortOrder,
+    }
 
-    });
+    this.gs.isSpinnerShow = true;
+    this.reviewService.GetAllProviderRiskReviews(body).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      if (res.response && res.response.statusCode == "200") {
+        this.tableData = res.gridList;
+        this.totalData = res?.viewModel?.totalCount || 0;
+        this.selfReviewData = res.loginUserDetails ? JSON.parse(res.loginUserDetails) : {};
+      }
+    })
+    // this.reviewService.getUserReview().subscribe((apiRes: any) => {
+    //   // this.totalData = apiRes.totalData;
+    //   this.reviews = apiRes.data;
+    //   console.log("this.reviews >>>>>>", this.reviews);
+
+    // });
   }
 
   openEnquirieModal(providerDetails: any) {
@@ -111,10 +143,37 @@ export class ServiceDetailsComponent {
       // centered: true,
     });
     modalRef.componentInstance.singleDetails = this.singleDetailInfo;
+    modalRef.componentInstance.selfReviewData = this.selfReviewData;
+    modalRef.componentInstance.type = "service";
     modalRef.result.then((res: any) => {
       if (res.confirmed) {
+        this.gs.isSpinnerShow = true;
+        const body = {
+          "providerUserId": this.singleDetailInfo.userId,
+          "loginUserId": this.gs.loggedInUserInfo.userId,
+          "providerId": this.singleDetailInfo.providerId,
+          "reviewId": this.selfReviewData.reviewId || 0,
+          "rating": res.review.rating,
+          "review": res.review.ratingText
+        }
+        this.reviewService.ProviderRiskReview(body).subscribe((res: any) => {
+          this.gs.isSpinnerShow = false;
+          if (res && res.statusCode == "200") {
+            this.getReview();
+            this.toast.successToastr(res.message);
+          } else {
+            this.toast.errorToastr(res.message);
+          }
+        })
       }
     }, () => {
     });
   }
+
+  setPage(page: number) {
+    this.currentPage = page;
+    this.getReview();
+  }
+
+
 }

@@ -124,6 +124,7 @@ export class ServicesComponent {
 
   backAction() {
     this.isView = false;
+    this.searchVehicleResult();
   }
 
   setPage(page: number) {

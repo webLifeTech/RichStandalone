@@ -1,20 +1,14 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { CurrencySymbolPipe } from '../../../shared/pipe/currency.pipe';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EnquiriesModalComponent } from '../../../shared/components/comman/modal/enquiries-modal/enquiries-modal.component';
-import { OtpVerificationModalComponent } from '../../user-dashboard/user-settings/modals/otp-verification-modal/otp-verification-modal.component';
-import { VerificationSuccessModalComponent } from '../../user-dashboard/user-settings/modals/verification-success-modal/verification-success-modal.component';
-import { GlobalService } from '../../../shared/services/global.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { VendorServService } from '../../../shared/services/vendor-service.service';
-import { PaginationService } from '../../../shared/services/pagination.service';
-import { pagination } from '../../../shared/interface/cab';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
-import { InformationModalComponent } from '../../../shared/components/comman/modal/information-modal/information-modal.component';
+import { BarRating } from 'ngx-bar-rating';
+import { GlobalService } from '../../../shared/services/global.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-service-list',
@@ -23,7 +17,8 @@ import { InformationModalComponent } from '../../../shared/components/comman/mod
     CommonModule,
     TranslateModule,
     NgxPaginationModule,
-    RouterLink
+    RouterLink,
+    BarRating
   ],
   templateUrl: './service-list.component.html',
   styleUrl: './service-list.component.scss'
@@ -50,6 +45,8 @@ export class ServiceListComponent {
     private router: Router,
     private route: ActivatedRoute,
     public auth: AuthService,
+    public gs: GlobalService,
+    private toast: ToastService,
   ) {
     // this.route.queryParams.subscribe((params: any) => {
     //   console.log("params >>>>>", params);
@@ -79,6 +76,10 @@ export class ServiceListComponent {
     //   }, () => { });
     //   return;
     // }
+    if (this.gs.loggedInUserInfo.userId === providerDetails.userId) {
+      this.toast.errorToastr("You can't send enquiry your own service!");
+      return;
+    }
     const modalRef = this.modalService.open(EnquiriesModalComponent, {
       centered: true,
       size: 'lg'

@@ -427,6 +427,7 @@ export class CabBookingSummaryComponent {
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
+        this.gs.bookingSummaryDetails.appliedCouponCode = this.appliedCouponCode;
       } else {
         this.gs.isSpinnerShow = false;
         this.gs.bookingSummaryDetails.isRestrict = true;
@@ -456,6 +457,7 @@ export class CabBookingSummaryComponent {
         this.bookingSummaryDetails = res.driverBookingSummaryDetails.bookingSummaryDetails;
         this.gs.bookingSummaryDetails = this.bookingSummaryDetails;
         this.gs.bookingSummaryDetails.bookingStep = this.bookingStep;
+        this.gs.bookingSummaryDetails.appliedCouponCode = this.appliedCouponCode;
       } else {
         this.gs.bookingSummaryDetails.isRestrict = true;
         this.gs.bookingSummaryDetails.restrictMessage = res?.response?.message;

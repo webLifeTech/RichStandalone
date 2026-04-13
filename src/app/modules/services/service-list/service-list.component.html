@@ -13,6 +13,10 @@
     <div class="sub-categories">
       <span *ngFor="let sub of singleProvider.subCategories" class="sub">{{ sub.subCategoryName }}</span>
     </div>
+    <div class="d-flex align-items-center">
+      <bar-rating [(rate)]="singleProvider.rating" readonly></bar-rating>
+      <span class="ms-2 fw-bold">{{singleProvider.rating}} {{singleProvider.rating == 1 ? 'star' : 'stars'}}</span>
+    </div>
     <div class="contact-options">
       <a class="btn btn-theme " href="tel:{{ singleProvider.phoneNumber }}">
         <i class="feather icon-phone"></i> {{ singleProvider.phoneNumber }}

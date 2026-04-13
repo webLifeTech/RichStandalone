@@ -101,25 +101,6 @@
                           </tr>
                         </tbody>
                       </table>
-                      <!-- <table class="table table-striped table-borderless">
-                        <thead>
-                          <tr *ngFor="let day of singleDetailInfo.BussinessHours">
-                            <th scope="col">
-                              <div class="day" [class.bold]="day.dayOfWeek === selectedDay">
-                                {{ day.dayOfWeek }}:
-                              </div>
-                            </th>
-                            <td *ngIf="day.status">
-                              <div class="time" [class.bold]="day.dayOfWeek === selectedDay">
-                                {{ day.fromTime }}-{{ day.toTime }}
-                              </div>
-                            </td>
-                            <td *ngIf="!day.status">
-                              Closed
-                            </td>
-                          </tr>
-                        </thead>
-                      </table> -->
                     </div>
                   </div>
                 </mat-tab>
@@ -134,54 +115,69 @@
                 <mat-tab label="Reviews">
                   <div class="my-5">
                     <div class="business-header">
+
                       <h2 class="name">{{ singleDetailInfo.providerName }}</h2>
                       <div class="address">{{ singleDetailInfo.location }}</div>
-
-                      <h5 class="fw-bold mt-4 mb-0">Your Review</h5>
-
-                      <div class="review-card">
-                        <div class="header">
-                          <img [src]="reviews[0]?.driver_img" alt="avatar" class="avatar" />
-                          <div class="user-info">
-                            <div class="name">{{ reviews[0]?.driver_name }}</div>
-                            <div class="meta">{{ reviews[0]?.meta }}</div>
-                            <div class="d-flex">
-                              <div class="stars mt-0 me-2">★★★★★</div>
-                              <div class="date" *ngIf="reviews[0]?.createdDate">{{ reviews[0]?.createdDate | date :
-                                'medium' }}
+                      <div class="rating-row mt-3">
+                        <div class="rating">{{ selfReviewData.providerAverageRatings}}</div>
+                        <div class="stars">
+                          <bar-rating [(rate)]="selfReviewData.providerAverageRatings" readonly></bar-rating>
+                        </div>
+                        <div class="reviews">{{ selfReviewData.totalReviews }} reviews</div>
+                      </div>
+                      <ng-container
+                        *ngIf="gs.loggedInUserInfo && gs.loggedInUserInfo.userId && (singleDetailInfo.userId !== gs.loggedInUserInfo.userId)">
+                        <h5 class="fw-bold mt-4 mb-0">Your Review</h5>
+                        <div class="review-card">
+                          <ng-container *ngIf="selfReviewData.isEdit">
+                            <div class="header">
+                              <img [src]="selfReviewData.profilePath" alt="avatar" class="avatar" />
+                              <div class="user-info">
+                                <div class="name">{{ selfReviewData.fullName }}</div>
+                                <div class="meta">{{ selfReviewData.meta }}</div>
+                                <div class="d-flex align-items-center">
+                                  <div class="stars mt-0 me-2">
+                                    <bar-rating [(rate)]="selfReviewData.rating" readonly></bar-rating>
+                                  </div>
+                                  <div class="date" *ngIf="selfReviewData.reviewDate">
+                                    {{ selfReviewData.reviewDate | date :'medium' }}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                            <p class="message">{{ selfReviewData.review }}</p>
+                          </ng-container>
+                          <a (click)="writeReview()" class="btn review-btn mt-2 mb-2 no-text-transorm">
+                            <i class="feather icon-edit-2 me-2"></i>
+                            {{selfReviewData.isEdit ? 'Edit your review' : 'Write Review'}}
+                          </a>
                         </div>
-                        <p class="message">{{ reviews[0]?.review }}</p>
-                        <a (click)="writeReview()" class="btn review-btn mt-2 mb-2 no-text-transorm">
-                          <i class="feather icon-edit-2 me-2"></i> Edit your review
-                        </a>
-                      </div>
-
-                      <div>
-                      </div>
-
-                      <div class="rating-row mt-3">
-                        <div class="rating">{{ singleDetailInfo.rating || 5 }}</div>
-                        <div class="stars">
-                          <ng-container *ngFor="let star of fullStars">&#9733;</ng-container>
-                        </div>
-                        <div class="reviews">{{ singleDetailInfo.review || 7 }} reviews</div>
-                      </div>
+                      </ng-container>
                     </div>
-                    <div class="review-card" *ngFor="let review of reviews">
+                    <div class="review-card"
+                      *ngFor="let item of tableData | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalData }">
                       <div class="header">
-                        <img [src]="review.driver_img" alt="avatar" class="avatar" />
+                        <img [src]="item.profilePath" alt="avatar" class="avatar" />
                         <div class="user-info">
-                          <div class="name">{{ review.driver_name }}</div>
-                          <div class="meta">{{ review.meta }}</div>
+                          <div class="name">{{ item.fullName }}</div>
+                          <div class="meta">{{ item.meta }}</div>
                         </div>
                       </div>
 
-                      <div class="stars">★★★★★</div>
-                      <div class="date" *ngIf="review.createdDate">{{ review.createdDate | date : 'medium' }}</div>
-                      <p class="message">{{ review.review }}</p>
+                      <div class="stars">
+                        <bar-rating [(rate)]="item.rating" readonly></bar-rating>
+                      </div>
+                      <div class="date" *ngIf="item.reviewDate">{{ item.reviewDate | date : 'medium' }}</div>
+                      <p class="message">{{ item.review }}</p>
+                    </div>
+
+                    <div *ngIf="tableData?.length" class="text-center mt-4">
+                      <pagination-controls (pageChange)="setPage($event)"></pagination-controls>
+                    </div>
+                    <div class="text-center" *ngIf="!selfReviewData.totalReviews && !totalData">
+                      <p class="text-center mt-3">
+                        <b>No Reviews Found</b>
+                      </p>
                     </div>
                   </div>
                 </mat-tab>

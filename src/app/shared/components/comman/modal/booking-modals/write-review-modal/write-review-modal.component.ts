@@ -22,6 +22,8 @@ export class WriteReviewModalComponent {
 
   @Input() title: string;
   @Input() singleDetails: any = {};
+  @Input() selfReviewData: any = {};
+  @Input() type: any = "";
   reason: any = "";
   form: any = {
     rating: 0,
@@ -41,12 +43,23 @@ export class WriteReviewModalComponent {
       this.form.rating = this.singleDetails.rating;
       this.form.ratingText = this.singleDetails.ratingText;
     }
+    if (this.selfReviewData && this.selfReviewData.reviewId) {
+      this.form.rating = this.selfReviewData.rating;
+      this.form.ratingText = this.selfReviewData.review;
+    }
   }
 
   closeModal() {
     this.modalService.dismissAll();
   }
   onConfirm() {
+
+    if (this.type === 'service') {
+      this.activeModal.close({ confirmed: true, review: this.form });
+      return;
+    }
+
+
     let Body = {
       "id": this.singleDetails.id || 0,
       "bookingId": this.singleDetails.bookingId,
