@@ -323,7 +323,8 @@ export class DynamicGridComponent {
         console.log("getDriverDetails >>>>>>>>", response);
         if (response && response.driverInfo.driverId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-            size: 'lg'
+            size: 'lg',
+            scrollable: true
           });
           modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
@@ -345,7 +346,8 @@ export class DynamicGridComponent {
       this.profileService.getCompanyDetailsByCompanyId(body).subscribe(async (response: any) => {
         if (response && response.response.statusCode == "200" && response.userId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-            size: 'lg'
+            size: 'lg',
+            scrollable: true
           });
           modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
@@ -367,7 +369,8 @@ export class DynamicGridComponent {
       this.profileService.getVehicleDetails(body).subscribe(async (response: any) => {
         if (response.response && response.response.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-            size: 'lg'
+            size: 'lg',
+            scrollable: true
           });
           modalRef.componentInstance.formType = this.type;
           modalRef.componentInstance.viewInfoDetails = response;
@@ -388,7 +391,8 @@ export class DynamicGridComponent {
       this.branchService.GetCompanyBranchByBranchId(body).subscribe(async (response: any) => {
         if (response.response && response.response.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-            size: 'lg'
+            size: 'lg',
+            scrollable: true
           });
           modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
@@ -408,7 +412,8 @@ export class DynamicGridComponent {
       this.branchService.GetGarageInfoByGarageId(body).subscribe(async (response: any) => {
         if (response.response && response.response.statusCode == "200") {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-            size: 'lg'
+            size: 'lg',
+            scrollable: true
           });
           modalRef.componentInstance.viewInfoDetails = response;
           modalRef.componentInstance.groupedSectionsData = []; // this.groupedSectionsData
@@ -421,7 +426,8 @@ export class DynamicGridComponent {
 
     if (this.type === 'driver_details') {
       const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-        size: 'lg'
+        size: 'lg',
+        scrollable: true
       });
 
       modalRef.componentInstance.formType = this.type;
@@ -434,7 +440,8 @@ export class DynamicGridComponent {
 
     if (this.type === 'vendor-profile') {
       const modalRef = this.modalService.open(DynamicInfoModalComponent, {
-        size: 'lg'
+        size: 'lg',
+        scrollable: true
       });
 
       modalRef.componentInstance.formType = this.type;

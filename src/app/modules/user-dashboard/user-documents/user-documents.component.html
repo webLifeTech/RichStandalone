@@ -36,7 +36,20 @@
                   bindValue="TypeCode" placeholder="-- Select Document Type --" [(ngModel)]="documentTypeCode"
                   name="documentTypeCode">
                 </ng-select>
-                <input #fileInput type="file" class="form-control open-select mx-2" [disabled]="!documentTypeCode" />
+                <div class="input-group mb-0 ms-2">
+                  <div class="custom-file-upload w-100">
+                    <input #fileInput type="file" [id]="'uploaddocument'" class="file-input"
+                      [title]="documentFile || 'Click to Choose File'" (change)="uploadDocument($event)" />
+                    <span class="choose-file">Choose File</span>
+                    <span *ngIf="documentFile" class="file-name">{{documentFile}}</span>
+                    <span *ngIf="!documentFile" class="file-name">No file chosen</span>
+                    <span class="eye-icon" (click)="gs.viewDocumentFile(documentFile);$event.stopPropagation()"
+                      [title]="'View Document'">
+                      <i class="fas fa-eye"></i>
+                    </span>
+                  </div>
+                </div>
+                <!-- <input #fileInput type="file" class="form-control open-select mx-2" [disabled]="!documentTypeCode" /> -->
               </div>
             </div>
             <div class="text-end">

@@ -92,6 +92,7 @@ export class DynamicFormComponent {
   fleetVerifyDetails: any = {};
   documentList: any = [];
   rolesDocSection: any = "";
+  editClTypeCode: any = "";
 
   constructor(
     private fb: FormBuilder,
@@ -1492,23 +1493,33 @@ export class DynamicFormComponent {
           return;
         }
       });
-      this.updateValueByFieldId(section, 344, "value", null);
+      // this.updateValueByFieldId(section, 344, "value", null);
       this.updateValueByFieldId(section, 346, "value", null);
       this.gs.isSpinnerShow = false;
       this.masterDropdwonList["FeeRules"] = JSON.parse(cancellationFeeMasterDp);
-      for (let i in this.masterDropdwonList["FeeRules"]) {
-        let cancelType = section.value.loopArray.find((subCatItem: any) => subCatItem.cancellationTime == this.masterDropdwonList["FeeRules"][i].Name) || {};
-        if (cancelType?.cancellationTime === this.masterDropdwonList["FeeRules"][i].Name) {
-          this.masterDropdwonList["FeeRules"][i].disabled = true;
-        }
+      const clTypeIndex = this.findControlIndexByFieldId(fieldsFmArray, 344);
+      const clChargeIndex = this.findControlIndexByFieldId(fieldsFmArray, 346);
+      const cancellationType = this.masterDropdwonList["FeeRules"].find((item: any) => ((item.Code == this.editClTypeCode) || (item.Name?.toLowerCase() == fieldsFmArray.at(clTypeIndex).get('value')?.value?.toLowerCase()))) || null;
+      if (cancellationType) {
+        fieldsFmArray.at(clTypeIndex).get('value')?.setValue(cancellationType.Name);
+        fieldsFmArray.at(clTypeIndex).get('valueCd')?.setValue(cancellationType.ID);
+        fieldsFmArray.at(clTypeIndex).get('note')?.setValue(cancellationType.CancllationDescription);
+        fieldsFmArray.at(clChargeIndex).get('value')?.setValue(String(cancellationType.FeeValue));
+        fieldsFmArray.at(clChargeIndex).get('isReadOnly')?.setValue(!cancellationType.IsEdit);
       }
       this.updateValueByFieldId(section, 344, "dropdownList", this.masterDropdwonList["FeeRules"]);
+      // for (let i in this.masterDropdwonList["FeeRules"]) {
+      //   let cancelType = section.value.loopArray.find((subCatItem: any) => subCatItem.cancellationTime == this.masterDropdwonList["FeeRules"][i].Name) || {};
+      //   if (cancelType?.cancellationTime === this.masterDropdwonList["FeeRules"][i].Name) {
+      //     this.masterDropdwonList["FeeRules"][i].disabled = true;
+      //   }
+      // }
     }
     if (field.value.fieldId === 344) {  //fieldId 344 is "Cancellation Type"
-      this.updateValueByFieldId(section, 344, "note", event.CancllationDescription);
       this.updateValueByFieldId(section, 345, "value", event.FeeType);
-      this.updateValueByFieldId(section, 346, "value", String(event.FeeValue));
-      this.updateValueByFieldId(section, 346, "isReadOnly", !event.IsEdit);
+      // this.updateValueByFieldId(section, 344, "note", event.CancllationDescription);
+      // this.updateValueByFieldId(section, 346, "value", String(event.FeeValue));
+      // this.updateValueByFieldId(section, 346, "isReadOnly", !event.IsEdit);
     }
 
     if (field.value.fieldId === 309 && !isInitiated) {
@@ -1795,6 +1806,7 @@ export class DynamicFormComponent {
   // Table Edit
   editTableItem(tgIndex: any, itemValue: any, section: any) {
     const fields = section.get('fields') as FormArray;
+    this.editClTypeCode = itemValue.code;
 
     fields.controls.forEach((field: any) => {
       if (field.get('isVisible')?.value === false) {
@@ -3063,7 +3075,7 @@ export class DynamicFormComponent {
 
     let Body: any = [];
     for (let idx in finalBody.vehicleCancellationRules) {
-      const slctFeeMasterDp = this.singleDetailInfo.vehicleCancellationRules.find((item: any) => item.ruleId == finalBody.vehicleCancellationRules[idx].ruleId) || {};
+      const slctFeeMasterDp = this.singleDetailInfo.vehicleCancellationRules.find((item: any) => item.code == finalBody.vehicleCancellationRules[idx].code) || {};
       Body.push({
         "id": slctFeeMasterDp.id || 0,
         "riskType": "Vehicle",

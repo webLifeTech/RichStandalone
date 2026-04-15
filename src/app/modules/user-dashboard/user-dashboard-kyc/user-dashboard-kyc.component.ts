@@ -205,16 +205,16 @@ export class UserDashboardKycComponent {
   driverColumns = [
     { header: 'Last name', fieldObject: null, field: 'lastName' },
     { header: 'License Number', fieldObject: null, field: 'driverLicenseNumber' },
-    { header: 'License effective date', fieldObject: null, field: 'driverLicenseEffectiveDate' },
-    { header: 'License expiration date', fieldObject: null, field: 'driverLicenseExpirationDate' },
+    { header: 'License effective date', fieldObject: null, field: 'driverLicenseEffectiveDate', fieldType: 'DATE' },
+    { header: 'License expiration date', fieldObject: null, field: 'driverLicenseExpirationDate', fieldType: 'DATE' },
     { header: 'KYC Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
   ];
 
   fleetOwnerColumns = [
     { header: 'Last name', fieldObject: null, field: 'lastName' },
     { header: 'License Number', fieldObject: null, field: 'driverLicNum' },
-    { header: 'License effective date', fieldObject: null, field: 'driverLicenceEffDate' },
-    { header: 'License expiration date', fieldObject: null, field: 'driverLicenceExpDate' },
+    { header: 'License effective date', fieldObject: null, field: 'driverLicenceEffDate', fieldType: 'DATE' },
+    { header: 'License expiration date', fieldObject: null, field: 'driverLicenceExpDate', fieldType: 'DATE' },
     { header: 'KYC Status', fieldObject: null, field: 'kycStatus', fieldCode: 'kycStatusCd' },
   ];
 

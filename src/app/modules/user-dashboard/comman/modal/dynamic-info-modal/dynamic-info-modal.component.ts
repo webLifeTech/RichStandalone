@@ -222,7 +222,14 @@ export class DynamicInfoModalComponent {
         }
 
         if (formArray[i].modalObject) {
-          const endKey = formArray[i].fieldType === 'TEXTMASK' ? formArray[i].modalValueCode : formArray[i].modalValue;
+          // const endKey = formArray[i].fieldType === 'TEXTMASK' ? formArray[i].modalValueCode : formArray[i].modalValue;
+          let endKey: any = formArray[i].modalValue;
+          if (formArray[i].fieldType === 'TEXTMASK') {
+            endKey = formArray[i].modalValueCode;
+          }
+          if (formArray[i].fieldType !== 'DROPDOWN' && formArray[i].modalValueCode) {
+            endKey = formArray[i].modalValueCode;
+          }
           const defaultValue = this.getFieldValue(this.viewInfoDetails, formArray[i].modalObject, endKey);
           formArray[i].defaultValue = defaultValue;
           if (formArray[i].fieldType === 'MULTIDROPDOWN') {

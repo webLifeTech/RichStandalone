@@ -88,11 +88,17 @@
                   *ngIf="column.fieldObject && (row[column.field]?.includes('.jpg') || row[column.field]?.includes('.jpeg') || row[column.field]?.includes('.png'))">
                   <img [src]="row[column.field]" alt="image" width="70px">
                 </span>
-                <span *ngIf="!column.fieldObject && column.field !== 'kycStatus'">
+                <span *ngIf="!column.fieldObject && column.field !== 'kycStatus' && column.fieldType !== 'DATE'">
                   {{ row[column.field] || '-' }}
+                </span>
+                <span *ngIf="!column.fieldObject && column.fieldType === 'DATE'">
+                  {{ (row[column.field] | date : 'MM/dd/yyyy') || '-' }}
                 </span>
                 <span *ngIf="column.fieldObject">
                   {{ row[column.fieldObject][column.field] || '-' }}
+                </span>
+                <span *ngIf="column.fieldObject && column.fieldType === 'DATE'">
+                  {{ (row[column.fieldObject][column.field] | date : 'MM/dd/yyyy') || '-' }}
                 </span>
                 <span
                   *ngIf="!column.fieldObject &&  column.field === 'vehicleStatus' || (column.field === 'status' && type === 'vendor-profile')"

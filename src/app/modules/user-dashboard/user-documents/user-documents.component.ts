@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '../../../shared/services/profile.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-user-documents',
@@ -42,6 +43,7 @@ export class UserDocumentsComponent {
 
   documentList: any = [];
   documentTypeCode: any = null;
+  documentFile: any = null;
   isShow: boolean = false;
 
 
@@ -51,6 +53,7 @@ export class UserDocumentsComponent {
     public gs: GlobalService,
     private profileService: ProfileService,
     private datePipe: DatePipe,
+    private toast: ToastService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.getConfigUIForms();
@@ -191,15 +194,41 @@ export class UserDocumentsComponent {
   }
 
   onUpload() {
-
+    this.toast.successToastr("Document Uploaded Successfully");
+    this.onReset();
   }
+
   onReset() {
     this.isShow = false;
     this.documentTypeCode = null;
     this.fileInput.nativeElement.value = null;
+    this.documentFile = null;
   }
 
   transformDate(date: any, format: any) {
     return this.datePipe.transform(date, format);
+  }
+
+  uploadDocument(event: any) {
+
+    const file = event.target.files[0];
+    let dataParams = {
+      "UserId": this.gs.loggedInUserInfo.userId,
+      "DocumentType": this.documentTypeCode,
+    }
+    console.log("res file >>>", file);
+    let fileFormData: any = new FormData();
+    fileFormData.append('Doc', file, file.name);
+    this.gs.isSpinnerShow = true;
+    this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
+      this.gs.isSpinnerShow = false;
+      console.log("res >>>", res)
+      if (res) {
+        this.documentFile = res;
+      }
+    }, (err: any) => {
+      this.toast.errorToastr(err?.error?.message || "Something went wrong");
+      this.gs.isSpinnerShow = false;
+    })
   }
 }

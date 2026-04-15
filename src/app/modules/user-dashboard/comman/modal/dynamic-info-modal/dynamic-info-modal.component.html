@@ -1,237 +1,241 @@
-<div class="new-modal">
-  <div class="modal-content">
-    <div *ngIf="purpose !== 'approval'" class="modal-header">
-      <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
-    </div>
-    <div class="modal-body">
-      <div class="booking-group">
-        <div *ngFor="let item of groupedSectionsData" class="booking-wrapper">
-          <div class="booking-title">
-            <h6>{{ item.sectionName }}</h6>
-          </div>
-          <div class="booking-body">
-            <div class="row">
-              <ng-container *ngIf="!(viewInfoDetails[item.modalObject] && viewInfoDetails[item.modalObject]?.length)">
-                <ng-container *ngFor="let field of item.fields">
-                  <div *ngIf="field.isConditionValid" class="mb-3"
-                    [ngClass]="{ 'col-md-12': field.modalValue == 'companyDetails', 'col-lg-4 col-md-6': field.modalValue !== 'companyDetails' }">
-                    <div class="booking-view">
-                      <h6>{{ field.description }}</h6>
-                      <ng-container
-                        *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION' && field.fieldType !== 'TEXTMASK'">
-                        <!-- <p>{{field.defaultValue}}</p> -->
-                        <p *ngIf="!isBoolean(field.defaultValue)">{{field.defaultValue}}</p>
-                        <p *ngIf="isBoolean(field.defaultValue)">
-                          {{field.defaultValue ? 'Yes' :'No'}}
-                        </p>
-                      </ng-container>
+<div class="modal-content">
+  <div *ngIf="purpose !== 'approval'" class="modal-header">
+    <button type="button" class="close-btn" (click)="closeModal()"><span>×</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="booking-group">
+      <div *ngFor="let item of groupedSectionsData" class="booking-wrapper">
+        <div class="booking-title">
+          <h6>{{ item.sectionName }}</h6>
+        </div>
+        <div class="booking-body">
+          <div class="row">
+            <ng-container *ngIf="!(viewInfoDetails[item.modalObject] && viewInfoDetails[item.modalObject]?.length)">
+              <ng-container *ngFor="let field of item.fields">
+                <div *ngIf="field.isConditionValid" class="mb-3"
+                  [ngClass]="{ 'col-md-12': field.modalValue == 'companyDetails', 'col-lg-4 col-md-6': field.modalValue !== 'companyDetails' }">
+                  <div class="booking-view">
+                    <h6>{{ field.description }}</h6>
+                    <ng-container
+                      *ngIf="field.fieldType !== 'LOGO' && field.fieldType !== 'SELECTION' && field.fieldType !== 'TEXTMASK' && (field.fieldType !== 'DATE' || (field.fieldType === 'DATE' && field.modalValueCode))">
+                      <!-- <p>{{field.defaultValue}}</p> -->
+                      <p *ngIf="!isBoolean(field.defaultValue)">{{field.defaultValue}}</p>
+                      <p *ngIf="isBoolean(field.defaultValue)">
+                        {{field.defaultValue ? 'Yes' :'No'}}
+                      </p>
+                    </ng-container>
 
-                      <ng-container *ngIf="field.fieldType === 'TEXTMASK'">
-                        <p>{{field.defaultValue}}</p>
-                      </ng-container>
+                    <ng-container *ngIf="field.fieldType === 'TEXTMASK'">
+                      <p>{{field.defaultValue}}</p>
+                    </ng-container>
 
-                      <ng-container *ngIf="field.fieldType === 'LOGO' || field.fieldType === 'SELECTION'">
-                        <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(field.defaultValue)"></i></p>
-                      </ng-container>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-container>
-              <ng-container *ngIf="(
-                viewInfoDetails[item.modalObject] && viewInfoDetails[item.modalObject]?.length)">
-                <div class="booking-view">
-                  <div class="col-lg-12 mt-3">
-                    <div class="table-responsive dashboard-table mb-3">
-                      <table class="table">
-                        <thead class="thead-light">
-                          <tr>
-                            <th class="text-center">
-                              {{'#' | translate}}
-                            </th>
-                            <ng-container *ngFor="let field of item.fields; let j = index">
-                              <th
-                                *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
-                                [ngClass]="{'text-start': !j,'text-center': j}">
-                                {{ field.description }}
-                              </th>
-                            </ng-container>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let tblItem of viewInfoDetails[item.modalObject]; let tgIdx = index">
-                            <td class="text-center">{{tgIdx+1}}</td>
-                            <ng-container *ngFor="let field of item.fields; let j = index">
-                              <td
-                                *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
-                                [ngClass]="{'text-start': !j,'text-center': j}">
-                                <!-- {{getPrefix(tblItem, field)}} {{tblItem[field.modalValue]}} {{getSuffix(tblItem,field)}} -->
-                                {{tblItem[field.modalValue]}}
-                              </td>
-                            </ng-container>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <ng-container *ngIf="field.fieldType === 'DATE' && !field.modalValueCode">
+                      <p>{{field.defaultValue | date : 'MM/dd/yyyy'}}</p>
+                    </ng-container>
+
+                    <ng-container *ngIf="field.fieldType === 'LOGO' || field.fieldType === 'SELECTION'">
+                      <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(field.defaultValue)"></i></p>
+                    </ng-container>
                   </div>
                 </div>
               </ng-container>
-
-              <!-- Upload Document -->
-              <div *ngIf="item.sectionID == rolesDocSection" class="col-lg-12">
-                <div class="table-responsive dashboard-table">
-                  <table class="table">
-                    <thead class="thead-light">
-                      <tr>
-                        <th class="text-start">{{'userDashboard.kyc.upload_document.name' | translate}}</th>
-                        <th>{{'userDashboard.kyc.upload_document.document' | translate}}</th>
-                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Version' | translate}}</th>
-                        <th>{{'Status' | translate}}</th>
-                        <th>{{'Remarks' | translate}}</th>
-                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Date' | translate}}</th>
-                        <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Action' | translate}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let doc of viewInfoDetails.kycMandatoryDocuments; let inx = index">
-                        <td class="text-start">
-                          <div class="table-avatar">
-                            <span
-                              [ngClass]="{ 'badge-light-danger':!doc.isLatest, 'badge-light-secondary': doc.isLatest}"
-                              class="badge">
-                              {{doc.isLatest ? 'Latest' : 'Old'}}
-                            </span>
-                            <div class="table-head-name flex-grow-1 ms-2">
-                              {{doc.documentTypeName}}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(doc.documentPath)"></i></p>
-                        </td>
-                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
-                          <div class="table-avatar">
-                            <div class="table-head-name flex-grow-1">
-                              {{doc.version}}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <span class="badge" [ngClass]="{
-                                'text-tangerine': doc.kycStatusCd == '1' || doc.kycStatusCd == '8',
-                                'text-success-light': doc.kycStatusCd == '2' || doc.kycStatusCd == '5',
-                                'text-red': doc.kycStatusCd == '3'|| doc.kycStatusCd == '6',
-                                'text-cyan': doc.kycStatusCd == '4' }">
-                            {{doc.kycStatus || '-'}}
-                          </span>
-                        </td>
-                        <td>
-                          {{doc.kycDescription || '-'}}
-                        </td>
-                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
-                          <div class="table-avatar">
-                            <div class="table-head-name flex-grow-1">
-                              {{doc.createdDate | date : 'MM/dd/yyyy'}}
-                            </div>
-                          </div>
-                        </td>
-                        <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
-                          <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'" (click)="approveKyc('SINGLE', doc)"
-                            type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
-                            Approve
-                          </button>
-                          <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'"
-                            (click)="approveDeclineRevert(4, 'SINGLE', doc)" type="button"
-                            class="btn btn-theme no-text-transorm mx-2 mb-2">
-                            Revert Back
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div *ngIf="!viewInfoDetails.kycMandatoryDocuments?.length" class="col-md-12">
-                    <p class="text-center mt-3">
-                      <b>No records found</b>
-                    </p>
+            </ng-container>
+            <ng-container *ngIf="(
+                viewInfoDetails[item.modalObject] && viewInfoDetails[item.modalObject]?.length)">
+              <div class="booking-view">
+                <div class="col-lg-12 mt-3">
+                  <div class="table-responsive dashboard-table mb-3">
+                    <table class="table">
+                      <thead class="thead-light">
+                        <tr>
+                          <th class="text-center">
+                            {{'#' | translate}}
+                          </th>
+                          <ng-container *ngFor="let field of item.fields; let j = index">
+                            <th
+                              *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject"
+                              [ngClass]="{'text-start': !j,'text-center': j}">
+                              {{ field.description }}
+                            </th>
+                          </ng-container>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let tblItem of viewInfoDetails[item.modalObject]; let tgIdx = index">
+                          <td class="text-center">{{tgIdx+1}}</td>
+                          <ng-container *ngFor="let field of item.fields; let j = index">
+                            <td
+                              *ngIf="field.fieldType !== 'BUTTON' && field.fieldType !== 'ARRAY' && field.modalObject === item.modalObject && field.fieldType !== 'DATE'"
+                              [ngClass]="{'text-start': !j,'text-center': j}">
+                              <!-- {{getPrefix(tblItem, field)}} {{tblItem[field.modalValue]}} {{getSuffix(tblItem,field)}} -->
+                              {{tblItem[field.modalValue]}}
+                            </td>
+                            <td *ngIf="field.fieldType === 'DATE'">
+                              {{tblItem[field.modalValue] | date : 'MM/dd/yyyy'}}
+                            </td>
+                          </ng-container>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </ng-container>
 
-        <div class="booking-wrapper"
-          *ngIf="(viewInfoDetails?.driverDetailsRequest?.isAvailableForPrivateBooking === 'Yes' || formType === 'vendor-profile')">
-          <div class="booking-title mb-3">
-            <h6>{{ 'userDashboard.kyc.other_info.working_hours' | translate}}</h6>
-          </div>
-          <div class="row px-3 pb-3">
-            <div class="col-md-12">
+            <!-- Upload Document -->
+            <div *ngIf="item.sectionID == rolesDocSection" class="col-lg-12">
               <div class="table-responsive dashboard-table">
                 <table class="table">
                   <thead class="thead-light">
                     <tr>
-                      <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
-                      </th>
-                      <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
-                      <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
-                      <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
-                      <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                      <th class="text-start">{{'userDashboard.kyc.upload_document.name' | translate}}</th>
+                      <th>{{'userDashboard.kyc.upload_document.document' | translate}}</th>
+                      <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Version' | translate}}</th>
+                      <th>{{'Status' | translate}}</th>
+                      <th>{{'Remarks' | translate}}</th>
+                      <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Date' | translate}}</th>
+                      <th *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">{{'Action' | translate}}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let item of workingHours; let idx = index">
-                      <td class="text-center">{{idx+1}}</td>
-                      <td>
+                    <tr *ngFor="let doc of viewInfoDetails.kycMandatoryDocuments; let inx = index">
+                      <td class="text-start">
                         <div class="table-avatar">
-                          <div class="table-head-name flex-grow-1">
-                            {{item.dayOfWeek}}
+                          <span [ngClass]="{ 'badge-light-danger':!doc.isLatest, 'badge-light-secondary': doc.isLatest}"
+                            class="badge">
+                            {{doc.isLatest ? 'Latest' : 'Old'}}
+                          </span>
+                          <div class="table-head-name flex-grow-1 ms-2">
+                            {{doc.documentTypeName}}
                           </div>
                         </div>
                       </td>
                       <td>
-                        <span>{{item.fromTime}}</span>
+                        <p><i class="fa fa-eye pointer" (click)="gs.viewDocumentFile(doc.documentPath)"></i></p>
                       </td>
-                      <td class="text-success-light">
-                        <span>{{item.toTime}}</span>
+                      <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                        <div class="table-avatar">
+                          <div class="table-head-name flex-grow-1">
+                            {{doc.version}}
+                          </div>
+                        </div>
                       </td>
-                      <td class="text-center">
-                        <a *ngIf="item.status">
-                          <span class="badge badge-success">
-                            ON
-                          </span>
-                        </a>
-                        <a *ngIf="!item.status">
-                          <span class="badge badge-danger">
-                            OFF
-                          </span>
-                        </a>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                                'text-tangerine': doc.kycStatusCd == '1' || doc.kycStatusCd == '8',
+                                'text-success-light': doc.kycStatusCd == '2' || doc.kycStatusCd == '5',
+                                'text-red': doc.kycStatusCd == '3'|| doc.kycStatusCd == '6',
+                                'text-cyan': doc.kycStatusCd == '4' }">
+                          {{doc.kycStatus || '-'}}
+                        </span>
+                      </td>
+                      <td>
+                        {{doc.kycDescription || '-'}}
+                      </td>
+                      <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                        <div class="table-avatar">
+                          <div class="table-head-name flex-grow-1">
+                            {{doc.createdDate | date : 'MM/dd/yyyy'}}
+                          </div>
+                        </div>
+                      </td>
+                      <td *ngIf="gs.loggedInUserInfo.role === 'helpdesk'">
+                        <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'" (click)="approveKyc('SINGLE', doc)"
+                          type="button" class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+                          Approve
+                        </button>
+                        <button *ngIf="doc.isLatest && doc.kycStatusCd != '2'"
+                          (click)="approveDeclineRevert(4, 'SINGLE', doc)" type="button"
+                          class="btn btn-theme no-text-transorm mx-2 mb-2">
+                          Revert Back
+                        </button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+                <div *ngIf="!viewInfoDetails.kycMandatoryDocuments?.length" class="col-md-12">
+                  <p class="text-center mt-3">
+                    <b>No records found</b>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- // for HelpDeskrole -->
-      <div *ngIf="purpose == 'approval'" class="col-lg-12 text-center">
-        <button [disabled]="viewInfoDetails.kycStatusCd == '2'" (click)="approveKyc('ENTIRE')" type="button"
-          class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
-          Approve
-        </button>
-        <button (click)="approveDeclineRevert(3, 'ENTIRE')" type="button"
-          class="btn btn-solid color4 no-text-transorm mx-2 mb-2">
-          Decline
-        </button>
-        <button (click)="approveDeclineRevert(4, 'ENTIRE')" type="button"
-          class="btn btn-theme no-text-transorm mx-2 mb-2">
-          Revert Back
-        </button>
-        <button (click)="handleCancel()" type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
-          Cancel
-        </button>
+      <div class="booking-wrapper"
+        *ngIf="(viewInfoDetails?.driverDetailsRequest?.isAvailableForPrivateBooking === 'Yes' || formType === 'vendor-profile')">
+        <div class="booking-title mb-3">
+          <h6>{{ 'userDashboard.kyc.other_info.working_hours' | translate}}</h6>
+        </div>
+        <div class="row px-3 pb-3">
+          <div class="col-md-12">
+            <div class="table-responsive dashboard-table">
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="text-center">{{'userDashboard.kyc.other_info.serial_number' | translate}}.
+                    </th>
+                    <th>{{'userDashboard.kyc.other_info.day_of_week' | translate}}</th>
+                    <th>{{'userDashboard.kyc.other_info.from_time' | translate}}</th>
+                    <th>{{'userDashboard.kyc.other_info.to_time' | translate}}</th>
+                    <th class="text-center">{{'userDashboard.kyc.other_info.status' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of workingHours; let idx = index">
+                    <td class="text-center">{{idx+1}}</td>
+                    <td>
+                      <div class="table-avatar">
+                        <div class="table-head-name flex-grow-1">
+                          {{item.dayOfWeek}}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span>{{item.fromTime}}</span>
+                    </td>
+                    <td class="text-success-light">
+                      <span>{{item.toTime}}</span>
+                    </td>
+                    <td class="text-center">
+                      <a *ngIf="item.status">
+                        <span class="badge badge-success">
+                          ON
+                        </span>
+                      </a>
+                      <a *ngIf="!item.status">
+                        <span class="badge badge-danger">
+                          OFF
+                        </span>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- // for HelpDeskrole -->
+    <div *ngIf="purpose == 'approval'" class="col-lg-12 text-center">
+      <button [disabled]="viewInfoDetails.kycStatusCd == '2'" (click)="approveKyc('ENTIRE')" type="button"
+        class="btn btn-solid color2 no-text-transorm mx-2 mb-2">
+        Approve
+      </button>
+      <button (click)="approveDeclineRevert(3, 'ENTIRE')" type="button"
+        class="btn btn-solid color4 no-text-transorm mx-2 mb-2">
+        Decline
+      </button>
+      <button (click)="approveDeclineRevert(4, 'ENTIRE')" type="button"
+        class="btn btn-theme no-text-transorm mx-2 mb-2">
+        Revert Back
+      </button>
+      <button (click)="handleCancel()" type="button" class="btn btn-solid color3 no-text-transorm mx-2 mb-2">
+        Cancel
+      </button>
     </div>
   </div>
