@@ -57,6 +57,11 @@ export class BookingProgressModalComponent {
 
 
   config: any = {
+    "23": {
+      "color": "success",
+      "statusColor": "danger",
+      "icon": "verified"
+    },
     "22": {
       "color": "success",
       "statusColor": "danger",
@@ -66,6 +71,11 @@ export class BookingProgressModalComponent {
       "color": "warning",
       "statusColor": "danger",
       "icon": "verified"
+    },
+    "20": {
+      "color": "danger",
+      "statusColor": "danger",
+      "icon": "cancel"
     },
     "19": {
       "color": "danger",
@@ -208,9 +218,9 @@ export class BookingProgressModalComponent {
       console.log("this.timelineEvents >>>>>", this.timelineEvents);
       if (this.timelineEvents.length) {
         for (let i in this.timelineEvents) {
-          this.timelineEvents[i].color = this.config[this.timelineEvents[i].eventType].color;
-          this.timelineEvents[i].icon = this.config[this.timelineEvents[i].eventType].icon;
-          this.timelineEvents[i].statusColor = this.config[this.timelineEvents[i].eventType].statusColor;
+          this.timelineEvents[i].color = this.config[this.timelineEvents[i].eventType]?.color;
+          this.timelineEvents[i].icon = this.config[this.timelineEvents[i].eventType]?.icon;
+          this.timelineEvents[i].statusColor = this.config[this.timelineEvents[i].eventType]?.statusColor;
           // this.timelineEvents[i].color = this.colors[this.timelineEvents[i].bookingStatusCd];
           // this.timelineEvents[i].icon = this.icons[this.timelineEvents[i].bookingStatusRemarksCd];
           // if (this.timelineEvents[i].bookingStatusCd === 5) {

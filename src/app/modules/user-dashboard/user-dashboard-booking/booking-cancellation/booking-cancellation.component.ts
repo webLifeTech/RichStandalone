@@ -9,6 +9,7 @@ import { GlobalService } from '../../../../shared/services/global.service';
 import { CurrencySymbolPipe } from '../../../../shared/pipe/currency.pipe';
 import { ConfirmationModalComponent } from '../../../../shared/components/comman/modal/confirmation-modal/confirmation-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-booking-cancellation',
@@ -19,6 +20,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     NgSelectModule,
     ReactiveFormsModule,
     CurrencySymbolPipe,
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './booking-cancellation.component.html',

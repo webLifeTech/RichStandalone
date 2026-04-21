@@ -246,6 +246,8 @@
     "other_fees": "Other Fees",
     "discount": "Discount",
     "tax": "Tax",
+    "site_fee": "Site Fee",
+    "coupon_amount": "Coupon Amount",
     "total_fare": "total fare"
   },
   "driver_booking_summary": {

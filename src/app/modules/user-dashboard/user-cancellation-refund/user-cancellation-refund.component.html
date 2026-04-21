@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="table-responsive dashboard-table mb-4">
+        <div class="table-responsive dashboard-table mb-4 position-static">
           <table class="table datatable">
             <thead class="thead-light">
               <tr>
@@ -133,9 +133,43 @@
                 <td class="text-center">
                   <span>{{data.cancellationCharge | currencyPipe: gs.currency}}</span>
                 </td>
-                <td class="text-center">
-                  <span>{{data.refundAmount | currencyPipe: gs.currency}}</span>
+                <td *ngIf="gs.loggedInUserInfo.role !== 'user'" class="text-center pointer">
+                  <span type="button" class="text-red fw-bold" [ngbPopover]="popContent"
+                    triggers="mouseenter:mouseleave" placement="start" popoverClass="my-custom-class"
+                    (mouseenter)='onHover(data)'>
+                    <span>{{data.refundAmount | currencyPipe: gs.currency}}</span>
+                  </span>
+                  <img src="assets/images/icon/dashboard/click-action.gif" width="34px" />
                 </td>
+                <ng-template #popContent>
+                  <div class="rating-box">
+                    <div class="average-rating">
+                      <div class="rating-star">
+                        <div class="review_box">
+                          <div class="flight_detail p-3">
+                            <div class="summery_box">
+                              <table class="table table-borderless">
+                                <tbody>
+                                  <tr *ngFor="let pbItem of pricingBreakdown">
+                                    <td class="text-start"
+                                      [ngClass]="{'text-danger fw-bold': pbItem.FeeName == 'Refund Amount','fw-bold': pbItem.FeeName == 'Total Amount' }">
+                                      {{pbItem.FeeName | translate}}
+                                    </td>
+                                    <td class="text-end"
+                                      [ngClass]="{'text-danger fw-bold': pbItem.FeeName == 'Refund Amount','fw-bold': pbItem.FeeName == 'Total Amount'}">
+                                      {{pbItem?.symbol}} {{ pbItem.amount | currencyPipe:cabService.currency ||
+                                      "-" }}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
                 <td *ngIf="gs.loggedInUserInfo.role === 'admin' || gs.loggedInUserInfo.role == 'Accountant'">
                   <span [ngClass]="{
                           'badge-light-success': data.refundStatus === 'Approved',

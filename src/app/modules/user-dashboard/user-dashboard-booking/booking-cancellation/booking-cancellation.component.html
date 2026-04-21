@@ -47,6 +47,9 @@
           <div class="text-success text-end refund-info mt-3">
             Fully refundable for 22h 20m
           </div>
+          <div class="text-danger text-end refund-info mt-3">
+            Rule applied :- {{cancellationInfo.description}}
+          </div>
 
           <div class="mt-4">
             <table class="table border mb-0">
@@ -54,12 +57,18 @@
                 <tr>
                   <th scope="col">Booking amount</th>
                   <th scope="col">Cancellation charges</th>
+                  <th *ngIf="!singleBookingDetail.isBooker && cancellationInfo?.compensationAmount" scope="col">
+                    Compensation Amount
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</td>
                   <td>{{cancellationInfo.cancellationCharge | currencyPipe: gs.currency}}</td>
+                  <td *ngIf="!singleBookingDetail.isBooker && cancellationInfo?.compensationAmount">
+                    {{cancellationInfo.compensationAmount | currencyPipe:gs.currency}}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -119,18 +128,35 @@
               <div class="small">Total</div>
               <div>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</div>
             </div>
+            <div class="d-flex justify-content-between mt-2">
+              <div class="small" *ngIf="!singleBookingDetail.isBooker && cancellationInfo?.compensationAmount">
+                Compensation Amount
+              </div>
+              <div *ngIf="!singleBookingDetail.isBooker && cancellationInfo?.compensationAmount">
+                -{{cancellationInfo?.compensationAmount | currencyPipe: gs.currency}}
+              </div>
+            </div>
             <hr>
             <div class="d-flex justify-content-between fw-bold">
               <span>Total Amount</span>
-              <span>{{cancellationInfo.bookingAmount | currencyPipe: gs.currency}}</span>
+              <span>{{(cancellationInfo.bookingAmount - (cancellationInfo?.compensationAmount || 0)) | currencyPipe:
+                gs.currency}}</span>
             </div>
           </div>
 
           <div class="breakdown-box mt-3">
-            <div class="d-flex justify-content-between">
-              <span class="text-muted">Deductions</span>
+            <div class="section-title">Deductions</div>
+            <div *ngFor="let pbItem of cancellationInfo.pricingBreakdown" class="d-flex justify-content-between mb-2">
+              <span class="text-muted"> {{pbItem.FeeName | translate}}</span>
               <span class="text-success fw-bold">
-                {{cancellationInfo.cancellationCharge | currencyPipe: gs.currency}}
+                {{ pbItem.amount | currencyPipe:gs.currency ||"-" }}
+              </span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total Deductions</span>
+              <span>
+                {{(cancellationInfo.totalDeductions) | currencyPipe: gs.currency}}
               </span>
             </div>
           </div>
@@ -142,6 +168,11 @@
               Refunds are typically processed within 30 business days. The exact amount will be sent later via
               email.
             </small>
+            <div class="mt-2">
+              <small class="text-danger fw-bold">
+                {{cancellationInfo.cancellationDesc}}
+              </small>
+            </div>
           </div>
         </div>
       </div>

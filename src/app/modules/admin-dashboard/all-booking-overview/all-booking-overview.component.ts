@@ -22,6 +22,7 @@ import { RolePermissionService } from '../../../shared/services/rolepermission.s
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatIconModule } from '@angular/material/icon';
 import { BookingProgressModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-progress-modal/booking-progress-modal.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-all-booking-overview',
@@ -40,7 +41,8 @@ import { BookingProgressModalComponent } from '../../../shared/components/comman
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     NgSelectModule,
-    MatIconModule
+    MatIconModule,
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './all-booking-overview.component.html',
@@ -82,6 +84,7 @@ export class AllBookingOverviewComponent {
     { name: "End Service", value: "End Service" },
     { name: "Cancelled", value: "Cancelled" },
   ]
+  pricingBreakdown: any = [];
 
 
   constructor(
@@ -233,7 +236,7 @@ export class AllBookingOverviewComponent {
 
   onView(item: any) {
     const modalRef = this.modalService.open(BookingDetailsModalComponent, {
-      size: 'lg'
+      size: 'lg',
     });
     modalRef.componentInstance.bookingRefNo = item.bookingReferenceNumber;
     modalRef.result.then((res: any) => {
@@ -444,4 +447,13 @@ export class AllBookingOverviewComponent {
     });
   }
 
+  onHover(data: any) {
+    this.pricingBreakdown = data.netAmountJson ? JSON.parse(data.netAmountJson) : [];
+    const xcd = ['Net Amount', 'Total Amount'];
+    for (let i in this.pricingBreakdown) {
+      if (xcd.indexOf(this.pricingBreakdown[i].FeeName) === -1) {
+        this.pricingBreakdown[i].symbol = "-";
+      }
+    }
+  }
 }

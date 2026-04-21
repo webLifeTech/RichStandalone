@@ -72,6 +72,10 @@
             <td>{{ bookingSummaryDetails.otherFee | currencyPipe: cabService.currency || "-" }}</td>
           </tr>
           <tr>
+            <td>{{'booking_summary.site_fee' | translate}}</td>
+            <td>{{ bookingSummaryDetails.siteFee | currencyPipe: cabService.currency || "-" }}</td>
+          </tr>
+          <tr>
             <td>{{'booking_summary.discount' | translate}}</td>
             <td>- {{ bookingSummaryDetails.discount | currencyPipe: cabService.currency }}</td>
           </tr>

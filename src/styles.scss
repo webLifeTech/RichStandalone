@@ -2154,7 +2154,7 @@ header {
   position: unset;
 
   .modal-header {
-    padding: 0;
+    padding: 6px 12px;
 
     .close-btn {
       position: absolute;
@@ -2813,7 +2813,7 @@ header {
 }
 
 .modal-dialog {
-  margin-top: 40px;
+  margin-top: 60px;
   margin-bottom: 0px;
 }
 
@@ -3619,6 +3619,14 @@ header {
 
   .popover-body {
     padding: 0 !important;
+  }
+}
+
+.book-card {
+  .table-responsive {
+    .my-custom-class {
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+    }
   }
 }
 

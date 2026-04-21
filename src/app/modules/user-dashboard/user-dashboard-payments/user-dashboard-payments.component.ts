@@ -19,6 +19,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { SignalRService } from '../../../shared/services/signalr.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-dashboard-payments',
@@ -34,6 +35,7 @@ import { SignalRService } from '../../../shared/services/signalr.service';
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './user-dashboard-payments.component.html',
@@ -67,6 +69,7 @@ export class UserDashboardPaymentsComponent {
     pendingRefund: 0
   };
   private intervalId!: number; // Store the interval ID
+  pricingBreakdown: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -359,5 +362,15 @@ export class UserDashboardPaymentsComponent {
 
       this.excelExport.exportToExcelCustom(finalData, "MyPayments", "My Payments");
     });
+  }
+
+  onHover(data: any) {
+    this.pricingBreakdown = data.netAmountJson ? JSON.parse(data.netAmountJson) : [];
+    const xcd = ['Net Amount', 'Total Amount'];
+    for (let i in this.pricingBreakdown) {
+      if (xcd.indexOf(this.pricingBreakdown[i].FeeName) === -1) {
+        this.pricingBreakdown[i].symbol = "-";
+      }
+    }
   }
 }

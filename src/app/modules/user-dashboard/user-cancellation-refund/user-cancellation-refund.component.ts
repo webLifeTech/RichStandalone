@@ -19,6 +19,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { ExcelExportService } from '../../../shared/services/excel-export.service';
 import { RolePermissionService } from '../../../shared/services/rolepermission.service';
 import { InvoiceModalComponent } from '../../../shared/components/comman/modal/payment-modals/invoice-modal/invoice-modal.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-cancellation-refund',
@@ -33,6 +34,7 @@ import { InvoiceModalComponent } from '../../../shared/components/comman/modal/p
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './user-cancellation-refund.component.html',
@@ -50,6 +52,7 @@ export class UserCancellationRefundComponent {
   dateTimeRange: any = "";
   activeTab: any = "Refund";
   statusList: any = [];
+  pricingBreakdown: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -279,4 +282,15 @@ export class UserCancellationRefundComponent {
       this.excelExport.exportToExcelCustom(finalData, "PaymentsRefund", "Payments Refund");
     });
   }
+
+  onHover(data: any) {
+    this.pricingBreakdown = data.netAmountJson ? JSON.parse(data.netAmountJson) : [];
+    const xcd = ['Refund Amount', 'Total Amount'];
+    for (let i in this.pricingBreakdown) {
+      if (xcd.indexOf(this.pricingBreakdown[i].FeeName) === -1) {
+        this.pricingBreakdown[i].symbol = "-";
+      }
+    }
+  }
+
 }

@@ -123,11 +123,17 @@
                 <p>{{'booking_summary.other_fees' | translate}}
                   <span>+ {{invoiceDetails.bookingDetails.otherFee | currencyPipe: gs.currency}}</span>
                 </p>
+                <p>{{'booking_summary.site_fee' | translate}}
+                  <span>+ {{invoiceDetails.bookingDetails.siteFee | currencyPipe: gs.currency}}</span>
+                </p>
                 <p>{{'booking_summary.tax' | translate}}
                   <span>+ {{invoiceDetails.bookingDetails.taxFee | currencyPipe: gs.currency}}</span>
                 </p>
                 <p>{{'booking_summary.discount' | translate}}
                   <span>- {{invoiceDetails.bookingDetails.discountAmount | currencyPipe: gs.currency}}</span>
+                </p>
+                <p>{{'booking_summary.coupon_amount' | translate}}
+                  <span>- {{invoiceDetails.bookingDetails.couponAmount | currencyPipe: gs.currency}}</span>
                 </p>
               </div>
             </div>

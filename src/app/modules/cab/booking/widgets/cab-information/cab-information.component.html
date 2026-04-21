@@ -9,7 +9,6 @@
           <tr>
             <th class="p-3" scope="col">Cancellation Type</th>
             <th class="p-3" scope="col">Cancellation Charge</th>
-            <th class="p-3" scope="col">Total Refund</th>
           </tr>
         </thead>
         <tbody>
@@ -28,11 +27,6 @@
                 {{item.feeValue | currencyPipe: gs.currency}}
               </span>
               <small class="ms-2">{{item.feeType}}</small>
-            </td>
-            <td class="p-3">
-              <span class="fw-bold">
-                {{item.refundAmount | currencyPipe: gs.currency}}
-              </span>
             </td>
           </tr>
         </tbody>

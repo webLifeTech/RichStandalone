@@ -95,7 +95,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div class="table-responsive dashboard-table mb-4">
+              <div class="table-responsive dashboard-table mb-4 position-static">
                 <table class="table datatable">
                   <thead class="thead-light">
                     <tr>
@@ -163,6 +163,14 @@
                           <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
                         </span>
                       </th>
+                      <th *ngIf="gs.loggedInUserInfo.role !== 'user'" class="text-center pointer"
+                        (click)="onSort('netAmount')">
+                        Net Amount
+                        <span *ngIf="sortColumn === 'netAmount'">
+                          <i *ngIf="sortOrder === 'ASC'" class="feather icon-chevron-up" aria-hidden="true"></i>
+                          <i *ngIf="sortOrder === 'DESC'" class="feather icon-chevron-down" aria-hidden="true"></i>
+                        </span>
+                      </th>
                       <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Cancelled By</th>
                       <th *ngIf="activeTab == 'cancelled'" class="text-center" class="text-center">Reason</th>
 
@@ -221,6 +229,46 @@
                       <td class="text-center">
                         <span class="text-red">{{data.totalAmount | currencyPipe: gs.currency}}</span>
                       </td>
+                      <td *ngIf="gs.loggedInUserInfo.role !== 'user'" class="text-center pointer">
+                        <span *ngIf="!data.isBooker" type="button" class="text-red fw-bold" [ngbPopover]="popContent"
+                          triggers="mouseenter:mouseleave" placement="start" popoverClass="my-custom-class"
+                          (mouseenter)='onHover(data)'>
+                          {{data.netAmount | currencyPipe: gs.currency}}
+                        </span>
+                        <img *ngIf="!data.isBooker" src="assets/images/icon/dashboard/click-action.gif" width="34px" />
+                        <span *ngIf="data.isBooker">
+                          -
+                        </span>
+                      </td>
+                      <ng-template #popContent>
+                        <div class="rating-box">
+                          <div class="average-rating">
+                            <div class="rating-star">
+                              <div class="review_box">
+                                <div class="flight_detail p-3">
+                                  <div class="summery_box">
+                                    <table class="table table-borderless">
+                                      <tbody>
+                                        <tr *ngFor="let pbItem of pricingBreakdown">
+                                          <td class="text-start"
+                                            [ngClass]="{'text-danger fw-bold': pbItem.FeeName == 'Net Amount','fw-bold': pbItem.FeeName == 'Total Amount' }">
+                                            {{pbItem.FeeName | translate}}
+                                          </td>
+                                          <td class="text-end"
+                                            [ngClass]="{'text-danger fw-bold': pbItem.FeeName == 'Net Amount','fw-bold': pbItem.FeeName == 'Total Amount'}">
+                                            {{pbItem?.symbol}} {{ pbItem.amount | currencyPipe:cabService.currency ||
+                                            "-" }}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
                       <td *ngIf="activeTab == 'cancelled'" class="text-center">
                         <span class="text-red">{{data.cancelledBy || "-"}}</span>
                       </td>

@@ -28,6 +28,7 @@ import { BookingActionCardComponent } from '../../../shared/components/comman/bo
 import { InstructionsModalComponent } from '../../../shared/components/comman/modal/instructions-modal/instructions-modal.component';
 import { BookingProgressModalComponent } from '../../../shared/components/comman/modal/booking-modals/booking-progress-modal/booking-progress-modal.component';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-dashboard-booking',
@@ -47,7 +48,8 @@ import { MatIconModule } from '@angular/material/icon';
     CurrencySymbolPipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    MatIconModule
+    MatIconModule,
+    TranslateModule
   ],
   providers: [DatePipe],
   templateUrl: './user-dashboard-booking.component.html',
@@ -71,6 +73,7 @@ export class UserDashboardBookingComponent {
   singleBookingDetail: any = {};
   cancellationInfo: any = {};
   dateTimeRange: any = "";
+  pricingBreakdown: any = [];
 
 
   constructor(
@@ -357,6 +360,16 @@ export class UserDashboardBookingComponent {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
         window.scrollTo({ top: 180, behavior: 'smooth' });
+        let tempBreakdown = this.cancellationInfo.netAmountJson ? JSON.parse(this.cancellationInfo.netAmountJson) : [];
+        const xcd = ['Refund Amount', 'Total Amount'];
+        this.cancellationInfo.pricingBreakdown = [];
+        this.cancellationInfo.totalDeductions = 0;
+        for (let i in tempBreakdown) {
+          if (xcd.indexOf(tempBreakdown[i].FeeName) === -1) {
+            this.cancellationInfo.pricingBreakdown.push(tempBreakdown[i]);
+            this.cancellationInfo.totalDeductions += Number(tempBreakdown[i].amount);
+          }
+        }
       } else {
         this.toast.errorToastr(response.responseResult.message);
       }
@@ -522,4 +535,15 @@ export class UserDashboardBookingComponent {
     }, () => {
     });
   }
+
+  onHover(data: any) {
+    this.pricingBreakdown = data.netAmountJson ? JSON.parse(data.netAmountJson) : [];
+    const xcd = ['Net Amount', 'Total Amount'];
+    for (let i in this.pricingBreakdown) {
+      if (xcd.indexOf(this.pricingBreakdown[i].FeeName) === -1) {
+        this.pricingBreakdown[i].symbol = "-";
+      }
+    }
+  }
+
 }
