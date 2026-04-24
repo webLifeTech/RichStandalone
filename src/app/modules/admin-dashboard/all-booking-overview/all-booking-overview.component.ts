@@ -281,6 +281,16 @@ export class AllBookingOverviewComponent {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
         window.scrollTo({ top: 180, behavior: 'smooth' });
+        let tempBreakdown = this.cancellationInfo.netAmountJson ? JSON.parse(this.cancellationInfo.netAmountJson) : [];
+        const xcd = ['Refund Amount', 'Total Amount'];
+        this.cancellationInfo.pricingBreakdown = [];
+        this.cancellationInfo.totalDeductions = 0;
+        for (let i in tempBreakdown) {
+          if (xcd.indexOf(tempBreakdown[i].FeeName) === -1) {
+            this.cancellationInfo.pricingBreakdown.push(tempBreakdown[i]);
+            this.cancellationInfo.totalDeductions += Number(tempBreakdown[i].amount);
+          }
+        }
       } else {
         this.toast.errorToastr(response.responseResult.message);
       }

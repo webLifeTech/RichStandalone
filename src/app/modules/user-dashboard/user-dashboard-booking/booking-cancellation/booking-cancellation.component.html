@@ -133,13 +133,13 @@
                 Compensation Amount
               </div>
               <div *ngIf="!singleBookingDetail.isBooker && cancellationInfo?.compensationAmount">
-                -{{cancellationInfo?.compensationAmount | currencyPipe: gs.currency}}
+                +{{cancellationInfo?.compensationAmount | currencyPipe: gs.currency}}
               </div>
             </div>
             <hr>
             <div class="d-flex justify-content-between fw-bold">
               <span>Total Amount</span>
-              <span>{{(cancellationInfo.bookingAmount - (cancellationInfo?.compensationAmount || 0)) | currencyPipe:
+              <span>{{(cancellationInfo.bookingAmount + (cancellationInfo?.compensationAmount || 0)) | currencyPipe:
                 gs.currency}}</span>
             </div>
           </div>
@@ -149,14 +149,14 @@
             <div *ngFor="let pbItem of cancellationInfo.pricingBreakdown" class="d-flex justify-content-between mb-2">
               <span class="text-muted"> {{pbItem.FeeName | translate}}</span>
               <span class="text-success fw-bold">
-                {{ pbItem.amount | currencyPipe:gs.currency ||"-" }}
+                -{{ pbItem.amount | currencyPipe:gs.currency ||"-" }}
               </span>
             </div>
             <hr>
             <div class="d-flex justify-content-between fw-bold">
               <span>Total Deductions</span>
               <span>
-                {{(cancellationInfo.totalDeductions) | currencyPipe: gs.currency}}
+                -{{(cancellationInfo.totalDeductions) | currencyPipe: gs.currency}}
               </span>
             </div>
           </div>
