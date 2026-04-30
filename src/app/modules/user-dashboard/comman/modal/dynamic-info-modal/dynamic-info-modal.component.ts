@@ -50,10 +50,10 @@ export class DynamicInfoModalComponent {
 
     this.getConfigUIFields();
     if (this.formType === 'driver_details') {
-      this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours;
+      this.workingHours = this.viewInfoDetails.driverDetailsRequest.driverWorkingHours || [];
     }
     if (this.formType === 'vendor-profile') {
-      this.workingHours = this.viewInfoDetails.providerRequest.workingHours;
+      this.workingHours = this.viewInfoDetails.providerRequest.workingHours || [];
     }
     if (this.gs.loggedInUserInfo.role === 'helpdesk') {
       this.viewInfoDetails.kycMandatoryDocuments = [...this.viewInfoDetails.kycMandatoryDocuments].sort((a, b) => {

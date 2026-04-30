@@ -330,6 +330,7 @@ export class UserDashboardKycComponent {
         "Individual car owner": "driverkyc",
         "Driver with owned car": "driverkyc",
         "Vendor": "providerkyc",
+        "Driver Agent": "providerkyc",
       }
       this.isKYCCompleted = response[type[response.risktype]] == 0 ? false : true;
       this.kycStatus = response[type[response.risktype]]
@@ -417,7 +418,7 @@ export class UserDashboardKycComponent {
       this.getConfigUIForms();
       return;
     }
-    if (this.gs.loggedInUserInfo.role == 'Vendor') {
+    if (this.gs.loggedInUserInfo.role == 'Vendor' || this.gs.loggedInUserInfo.role == 'DriverAgent') {
       this.gs.isLicenseVerified = true;
       this.kycForm.state = 42;
       this.getConfigUIForms()

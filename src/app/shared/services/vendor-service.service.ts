@@ -110,4 +110,33 @@ export class VendorServService {
     );
   }
 
+  // Provider -> GetDriverAgentNames
+  public GetDriverAgentNames(dataParams: any) {
+    const params = new HttpParams().set('userId', dataParams.userId);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.baseUrl1 + 'TLHUB/Provider/GetDriverAgentNames', { params }).subscribe((result) => {
+        resolve(result)
+      }, (err) => {
+        reject(err)
+      })
+    })
+  }
+
+  // Provider -> MyDriversByDriverAgentId
+  public MyDriversByDriverAgentId(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/MyDriversByDriverAgentId', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  // Provider -> MyCommissionByDriverAgentId
+  public MyCommissionByDriverAgentId(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/MyCommissionByDriverAgentId', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

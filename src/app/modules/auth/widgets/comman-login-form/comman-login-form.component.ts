@@ -161,6 +161,7 @@ export class CommanLoginFormComponent {
           ["Vendor"]: "Vendor",
           ["Accountant"]: "Accountant",
           ["Helpdesk"]: "helpdesk",
+          ["Driver Agent"]: "DriverAgent",
         }
 
         this.loginForm = {
@@ -213,11 +214,19 @@ export class CommanLoginFormComponent {
         "email": this.verificationType == "EmailId" ? this.loginForm.username : null,
       }
 
+      console.log("this.registerForm >>>", this.registerForm);
+
       if (this.isVendor) {
         body["category"] = this.registerForm.category;
         body["categoryCd"] = this.registerForm.categoryCd;
-        body["userType"] = "06E0E6F2-E9E6-4555-B4C8-8C91507FE3D6";
+
+        if (this.registerForm.categoryCd === 12) {
+          body["userType"] = "0768AC1D-DE27-4B27-ADFD-DCC400BDE577";
+        } else {
+          body["userType"] = "06E0E6F2-E9E6-4555-B4C8-8C91507FE3D6";
+        }
       }
+      // return;
 
       this.gs.isSpinnerShow = true;
       this.authService.register(body).subscribe((res: any) => {

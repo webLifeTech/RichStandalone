@@ -94,6 +94,8 @@ export class ServiceListComponent {
   }
 
   viewDetails(item: any) {
-    this.viewAction.emit(item);
+    if (!item.isDriverAgent) {
+      this.viewAction.emit(item);
+    }
   }
 }

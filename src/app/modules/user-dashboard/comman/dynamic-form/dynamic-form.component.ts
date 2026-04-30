@@ -119,11 +119,11 @@ export class DynamicFormComponent {
       this.isRequiredTermsAgree = false;
     }
     if (this.formType === 'driver_details') {
-      this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours;
+      this.workingHours = this.singleDetailInfo.driverDetailsRequest.driverWorkingHours || [];
       this.isRequiredTermsAgree = false;
     }
     if (this.formType === 'vendor-profile') {
-      this.workingHours = this.singleDetailInfo.providerRequest.workingHours;
+      this.workingHours = this.singleDetailInfo.providerRequest.workingHours || [];
     }
     if (this.formType == 'driver') {
       this.rolesDocSection = "41";
@@ -313,6 +313,12 @@ export class DynamicFormComponent {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
         console.log("masterDropdwonList >>>>", this.masterDropdwonList);
+        let driverAgentDp: any = await this.vendorServ.GetDriverAgentNames({
+          "userId": this.gs.loggedInUserInfo.userId,
+        });
+        console.log("driverAgentDp >>>", driverAgentDp);
+
+        this.masterDropdwonList["DriverAgent"] = driverAgentDp;
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -1399,7 +1405,7 @@ export class DynamicFormComponent {
       }
 
       // for oper addNew
-      if (fieldTwo.get('fieldType')?.value === 'BUTTON' && fieldTwo.get('isMandatory')?.value && fieldTwo.get('action')?.value === 'ADD') {
+      if (fieldTwo.get('fieldType')?.value === 'BUTTON' && fieldTwo.get('isMandatory')?.value && fieldTwo.get('action')?.value === 'ADD' && field.value.fieldId !== 450) {
         if (!section.value.tableGridValueList.length) {
           this.addNew(section);
         }
@@ -2848,6 +2854,8 @@ export class DynamicFormComponent {
       "doYouWantToGetQuotesFromTLH": finalBody["doYouWantToGetQuotesFromTLH"] || false,
       "doYouHaveInsurance": finalBody["doYouHaveInsurance"],
       "doYouHaveInsuranceCd": finalBody["doYouHaveInsuranceCd"],
+      "driverAgentName": finalBody["driverAgentName"],
+      "driverAgentId": finalBody["driverAgentId"],
       "otherInfo": finalBody['otherInfo']
     }
 
@@ -3164,12 +3172,6 @@ export class DynamicFormComponent {
       this.toast.warningToastr("First save to working hours");
       return;
     }
-
-    // if (!this.isPrivateBooking) {
-    //   for (let i in this.workingHours) {
-    //     this.workingHours[i].status = false
-    //   }
-    // }
 
     let Body = {
       "userId": this.singleDetailInfo.driverDetailsRequest.userId,
