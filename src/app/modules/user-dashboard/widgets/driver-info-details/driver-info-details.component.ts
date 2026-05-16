@@ -81,9 +81,7 @@ export class DriverInfoDetailsComponent {
 
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
-      console.log("aaaaaaaaaaaa >>>>>>>>", this.formArray);
       const groupedSections = this.groupBy(this.formArray, 'sectionID');
-      console.log("groupedSections >>>>>>>>", groupedSections);
 
       Object.keys(groupedSections).forEach((sectionID, index) => {
         const fieldsArray: any = groupedSections[sectionID].sort(
