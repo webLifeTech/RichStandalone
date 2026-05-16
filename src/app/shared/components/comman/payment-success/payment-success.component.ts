@@ -38,7 +38,6 @@ export class PaymentSuccessComponent {
     private router: Router,
   ) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    // this.getCurrentPackageDetails();
     this.GetPackageSubscriptionInvoiceDetails();
   }
 
@@ -52,21 +51,6 @@ export class PaymentSuccessComponent {
     document.documentElement.style.removeProperty('--theme-color2');
   }
 
-  // getCurrentPackageDetails() {
-  //   let body = {
-  //     "userId": this.gs.loggedInUserInfo.userId || null,
-  //   }
-  //   this.gs.isSpinnerShow = true;
-  //   this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
-  //     this.gs.isSpinnerShow = false;
-  //     if (response.response && response.response.statusCode == "200") {
-  //       this.currentPlan = response;
-  //     }
-  //   }, err => {
-  //     this.gs.isSpinnerShow = false;
-  //   })
-  // }
-
   GetPackageSubscriptionInvoiceDetails() {
     let body = {
       "userId": this.gs.loggedInUserInfo.userId || null,
@@ -74,8 +58,6 @@ export class PaymentSuccessComponent {
     this.gs.isSpinnerShow = true;
     this.pricingS.GetPackageSubscriptionInvoiceDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
-
       if (response.response && response.response.statusCode == "200") {
         this.currentPlan = response;
       }
@@ -91,7 +73,6 @@ export class PaymentSuccessComponent {
       "documentId": this.currentPlan.subscriptionDetails.documentId,
     }).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      // this.gs.downloadFile(res.fileName, 'data:application/pdf;base64,' + res.base64String);
       this.gs.downloadBase64File(res.fileName, res.base64String, res.fileType);
     }, (error: any) => {
       this.gs.isSpinnerShow = false;

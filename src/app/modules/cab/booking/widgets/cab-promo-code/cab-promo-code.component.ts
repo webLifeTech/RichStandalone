@@ -27,8 +27,6 @@ export class CabPromoCodeComponent {
 
   applyCouponCode(item: any) {
     this.toast.successToastr("Coupon Applied!");
-    console.log("item.couponCode >>>>>", item.couponCode);
-    console.log("gs.couponList >>>>>", this.gs.couponList);
     for (let i in this.gs.couponList) {
       this.gs.couponList[i].checked = false;
     }

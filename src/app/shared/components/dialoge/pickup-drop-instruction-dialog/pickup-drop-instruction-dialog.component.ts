@@ -31,7 +31,6 @@ export class PickupDropInstructionDialogComponent {
     public dialogRef: MatDialogRef<PickupDropInstructionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log("data >>>>>>>>", data);
     this.searchObj = this.gs.getLastSearch();
   }
 

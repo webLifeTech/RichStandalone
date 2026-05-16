@@ -69,8 +69,6 @@ export class ChangePasswordModalComponent {
 
   submitForm() {
 
-    console.log("fc.OldPassword?.errors >>>>>>", this.fc.OldPassword?.errors);
-
     this.submitted = true;
     if (!this.form.valid) {
       this.toast.errorToastr("Please enter valid details.");
@@ -85,7 +83,6 @@ export class ChangePasswordModalComponent {
     this.gs.isSpinnerShow = true;
     this.settingsService.ChangePassword(this.form.value).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("ChangePassword >>>", res);
       if (res && res.statusCode == "200") {
         this.toast.successToastr(res.message);
         this.onConfirm();

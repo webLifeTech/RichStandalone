@@ -131,9 +131,7 @@ export class UserDocumentsComponent {
 
     this.gs.isSpinnerShow = true;
     this.profileService.GetGeneratedDocuments(body).subscribe(async (response: any) => {
-      console.log("response >>>", response);
       this.gs.isSpinnerShow = false;
-
       if (response.response && response.response.statusCode == "200") {
         this.tableData = response.gridList;
         this.totalData = response.viewModel.totalCount;
@@ -155,9 +153,7 @@ export class UserDocumentsComponent {
 
     this.gs.isSpinnerShow = true;
     this.profileService.GetUploadedDocuments(body).subscribe(async (response: any) => {
-      console.log("response >>>", response);
       this.gs.isSpinnerShow = false;
-
       if (response.response && response.response.statusCode == "200") {
         this.tableData = response.gridList;
         this.totalData = response.viewModel.totalCount;
@@ -216,13 +212,11 @@ export class UserDocumentsComponent {
       "UserId": this.gs.loggedInUserInfo.userId,
       "DocumentType": this.documentTypeCode,
     }
-    console.log("res file >>>", file);
     let fileFormData: any = new FormData();
     fileFormData.append('Doc', file, file.name);
     this.gs.isSpinnerShow = true;
     this.profileService.uploadedDocument(fileFormData, dataParams).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("res >>>", res)
       if (res) {
         this.documentFile = res;
       }

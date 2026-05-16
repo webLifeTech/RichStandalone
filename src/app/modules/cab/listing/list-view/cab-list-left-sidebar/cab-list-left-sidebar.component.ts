@@ -78,8 +78,6 @@ export class CabListLeftSidebarComponent {
 
     this.route.queryParams.subscribe((params) => {
       this.params = params;
-      console.log("this.gs.lastSearch.type >>>>>", this.gs.lastSearch);
-
       if (this.gs.lastSearch.searchFrom == "home") {
         this.gs.lastSearch.searchFrom = null;
       } else if (this.gs.lastSearch.type === this.params.type) {
@@ -175,8 +173,6 @@ export class CabListLeftSidebarComponent {
               }))
             }));
 
-            console.log("this.aggregateFilters >>>", this.aggregateFilters);
-
             this.vehicleType = aggFilters['VEHICLETYPE'] ? aggFilters['VEHICLETYPE'].filterlist : [];
             this.router.navigate([], {
               relativeTo: this.route,
@@ -246,8 +242,6 @@ export class CabListLeftSidebarComponent {
               }
             }
 
-            console.log("this.aggregateFilters >>>", this.aggregateFilters);
-
             this.router.navigate([], {
               relativeTo: this.route,
               queryParams: {
@@ -261,10 +255,6 @@ export class CabListLeftSidebarComponent {
 
           }
           this.vehicleSearchResult = res;
-          // this.vehicleSearchResult = {
-          //   vehicleMatches: res.driverMatches,
-          //   ...res
-          // };
         } else {
           this.vehicleSearchResult = {
             searchList: [],

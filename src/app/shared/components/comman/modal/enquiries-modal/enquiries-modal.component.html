@@ -39,7 +39,7 @@
               Enter a valid email address
             </span>
           </div>
-          <div class="modal-form-group">
+          <div *ngIf="!providerDetails.isDriverAgent" class="modal-form-group">
             <label>Sub Category <span class="text-danger">*</span></label>
             <ng-select clearable="false" [items]="providerDetails.subCategories" formControlName="subCategoryCd"
               name="subCategoryCd" bindLabel="subCategoryName" placeholder="-- Select One --" bindValue="subCategoryId"

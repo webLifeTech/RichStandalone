@@ -361,17 +361,11 @@ export class UserDashboardKycComponent {
 
 
   changeKycTab(tab: any) {
-    console.log("this.isFormEdit >>>>>", this.isFormEdit);
-    console.log("tab >>>>>", tab);
-    console.log("isKYCCompleted >>>>>", this.isKYCCompleted);
-
-
     const confirm = () => {
       if (tab.formId == 7 && !this.isKYCCompleted) {
         this.toast.errorToastr("KYC is pending, Able to vehicle upload once kyc done.");
       }
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
-      console.log("this.selectedTabObj >>>>>", this.selectedTabObj);
       this.isStartGetKyc = false;
       this.isFormEdit = false;
       this.vehicleUploadType = null;
@@ -450,7 +444,6 @@ export class UserDashboardKycComponent {
           this.onSelectState();
         }
       }
-      console.log("getAllDrivers >>>>>", response);
     })
   }
 
@@ -460,16 +453,13 @@ export class UserDashboardKycComponent {
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       if (response && response.length) {
-        console.log("response[0] >>>>>>>", response[0]);
         this.driverInfoData = response;
-        console.log(" >>>>>", this.driverInfoData);
         this.gs.isLicenseVerified = true;
         this.kycForm.state = this.gs.loggedInUserInfo.driveInCity || 42;
       }
       if (!isSkipLoad) {
         this.onSelectState();
       }
-      console.log("getAllDrivers >>>>>", response);
     })
   }
 
@@ -479,7 +469,6 @@ export class UserDashboardKycComponent {
       userId: this.gs.loggedInUserInfo.userId,
     }
     this.vendorService.GetProviderDetails(body).subscribe(async (response: any) => {
-      console.log("getProviderDetails response >>>>>>", response);
       this.singleDetailInfo = { providerRequest: response };
       if (response && !response.providerProfilePath) { // !response.businessType need to do
         this.isFormEdit = true;
@@ -505,7 +494,6 @@ export class UserDashboardKycComponent {
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
       if (response && response.length) {
         this.sidebarTabs = response;
         this.filter();
@@ -609,11 +597,9 @@ export class UserDashboardKycComponent {
     this.profileService.GetKYCDraftByUserId({
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
-      console.log("GetKYCDraftByUserId >>>>>>>", response);
       if (response && response.userID) {
         this.draftVehiclesResponse = response;
         this.allPendingKycVehicleList = JSON.parse(response.draftData);
-        console.log("this.allPendingKycVehicleList >>>>>", this.allPendingKycVehicleList);
       }
     })
   }
@@ -651,8 +637,6 @@ export class UserDashboardKycComponent {
 
   getKyc(item: any) {
     this.singleDetailInfo = item;
-    console.log("this.singleDetailInfo >>>>>>", this.singleDetailInfo);
-    // this.allPendingKycVehicleList = JSON.parse(this.draftVehiclesResponse.draftData);
     this.kycForm.draftVehicles = this.draftVehiclesResponse;
     this.isStartGetKyc = true;
   }
@@ -704,7 +688,6 @@ export class UserDashboardKycComponent {
         if (response && response.driveInCity) {
           this.isFormEdit = true;
           this.singleDetailInfo = response;
-          console.log("getDriverDetails -------->>>>>>>>", this.singleDetailInfo);
           this.kycForm.state = this.singleDetailInfo.driveInCity
         }
       })
@@ -749,7 +732,6 @@ export class UserDashboardKycComponent {
   }
 
   nextStep(from?: any) {
-    console.log("activeKycTab", this.activeKycTab);
     this.gs.isModificationOn = false;
     if (from == 'load') {
       return;
@@ -770,7 +752,6 @@ export class UserDashboardKycComponent {
       modalRef.componentInstance.buttonLabel = "Next";
       modalRef.result.then((res: any) => {
         if (res.confirmed) {
-          console.log("dddddddd");
           if (this.activeKycTab === 1 && this.gs.loggedInUserInfo.role === 'user_4') {
             let tab = this.sidebarTabs.find((sItem: any) => sItem.formId == 8) || {};
             this.changeKycTab(tab);

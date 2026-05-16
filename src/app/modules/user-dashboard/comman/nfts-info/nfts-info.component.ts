@@ -62,13 +62,6 @@ export class NftsInfoComponent {
   }
 
   public ngOnInit() {
-
-    // this.driverService.getVerifiedDriver().subscribe((apiRes: any) => {
-    //   console.log("apiRes >>>>>>>", apiRes);
-    //   const driverList = apiRes.driver.filter((item: any) => item.kyc_id)
-    //   this.totalRecord = driverList.length;
-    //   this.tableData = this.nftService.checkNFTPurchased(driverList);
-    // });
     this.onSearch();
     this.getRolesList();
   }
@@ -122,7 +115,6 @@ export class NftsInfoComponent {
   async connectWallet() {
     try {
       this.walletAddress = await this.nftService.connectWallet(this.tableData[0].recieverContractId);
-      console.log("this.walletAddress >>>>>", this.walletAddress);
     } catch (error) {
       console.error(error);
     }
@@ -133,20 +125,14 @@ export class NftsInfoComponent {
       if (!this.walletAddress) {
         this.walletAddress = await this.nftService.connectWallet(item.recieverContractId);
       }
-      console.log("item >>>>>>", item);
-      console.log("this.walletAddress >>>>>", this.walletAddress);
-
       await this.nftService.purchaseNFT(item);
       this.onSearch();
-      // this.tableData = this.nftService.checkNFTPurchased(this.tableData);
     } catch (error) {
       console.error(error);
     }
   }
 
   async viewNFT(item: any, type: any) {
-    console.log("item >>>>>", item);
-
     if (type === 'view') {
       window.open(item.nftUrl);
     }

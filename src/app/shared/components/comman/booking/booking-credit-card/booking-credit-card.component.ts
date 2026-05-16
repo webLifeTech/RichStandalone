@@ -61,9 +61,6 @@ export class BookingCreditCardComponent {
     this.cardType = event.resolvedScheme$._value;
   }
   onSubmit(form: any) {
-    console.log(form);
-
-
   }
 
 

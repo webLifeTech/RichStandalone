@@ -73,7 +73,6 @@ export class MyCommissionComponent {
     }
     this.gs.isSpinnerShow = true;
     this.vendorService.MyCommissionByDriverAgentId(body).subscribe(async (response: any) => {
-      console.log("response >>>", response);
       this.gs.isSpinnerShow = false;
 
       if (response.response && response.response.statusCode == "200") {
@@ -108,7 +107,6 @@ export class MyCommissionComponent {
     }
     if (this.filterObj.sortFilter == 'This Week') {
       const Date = this.gs.getThisWeekRange();
-      console.log("Date >>>>>", Date);
       this.filterObj.dateTimeRange[0] = Date.startDate;
     }
     if (this.filterObj.sortFilter == 'This Month') {

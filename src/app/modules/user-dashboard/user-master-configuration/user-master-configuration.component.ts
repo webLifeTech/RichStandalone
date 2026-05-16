@@ -108,9 +108,6 @@ export class UserMasterConfigurationComponent {
   driverDetailsColumns = [
     { header: 'Is Active', fieldObject: null, field: 'isActiveOrInActive' },
     { header: 'Is Available for Private Booking?', fieldObject: null, field: 'isAvailableForPrivateBooking' },
-    // { header: 'Price per Day', fieldObject: null, field: 'pricePerDay' },
-    // { header: 'Price Per Week', fieldObject: null, field: 'pricePerWeek' },
-    // { header: 'Price Per Month', fieldObject: null, field: 'pricePerMonth' },
   ];
 
   // Actions grids
@@ -150,7 +147,6 @@ export class UserMasterConfigurationComponent {
     }
     this.profileService.getConfigUIForms(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
       if (response && response.length) {
         this.sidebarTabs = response;
         this.filter();
@@ -184,10 +180,6 @@ export class UserMasterConfigurationComponent {
       if (sidebarTab.formId == 3) {
         this.getDriverWorkingHours();
       }
-      // if (sidebarTab.formId == 41) {
-      //   this.getGarageInformations();
-      // }
-
       this.isNextStepShow = true;
     }, 200);
     return;
@@ -199,13 +191,10 @@ export class UserMasterConfigurationComponent {
       "userId": this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       if (response && response.length) {
-        console.log("response[0] >>>>>>>", response[0]);
         this.kycForm.contactId = response[0].contactId;
         this.gs.isLicenseVerified = true;
       }
       this.kycForm.isAddSearchSection = true;
-      // this.getCompanyBranches();
-      console.log("getAllDrivers >>>>>", response);
     })
   }
 
@@ -216,7 +205,6 @@ export class UserMasterConfigurationComponent {
       "userId": this.gs.loggedInUserInfo.userId,
       "driverId": 0,
     }).subscribe((response: any) => {
-      console.log("GetDriverWorkingHours >>>>>", response);
       if (response.response && response.response.statusCode == "200") {
         this.gridInfoData = [response];
         this.singleDetailInfo = { driverDetailsRequest: response };
@@ -236,8 +224,6 @@ export class UserMasterConfigurationComponent {
       this.selectedTabObj = JSON.parse(JSON.stringify(tab));
       this.activeKycTab = tab.formId;
 
-      console.log("this.activeKycTab >>>>>", this.activeKycTab);
-
       if (this.selectedTabObj.formId == 6) {
         this.getAllCompanies();
       }
@@ -249,8 +235,6 @@ export class UserMasterConfigurationComponent {
       }
       window.scrollTo({ top: 300, behavior: 'smooth' });
     }
-
-    console.log("this.gs.isModificationOn >>>", this.gs.isModificationOn);
 
     if (this.gs.isModificationOn) {
       const modalRef = this.modalService.open(ConfirmationModalComponent, {
@@ -280,18 +264,9 @@ export class UserMasterConfigurationComponent {
   }
 
   handleSubmit() {
-    // this.getDriverDetails();
     this.isAddEditBranch = false;
     this.isAddEditGarage = false;
     this.gs.isModificationOn = false;
-    // if (this.selectedTabObj.formId == 6) {
-    //   this.gs.isModificationOn = false;
-    //   this.getCompanyBranches();
-    // }
-    // if (this.selectedTabObj.formId == 41) {
-    //   this.gs.isModificationOn = false;
-    //   this.getGarageInformations();
-    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
@@ -302,21 +277,13 @@ export class UserMasterConfigurationComponent {
     this.gs.isModificationOn = false;
     this.isVehicleInfoEdit = false;
     this.isAddEditGarage = false;
-    // if (this.selectedTabObj.formId == 6) {
-    //   this.getCompanyBranches();
-    // }
     if (this.selectedTabObj.formId == 3) {
       this.getDriverWorkingHours();
     }
-    // if (this.selectedTabObj.formId == 41) {
-    //   this.getGarageInformations();
-    // }
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   handleAction(event: any, type: any) {
-    console.log("event >>>>>>", event);
-
     if (event.add && event.type === 'branch') {
       this.isAddEditBranch = true;
       return;
@@ -389,7 +356,6 @@ export class UserMasterConfigurationComponent {
     this.subscriptionStep = 3;
   }
   handleBack(step: any) {
-    console.log("step >>>>>", step);
     window.scrollTo({ top: 300, behavior: 'smooth' });
     this.isUpgradePlan = false;
     this.subscriptionStep = step;
@@ -401,9 +367,7 @@ export class UserMasterConfigurationComponent {
   }
 
   nextStep() {
-    // if (this.activeKycTab === 3) {
     this.router.navigate(['/user/wallet']);
-    // }
   }
 
 

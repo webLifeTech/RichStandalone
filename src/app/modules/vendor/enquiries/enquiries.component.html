@@ -38,7 +38,7 @@
                 (change)="onChangeServices($event)">
               </ng-select>
             </div>
-            <div class="col-lg-2 col-sm-12 col-12">
+            <div class="col-lg-2 col-sm-12 col-12" *ngIf="gs.loggedInUserInfo.role != 'DriverAgent'">
               <ng-select clearable="false" [items]="filteredSubCategories" bindLabel="Name" bindValue="Name"
                 placeholder="-- Filter Sub Category --" [(ngModel)]="searchFilter.subCategory" name="subCategory"
                 (change)="searchData()">
@@ -108,7 +108,7 @@
                     <th>Mobile</th>
                     <th>Email</th>
                     <th *ngIf="gs.loggedInUserInfo.role == 'admin'">Category</th>
-                    <th>Sub Category</th>
+                    <th *ngIf="gs.loggedInUserInfo.role != 'DriverAgent'">Sub Category</th>
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -133,7 +133,7 @@
                     <td *ngIf="gs.loggedInUserInfo.role == 'admin'">
                       <a>{{data.category || '-'}}</a>
                     </td>
-                    <td>
+                    <td *ngIf="gs.loggedInUserInfo.role != 'DriverAgent'">
                       <a>{{data.subCategory || '-'}}</a>
                     </td>
                     <td>

@@ -313,7 +313,6 @@ export class CabBookingSummaryComponent {
     this.searchObj.summaryId = route.snapshot.params['summaryId'];
     this.route.queryParams.subscribe((params) => {
       this.params = params;
-      console.log("this.searchObj >>>>>>", this.searchObj);
       this.type = this.params['type'];
       const pickTime = new Date(this.searchObj.pick_time);
       const dropTime = new Date(this.searchObj.drop_time);

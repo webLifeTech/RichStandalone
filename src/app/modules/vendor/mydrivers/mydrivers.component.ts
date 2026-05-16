@@ -59,8 +59,6 @@ export class MyDriversComponent {
 
   getTableData() {
     const { startDate, endDate } = this.gs.normalizeDateRange(this.filterObj.dateTimeRange[0], this.filterObj.dateTimeRange[1]);
-    console.log("startDate >>>", startDate);
-
     const body = {
       "userId": this.gs.loggedInUserInfo.userId,
       "pageNumber": this.currentPage,
@@ -73,7 +71,6 @@ export class MyDriversComponent {
     }
     this.gs.isSpinnerShow = true;
     this.vendorService.MyDriversByDriverAgentId(body).subscribe(async (response: any) => {
-      console.log("response >>>", response);
       this.gs.isSpinnerShow = false;
 
       if (response.response && response.response.statusCode == "200") {
@@ -108,7 +105,6 @@ export class MyDriversComponent {
     }
     if (this.filterObj.sortFilter == 'This Week') {
       const Date = this.gs.getThisWeekRange();
-      console.log("Date >>>>>", Date);
       this.filterObj.dateTimeRange[0] = Date.startDate;
     }
     if (this.filterObj.sortFilter == 'This Month') {

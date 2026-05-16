@@ -141,7 +141,6 @@ export class AddPaymentModalComponent {
 
     this.paymentService.createTransaction(cryptoBody).subscribe(response => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
 
       this.paymentService.CryptoPaymentRequestResponse({
         "userId": this.gs.loggedInUserInfo.userId,
@@ -224,8 +223,6 @@ export class AddPaymentModalComponent {
         "accountEntityType": this.gs.paymentDetails.ach.value?.accountEntityType
       }
     }
-    console.log("body >>>>", body);
-    // return;
     this.gs.isSpinnerShow = true;
     this.walletService.addWalletFunds(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
@@ -322,7 +319,6 @@ export class AddPaymentModalComponent {
   }
 
   onSelectCoin(event: any) {
-    console.log("event >>>>>>>>", event);
     this.selectedCoin = event;
   }
 

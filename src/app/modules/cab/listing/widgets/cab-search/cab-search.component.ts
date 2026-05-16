@@ -336,16 +336,8 @@ export class CabSearchComponent {
     private datePipe: DatePipe,
     private toast: ToastService,
   ) {
-    // use for continue seearch
-    // this.searchInfo = this.gs.getLastSearch();
-    // console.log("this.searchInfo >>>>>", this.searchInfo);
-    // if (this.searchInfo.location_type) {
-    //   this.searchObj = this.searchInfo;
-    // }
-
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;
-    console.log("this.route >>>>>>>", this.router.url);
 
     if (this.router.url.includes('hire-drivers')) {
       this.isDriverHireSearch = true;
@@ -368,7 +360,6 @@ export class CabSearchComponent {
   }
 
   ngOnInit() {
-    // this.searchObj.timeSchedule = "Now";
     this.searchObj.carType = "Manual";
     this.searchObj.carCatType = "Hatchback";
     this.searchObj.package = "2 Hours";
@@ -382,7 +373,6 @@ export class CabSearchComponent {
       this.searchObj.timeType = "Daily";
     }
     this.setDropMinDate();
-    console.log("eeeee .searchObj >>>>", this.searchObj);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -413,10 +403,6 @@ export class CabSearchComponent {
       this.searchObj.drop_time = "";
     }
     if (searchType != "reset" && !this.isDriverHireSearch) {
-      // if (!this.searchObj.same_location) {
-      //   this.toast.errorToastr("Please enter location");
-      //   return;
-      // }
       if (!this.searchObj.timeType) {
         this.toast.errorToastr("Please enter type");
         return;
@@ -547,18 +533,9 @@ export class CabSearchComponent {
   }
 
   onChangeDropTime() {
-    // const pick = new Date(this.searchObj.pick_time);
-    // const drop = new Date(this.searchObj.drop_time);
-    // console.log("this.searchObj.drop_time >>>", this.searchObj.drop_time.toISOString());
-    // console.log("this.minEndDate >>>", this.minEndDate.toISOString());
-    // if (this.searchObj.drop_time.toISOString() < this.minEndDate.toISOString()) {
-    //   this.searchObj.drop_time = null;
-    // }
-
-    const drop = new Date(this.searchObj.drop_time); // .getTime()
-    const min = new Date(this.minEndDate); // .getTime()
+    const drop = new Date(this.searchObj.drop_time);
+    const min = new Date(this.minEndDate);
     min.setMinutes(min.getMinutes() - 1);
-
 
     if (drop < min) {
       this.toast.errorToastr("Drop time must be at least 1 day after pickup time.");
@@ -578,14 +555,11 @@ export class CabSearchComponent {
       nextDay.setMinutes(nextDay.getMinutes()); // +1 minute
 
       this.minEndDate = nextDay;
-      console.log("this.minEndDate >>>", this.minEndDate);
-
     }
   }
 
 
   changeTab(item: any) {
-    // item.isSelected = true;
     this.activeTab = item.value;
     this.searchObj.mainTripType = item.Code;
   }

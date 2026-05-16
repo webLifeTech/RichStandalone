@@ -40,33 +40,16 @@ export class CountryDialogComponent {
   };
   searchText = '';
 
-  countries: any = [
-    // { name: 'India', code: 'IND', dialCode: '91' },
-    // { name: 'Singapore', code: 'SGP', dialCode: '65' },
-    // { name: 'Malaysia', code: 'MYS', dialCode: '60' },
-    // { name: 'Indonesia', code: 'IDN', dialCode: '62' },
-    // { name: 'Peru', code: 'PER', dialCode: '51' },
-    // { name: 'Colombia', code: 'COL', dialCode: '57' },
-    // { name: 'Viet Nam', code: 'VNM', dialCode: '84' },
-    // { name: 'Cambodia', code: 'KHM', dialCode: '855' },
-  ];
+  countries: any = [];
 
   constructor(
     private authService: AuthService,
     public dialogRef: MatDialogRef<CountryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log("data >>>>>>>>", data);
     this.selectedCountry = data.selectedCountry;
     this.countries = data.countries;
-    // this.getCountryCodeList();
   }
-
-  // getCountryCodeList(): void {
-  //   this.authService.GetTwilioCountryCodeList().subscribe((res: any) => {
-  //     this.countries = res;
-  //   })
-  // }
 
   close(): void {
     this.dialogRef.close(this.selectedCountry);

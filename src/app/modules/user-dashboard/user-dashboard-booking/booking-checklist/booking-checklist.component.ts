@@ -32,34 +32,7 @@ export class BookingChecklistComponent {
 
   inspectionForm: FormGroup;
   submitted: boolean = false;
-
-  // vehicle-checklist.data.ts
-  checklist: any = [
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Condition & function of seatbelts' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Head restraint adjustment' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Mirror adjustment' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'First AID kit' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Fire extinguisher' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Torch' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Warning triangle' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Vehicle handbook' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'All lights' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Horn' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Washers and wipers' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Brake' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Fuel' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Engine oil level' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Coolant level' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Wind screen wash level' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Brake/clutch fluid' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Condition of battery' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Oil or waste leaks' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Condition of windscreen' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Cleanness of windscreen windows' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Security of load, trailer, roofrack' },
-    // { "satisfactory": false, "defective": false, "na": false, description: 'Condition of tyres' },
-  ];
-
+  checklist: any = [];
   inspectionTypes: any = [];
 
   constructor(
@@ -89,7 +62,6 @@ export class BookingChecklistComponent {
   GetMasterInspectiontypes() {
     this.gs.isSpinnerShow = true;
     this.bookingService.GetMasterInspectiontypes({}).subscribe((res: any) => {
-      console.log("GetMasterInspectiontypes >>>>>", res);
       this.gs.isSpinnerShow = false;
       this.inspectionTypes = res;
     });
@@ -131,7 +103,6 @@ export class BookingChecklistComponent {
       if (res.response && res.response.statusCode == "200") {
         this.checklist = res.postRentalInspections;
         for (let i in this.checklist) {
-          // this.checklist[i].satisfactory = true;
           if (this.checklist[i].selectedResult === "Satisfactory") {
             this.checklist[i].satisfactory = true;
           }
@@ -218,7 +189,6 @@ export class BookingChecklistComponent {
       this.gs.isSpinnerShow = true;
       if (this.gs.loggedInUserInfo.role === 'user' || this.gs.loggedInUserInfo.role === 'user_4') { // for driver
         this.bookingService.ConfirmVehicleAcceptanceByDriver(body).subscribe((res: any) => {
-          console.log("ConfirmVehicleAcceptanceByDriver >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
             this.back();
@@ -229,7 +199,6 @@ export class BookingChecklistComponent {
         });
       } else {  // Car Owner
         this.bookingService.ConfirmVehicleReceivedByOwnerfromDriver(body).subscribe((res: any) => {
-          console.log("ConfirmVehicleReceivedByOwnerfromDriver >>>>>", res);
           this.gs.isSpinnerShow = false;
           if (res && res.statusCode == "200") {
             this.back();
@@ -239,7 +208,6 @@ export class BookingChecklistComponent {
           }
         });
       }
-      // this.activeModal.close({ confirmed: true, reason: this.reason });
     } else {
       this.toast.errorToastr("Please fill the all required fields.")
     }

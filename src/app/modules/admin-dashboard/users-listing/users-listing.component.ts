@@ -140,7 +140,6 @@ export class UsersListingComponent {
     this.gs.isSpinnerShow = true;
     this.roleService.GetGridTabsDetails(body).subscribe(async (response: any) => {
       this.tabs = response || [];
-      console.log("this.tabs >>>", this.tabs);
       this.activeTab = params['activeTab'] ? params['activeTab'] : this.tabs[0].menuName;
       this.activeTabName = this.tabs.find((m: any) => m.menuName === this.activeTab)?.name || '';
       this.getTableData();

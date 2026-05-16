@@ -62,10 +62,6 @@ export class UserVehicleRiskRatingComponent {
   }
 
   getTableData() {
-    // this.reviewService.getUserActivities().subscribe((apiRes: apiResultFormat) => {
-    //   this.totalData = apiRes.totalData;
-    //   this.tableData = apiRes.data;
-    // });
     const body = {
       userId: this.gs.loggedInUserInfo.userId,
     }
@@ -77,7 +73,6 @@ export class UserVehicleRiskRatingComponent {
         this.totalData = dashboardAllDetails?.vehicleRiskRatings?.length || 0;
         this.tableData = dashboardAllDetails?.vehicleRiskRatings;
         this.vehicleRiskRatings = dashboardAllDetails?.vehicleRiskRatings;
-        console.log("dashboardAllDetails >>>", dashboardAllDetails);
       }
     })
   }

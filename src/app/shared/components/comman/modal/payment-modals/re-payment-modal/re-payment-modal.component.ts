@@ -47,18 +47,12 @@ export class RePaymentModalComponent {
   }
 
   ngOnInit() {
-    console.log("singleItem >>>", this.singleItem);
-
   }
   closeModal() {
     this.modalService.dismissAll();
   }
 
   makePayment(event: any) {
-    console.log("event >>>>>", event);
-    // this.singleItem.totalAmount
-    // BookingPaymentRequest: event
-
     const body: any = {
       "bookingId": this.singleItem.bookingId,
       "userId": this.gs.loggedInUserInfo.userId,
@@ -68,13 +62,8 @@ export class RePaymentModalComponent {
       "remarks": "Repayment of ref : " + this.singleItem.bookingReferenceNumber
     }
 
-    console.log("body >>>>>>", body);
-
-    // return;
     this.gs.isSpinnerShow = true;
     this.paymentService.RePaymentConfirmBooking(body).subscribe((response: any) => {
-      console.log("RePaymentConfirmBooking >>>>", response);
-
       this.gs.isSpinnerShow = false;
       if (response && response.statusCode == "200") {
         this.toast.successToastr(response.message);

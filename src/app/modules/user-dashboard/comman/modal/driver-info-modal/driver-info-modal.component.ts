@@ -28,7 +28,6 @@ export class DriverInfoModalComponent {
   }
 
   ngOnInit() {
-    console.log("1111111 driverInfoData >>>>>>>", this.driverInfoData);
   }
 
   closeModal() {

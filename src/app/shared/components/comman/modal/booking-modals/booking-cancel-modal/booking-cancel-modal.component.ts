@@ -74,7 +74,6 @@ export class BookingCancelModalComponent {
   }
 
   ngOnInit() {
-    console.log("bookingDetails >>>>>", this.bookingDetails);
     this.GetBookingByBookingRefNo();
     if (this.type == "driver") {
       this.reasons = this.driverRentCancellationReasons;
@@ -85,7 +84,6 @@ export class BookingCancelModalComponent {
 
 
   GetBookingByBookingRefNo() {
-    console.log("bookingRefNo >>>>", this.bookingRefNo);
 
     this.bookingService.GetBookingByBookingRefNo({
       bookingRefNo: this.bookingRefNo,

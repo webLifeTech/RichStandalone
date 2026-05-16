@@ -159,7 +159,6 @@ export class UserWishlistComponent {
       this.tableData = [];
       this.favoriteService.GetInterestOnDriverFavourites(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        console.log("response >>>>>", response);
         if (response.response && response.response.statusCode == "200") {
           this.tableData = response.gridList;
           this.totalData = response.viewModel?.totalCount || 0;

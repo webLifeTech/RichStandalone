@@ -50,7 +50,6 @@ export class ViewAllDocumentsModalComponent {
 
     this.gs.isSpinnerShow = true;
     this.bookingService.GetBookingAllDocuments(body).subscribe((res: any) => {
-      console.log("GetBookingAllDocuments >>>>>", res);
       this.gs.isSpinnerShow = false;
       this.documentsList = res['bookingDocuments'];
     }, (error: any) => {
@@ -68,7 +67,6 @@ export class ViewAllDocumentsModalComponent {
 
     this.gs.isSpinnerShow = true;
     this.profileService.GetUserDocuments(body).subscribe((res: any) => {
-      console.log("GetUserDocuments >>>>>", JSON.parse(res));
       this.gs.isSpinnerShow = false;
       this.documentsList = JSON.parse(res);
     }, (error: any) => {

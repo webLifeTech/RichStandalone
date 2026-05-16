@@ -40,7 +40,6 @@ export class NotificationsComponent {
       this.gs.isSpinnerShow = false;
       if (response) {
         this.settingsDetails = JSON.parse(response)?.settingTabs || [];
-        console.log("Notifications Details >>>>>", this.settingsDetails);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;

@@ -70,18 +70,13 @@ export class BookingActionCardComponent implements OnChanges {
   }
 
   onChange(event: any): void {
-    console.log('Selection changed:', event);
     this.bookingDetails = event;
     this.updateCardState();
-    // You can perform further logic here,
-    // e.g., update other parts of your application or validate the value.
   }
 
   updateCardState() {
     // String normalize kar rahe hain taaki case-sensitive issue na ho
     const status = this.bookingDetails.bookingStatusRemarks?.toLowerCase() || '';
-    console.log("status >>>", status);
-
     this.uiState.showCard = false;
 
     // =========================================================

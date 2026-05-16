@@ -171,7 +171,6 @@ export class UserWalletComponent {
     modalRef.componentInstance.paymentType = type;
     modalRef.componentInstance.walletId = this.walletDetails.walletId;
     modalRef.result.then((res: any) => {
-      console.log("res >>>>", res);
       if (res.confirmed) {
         this.getWalletDetails();
         this.gs.isProgressStepShow = false;
@@ -295,47 +294,6 @@ export class UserWalletComponent {
       }
 
       this.excelExport.exportToExcelCustom(finalData, "WalletHistory", "Wallet Usage History");
-      // this.excelExport.exportToExcel(finalData, "WalletHistory", "Wallet Usage History");
-
-      // const data = [
-      //   {
-      //     SL: { value: 1 },
-      //     "Reference Number": { value: "WT00000023" },
-      //     "Transaction Type": {
-      //       value: "Amount - DEBIT",
-      //       font: { bold: true, color: { argb: "FF0000" } },
-      //     },
-      //     Amount: {
-      //       value: "-36.7",
-      //       font: { bold: true, color: { argb: "FF0000" } },
-      //       isTotal: true,
-      //     },
-      //     "Payment Mode": { value: "Wallet" },
-      //     Remarks: { value: "Booking Payment" },
-      //     Date: { value: "09/26/2025" },
-      //     Status: {
-      //       value: "Active",
-      //       font: { bold: true, color: { argb: "008000" } },
-      //     },
-      //   },
-      //   {
-      //     SL: { value: 2 },
-      //     "Reference Number": { value: "12743" },
-      //     "Transaction Type": {
-      //       value: "Amount - CREDIT",
-      //       font: { bold: true, color: { argb: "008000" } },
-      //     },
-      //     Amount: {
-      //       value: "+29",
-      //       font: { bold: true, color: { argb: "008000" } },
-      //       isTotal: true,
-      //     },
-      //     "Payment Mode": { value: "ACH" },
-      //     Remarks: { value: "Booking Payment" },
-      //     Date: { value: "09/25/2025" },
-      //     Status: { value: "Active" },
-      //   },
-      // ];
     });
   }
 
@@ -364,7 +322,5 @@ export class UserWalletComponent {
         },
       });
     }
-
-    // this.router.navigate(['/user/wallet']);
   }
 }

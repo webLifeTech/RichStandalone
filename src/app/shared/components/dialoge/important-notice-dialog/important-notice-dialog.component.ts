@@ -795,10 +795,8 @@ export class ImportantNoticeDialogComponent {
     this.gs.isSpinnerShow = true;
     this.cabService.getImportantNotice(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>>", response);
       if (response && response.noticeDescription) {
         this.termsAndConditionsObj = response;
-        // console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
         this.content = response.noticeDescription;
       }
     }, err => {

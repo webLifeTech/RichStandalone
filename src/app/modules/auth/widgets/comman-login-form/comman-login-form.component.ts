@@ -214,8 +214,6 @@ export class CommanLoginFormComponent {
         "email": this.verificationType == "EmailId" ? this.loginForm.username : null,
       }
 
-      console.log("this.registerForm >>>", this.registerForm);
-
       if (this.isVendor) {
         body["category"] = this.registerForm.category;
         body["categoryCd"] = this.registerForm.categoryCd;

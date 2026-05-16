@@ -60,11 +60,10 @@ export class EnquiriesModalComponent {
       "category": this.providerDetails?.categoryName,
       "categoryCd": this.providerDetails?.categoryId,
       "subCategory": null,
-      "subCategoryCd": [null, Validators.required],
+      "subCategoryCd": [null, !this.providerDetails.isDriverAgent && Validators.required],
       "isRead": true,
       "enquiryDate": [this.transformDate(this.todayDate, 'MM/dd/yy')]
     })
-
   }
 
   changeSubCategory(event: any) {
@@ -77,18 +76,33 @@ export class EnquiriesModalComponent {
   }
   onConfirm() {
     this.submitted = true;
+
     if (this.enquiryForm.valid) {
-      this.gs.isSpinnerShow = true;
-      this.vendorService.AddProviderEnquiry(this.enquiryForm.value).subscribe((res: any) => {
-        this.submitted = false;
-        this.gs.isSpinnerShow = false;
-        if (res && res.statusCode == "200") {
-          this.openVerificationSuccess();
-          this.activeModal.close({ confirmed: true });
-        } else {
-          this.toast.errorToastr("Something went wrong");
-        }
-      })
+      if (this.providerDetails.isDriverAgent) {
+        this.gs.isSpinnerShow = true;
+        this.vendorService.AddDriverAgentEnquiry(this.enquiryForm.value).subscribe((res: any) => {
+          this.submitted = false;
+          this.gs.isSpinnerShow = false;
+          if (res && res.statusCode == "200") {
+            this.openVerificationSuccess();
+            this.activeModal.close({ confirmed: true });
+          } else {
+            this.toast.errorToastr("Something went wrong");
+          }
+        })
+      } else {
+        this.gs.isSpinnerShow = true;
+        this.vendorService.AddProviderEnquiry(this.enquiryForm.value).subscribe((res: any) => {
+          this.submitted = false;
+          this.gs.isSpinnerShow = false;
+          if (res && res.statusCode == "200") {
+            this.openVerificationSuccess();
+            this.activeModal.close({ confirmed: true });
+          } else {
+            this.toast.errorToastr("Something went wrong");
+          }
+        })
+      }
     }
 
     // this.openOtpVerification();

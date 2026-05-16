@@ -46,7 +46,6 @@ export class DynamicInfoModalComponent {
   }
 
   ngOnInit() {
-    console.log("model kycForm >>>", this.kycForm);
 
     this.getConfigUIFields();
     if (this.formType === 'driver_details') {
@@ -60,7 +59,6 @@ export class DynamicInfoModalComponent {
         if (a.isLatest !== b.isLatest) {
           return a.isLatest ? -1 : 1;
         }
-
         // 2️⃣ Higher version first
         if (a.version !== b.version) {
           return b.version - a.version;
@@ -68,13 +66,6 @@ export class DynamicInfoModalComponent {
 
         // 3️⃣ Optional stable ordering (same version)
         return a.documentTypeId - b.documentTypeId;
-        // if (a.documentTypeId !== b.documentTypeId) {
-        //   return a.documentTypeId - b.documentTypeId;
-        // }
-        // if (a.isLatest !== b.isLatest) {
-        //   return b.isLatest ? 1 : -1;
-        // }
-        // return b.version - a.version;
       });
     }
 
@@ -112,7 +103,6 @@ export class DynamicInfoModalComponent {
     }
 
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
-      console.log("aaaaaaaaaaaa >>>>>>>>", response);
       const groupedSections = this.groupBy(response, 'sectionID');
 
       Object.keys(groupedSections).forEach((sectionID, index) => {
@@ -164,7 +154,6 @@ export class DynamicInfoModalComponent {
     this.profileService.getMasterPolicyCodes(body).subscribe((res: any) => {
       if (res && res.length) {
         this.masterDropdwonList = this.groupBy(res, 'TypeCode');
-        console.log("getMasterVehicleCodes >>>>", this.masterDropdwonList);
         this.createForm();
       } else {
         this.gs.isSpinnerShow = false;
@@ -256,8 +245,6 @@ export class DynamicInfoModalComponent {
         }
       }
     }
-
-    console.log("final >>>>", this.groupedSectionsData);
   }
 
   getFieldValue(obj: any, path: string, key: string): any {
@@ -378,7 +365,6 @@ export class DynamicInfoModalComponent {
     }
     this.gs.isSpinnerShow = true;
     this.profileService.UpdateKycVerificationStatus(body).subscribe((response: any) => {
-      console.log('UpdateKycVerificationStatus >>>', response);
 
       this.gs.isSpinnerShow = false;
       if (response && response.statusCode == "200") {

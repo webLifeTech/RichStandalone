@@ -184,7 +184,6 @@ export class UserCancellationRefundComponent {
       "rejectedReason": statusObj.refund_rejected_reason || null
     }
     this.adminService.UpdateBookingRefundStatus(body).subscribe((response: any) => {
-      console.log("UpdateBookingRefundStatus >>>>", response);
       if (response && response.statusCode == "200") {
         this.toast.successToastr(response.message);
         this.getTableData();

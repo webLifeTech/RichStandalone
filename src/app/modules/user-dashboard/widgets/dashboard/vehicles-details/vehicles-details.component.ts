@@ -41,7 +41,6 @@ export class VehiclesDetailsComponent {
   }
 
   ngOnInit() {
-    console.log("details >>>>", this.details);
     this.totalDrivers.total = this.details.totalVehicles;
     const carOwnersData: any = [
       {
@@ -75,30 +74,19 @@ export class VehiclesDetailsComponent {
         "bg-color": "color-turquoise-blue",
       },
     ];
-    // for
     // Calculate the total value
     const totalValue = carOwnersData.reduce((sum: any, item: any) => sum + item.total, 0);
 
     // Add percentage key to each object
     const carOwnersDataWithPercentage = carOwnersData.map((item: any) => {
       let pr: any = ((item.total / totalValue) * 100).toFixed(0);
-
       this.totalDrivers.data.chartLabels.push(item.title + ' : ' + item.total)
-      // if (!item.data.percentage) {
-      //   item.data.percentage = parseInt(pr);
-      // }
       this.totalDrivers.data.series.push(parseInt(pr))
       return {
         ...item,
         percentage: pr // percentage with 2 decimal places
       };
     });
-
-
-
-    // this.carOwnersData = carOwnersDataWithPercentage;
-
-
   }
 
   viewMyVehicles(type: any) {

@@ -39,31 +39,8 @@ export class BookingCancellationComponent {
   submitted: boolean = false;
   isBookingCancelled: boolean = false;
 
-  // carRentCancellationReasons = [
-  //   { id: 1, Name: 'Change in travel plans' },
-  //   { id: 2, Name: 'Found a better deal elsewhere' },
-  //   { id: 3, Name: 'Vehicle not available on required date' },
-  //   { id: 4, Name: 'Vehicle type no longer needed' },
-  //   { id: 5, Name: 'Booking made by mistake' },
-  //   { id: 6, Name: 'Unsatisfactory customer service' },
-  //   { id: 7, Name: 'Pickup/drop location not suitable' }
-  // ];
-
-
-  // driverRentCancellationReasons = [
-  //   { id: 1, Name: 'Trip postponed or cancelled' },
-  //   { id: 2, Name: 'Driver arrival delay' },
-  //   { id: 3, Name: 'Preferred driver not assigned' },
-  //   { id: 4, Name: 'Driver behavior concerns' },
-  //   { id: 5, Name: 'Change in travel mode (self-drive, etc.)' },
-  //   { id: 6, Name: 'Incorrect booking details entered' },
-  //   { id: 7, Name: 'Health/emergency issues' }
-  // ];
-
 
   constructor(
-    // private modalService: NgbModal,
-    // public activeModal: NgbActiveModal,
     public bf: FormBuilder,
     private toast: ToastService,
     public gs: GlobalService,
@@ -72,7 +49,6 @@ export class BookingCancellationComponent {
     private modalService: NgbModal,
   ) {
     this.cancellationForm = this.bf.group({
-      // "userId": this.providerDetails.userId,
       "reason": [null, Validators.required],
       "remarks": ["", Validators.required],
     })
@@ -117,12 +93,9 @@ export class BookingCancellationComponent {
             "remarks": this.cancellationForm.value.remarks,
             "modifiedBy": this.gs.loggedInUserInfo.userId,
           }
-          console.log("body >>>>", body);
-          // return;
 
           this.gs.isSpinnerShow = true;
           this.bookingService.BookingCancellationRequest(body).subscribe((res: any) => {
-            console.log("BookingCancellationRequest >>>>>", res);
             this.gs.isSpinnerShow = false;
             if (res && res.statusCode == "200") {
               this.toast.successToastr(res.message);

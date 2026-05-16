@@ -61,9 +61,7 @@ export class EnquiriesComponent {
   };
   mainCatList: any = [];
   enquiries: any = [];
-  filteredSubCategories: any = [
-    // { Name: "All Sub Category", ID: "all" },
-  ];
+  filteredSubCategories: any = [];
   providerList: any = [];
 
   constructor(
@@ -241,7 +239,6 @@ export class EnquiriesComponent {
     this.excelExport.exportToExcelPost(body, "ExportAllProviderEnquiryToExcel").subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       let tableData = JSON.parse(response);
-      console.log("ExportAllProviderEnquiryToExcel tableData >>", tableData);
 
       let finalData: any = [];
       const style = {

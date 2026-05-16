@@ -56,11 +56,6 @@ export class CabClassicHomeSectionComponent {
     private profileService: ProfileService,
     private toast: ToastService,
   ) {
-    // use for continue seearch
-    // this.searchInfo = this.gs.getLastSearch();
-    // if (this.searchInfo.location_type) {
-    //   this.searchObj = this.searchInfo;
-    // }
     this.getRentType();
   }
 
@@ -90,7 +85,6 @@ export class CabClassicHomeSectionComponent {
   }
 
   onSearchLocation() {
-    console.log("this.searchObj.pick_up_location >>>>>", this.searchObj.same_location.length);
 
     if (this.searchObj.same_location.length < 2) {
       this.locationArray = [];
@@ -109,7 +103,6 @@ export class CabClassicHomeSectionComponent {
     }, err => {
       this.gs.isSpinnerShow = false;
     })
-    // this.searchObj.location_type = (event.target as HTMLInputElement).value;
   }
 
   selectLocation(location: string) {
@@ -146,7 +139,6 @@ export class CabClassicHomeSectionComponent {
       return;
     }
 
-    // localStorage.setItem('lastSearch', JSON.stringify(this.searchObj));
     this.gs.lastSearch = this.searchObj;
     this.router.navigate(['/cab/listing/list-view'], {
       queryParams: {

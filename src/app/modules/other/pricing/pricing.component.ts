@@ -79,9 +79,7 @@ export class PricingComponent {
     this.gs.isSpinnerShow = true;
     this.pricingS.getPackageDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("response >>>>>", response);
       if (response && response.length) {
-        // response[0].packages[0].purchased = true;
         this.pricingList = response[0].packages;
         for (let i in this.pricingList) {
           if (this.pricingList[i].packageCode == this.currentPlan.packageCode) {
@@ -94,8 +92,6 @@ export class PricingComponent {
         } else {
           this.pricingList = response[0].packages;
         }
-        console.log("this.pricingList >>>>>", this.pricingList);
-
       } else {
         this.toast.errorToastr("Something went wrong");
       }
@@ -127,7 +123,6 @@ export class PricingComponent {
   }
 
   subscribe(event: any) {
-    console.log("event >>>>>>", event);
     let { item, payckageStatus } = event;
 
     if (!this.auth.isLoggedIn) {

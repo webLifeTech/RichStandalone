@@ -445,7 +445,6 @@ export class ExcelExportService {
     delete excelSheetsData['TableHeaders'];
 
     const SheetsData = excelSheetsData;
-    console.log("SheetsData >>>>>", SheetsData);
 
     Object.keys(SheetsData).forEach(sheetName => {
       const sheet = workbook.addWorksheet(sheetName);

@@ -82,9 +82,6 @@ export class BookingComponent {
   }
 
   ngOnInit() {
-    console.log("this.singleItem >>>>", this.singleItem);
-    console.log("isRePaymtn >>>>", this.isRePaymtn);
-
     if (this.singleItem.bookingId && this.singleItem.bookingReferenceNumber) {
       this.isRePaymtn = true;
       this.riskType = this.singleItem.riskType;
@@ -123,7 +120,6 @@ export class BookingComponent {
 
   getCrypto() {
     this.paymentService.getSupportedCoins().subscribe((response: any) => {
-      console.log(response);
       if (response.status == 200) {
         for (const property in response.data) {
           response.data[property]['coin'] = property;
@@ -227,9 +223,6 @@ export class BookingComponent {
       }
     }
 
-    console.log("body >>>>>>", body);
-    // return;
-
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
       backdrop: 'static',
@@ -270,12 +263,6 @@ export class BookingComponent {
       "customOrderId": customOrderId || null,
       "notificationURL": "https://uat.maya-avante.com/PostData/IsoSearch/PostMatchResponseData"
     }
-    console.log("this.isRePaymtn >>>", this.isRePaymtn);
-    console.log("totalAmount >>>", this.singleItem.totalAmount);
-    console.log("totalFare >>>", this.gs.bookingSummaryDetails.totalFare);
-    console.log("body >>>", body);
-    // return;
-
 
     this.paymentService.CryptoPaymentRequestResponse({
       "userId": this.gs.loggedInUserInfo.userId,
@@ -288,7 +275,6 @@ export class BookingComponent {
 
     this.paymentService.createTransaction(body).subscribe(response => {
       this.isLoader = false;
-      console.log("response >>>>>", response);
 
       this.paymentService.CryptoPaymentRequestResponse({
         "userId": this.gs.loggedInUserInfo.userId,
@@ -316,13 +302,6 @@ export class BookingComponent {
               this.bookingAgreement(bodyObj);
             }
           }, () => { });
-          // setTimeout(() => {
-          //   window.open(responseData.url, "_blank");
-          //   this.router.navigate(['/cab/booking/booking-success', this.params.type], {
-          //     queryParams: { paymentType: 'crypto' },
-          //     queryParamsHandling: "merge"
-          //   });
-          // }, 1000);
         } else {
           this.toast.errorToastr("Something went wrong");
         }
@@ -336,11 +315,9 @@ export class BookingComponent {
 
   bookingAgreement(body: any) {
 
-    console.log("this.isRePaymtn >>>>>>", this.isRePaymtn);
-    console.log("body >>>>>>", body);
     if (this.isRePaymtn) {
       this.onRePayment.emit(body["BookingPaymentRequest"]);
-      return; // need to do
+      return;
     }
 
     this.gs.isSpinnerShow = true;
@@ -359,7 +336,6 @@ export class BookingComponent {
           if (signModalRes.confirmed) {
             this.toast.successToastr("Booking successfully.");
             this.router.navigate(['/user/booking']);
-            // this.router.navigate(['/cab/booking/booking-success', this.params.type]);
           }
         }, () => { });
       } else {
@@ -367,7 +343,6 @@ export class BookingComponent {
       }
     }, (err: any) => {
       console.log("err >>>>>", err);
-
       this.toast.errorToastr(err.error.message);
       this.gs.isSpinnerShow = false;
     })
@@ -388,7 +363,6 @@ export class BookingComponent {
   }
 
   onSelectCoin(event: any) {
-    console.log("event >>>>>>>>", event);
     this.selectedCoin = event;
   }
 }

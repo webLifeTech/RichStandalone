@@ -49,9 +49,6 @@ export class OtpVerificationModalComponent {
   ) { }
 
   ngOnInit() {
-    console.log("verificationType >>", this.verificationType);
-    console.log("username >>", this.username);
-
     if (this.verificationType == "PhoneNo") { // need to do once Twilio recharge
       this.toast.successToastr("Verification Code Sent Successfully");
       return;
@@ -147,10 +144,7 @@ export class OtpVerificationModalComponent {
 
   confirmOtp() {
     this.submitted = true;
-    console.log("this.oneTimePassword >>>", this.oneTimePassword);
     const otp = this.oneTimePassword.data1 + this.oneTimePassword.data2 + this.oneTimePassword.data3 + this.oneTimePassword.data4
-    console.log("otp >>>", otp);
-    // return;
 
     if (!otp) {
       this.toast.errorToastr("Please enter otp.");

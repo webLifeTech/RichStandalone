@@ -75,7 +75,6 @@ export class PackageSubscriptionComponent {
     this.gs.isSpinnerShow = true;
     this.pricingS.getCurrentPackageDetails(body).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("getCurrentPackageDetails >>>>>", response);
       if (response.response && response.response.statusCode == "200") {
         this.currentPlan = response;
       }

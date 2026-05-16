@@ -51,12 +51,8 @@ export class AppComponent {
 
   connect() {
     this.signalR.connect(this.gs.loggedInUserInfo.access_token, (msg, msgType) => {
-      // this.notificationList = JSON.parse(msg);
-      console.log('msgType >>>', msgType);
-      console.log('notificationList >>>', msg);
       if (msgType === 'updatewallet') {
         this.signalR.walletInfo = JSON.parse(msg);
-        console.log('this.signalR.walletInfo >>>', this.signalR.walletInfo);
       }
       if (msgType === 'receiveNotification') {
         this.signalR.notification.unshift(msg);

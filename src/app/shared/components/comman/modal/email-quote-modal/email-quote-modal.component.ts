@@ -36,12 +36,9 @@ export class EmailQuoteModalComponent {
   ) { }
 
   ngOnInit() {
-    console.log("details >>>>>>>>", this.details);
-
   }
   onClose(): void {
     this.modalService.dismissAll();
-    // this.dialogRef.close();
   }
 
   submitEmail() {
@@ -59,7 +56,6 @@ export class EmailQuoteModalComponent {
 
     this.gs.isSpinnerShow = true;
     this.cabService.AddDriverOrVehicleEnquiry(body).subscribe((res: any) => {
-      console.log("AddDriverOrVehicleEnquiry >>>>", res);
       if (res && res.statusCode == "200") {
         this.toast.successToastr("Enquiry sent successfully");
         this.modalService.dismissAll();

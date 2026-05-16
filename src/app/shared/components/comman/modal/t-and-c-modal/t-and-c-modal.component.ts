@@ -44,8 +44,6 @@ export class TermsAndCModalComponent {
   ) { }
 
   ngOnInit() {
-    console.log("termCode >>>>>", this.termCode);
-
     this.getTermsAndConditions();
   }
 
@@ -60,8 +58,6 @@ export class TermsAndCModalComponent {
       this.gs.isSpinnerShow = false;
       if (response && response.template) {
         this.termsAndConditionsObj = response;
-        console.log("this.termsAndConditionsObj >>>>>>", this.termsAndConditionsObj);
-
         this.content = response.template;
       }
     }, err => {

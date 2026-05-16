@@ -123,7 +123,6 @@ export class UserDashboardBookingComponent {
       if (res.response && res.response.statusCode == "200") {
         this.tableData = res.gridList;
         this.totalData = res?.viewModel?.totalCount || 0;
-        // this.booktabs = res.filterList ? JSON.parse(res.filterList) : [];
       }
     });
   }
@@ -156,7 +155,6 @@ export class UserDashboardBookingComponent {
   changeBookTab(row: any) {
     this.activeTab = row.menuName;
     this.activeTabName = row.name;
-    console.log("bookingStatus >>>>", row);
     this.getTableData();
   }
 
@@ -271,7 +269,6 @@ export class UserDashboardBookingComponent {
   }
 
   changeStatus(data: any, status: any) {
-    console.log("data >>>>>", data);
 
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
@@ -304,7 +301,6 @@ export class UserDashboardBookingComponent {
     this.gs.isSpinnerShow = true;
     this.bookingService.ReturnVehicleToOwner(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("ReturnVehicleToOwner >>>>", res);
       if (res && res.statusCode == "200") {
         this.toast.successToastr(res.message);
         this.getTableData();
@@ -355,7 +351,6 @@ export class UserDashboardBookingComponent {
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetCarBookingCancellationInfo >>>>>", response);
       if (response && response.responseResult && response.responseResult.statusCode == "200") {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
@@ -388,7 +383,6 @@ export class UserDashboardBookingComponent {
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetDriverBookingCancellationInfo >>>>>", response);
       if (response && response.responseResult && response.responseResult.statusCode == "200") {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
@@ -411,7 +405,6 @@ export class UserDashboardBookingComponent {
     modalRef.componentInstance.singleItem = data;
     modalRef.result.then(async (res: any) => {
       if (res.confirmed) {
-        console.log("res >>>>>", res);
         this.getTableData();
         return;
       }
@@ -506,8 +499,6 @@ export class UserDashboardBookingComponent {
   }
 
   handleAction(actionType: string, booking: any) {
-    console.log('Action received:', actionType);
-
     if (actionType === 'SIGN') {
       this.viewDocument(booking.document)
     }

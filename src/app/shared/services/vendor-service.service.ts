@@ -139,4 +139,13 @@ export class VendorServService {
       })
     );
   }
+
+  // Provider -> AddDriverAgentEnquiry
+  public AddDriverAgentEnquiry(data: any) {
+    return this.http.post(this.baseUrl1 + 'TLHUB/Provider/AddDriverAgentEnquiry', data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

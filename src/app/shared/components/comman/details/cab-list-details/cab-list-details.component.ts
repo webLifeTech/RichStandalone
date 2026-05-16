@@ -144,9 +144,6 @@ export class CabListDetailsComponent {
     }
     this.paginate = this.paginationService.getPager(this.searchResult.viewModel?.totalCount, this.pageNo, this.pageSize);
     this.searchInfo = this.gs.getLastSearch();
-    // if (this.auth.isLoggedIn) {
-    //   this.checkFav();
-    // }
   }
 
   setPage(page: number) {
@@ -201,7 +198,6 @@ export class CabListDetailsComponent {
       let params = {
         car_type: this.getCarTypeParams.length ? this.getCarTypeParams.join(',') : null,
       }
-      console.log("params >>>>>", params);
 
       this.router.navigate(['/cab/booking/booking', this.type === 'car' ? details.vehicleId : details.driverId, details.summaryId], {
         queryParams: params,
@@ -259,26 +255,6 @@ export class CabListDetailsComponent {
     }
   }
 
-  // checkFav() {
-  //   this.favoriteService.getAllFavourite({
-  //     "userId": this.gs.loggedInUserInfo.userId,
-  //     "riskType": this.type === 'car' ? 'Vehicle' : 'Driver',
-  //   }).subscribe((response: any) => {
-  //     if (response.response && response.response.statusCode == "200") {
-  //       for (let i in this.searchResult.searchList) {
-  //         for (let j in response.favoriteList) {
-  //           if (this.type === 'car' && this.searchResult.searchList[i].vehicleId == response.favoriteList[j].vehicleId) {
-  //             this.searchResult.searchList[i].isAddWishlist = true;
-  //           }
-  //           if (this.type === 'driver' && this.searchResult.searchList[i].driverId == response.favoriteList[j].driverId) {
-  //             this.searchResult.searchList[i].isAddWishlist = true;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-
   openImportantNoticeDialog(): void {
     this.dialog.open(ImportantNoticeDialogComponent, {
       width: '60%',
@@ -315,10 +291,6 @@ export class CabListDetailsComponent {
         this.router.navigateByUrl('/auth/log-in');
       }
     });
-    // this.dialog.open(EmailQuoteDialogComponent, {
-    //   width: '600px',
-    //   data: {}
-    // });
   }
 
   applyFilter(value: any) {
@@ -387,7 +359,6 @@ export class CabListDetailsComponent {
 
   async onHover(item: any) {
 
-    console.log("item >>>", item);
     if (this.type === 'car' && ((!this.auth.isLoggedIn && !item.ratingAverage) || (this.auth.isLoggedIn && !item.riskRating))) {
       return;
     }
@@ -488,14 +459,11 @@ export class CabListDetailsComponent {
 
     this.cabService.getVehicleBookingSummaryDetails(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("res.vehicleCancellationRules >>>>>", res.vehicleCancellationRules);
-
       if (res.response && res.response.statusCode == "200") {
         this.gs.vehicleCancellationPolicy = res.vehicleCancellationRules;
         const modalRef = this.modalService.open(CancelPolicyModalComponent, {
           size: 'lg'
         });
-        // modalRef.componentInstance.title = "Please login to book";
         modalRef.result.then((res: any) => {
           if (res.confirmed) {
           }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SearchCatLoactionComponent } from './search-cat-loaction/search-cat-loaction.component';
 import { CommonModule } from '@angular/common';
 import { ServiceListComponent } from './service-list/service-list.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BookingService } from '../../shared/services/booking.service';
 import { CabService } from '../../shared/services/cab.service';
 import { GlobalService } from '../../shared/services/global.service';
@@ -22,6 +22,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ServiceDetailsComponent,
     CommonModule,
     NgxPaginationModule,
+    RouterLink
   ],
   templateUrl: './services.component.html',
   styleUrl: './services.component.scss'
@@ -50,21 +51,7 @@ export class ServicesComponent {
     private toast: ToastService,
   ) {
     window.scrollTo({ top: 180, behavior: 'smooth' });
-    // this.router.navigate([], {
-    //   relativeTo: this.route,
-    //   queryParams: { currentPage: 1 },
-    //   queryParamsHandling: "merge"
-    // });
     this.searchVehicleResult();
-    // this.route.queryParams.subscribe((params: any) => {
-    //   console.log("params >>>>>", params);
-    //   this.currentPage = params.currentPage || 1;
-    //   if (params.currentPage) {
-    //     this.searchVehicleResult();
-    //   } else {
-    //     this.onHandleSubmit({});
-    //   }
-    // })
   }
 
   changeBookTab(item: any) {
@@ -116,7 +103,6 @@ export class ServicesComponent {
   }
 
   viewDetails(event: any) {
-    console.log("event>>>", event);
     this.singleDetailInfo = event;
     this.isView = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });

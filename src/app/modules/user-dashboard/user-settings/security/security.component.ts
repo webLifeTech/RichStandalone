@@ -55,7 +55,6 @@ export class SecurityComponent {
       this.gs.isSpinnerShow = false;
       if (response) {
         this.settingsDetails = JSON.parse(response)?.settingTabs || [];
-        console.log("Security Details >>>>>", this.settingsDetails);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;

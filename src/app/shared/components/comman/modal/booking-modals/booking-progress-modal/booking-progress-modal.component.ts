@@ -215,20 +215,11 @@ export class BookingProgressModalComponent {
         this.gs.isSpinnerShow = false;
       }
       this.timelineEvents = response ? JSON.parse(response) : [];
-      console.log("this.timelineEvents >>>>>", this.timelineEvents);
       if (this.timelineEvents.length) {
         for (let i in this.timelineEvents) {
           this.timelineEvents[i].color = this.config[this.timelineEvents[i].eventType]?.color;
           this.timelineEvents[i].icon = this.config[this.timelineEvents[i].eventType]?.icon;
           this.timelineEvents[i].statusColor = this.config[this.timelineEvents[i].eventType]?.statusColor;
-          // this.timelineEvents[i].color = this.colors[this.timelineEvents[i].bookingStatusCd];
-          // this.timelineEvents[i].icon = this.icons[this.timelineEvents[i].bookingStatusRemarksCd];
-          // if (this.timelineEvents[i].bookingStatusCd === 5) {
-          //   this.timelineEvents[i].icon = 'cancel';
-          // }
-          // if (this.timelineEvents[i].bookingStatusRemarksCd === 11) {
-          //   this.timelineEvents[i].color = 'danger';
-          // }
         }
       }
     }, (error) => {

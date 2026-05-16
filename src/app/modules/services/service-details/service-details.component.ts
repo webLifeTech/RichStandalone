@@ -64,8 +64,6 @@ export class ServiceDetailsComponent {
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const d = new Date();
     this.selectedDay = weekday[d.getUTCDay()];
-    console.log("this.selectedDay >>>>>", this.selectedDay);
-
   }
 
   ngOnInit() {
@@ -74,15 +72,11 @@ export class ServiceDetailsComponent {
   }
 
   get() {
-    console.log("provider >>>>>>", this.singleDetailInfo);
-
     this.gs.isSpinnerShow = true;
     this.vendorService.GetProviderDetailsByProviderId({
       providerId: this.singleDetailInfo.providerId
     }).subscribe((res: any) => {
-      console.log("res >>>>>>>", JSON.parse(res));
       this.singleDetailInfo = { ...this.singleDetailInfo, ...JSON.parse(res) }
-      console.log("this.singleDetailInfo >>>>>>>", this.singleDetailInfo);
       this.gs.isSpinnerShow = false;
       if (res && res.length) {
         // this.totalData = res.length;
@@ -112,12 +106,6 @@ export class ServiceDetailsComponent {
         this.selfReviewData = res.loginUserDetails ? JSON.parse(res.loginUserDetails) : {};
       }
     })
-    // this.reviewService.getUserReview().subscribe((apiRes: any) => {
-    //   // this.totalData = apiRes.totalData;
-    //   this.reviews = apiRes.data;
-    //   console.log("this.reviews >>>>>>", this.reviews);
-
-    // });
   }
 
   openEnquirieModal(providerDetails: any) {

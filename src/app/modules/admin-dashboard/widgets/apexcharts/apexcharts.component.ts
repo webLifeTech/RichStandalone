@@ -404,8 +404,6 @@ export class ApexchartsComponent implements OnInit {
     }
 
     if (this.chartType === 'simplepie') {
-      console.log("this.data.series ----->", this.data.series);
-
       this.chartSimplePie = {
         series: this.data.series, // [1, 2, 3, 4, 5]
         chart: {

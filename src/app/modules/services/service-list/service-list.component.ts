@@ -48,34 +48,9 @@ export class ServiceListComponent {
     public gs: GlobalService,
     private toast: ToastService,
   ) {
-    // this.route.queryParams.subscribe((params: any) => {
-    //   console.log("params >>>>>", params);
-    //   this.currentPage = params.currentPage;
-    // })
   }
 
-  // setPage(page: number) {
-  //   this.currentPage = page;
-  //   this.router.navigate([], {
-  //     relativeTo: this.route,
-  //     queryParams: { currentPage: page },
-  //     queryParamsHandling: "merge"
-  //   });
-  // }
-
   openEnquirieModal(providerDetails: any) {
-    // if (!this.auth.isLoggedIn) {
-    //   const modalRef = this.modalService.open(InformationModalComponent, {
-    //     centered: true,
-    //   });
-    //   modalRef.componentInstance.title = "Please login to book";
-    //   modalRef.result.then((res: any) => {
-    //     if (res.confirmed) {
-    //       this.router.navigateByUrl('/auth/log-in');
-    //     }
-    //   }, () => { });
-    //   return;
-    // }
     if (this.gs.loggedInUserInfo.userId === providerDetails.userId) {
       this.toast.errorToastr("You can't send enquiry your own service!");
       return;

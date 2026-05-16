@@ -46,10 +46,8 @@ src\assets\scss\style.scss line (2447)
       "pInfo": finalBody
     }
 
-    console.log("Body >>>>>", Body);
     // return
     this.profileService.updatePersonalInfo(Body).subscribe((res: any) => {
-      console.log("res >>>>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode === "200") {
         this.toast.successToastr("Updated successfully");
@@ -66,7 +64,6 @@ src\assets\scss\style.scss line (2447)
   createForm() {
     // Group fields by sectionID
 
-    console.log("this.isEditInfo >>>>>>>", this.isEditInfo);
     const groupedSections: any = this.groupBy(this.formArray, 'sectionID');
     Object.keys(groupedSections).forEach((sectionID, index) => {
 
@@ -205,7 +202,6 @@ src\assets\scss\style.scss line (2447)
       });
     });
 
-    console.log("sections >>>>>>>", this.sections);
 
     this.gs.isSpinnerShow = false;
     this.fetchMasterCountriesList();

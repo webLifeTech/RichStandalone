@@ -59,7 +59,6 @@ export class PreferencesComponent {
       this.gs.isSpinnerShow = false;
       if (response) {
         this.settingsDetails = JSON.parse(response)?.settingTabs || [];
-        console.log("Preferences Details >>>>>", this.settingsDetails);
       }
     }, (err: any) => {
       this.gs.isSpinnerShow = false;

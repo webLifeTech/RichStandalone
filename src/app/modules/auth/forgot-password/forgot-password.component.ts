@@ -114,7 +114,6 @@ export class ForgotPasswordComponent {
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-      console.log('Selected Country Code:', result);
       if (result) {
         this.selectedCountry = result;
       }
@@ -124,11 +123,6 @@ export class ForgotPasswordComponent {
   async sendOtp(frm: any, sendType: any) {
 
     this.submitted = true;
-    // if (!this.forgotPassForm.username || !this.registerForm.full_name?.trim() || (this.isVendor && !this.registerForm.category) || (!this.isVendor && !this.registerForm.type)) {
-    //   this.toast.errorToastr("Please fill the all details!");
-    //   return;
-    // }
-
     if (!frm.valid && sendType !== 'resend') {
       this.toast.errorToastr("Please fill the all required fields.");
       return;
@@ -150,7 +144,6 @@ export class ForgotPasswordComponent {
     }
     this.gs.isSpinnerShow = true;
     this.authService.SendVerificationCodeAsync(body).subscribe((res: any) => {
-      console.log("SendVerificationCodeAsync >>>", res);
       this.gs.isSpinnerShow = false;
       if (res && res.statusCode == "200") {
         this.submitted = false;
@@ -184,21 +177,11 @@ export class ForgotPasswordComponent {
       this.toast.errorToastr("Please enter valid details.");
       return;
     }
-    console.log("this.forgotPassForm.password >>>>>>", this.forgotPassForm.password);
-    console.log("this.rePassword >>>>>>", this.rePassword);
 
     if (this.forgotPassForm.password !== this.rePassword) {
       this.toast.errorToastr('Password and confirm password do not match.');
       return;
     }
-
-    // if (!this.forgotPassForm.otp) {
-    //   this.toast.errorToastr("Please enter otp.");
-    //   return;
-    // }
-    // this.toast.successToastr("Password updated successfully");
-    // this.backToLogin();
-    // return;
     const body = {
       verificationType: this.verificationType,
       verificationCode: this.forgotPassForm.otp,
@@ -209,7 +192,6 @@ export class ForgotPasswordComponent {
     this.gs.isSpinnerShow = true;
     this.authService.SetPassword(body).subscribe((res: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("SetPassword >>>", res);
       if (res && res.statusCode == "200") {
         this.toast.successToastr(res.message);
         this.backToLogin();

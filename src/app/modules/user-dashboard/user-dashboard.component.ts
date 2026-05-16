@@ -223,8 +223,6 @@ export class UserDashboardComponent {
         }
       }
 
-      console.log("this.dashboardAllDetails >>>>>>>", this.dashboardAllDetails);
-
 
       let tempArray: any = [];
 
@@ -469,16 +467,6 @@ export class UserDashboardComponent {
     }, () => {
     });
   }
-
-  // onView(item: any) {
-  //   const modalRef = this.modalService.open(BookingStatusModalComponent, {
-  //     size: 'lg'
-  //   });
-  //   modalRef.componentInstance.bookingDetails = item;
-  //   modalRef.result.then((res: any) => {
-  //   }, () => {
-  //   });
-  // }
 
   goWallet() {
     this.router.navigate(['/user/wallet']);

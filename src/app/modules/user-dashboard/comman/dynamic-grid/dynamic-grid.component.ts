@@ -82,8 +82,6 @@ export class DynamicGridComponent {
   }
 
   ngOnInit() {
-    console.log("this.type >>>>>", this.type);
-    console.log("selectedTabObj >>>>>", this.selectedTabObj);
 
     if (this.type === 'my_vehicle') {
       this.roleService.getButtons("MYVEH");
@@ -103,9 +101,6 @@ export class DynamicGridComponent {
         this.kycForm.formName = this.selectedTabObj.formName;
       }
       this.filteredData = this.data;
-      // this.onEdit(this.filteredData[0]); // need to do
-      console.log("this.filteredData >>>>>", this.filteredData);
-
       this.totalData = this.data.length;
     }
     this.getConfigUIFields();
@@ -160,7 +155,6 @@ export class DynamicGridComponent {
       }
       this.gs.isSpinnerShow = true;
       this.branchService.GetGarageInformations(body).subscribe((response: any) => {
-        console.log("GetGarageInformations >>>>>", response);
         this.gs.isSpinnerShow = false;
         if (response.response && response.response.statusCode == "200") {
           this.filteredData = response.gridList;
@@ -182,7 +176,6 @@ export class DynamicGridComponent {
       this.gs.isSpinnerShow = true;
       this.branchService.GetAllCompanyBranches(body).subscribe((response: any) => {
         this.gs.isSpinnerShow = false;
-        console.log("GetAllCompanyBranches >>>>>", response);
         if (response.response && response.response.statusCode == "200") {
           this.filteredData = response.gridList;
           this.totalData = response.viewModel.totalCount;
@@ -212,7 +205,6 @@ export class DynamicGridComponent {
 
     this.profileService.getConfigUIFields(body).subscribe(async (response: any) => {
       this.formArray = response;
-      console.log("aaaaaaaaaaaa >>>>>>>>", this.formArray);
       const groupedSections = this.groupBy(this.formArray, 'sectionID');
 
       Object.keys(groupedSections).forEach((sectionID, index) => {
@@ -309,8 +301,6 @@ export class DynamicGridComponent {
   }
 
   onView(item: any) {
-    console.log("item >>>>>>", item);
-    console.log("this.type >>>>>>", this.type);
 
     if (this.type === 'driver' || this.type === 'individualCarOwner') {
       const body = {
@@ -320,7 +310,6 @@ export class DynamicGridComponent {
       }
 
       this.profileService.getDriverDetails(body).subscribe(async (response: any) => {
-        console.log("getDriverDetails >>>>>>>>", response);
         if (response && response.driverInfo.driverId) {
           const modalRef = this.modalService.open(DynamicInfoModalComponent, {
             size: 'lg',

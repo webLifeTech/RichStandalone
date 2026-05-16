@@ -165,7 +165,6 @@ export class AllBookingOverviewComponent {
       if (this.bookTypes.length) {
         this.selectedMenuID = this.bookTypes[0].menuID;
         this.getGridSubTabsDetails();
-        console.log("selectedMenuID >>>>>>", this.selectedMenuID);
       }
     })
   }
@@ -259,8 +258,6 @@ export class AllBookingOverviewComponent {
   }
 
   onViewDocument(item: any) {
-    console.log("item >>>", item);
-
     const modalRef = this.modalService.open(ViewAllDocumentsModalComponent, {
       size: 'lg'
     });
@@ -276,7 +273,6 @@ export class AllBookingOverviewComponent {
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetCarBookingCancellationInfo >>>>>", response);
       if (response && response.responseResult && response.responseResult.statusCode == "200") {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
@@ -309,7 +305,6 @@ export class AllBookingOverviewComponent {
       loginUserId: this.gs.loggedInUserInfo.userId,
     }).subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
-      console.log("GetDriverBookingCancellationInfo >>>>>", response);
       if (response && response.responseResult && response.responseResult.statusCode == "200") {
         this.cancellationInfo = response;
         this.isShowCancellation = true;
@@ -369,7 +364,6 @@ export class AllBookingOverviewComponent {
     this.excelExport.exportToExcelPost(body, 'ExportAllBookingOverviewToExcel').subscribe((response: any) => {
       this.gs.isSpinnerShow = false;
       let tableData = JSON.parse(response);
-      console.log("ExportAllBookingOverviewToExcel tableData >>", tableData);
       let finalData: any = [];
       const style = {
         border: {
